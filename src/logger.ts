@@ -9,12 +9,14 @@ export const logger = winston.createLogger({
       filename: "error.log",
       dirname: "logs",
       level: "error",
-      maxsize: config.maxErrorLogSize,
+      maxFiles: 1,
+      maxsize: config.sizeLimits.errorLog,
     }),
     new winston.transports.File({
       filename: "combined.log",
       dirname: "logs",
-      maxsize: config.maxCombinedLogSize,
+      maxFiles: 1,
+      maxsize: config.sizeLimits.combinedLog,
     }),
   ],
   levels: {

@@ -60,13 +60,13 @@ export class File {
   static getFilePath(file: File) {
     // file.id will only exist if the file has been saved, otherwise sqlite won't have generated the id.
     if (!file.id) throw new TypeError("FileMetadata.getFilePath called before file.id was populated"); // prettier-ignore
-    return path.join(config.uploadPath.base, file.id + "." + file.extension);
+    return path.join(config.paths.base, file.id + "." + file.extension);
   }
 
   static getThumbPath(file: File): string | undefined {
     if (!file.id) throw new TypeError("FileMetadata.getThumbPath called before file.id was populated"); // prettier-ignore
     const supported = THUMBNAIL_SUPPORTED_EXT.includes(file.extension);
     if (!supported) return;
-    return path.join(config.uploadPath.thumbs, file.id + ".jpg");
+    return path.join(config.paths.thumbs, file.id + ".jpg");
   }
 }

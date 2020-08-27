@@ -20,6 +20,10 @@ export async function thumbHandler(
   if (!thumbPath) throw new BadRequest("Cannot generate thumbnails for that file");
   const exists = fs.existsSync(thumbPath);
   if (!exists) {
+    if (!config.thumbnailSize || config.thumbnailSize <= 0) {
+      throw new BadRequest("Thumbnail generation is disabled on this server.");
+    }
+
     const filePath = File.getFilePath(file);
     const originalExists = fs.existsSync(filePath);
     if (!originalExists) {
@@ -28,7 +32,7 @@ export async function thumbHandler(
     }
 
     const timer = logger.startTimer();
-    await sharp(filePath).resize(config.thumbnails).toFile(thumbPath);
+    await sharp(filePath).resize(config.thumbnailSize).toFile(thumbPath);
     timer.done({ message: "/thumb: generate", id: file.id });
   }
 

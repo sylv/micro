@@ -9,7 +9,8 @@
     "noUnusedLocals": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "outDir": "dist",
-    "baseUrl": "."
+    "rootDir": "src"
   }
 }

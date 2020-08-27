@@ -1,0 +1,14 @@
+{
+  "host": "https://i.example.com",
+  "redirect": "https://example.com",
+  "thumbnails": 200,
+  "uploadPath": "./store",
+  "sizeLimits": {
+    "upload": "50MB",
+    "errorLog": "1MB",
+    "combinedLog": "1MB"
+  },
+  "users": {
+    "ryan": "youshallnotpass"
+  }
+}

@@ -104,4 +104,4 @@ dist
 .tern-port
 
 store
-config.json
+.microrc

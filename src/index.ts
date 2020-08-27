@@ -23,7 +23,7 @@ async function main() {
 
   await createConnection({
     type: "sqlite",
-    database: path.join(config.uploadPath.base, ".microindex"),
+    database: path.join(config.paths.base, ".microindex"),
     entities: [path.resolve(__dirname, "entities/**/*.{ts,js}")],
     synchronize: process.env.NODE_ENV !== "production",
   }).then(() => logger.info("Created database connection"));
@@ -31,9 +31,9 @@ async function main() {
   server.register(multipart, {
     limits: {
       fieldNameSize: 100,
-      fieldSize: config.maxUploadSize,
+      fieldSize: config.sizeLimits.upload,
       fields: 10,
-      fileSize: config.maxUploadSize,
+      fileSize: config.sizeLimits.upload,
       files: 1,
       headerPairs: 2000,
     },

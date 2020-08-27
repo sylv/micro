@@ -26,7 +26,7 @@ export async function uploadHandler(
   const data = await request.file();
   const extension = data.filename.split(".").slice(-1).shift() ?? "";
   const temporaryName = randomString({ length: 20, type: "hex" });
-  const temporaryPath = path.join(config.uploadPath.temp, temporaryName);
+  const temporaryPath = path.join(config.paths.temp, temporaryName);
   const writeStream = fs.createWriteStream(temporaryPath);
 
   // count bytes to safe an fs.stat, could also add limits here but i believe fastify handles
