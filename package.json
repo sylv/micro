@@ -6,7 +6,6 @@
   "author": "Ryan <ryan@sylver.me>",
   "license": "GPL-3.0",
   "private": false,
-  "type": "module",
   "scripts": {
     "watch": "ts-node-dev ./src/index.ts",
     "build": "tsc",

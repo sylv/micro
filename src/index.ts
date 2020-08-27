@@ -10,7 +10,7 @@ import { fileHandler } from "./routes/file";
 import { thumbHandler } from "./routes/thumb";
 import { uploadHandler } from "./routes/upload";
 
-function bail(err?: Error) {
+function bail(err: Error | undefined) {
   if (!err) return;
   console.error(err);
   process.exit(1);
@@ -25,7 +25,7 @@ async function main() {
     type: "sqlite",
     database: path.join(config.paths.base, ".microindex"),
     entities: [path.resolve(__dirname, "entities/**/*.{ts,js}")],
-    synchronize: process.env.NODE_ENV !== "production",
+    synchronize: process.env.SYNCHRONIZE !== "true" && process.env.NODE_ENV !== "production",
   }).then(() => logger.info("Created database connection"));
 
   server.register(multipart, {
@@ -49,7 +49,7 @@ async function main() {
 
   server.listen(port, "0.0.0.0", (err, address) => {
     if (err) bail(err);
-    logger.debug(`Listening on ${address} (${config.host})`);
+    logger.info(`Listening on ${address} (${config.host}) NODE_ENV=${process.env.NODE_ENV}`);
   });
 }
 

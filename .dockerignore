@@ -1,0 +1,6 @@
+*
+!src
+!package.json
+!yarn.lock
+!LICENSE
+!tsconfig.json
