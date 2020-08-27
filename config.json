@@ -1,0 +1,11 @@
+{
+  "host": "http://127.0.0.1:8080",
+  "maxUploadSize": "50MB",
+  "maxErrorLogSize": "1MB",
+  "maxCombinedLogSize": "1MB",
+  "uploadPath": "./store",
+  "redirect": "https://example.com",
+  "users": {
+    "admin": "youshallnotpass"
+  }
+}
