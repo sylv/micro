@@ -12,9 +12,11 @@ export interface MicroConfig {
   maxCombinedLogSize: number;
   users: Map<string, string>;
   keys: Map<string, string>;
+  thumbnails: number;
   uploadPath: {
     base: string;
     temp: string;
+    thumbs: string;
   };
 }
 
@@ -29,8 +31,10 @@ export const config: MicroConfig = {
   uploadPath: {
     base: path.resolve(process.cwd(), inputConfig.uploadPath),
     temp: path.resolve(process.cwd(), inputConfig.uploadPath, "temp"),
+    thumbs: path.resolve(process.cwd(), inputConfig.uploadPath, "thumbs"),
   },
 };
 
 // kinda shitty but just ensures these directories exist at startup
 fs.mkdirSync(config.uploadPath.temp, { recursive: true });
+fs.mkdirSync(config.uploadPath.thumbs, { recursive: true });

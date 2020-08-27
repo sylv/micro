@@ -7,6 +7,7 @@ import { config } from "./config";
 import { logger } from "./logger";
 import { deletionHandler } from "./routes/delete";
 import { fileHandler } from "./routes/file";
+import { thumbHandler } from "./routes/thumb";
 import { uploadHandler } from "./routes/upload";
 
 function bail(err?: Error) {
@@ -38,9 +39,14 @@ async function main() {
     },
   });
 
+  if (config.redirect) {
+    server.get("/", async (req, reply) => reply.redirect(302, config.redirect!));
+  }
   server.post("/upload", uploadHandler);
-  server.get("/delete", deletionHandler);
-  server.get("/:filename", fileHandler);
+  server.get("/delete/:query", deletionHandler);
+  server.get("/:query", fileHandler);
+  server.get("/:query/thumbnail", thumbHandler);
+
   server.listen(port, "0.0.0.0", (err, address) => {
     if (err) bail(err);
     logger.debug(`Listening on ${address} (${config.host})`);

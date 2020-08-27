@@ -11,7 +11,8 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { config } from "../config";
-import { logger } from "../logger";
+
+const THUMBNAIL_SUPPORTED_EXT = ["png", "jpg", "jpeg", "webp"];
 
 @Entity("files")
 export class File {
@@ -48,18 +49,24 @@ export class File {
   @BeforeRemove()
   protected async beforeRemove() {
     const filePath = File.getFilePath(this);
+    const thumbPath = File.getThumbPath(this);
     await fs.promises.unlink(filePath);
-    logger.debug(`Unlinked ${this.id}`, { fileId: this.id, filePath: filePath });
+    if (thumbPath) {
+      // delete any thumbs and ignore if it errors such as ENOENT
+      await fs.promises.unlink(thumbPath).catch(() => false);
+    }
   }
 
   static getFilePath(file: File) {
-    // using a randomly generated path to avoid any issues with potentially risky user provided file names
-    // extension is for convenience, we could go without it and save some hassle but then you can't easily
-    // view the files on disk.
-    if (!file.id) {
-      throw new TypeError("FileMetadata.path called before file.id was populated");
-    }
-
+    // file.id will only exist if the file has been saved, otherwise sqlite won't have generated the id.
+    if (!file.id) throw new TypeError("FileMetadata.getFilePath called before file.id was populated"); // prettier-ignore
     return path.join(config.uploadPath.base, file.id + "." + file.extension);
+  }
+
+  static getThumbPath(file: File): string | undefined {
+    if (!file.id) throw new TypeError("FileMetadata.getThumbPath called before file.id was populated"); // prettier-ignore
+    const supported = THUMBNAIL_SUPPORTED_EXT.includes(file.extension);
+    if (!supported) return;
+    return path.join(config.uploadPath.thumbs, file.id + ".jpg");
   }
 }

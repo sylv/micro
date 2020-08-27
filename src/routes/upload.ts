@@ -1,6 +1,7 @@
 import randomString from "crypto-random-string";
 import { FastifyReply, FastifyRequest } from "fastify";
 import fs from "fs";
+import { Conflict, Unauthorized } from "http-errors";
 import path from "path";
 import { pipeline } from "stream";
 import { getRepository } from "typeorm";
@@ -18,7 +19,7 @@ export async function uploadHandler(
   // some basic auth that should be improved in the future
   const key = request.headers.authorization ?? request.query.api_key;
   const user = key && config.keys.get(key);
-  if (!user) return reply.status(401).send({ message: "Invalid or missing authorisation." });
+  if (!user) throw new Unauthorized();
   logger.debug("/upload", { user });
   // we need to write to a temporary path so we can get the file size
   // because we can't create File and get the final path without it
@@ -48,20 +49,20 @@ export async function uploadHandler(
     await fileRepo.save(file);
     const finalPath = File.getFilePath(file);
     await fs.promises.rename(temporaryPath, finalPath);
-    const url = config.host + `/${data.filename}`;
-    const deletion_url = config.host + `/delete?delete_key=${file.deletion_key}`;
+    const url = `${config.host}/${data.filename}`;
+    const thumbnail_url = `${url}/thumbnail`;
+    const deletion_url = config.host + `/delete/${file.deletion_key}`;
     logger.debug(`/upload: complete`, { user, id: file.id, temporaryPath, finalPath });
     return reply.send({
       url,
+      thumbnail_url,
       deletion_url,
     });
   } catch (e) {
     await fs.promises.unlink(temporaryPath);
     if (e.code === "SQLITE_CONSTRAINT") {
       logger.info("/upload: error - duplicate filename", { user, filename: data.filename });
-      return reply.status(409).send({
-        message: `A file already exists with that name.`,
-      });
+      return new Conflict("A file already exists with that name.");
     }
 
     logger.warn(`/upload: error`, { user });

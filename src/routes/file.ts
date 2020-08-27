@@ -1,24 +1,20 @@
 import { classToPlain } from "class-transformer";
-import { FastifyRequest, FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
+import fs from "fs";
+import { NotFound } from "http-errors";
 import { getRepository } from "typeorm";
 import { File } from "../entities/File";
-import fs from "fs";
 import { logger } from "../logger";
-import { config } from "../config";
 
 export async function fileHandler(
-  request: FastifyRequest<{ Querystring: { debug?: string }; Params: { filename: string } }>,
+  request: FastifyRequest<{ Querystring: { debug?: string }; Params: { query: string } }>,
   reply: FastifyReply
 ) {
   const debug = request.query.debug === "true";
-  const fileName = request.params.filename;
-  if (!fileName) {
-    if (config.redirect) reply.redirect(301, config.redirect);
-    return reply.status(400).send({ message: "Missing file name" });
-  }
-
+  const query = request.params.query;
+  if (!query) throw new NotFound();
   const fileRepo = getRepository(File);
-  const file = await fileRepo.findOne({ name: fileName });
+  const file = await fileRepo.findOne({ where: [{ name: query }, { id: query }] });
   const filePath = file && File.getFilePath(file);
   // ideally we would just catch fs.createReadStream errors and save ourselves a
   // fs call but that's really annoying to do and i don't wanna do it so this should work fine
@@ -26,8 +22,7 @@ export async function fileHandler(
   if (!file || !filePath || !existsOnDisk) {
     // don't have to use fileRepo.remove() because that hook will try delete the already deleted file.
     if (file && !existsOnDisk) await fileRepo.delete(file);
-    if (config.redirect) reply.redirect(301, config.redirect);
-    return reply.status(404).send({ message: "Unknown file" });
+    throw new NotFound();
   }
 
   if (debug) return reply.send(classToPlain(file));
