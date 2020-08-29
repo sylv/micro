@@ -3,6 +3,7 @@
   "redirect": "https://example.com",
   "thumbnails": 200,
   "uploadPath": "./store",
+  "synchronize": false,
   "sizeLimits": {
     "upload": "50MB",
     "errorLog": "1MB",

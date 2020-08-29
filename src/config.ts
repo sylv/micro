@@ -33,8 +33,9 @@ export interface MicroConfigPaths {
 
 export class MicroConfig {
   readonly host: string = inputConfig.host;
-  readonly thumbnailSize: number = inputConfig.thumbnailSize;
-  readonly redirect: string = inputConfig.redirect;
+  readonly thumbnailSize?: number = inputConfig.thumbnailSize;
+  readonly redirect?: string = inputConfig.redirect;
+  readonly synchronize?: boolean = inputConfig.synchronize;
   readonly keys: Map<string,string> = new Map(Object.entries(inputConfig.users).map((e) => e.reverse() as [string, string])) // prettier-ignore
   readonly sizeLimits: MicroConfigSizeLimits = {
     upload: bytes(inputConfig.sizeLimits.upload as string),
