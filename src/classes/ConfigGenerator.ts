@@ -1,10 +1,12 @@
 import { config } from "../config";
+import url from "url";
 
 export class ConfigGenerator {
   forShareX(key: string) {
+    const domain = url.parse(config.host).hostname ?? config.host;
     return JSON.stringify({
       Version: "13.1.0",
-      Name: "micro",
+      Name: `micro - ${domain}`,
       DestinationType: "ImageUploader, TextUploader, FileUploader",
       RequestMethod: "POST",
       RequestURL: config.host + "/upload",

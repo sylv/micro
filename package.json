@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "watch": "ts-node-dev ./src/index.ts",
+    "watch": "ts-node-dev --transpile-only ./src/index.ts",
     "build": "tsc",
     "start": "node ./dist"
   },

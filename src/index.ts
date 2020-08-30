@@ -19,6 +19,9 @@ function bail(err: Error | undefined) {
 
 // todo: on startup/every X check for files deleted from disk and delete them from the db.
 async function main() {
+  if (config.sources) logger.info(`Sourced config(s) "${config.sources.join('", "')}"`);
+  logger.info(`${config.keys.size} defined users`);
+
   const port = process.env.PORT ? +process.env.PORT : 8080;
   const isProduction = process.env.NODE_ENV === "production";
   const synchronize = config.synchronize ?? !isProduction;

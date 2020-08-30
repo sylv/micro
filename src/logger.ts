@@ -29,10 +29,8 @@ export const logger = winston.createLogger({
   },
 });
 
-// if (process.env.NODE_ENV !== "production" || process.env.VERBOSE === "true") {
 logger.add(
   new winston.transports.Console({
     format: winston.format.simple(),
   })
 );
-// }
