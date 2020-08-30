@@ -38,10 +38,9 @@ RUN apk add vips fftw --no-cache \
     --repository https://mirror.aarnet.edu.au/pub/alpine/edge/main/
 
 # copy dependencies and built files over
-COPY --from=builder /opt/micro/node_modules .
-COPY --from=builder /opt/micro/dist .
+COPY --from=builder /opt/micro .
 COPY package.json package.json
 
 ENV NODE_ENV=production
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
 EXPOSE 8080
