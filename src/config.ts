@@ -33,6 +33,7 @@ export interface MicroConfigPaths {
 
 export class MicroConfig {
   readonly host: string = inputConfig.HOST;
+  readonly https: boolean = inputConfig.HTTOS ?? inputConfig.HOST.startsWith("https");
   readonly redirect?: string = inputConfig.REDIRECT;
   readonly thumbnailSize?: number = inputConfig.THUMBNAIL_SIZE;
   readonly synchronize?: boolean = inputConfig.SYNCHRONIZE;

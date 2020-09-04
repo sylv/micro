@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import fs from "fs";
-import { Conflict, Unauthorized } from "http-errors";
+import { Conflict, Unauthorized, InternalServerError } from "http-errors";
 import { pipeline } from "stream";
 import { getRepository } from "typeorm";
 import util from "util";
@@ -11,11 +11,22 @@ import fileType from "file-type";
 import { v4 as uuidv4 } from "uuid";
 
 const pump = util.promisify(pipeline);
+const pathLength = "/upload".length;
 
 export async function uploadHandler(
-  request: FastifyRequest<{ Querystring: { api_key?: string } }>,
+  request: FastifyRequest<{ Querystring: { api_key?: string; host?: string } }>,
   reply: FastifyReply
 ) {
+  let baseUrl = request.query.host;
+  if (!baseUrl) {
+    const pathPrefix = request.raw.url?.slice(0, -pathLength) || "/";
+    const host = request.headers.host;
+    if (!host) throw new InternalServerError();
+    const protocol = config.https ? "https://" : "http://";
+    baseUrl = `${protocol}${host}${pathPrefix}`;
+    if (!baseUrl.endsWith("/")) baseUrl += "/";
+  }
+
   // some basic auth that should be improved in the future
   const key = request.headers.authorization ?? request.query.api_key;
   const user = key && config.keys.get(key);
@@ -49,19 +60,21 @@ export async function uploadHandler(
     file.size_bytes = receivedBytesTotal;
     await fileRepo.save(file);
 
-    const url = `${config.host}/${data.filename}`;
-    const thumbnail_url = `${url}/thumbnail`;
-    const deletion_url = config.host + `/delete/${file.deletion_key}`;
+    const url = baseUrl + data.filename;
+    const thumbnailUrl = url + "/thumbnail";
+    const deletionUrl = baseUrl + `delete/${file.deletion_key}`;
+
     logger.debug(`/upload: complete`, {
       user,
+      url,
       id: file.id,
-      mime_type: uploadType.mime,
+      mime: uploadType.mime,
     });
 
     return reply.send({
       url,
-      thumbnail_url,
-      deletion_url,
+      thumbnailUrl,
+      deletionUrl,
     });
   } catch (e) {
     // delete failed upload if exists on disk

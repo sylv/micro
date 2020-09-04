@@ -13,8 +13,8 @@ export class ConfigGenerator {
       Body: "MultipartFormData",
       FileFormName: "file",
       URL: "$json:url$",
-      ThumbnailURL: "$json:thumbnail_url$",
-      DeletionURL: "$json:deletion_url$",
+      ThumbnailURL: "$json:thumbnailUrl$",
+      DeletionURL: "$json:deletionUrl$",
       Headers: {
         Authorization: key,
       },
