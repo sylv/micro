@@ -8,7 +8,7 @@ import {
   Entity,
   Generated,
   Index,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { config } from "../config";
 
@@ -16,7 +16,7 @@ const THUMBNAIL_SUPPORTED_EXT = ["png", "jpg", "jpeg", "webp"];
 
 @Entity("files")
 export class File {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn("uuid")
   id!: string;
 
   @Column()
