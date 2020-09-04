@@ -24,9 +24,9 @@ export async function uploadHandler(
     if (!host) throw new InternalServerError();
     const protocol = config.https ? "https://" : "http://";
     baseUrl = `${protocol}${host}${pathPrefix}`;
-    if (!baseUrl.endsWith("/")) baseUrl += "/";
   }
 
+  if (!baseUrl.endsWith("/")) baseUrl += "/";
   // some basic auth that should be improved in the future
   const key = request.headers.authorization ?? request.query.api_key;
   const user = key && config.keys.get(key);

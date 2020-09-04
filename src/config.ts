@@ -32,7 +32,7 @@ export interface MicroConfigPaths {
 }
 
 export class MicroConfig {
-  readonly host: string = inputConfig.HOST;
+  readonly host: string = inputConfig.HOST.endsWith('/') ? inputConfig.HOST : inputConfig.HOST + '/'; // prettier-ignore
   readonly https: boolean = inputConfig.HTTOS ?? inputConfig.HOST.startsWith("https");
   readonly redirect?: string = inputConfig.REDIRECT;
   readonly thumbnailSize?: number = inputConfig.THUMBNAIL_SIZE;

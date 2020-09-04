@@ -18,6 +18,9 @@ export class ConfigGenerator {
       Headers: {
         Authorization: key,
       },
+      Parameters: {
+        host: config.host,
+      },
     });
   }
 }
