@@ -1,61 +1,40 @@
-import bytes from "bytes";
-import fs from "fs";
-import path from "path";
 import rc from "rc";
+import path from "path";
 
-const inputConfig = rc("micro", {
-  HOST: "https://i.example.com",
-  // relative to process.cwd(), can be an absolute path
-  DATA_PATH: "./store",
-  REDIRECT: "https://example.com",
-  // set to 0 or -1 to disable
-  THUMBNAILS: 200,
-  // name:key
-  USERS: {},
-  SIZE_LIMITS: {
-    UPLOAD: "50MB",
-    ERROR_LOG: "5MB",
-    COMBINED_LOG: "5MB",
-  },
-});
-
-export interface MicroConfigSizeLimits {
-  upload: number;
-  errorLog: number;
-  combinedLog: number;
-}
-
-export interface MicroConfigPaths {
-  base: string;
-  temp: string;
-  thumbs: string;
-}
-
-export class MicroConfig {
-  readonly host: string = inputConfig.HOST.endsWith('/') ? inputConfig.HOST.slice(0,-1) : inputConfig.HOST; // prettier-ignore
-  readonly https: boolean = inputConfig.HTTPS ?? inputConfig.HOST.startsWith("https");
-  readonly redirect?: string = inputConfig.REDIRECT;
-  readonly thumbnailSize?: number = inputConfig.THUMBNAIL_SIZE;
-  readonly synchronize?: boolean = inputConfig.SYNCHRONIZE;
-  readonly keys: Map<string,string> = new Map(Object.entries(inputConfig.USERS).map((e) => e.reverse() as [string, string])) // prettier-ignore
-  readonly sources?: string[] = inputConfig.configs;
-  readonly sizeLimits: MicroConfigSizeLimits = {
-    upload: bytes(inputConfig.SIZE_LIMITS.UPLOAD as string),
-    errorLog: bytes(inputConfig.SIZE_LIMITS.ERROR_LOG as string),
-    combinedLog: bytes(inputConfig.SIZE_LIMITS.COMBINED_LOG as string),
+export interface MicroConfig {
+  /** path to the config path, if any */
+  host: string;
+  config: string;
+  upload_limit: number;
+  jwt_secret: string;
+  domains: string[];
+  cache_path: string;
+  allow_types: string[];
+  s3: {
+    endpoint: string;
+    bucket: string;
+    access_key: string;
+    secret_key: string;
   };
-
-  readonly paths: MicroConfigPaths = {
-    base: path.resolve(process.cwd(), inputConfig.DATA_PATH),
-    temp: path.resolve(process.cwd(), inputConfig.DATA_PATH, "temp"),
-    thumbs: path.resolve(process.cwd(), inputConfig.DATA_PATH, "thumbs"),
+  database: {
+    uri: string;
+    synchronize: boolean;
   };
-
-  constructor() {
-    // kinda shitty but just ensures these directories exist at startup
-    fs.mkdirSync(this.paths.temp, { recursive: true });
-    fs.mkdirSync(this.paths.thumbs, { recursive: true });
-  }
 }
 
-export const config = new MicroConfig();
+export const config = rc("micro", {
+  upload_limit: 50000000,
+  allow_types: [
+    "text/plain",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
+    "audio/webm",
+    "video/webm",
+    "video/mp4",
+  ],
+}) as MicroConfig;
+
+export const basePath = config.config ? path.dirname(config.config) : process.cwd();
+export const cachePath = path.resolve(basePath, config.cache_path);
