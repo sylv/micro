@@ -1,0 +1,51 @@
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.mt-5 {
+  margin-top: 3rem !important;
+}
+
+.max-width {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.select-option span {
+  display: flex;
+  align-items: center;
+}
+
+.select-option span svg {
+  height: 1.5em;
+  width: auto;
+  margin-right: 0.5em;
+}
+
+/* for some reason by default geist will poorly capitalise labels and that's disgusting */
+.label {
+  text-transform: none !important;
+}
+
+/* sketch fix for this shit https://i.imgur.com/UOhPOg0.png */
+.btn {
+  height: calc(1.688 * 16pt) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* fixes Input.Password text being a lil far too the right https://i.imgur.com/jZ06vwF.png */
+input[type="password"] {
+  margin-left: 0 !important;
+}
+
+/* makes grid cards max height so this shit https://i.imgur.com/oYfFhlV.png turns into this less shit https://i.imgur.com/i5IFhKn.png */
+.item .card {
+  height: 100%;
+}

@@ -30,5 +30,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-dist
+packages/*/dist
+packages/web/.next
 .microrc

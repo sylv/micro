@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "watch:api",
+      "command": "yarn",
+      "args": ["watch"],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/api"
+      }
+    },
+    {
+      "label": "watch:web",
+      "command": "yarn",
+      "args": ["watch"],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/web"
+      }
+    },
+    {
+      "label": "watch",
+      "dependsOn": ["watch:api", "watch:web"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
