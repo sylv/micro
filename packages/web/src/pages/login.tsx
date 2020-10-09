@@ -1,9 +1,8 @@
-import { Button, Checkbox, Input, Spacer, Text } from "@geist-ui/react";
+import { Button, Checkbox, Input, Spacer, Text, useToasts } from "@geist-ui/react";
 import { Lock, User } from "@geist-ui/react-icons";
 import Router from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
-import { ErrorMessage } from "../components/ErrorMessage";
 import { Title } from "../components/Title";
 import { login, useUser } from "../hooks/useUser";
 
@@ -24,10 +23,10 @@ const LoginContainer = styled.div`
 `;
 
 export default function Login() {
+  const [, setToast] = useToasts();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [remember, setRemember] = useState(true);
-  const [error, setError] = useState(null);
   const disabled = !username || !password;
   const { user } = useUser();
 
@@ -42,8 +41,8 @@ export default function Login() {
   async function onContinueClick() {
     try {
       await login(username, password, remember);
-    } catch (e) {
-      setError(e);
+    } catch (err) {
+      setToast({ type: "error", text: err.message });
     }
   }
 
@@ -52,7 +51,6 @@ export default function Login() {
       <Title>Sign in</Title>
       <LoginContainer>
         <Text h1>Sign In</Text>
-        {error && <ErrorMessage error={error} />}
         <Input
           width="100%"
           type="text"

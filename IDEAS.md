@@ -1,0 +1,3 @@
+- Generate thumbnails on upload
+- Use signed S3 urls for dashboard images and uploads. Would require thumbnails to be pregenerated.
+- Strip EXIF on upload

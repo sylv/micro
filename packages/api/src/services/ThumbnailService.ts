@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from "@nestjs/common";
 import sharp from "sharp";
 import { getRepository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
@@ -6,6 +12,7 @@ import { config } from "../config";
 import { File, FileCategory } from "../entities/File";
 import { User } from "../entities/User";
 import { s3 } from "../driver";
+import { FileService } from "./FileService";
 
 export const THUMBNAIL_SUPPORTED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg"];
 export const THUMBNAIL_SIZE = 200;
@@ -13,6 +20,7 @@ export const THUMBNAIL_SIZE = 200;
 @Injectable()
 export class ThumbnailService {
   private log = new Logger(ThumbnailService.name);
+  constructor(private readonly fileService: FileService) {}
 
   async generateThumbnail(file: File) {
     if (!file.supports_thumbnails) throw new BadRequestException("File does not support thumbnails.");
@@ -23,7 +31,8 @@ export class ThumbnailService {
 
     const start = Date.now();
     const fileRepo = getRepository(File);
-    const fileStream = s3.getObject({ Bucket: config.s3.bucket, Key: file.storage_key }).createReadStream();
+    const { stream } = await this.fileService.getFileStream(file);
+    if (!stream) throw new NotFoundException("That file no longer exists.");
     const generator = sharp().resize(THUMBNAIL_SIZE).jpeg();
     const thumbnail = new File();
     thumbnail.id = uuidv4();
@@ -36,7 +45,7 @@ export class ThumbnailService {
     thumbnail.category = FileCategory.THUMBNAIL;
     file.thumbnail = thumbnail;
     file.thumbnail_id = thumbnail.id;
-    const thumbStream = fileStream.pipe(generator).on("data", (chunk) => (thumbnail.size_bytes += chunk.length));
+    const thumbStream = stream.pipe(generator).on("data", (chunk) => (thumbnail.size_bytes += chunk.length));
     await s3.upload({ Bucket: config.s3.bucket, Key: thumbnail.storage_key, Body: thumbStream }).promise();
     await fileRepo.save(thumbnail);
     const time = Date.now() - start;

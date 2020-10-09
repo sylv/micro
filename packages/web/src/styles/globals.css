@@ -12,6 +12,10 @@ body,
   margin-top: 3rem !important;
 }
 
+.relative {
+  position: relative !important;
+}
+
 .max-width {
   min-width: 0 !important;
   width: 100% !important;

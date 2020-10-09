@@ -19,7 +19,10 @@ export class UploadController {
     const uploadMeta = await request.file();
     const upload = await getFileType.stream(uploadMeta.file as stream.Readable);
     const uploadMime = upload.fileType?.mime ?? (uploadMeta.mimetype === 'text/plain' ? uploadMeta.mimetype : "application/octet-stream"); // prettier-ignore
-    if (!config.allow_types.includes(uploadMime)) throw new BadRequestException("Unsupported content type");
+    if (!config.allow_types.includes(uploadMime)) {
+      throw new BadRequestException(`Unsupported content type "${uploadMime}"`);
+    }
+
     const fileRepo = getRepository(File);
     const file = new File();
     file.id = uuidv4();

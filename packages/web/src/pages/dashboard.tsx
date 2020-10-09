@@ -1,8 +1,8 @@
-import { Button, Card, Grid, Input, Select } from "@geist-ui/react";
+import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
 import { DownloadCloud } from "@geist-ui/react-icons";
 import { UserFilesResponse } from "@micro/api";
 import Router from "next/router";
-import { ChangeEvent, FocusEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
 import useSWR from "swr";
 import { Avatar } from "../components/Avatar";
 import { Container } from "../components/Container";
@@ -10,17 +10,20 @@ import { FileList } from "../components/FileList";
 import { PageLoader } from "../components/PageLoader";
 import { Title } from "../components/Title";
 import { Endpoints } from "../constants";
+import { downloadFile } from "../helpers/downloadFile";
+import { generateConfig } from "../helpers/generateConfig";
+import { usePersistentState } from "../hooks/usePersistentState";
 import { logout, useUser } from "../hooks/useUser";
 
 export default function Dashboard() {
   const { user, loading } = useUser();
-  // todo: persisting subdomain in localstorage here would be pog
-  const [subdomain, setSubdomain] = useState<string>();
+  const [, setToast] = useToasts();
+  const [subdomain, setSubdomain] = usePersistentState<string>("subdomain");
+  const [domain, setDomain] = useState<string>();
   const fileData = useSWR<UserFilesResponse>(Endpoints.USER_FILES);
   const tokenData = useSWR(Endpoints.AUTH_TOKEN, { revalidateOnFocus: false });
-  const token = useMemo(() => tokenData.data && `Bearer ${tokenData.data.access_token}`, [
-    tokenData.data,
-  ]);
+  const token = tokenData.data && `Bearer ${tokenData.data.access_token}`;
+  const supportsSubdomains = domain?.startsWith("*");
 
   useEffect(() => {
     if (!user && !loading) Router.push("/login");
@@ -29,6 +32,20 @@ export default function Dashboard() {
 
   const highlightToken = (evt: FocusEvent<HTMLInputElement>) => evt.target.select();
   const updateSubdomain = (evt: ChangeEvent<HTMLInputElement>) => setSubdomain(evt.target.value);
+  const updateDomain = (option: string | string[]) => {
+    setDomain(Array.isArray(option) ? option[0] : option);
+  };
+
+  const downloadConfig = () => {
+    if (!domain || !subdomain) {
+      return setToast({ type: "error", text: "Enter a valid domain and subdomain first." });
+    }
+
+    const host = domain.includes("*") ? domain.replace("*", subdomain) : domain;
+    const name = `micro - ${host}.sxcu`;
+    const content = generateConfig(token, host);
+    downloadFile(name, content);
+  };
 
   if (!user) {
     return (
@@ -70,18 +87,20 @@ export default function Dashboard() {
               <Grid xs={8}>
                 <Input
                   width="100%"
-                  initialValue={subdomain}
                   label="Subdomain"
+                  initialValue={subdomain}
                   onChange={updateSubdomain}
-                ></Input>
+                  disabled={!supportsSubdomains}
+                />
               </Grid>
               <Grid xs={8}>
-                <Select width="100%" placeholder="Domain">
-                  <Select.Option value="1">*.is-fucking.gay</Select.Option>
+                <Select width="100%" placeholder="Domain" onChange={updateDomain}>
+                  <Select.Option value="i.sylver.me">i.sylver.me</Select.Option>
+                  <Select.Option value="*.is-fucking.gay">*.is-fucking.gay</Select.Option>
                 </Select>
               </Grid>
               <Grid xs={8}>
-                <Button icon={<DownloadCloud />} className="max-width">
+                <Button icon={<DownloadCloud />} className="max-width" onClick={downloadConfig}>
                   ShareX Config
                 </Button>
               </Grid>

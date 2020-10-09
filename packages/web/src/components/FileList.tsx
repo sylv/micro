@@ -1,5 +1,5 @@
 import { File } from "@micro/api";
-import { FilePreview } from "./FilePreview";
+import { FilePreview } from "./FilePreview/FilePreview";
 import { Card, Grid, Text } from "@geist-ui/react";
 
 const LOADING_SKELETON_COUNT = 24;

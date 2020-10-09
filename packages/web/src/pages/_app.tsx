@@ -1,24 +1,21 @@
 import { CssBaseline, GeistProvider } from "@geist-ui/react";
 import { AppProps } from "next/app";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { SWRConfig } from "swr";
 import { Menu } from "../components/Menu/Menu";
 import { Title } from "../components/Title";
 import { DEFAULT_THEME, THEME_KEY } from "../constants";
 import { fetcher } from "../fetcher";
+import { usePersistentState } from "../hooks/usePersistentState";
 import "../styles/globals.css";
 
 export type Themes = "light" | "dark";
-export const ThemeContext = React.createContext<{ theme: Themes; toggleTheme: () => void }>({} as any);
+export const ThemeContext = React.createContext<{ theme: Themes; toggleTheme: () => void }>(
+  {} as any
+);
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [theme, setTheme] = useState<Themes>(DEFAULT_THEME);
-
-  useEffect(() => {
-    const theme = localStorage.getItem(THEME_KEY) as Themes | undefined;
-    if (!theme || theme === DEFAULT_THEME) return;
-    setTheme(theme);
-  }, []);
+  const [theme, setTheme] = usePersistentState<Themes>(DEFAULT_THEME);
 
   function toggleTheme() {
     const opposite = theme === "light" ? "dark" : "light";

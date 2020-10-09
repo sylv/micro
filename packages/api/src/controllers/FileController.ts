@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Param, Res, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Controller, Get, Param, Res, NotFoundException, Next } from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { getRepository } from "typeorm";
 import { File } from "../entities/File";
