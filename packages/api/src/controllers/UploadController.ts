@@ -3,16 +3,16 @@ import { FastifyRequest } from "fastify";
 import getFileType from "file-type";
 import stream from "stream";
 import { getRepository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
 import { config } from "../config";
+import { s3 } from "../driver";
 import { File } from "../entities/File";
 import { User } from "../entities/User";
-import { JWTAuthGuard } from "../guards/JWTAuthGuard";
-import { s3 } from "../driver";
-import { v4 as uuidv4 } from "uuid";
+import { TokenAuthGuard } from "../guards/TokenAuthGuard";
 
 @Controller("upload")
 export class UploadController {
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(TokenAuthGuard)
   @Post()
   async uploadFile(@Req() request: FastifyRequest) {
     // todo: request limits

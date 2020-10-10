@@ -1,9 +1,22 @@
-import { BadRequestException, Controller, Get, Param, Res, NotFoundException, Next } from "@nestjs/common";
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { getRepository } from "typeorm";
 import { File } from "../entities/File";
+import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { FileService } from "../services/FileService";
 import { ThumbnailService } from "../services/ThumbnailService";
+import { FastifyRequest } from "fastify";
 
 @Controller()
 export class FileController {
@@ -18,8 +31,20 @@ export class FileController {
     return this.fileService.sendFile(file, reply);
   }
 
+  @Delete(["/i/:key", "f/:key"])
+  @UseGuards(JWTAuthGuard)
+  async deleteFile(@Param("key") key: string, @Req() request: FastifyRequest) {
+    const fileRepo = getRepository(File);
+    const cleanKey = this.fileService.cleanFileKey(key);
+    const file = await fileRepo.findOne({ key: cleanKey }, { relations: ["owner"] });
+    if (!file) throw new NotFoundException();
+    if (file.owner.id !== request.user) throw new UnauthorizedException();
+    await fileRepo.remove(file);
+    return { deleted: true };
+  }
+
   @Get("d/:deleteKey")
-  async deleteFile(@Param("deleteKey") deleteKey: string) {
+  async deleteFileByKey(@Param("deleteKey") deleteKey: string) {
     const fileRepo = getRepository(File);
     const file = await fileRepo.findOne({ deletion_key: deleteKey });
     if (!file) throw new NotFoundException();

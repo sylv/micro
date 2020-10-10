@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, Index, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { generateToken } from "../helpers/generateToken";
 import { File } from "./File";
 
 export enum UserRole {
@@ -25,6 +26,9 @@ export class User {
   @Exclude()
   password!: string;
 
+  @Column()
+  token!: string;
+
   @Column({ default: 0 })
   flags!: number;
 
@@ -34,4 +38,9 @@ export class User {
   @OneToMany(() => File, (file) => file.owner)
   @JoinColumn()
   files!: File[];
+
+  @BeforeInsert()
+  public addToken() {
+    this.token = generateToken(64);
+  }
 }

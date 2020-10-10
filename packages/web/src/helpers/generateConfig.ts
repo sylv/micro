@@ -5,7 +5,7 @@ export function generateConfig(token: string, domain: string) {
 
   return JSON.stringify({
     Version: "13.2.1",
-    Name: "micro",
+    Name: `micro - ${domain}`,
     DestinationType: "ImageUploader, TextUploader, FileUploader",
     RequestMethod: "POST",
     RequestURL: upload,

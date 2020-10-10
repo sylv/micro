@@ -1,14 +1,15 @@
-import { File } from "@micro/api";
-import { FilePreview } from "./FilePreview/FilePreview";
 import { Card, Grid, Text } from "@geist-ui/react";
+import { FileCard } from "./FileCard/FileCard";
+import useSWR from "swr";
+import { UserFilesResponse } from "@micro/api";
+import { Endpoints } from "../constants";
 
 const LOADING_SKELETON_COUNT = 24;
-export interface FileListProps {
-  files: File[];
-}
 
-export function FileList(props: FileListProps) {
-  if (props.files && !props.files[0]) {
+export function FileList() {
+  // todo: pagination
+  const files = useSWR<UserFilesResponse>(Endpoints.USER_FILES);
+  if (files.data && !files.data[0]) {
     return (
       <Grid xs={24}>
         <Card>
@@ -18,13 +19,13 @@ export function FileList(props: FileListProps) {
     );
   }
 
-  const total = props.files?.length ?? LOADING_SKELETON_COUNT;
-  const files: JSX.Element[] = [];
+  const total = files.data?.length ?? LOADING_SKELETON_COUNT;
+  const elements: JSX.Element[] = [];
   for (let i = 0; i < total; i++) {
-    const file = props.files?.[i];
+    const file = files.data?.[i];
     const key = file?.id ?? `skeleton${i}`;
-    files.push(<FilePreview file={file} key={key} />);
+    elements.push(<FileCard file={file} key={key} />);
   }
 
-  return <>{files}</>;
+  return <>{elements}</>;
 }

@@ -1,10 +1,36 @@
+import { TokenResponse, UserResponse } from "@micro/api";
+import axios from "axios";
+import Router from "next/router";
 import useSWR, { cache, mutate } from "swr";
+import { HTTPError } from "../classes/HTTPError";
 import { Endpoints, TOKEN_KEY } from "../constants";
 import { fetcher } from "../fetcher";
-import { UserResponse } from "@micro/api";
-import { HTTPError } from "../classes/HTTPError";
-import Router from "next/router";
 
+/**
+ * Get the user's token from session/local storage, throwing if one isn't found.
+ */
+export function getToken() {
+  const token = localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
+  if (token) return `Bearer ${token}`;
+  throw new HTTPError("Unauthorized", 403);
+}
+
+/**
+ * Sign the user in with a username/password combo.
+ * @param remember Whether to remember the user once they close the page.
+ */
+export async function login(username: string, password: string, remember: boolean) {
+  const { data } = await axios.post<TokenResponse>(Endpoints.AUTH_TOKEN, { username, password });
+  if (!data.access_token) return;
+  if (remember) localStorage.setItem(TOKEN_KEY, data.access_token);
+  else sessionStorage.setItem(TOKEN_KEY, data.access_token);
+  mutate(Endpoints.USER, null, true);
+  Router.push("/dashboard");
+}
+
+/**
+ * Sign the user out.
+ */
 export function logout() {
   localStorage.removeItem(TOKEN_KEY);
   sessionStorage.removeItem(TOKEN_KEY);
@@ -13,32 +39,15 @@ export function logout() {
   Router.push("/");
 }
 
-export async function login(username: string, password: string, remember: boolean) {
-  const res = await fetch(Endpoints.AUTH_TOKEN, {
-    method: "POST",
-    body: JSON.stringify({ username, password }),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (res.status === 401) throw new HTTPError("Invalid username or password", 401);
-  if (res.status > 299 || res.status < 200) throw new HTTPError(res.statusText, res.status);
-  const body = await res.json();
-  if (!body || !body.access_token) return;
-  if (remember) localStorage.setItem(TOKEN_KEY, body.access_token);
-  else sessionStorage.setItem(TOKEN_KEY, body.access_token);
-  mutate(Endpoints.USER, null, true);
-  Router.push("/dashboard");
-}
-
-export function useUser() {
+export const useUser = () => {
   const options = { refreshInterval: 60000, fetcher };
-  const { data, error, isValidating, mutate } = useSWR<UserResponse>(Endpoints.USER, options);
-  const loading = (!data && !error) || isValidating;
+  const user = useSWR<UserResponse>(Endpoints.USER, options);
+  const loading = (!user.data && !user.error) || user.isValidating;
 
   return {
-    user: data,
-    error,
+    user: user.data,
+    error: user.error,
+    mutate: user.mutate,
     loading,
-    mutate,
   };
-}
+};

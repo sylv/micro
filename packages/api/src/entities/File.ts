@@ -53,6 +53,9 @@ export class File {
   @Column({ type: "text", nullable: true })
   original_name!: string | null;
 
+  @Column({ default: false })
+  deleted!: boolean;
+
   @OneToOne(() => File, (file) => file.parent, { nullable: true, cascade: ["insert", "update"] })
   @JoinColumn()
   thumbnail!: File | null;
