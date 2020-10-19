@@ -9,7 +9,7 @@ import { fetcher } from "../fetcher";
 /**
  * Get the user's token from session/local storage, throwing if one isn't found.
  */
-export function getToken() {
+export function getToken(): string {
   const token = localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
   if (token) return `Bearer ${token}`;
   throw new HTTPError("Unauthorized", 403);
