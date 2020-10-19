@@ -1,8 +1,9 @@
 import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
 import { DownloadCloud } from "@geist-ui/react-icons";
-import { UserFilesResponse } from "@micro/api";
+import { ConfigResponse, TokenResponse } from "@micro/api";
+import axios from "axios";
 import Router from "next/router";
-import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Avatar } from "../components/Avatar";
 import { Container } from "../components/Container";
@@ -13,41 +14,90 @@ import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/downloadFile";
 import { generateConfig } from "../helpers/generateConfig";
 import { usePersistentState } from "../hooks/usePersistentState";
-import { logout, useUser } from "../hooks/useUser";
+import { getToken, logout, useUser } from "../hooks/useUser";
 
+// todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
-  const { user, loading } = useUser();
   const [, setToast] = useToasts();
+  const { user, loading, mutate } = useUser();
+  const [selectedDomain, setSelectedDomain] = useState<string>();
+  const [regenerating, setRegenerating] = useState(false);
   const [subdomain, setSubdomain] = usePersistentState<string>("subdomain");
-  const [domain, setDomain] = useState<string>();
-  const fileData = useSWR<UserFilesResponse>(Endpoints.USER_FILES);
-  const tokenData = useSWR(Endpoints.AUTH_TOKEN, { revalidateOnFocus: false });
-  const token = tokenData.data && `Bearer ${tokenData.data.access_token}`;
-  const supportsSubdomains = domain?.startsWith("*");
+  const server = useSWR<ConfigResponse>(Endpoints.CONFIG);
+  const domains = (server.data?.domains ?? []).sort();
+  const defaultDomain = domains[0];
+  const supportsSubdomains = selectedDomain?.startsWith("*");
 
+  // redirecting users that aren't logged in
+  // populating the subdomain field with their username
   useEffect(() => {
-    if (!user && !loading) Router.push("/login");
-    else if (user && !subdomain) setSubdomain(user.username);
+    if (!user && !loading) {
+      Router.push("/login");
+    } else if (user && !subdomain) {
+      setSubdomain(user.username);
+    }
   }, [user, loading]);
 
-  const highlightToken = (evt: FocusEvent<HTMLInputElement>) => evt.target.select();
-  const updateSubdomain = (evt: ChangeEvent<HTMLInputElement>) => setSubdomain(evt.target.value);
-  const updateDomain = (option: string | string[]) => {
-    setDomain(Array.isArray(option) ? option[0] : option);
-  };
+  // set default domain once loaded
+  useEffect(() => {
+    if (defaultDomain && !selectedDomain) {
+      setSelectedDomain(defaultDomain);
+    }
+  }, [server.data]);
 
-  const downloadConfig = () => {
-    if (!domain || !subdomain) {
+  // server config error handler
+  useEffect(() => {
+    if (server.error) {
+      setToast({ type: "error", text: "Failed loading server configuration" });
+      Router.push("/");
+    }
+  }, [server.error]);
+
+  /**
+   * Set the selected domain to the given option.
+   */
+  function updateDomain(option: string | string[]) {
+    setSelectedDomain(Array.isArray(option) ? option[0] : option);
+  }
+
+  /**
+   * Download a customised ShareX config for the user based on their options.
+   */
+  function downloadConfig() {
+    if (!selectedDomain || !subdomain) {
       return setToast({ type: "error", text: "Enter a valid domain and subdomain first." });
     }
 
-    const host = domain.includes("*") ? domain.replace("*", subdomain) : domain;
+    const wildcard = selectedDomain.includes("*");
+    const host = wildcard ? selectedDomain.replace("*", subdomain) : selectedDomain;
     const name = `micro - ${host}.sxcu`;
-    const content = generateConfig(token, host);
+    const content = generateConfig(user.token, host);
     downloadFile(name, content);
-  };
+  }
 
-  if (!user) {
+  /**
+   * Regenerate the users token and mutate the global user object.
+   */
+  async function regenerateToken() {
+    if (regenerating) return;
+    // todo: this is bad and should probably be a modal
+    const confirmation = confirm('Are you sure you want to regenerate your token? This will invalidate previous ShareX configurations.') // prettier-ignore
+    if (!confirmation) return;
+    setRegenerating(true);
+    try {
+      const options = { headers: { Authorization: getToken() } };
+      const { data } = await axios.get<TokenResponse>(Endpoints.USER_TOKEN_RESET, options);
+      user.token = data.access_token;
+      mutate(user, true);
+      setRegenerating(false);
+      setToast({ type: "success", text: "Your token has been regenerated." });
+    } catch (e) {
+      setRegenerating(false);
+      setToast({ type: "error", text: e.message });
+    }
+  }
+
+  if (!user || !server.data) {
     return (
       <>
         <Title>Dashboard</Title>
@@ -75,28 +125,38 @@ export default function Dashboard() {
               <Grid xs={18}>
                 <Input
                   width="100%"
-                  label="Token"
-                  onFocus={highlightToken}
-                  initialValue={token}
-                  disabled={!token}
+                  label="Upload Token"
+                  onFocus={(evt) => evt.target.focus()}
+                  value={user.token}
+                  readOnly
                 />
               </Grid>
               <Grid xs={6}>
-                <Button className="max-width">Regenerate</Button>
+                <Button className="max-width" disabled={regenerating} onClick={regenerateToken}>
+                  Regenerate
+                </Button>
               </Grid>
               <Grid xs={8}>
                 <Input
                   width="100%"
                   label="Subdomain"
                   initialValue={subdomain}
-                  onChange={updateSubdomain}
+                  onChange={(evt) => setSubdomain(evt.target.value)}
                   disabled={!supportsSubdomains}
                 />
               </Grid>
               <Grid xs={8}>
-                <Select width="100%" placeholder="Domain" onChange={updateDomain}>
-                  <Select.Option value="i.sylver.me">i.sylver.me</Select.Option>
-                  <Select.Option value="*.is-fucking.gay">*.is-fucking.gay</Select.Option>
+                <Select
+                  width="100%"
+                  placeholder="Domain"
+                  initialValue={defaultDomain}
+                  onChange={updateDomain}
+                >
+                  {domains.map((domain) => (
+                    <Select.Option key={domain} value={domain}>
+                      {domain}
+                    </Select.Option>
+                  ))}
                 </Select>
               </Grid>
               <Grid xs={8}>
@@ -107,7 +167,7 @@ export default function Dashboard() {
             </Grid.Container>
           </Card>
         </Grid>
-        <FileList files={fileData.data} />
+        <FileList />
       </Grid.Container>
     </Container>
   );

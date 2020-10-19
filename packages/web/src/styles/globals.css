@@ -4,6 +4,15 @@ body,
   height: 100%;
 }
 
+body,
+html {
+  overflow: hidden;
+}
+
+#__next {
+  margin-bottom: 2em !important;
+}
+
 .mb-2 {
   margin-bottom: 0.5rem !important;
 }
@@ -12,24 +21,17 @@ body,
   margin-top: 3rem !important;
 }
 
-.relative {
-  position: relative !important;
+.card {
+  position: relative;
+}
+
+.card .content {
+  overflow: hidden;
 }
 
 .max-width {
   min-width: 0 !important;
   width: 100% !important;
-}
-
-.select-option span {
-  display: flex;
-  align-items: center;
-}
-
-.select-option span svg {
-  height: 1.5em;
-  width: auto;
-  margin-right: 0.5em;
 }
 
 /* for some reason by default geist will poorly capitalise labels and that's disgusting */

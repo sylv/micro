@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { Readable } from "stream";
+import { getRepository } from "typeorm";
 import { config } from "../config";
 import { s3 } from "../driver";
 import { File } from "../entities/File";
@@ -25,11 +26,21 @@ export class FileService {
    */
   getFileStream(file: File) {
     return new Promise<GetFileStream>((resolve, reject) => {
+      if (file.deleted) return resolve({ stream: null, headers: {} });
       const stream: Readable = s3
         .getObject({ Bucket: config.s3.bucket, Key: file.storage_key })
         .on("error", reject)
         .on("httpHeaders", (status, headers) => {
-          if (status === 404) return resolve({ stream: null, headers: {} });
+          if (status === 404) {
+            resolve({ stream: null, headers: {} });
+            if (!file.deleted) {
+              file.deleted = true;
+              const fileRepo = getRepository(File);
+              fileRepo.save(file);
+            }
+
+            return;
+          }
           if (status !== 200) return; // error will be thrown
           return resolve({ stream, headers });
         })

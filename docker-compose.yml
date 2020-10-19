@@ -5,7 +5,7 @@ services:
     image: minio/minio
     container_name: micro_s3
     restart: unless-stopped
-    command: server /data
+    command: -c 'mkdir -p /data/micro && /usr/bin/minio server /data'
     environment:
       - MINIO_ACCESS_KEY=YOUSHALLNOTPASSKEY
       - MINIO_SECRET_KEY=YOUSHALLNOTPASSSECRET
