@@ -10,6 +10,6 @@ export class Link extends Content {
 
   @Expose()
   get url() {
-    return `${config.host}/s/${this.id}`;
+    return `${config.url}/s/${this.id}`;
   }
 }

@@ -36,13 +36,11 @@ export class UserController {
 
   @UseGuards(JWTAuthGuard)
   @Get("token")
-  async userToken(@Request() req: FastifyRequest) {
+  async userToken(@Request() req: FastifyRequest): Promise<TokenResponse> {
     const userRepo = getRepository(User);
     const user = await userRepo.findOne(req.user, { select: ["token"] });
     if (!user) throw new InternalServerErrorException();
-    return {
-      token: user.token,
-    };
+    return { access_token: user.token };
   }
 
   @UseGuards(JWTAuthGuard)

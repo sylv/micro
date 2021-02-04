@@ -1,14 +1,12 @@
 import rc from "rc";
-import path from "path";
 
 export interface MicroConfig {
   /** path to the config path, if any */
-  host: string;
-  config: string;
-  upload_limit: number;
-  jwt_secret: string;
+  url: string;
+  secret: string;
   domains: string[];
-  allow_types: string[];
+  uploadLimit: number;
+  allowTypes: string[];
   database: {
     uri: string;
     synchronize: boolean;
@@ -16,8 +14,8 @@ export interface MicroConfig {
 }
 
 export const config = rc("micro", {
-  upload_limit: 50000000,
-  allow_types: [
+  uploadLimit: 50000000,
+  allowTypes: [
     "text/plain",
     "image/png",
     "image/gif",
@@ -28,5 +26,3 @@ export const config = rc("micro", {
     "video/mp4",
   ],
 }) as MicroConfig;
-
-export const basePath = config.config ? path.dirname(config.config) : process.cwd();

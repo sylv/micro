@@ -1,10 +1,8 @@
-import { TokenResponse, UserResponse } from "@micro/api";
-import axios from "axios";
+import { UserResponse } from "@micro/api";
 import Router from "next/router";
-import useSWR, { cache, mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { HTTPError } from "../classes/HTTPError";
 import { Endpoints, TOKEN_KEY } from "../constants";
-import { fetcher } from "../fetcher";
 
 /**
  * Get the user's token from session/local storage, throwing if one isn't found.
@@ -19,12 +17,14 @@ export function getToken(): string {
  * Sign the user in with a username/password combo.
  * @param remember Whether to remember the user once they close the page.
  */
-export async function login(username: string, password: string, remember: boolean) {
-  // todo: this should not be stored in local storage
-  const { data } = await axios.post<TokenResponse>(Endpoints.AUTH_TOKEN, { username, password });
-  if (!data.access_token) return;
-  if (remember) localStorage.setItem(TOKEN_KEY, data.access_token);
-  else sessionStorage.setItem(TOKEN_KEY, data.access_token);
+export async function login(username: string, password: string) {
+  const response = await fetch(Endpoints.AUTH_LOGIN, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
   mutate(Endpoints.USER, null, true);
   Router.push("/dashboard");
 }
@@ -32,21 +32,19 @@ export async function login(username: string, password: string, remember: boolea
 /**
  * Sign the user out.
  */
-export function logout() {
-  localStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem(TOKEN_KEY);
-  cache.clear();
-  mutate(Endpoints.USER, null, false);
-  Router.push("/");
+export async function logout() {
+  const response = await fetch(Endpoints.AUTH_LOGOUT);
+  if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
+  mutate(Endpoints.USER, null, true);
+  Router.push("/dashboard");
 }
 
 export const useUser = () => {
-  const options = { refreshInterval: 60000, fetcher };
-  const user = useSWR<UserResponse>(Endpoints.USER, options);
+  const user = useSWR<UserResponse>(Endpoints.USER, { refreshInterval: 60000 });
   const loading = (!user.data && !user.error) || user.isValidating;
 
   return {
-    user: user.data,
+    data: user.data,
     error: user.error,
     mutate: user.mutate,
     loading,

@@ -15,6 +15,7 @@
     "@nestjs/typeorm": "^7.1.5",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.2",
+    "fastify-cookie": "^5.1.0",
     "fastify-multipart": "^3.3.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

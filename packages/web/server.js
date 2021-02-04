@@ -4,7 +4,7 @@ const config = require("rc")("micro");
 
 const devProxy = {
   "/api": {
-    target: config.host,
+    target: config.url,
     pathRewrite: { "^/api": "/" },
     changeOrigin: true,
   },

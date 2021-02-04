@@ -1,7 +1,7 @@
 import { File } from "@geist-ui/react-icons";
 import { useState } from "react";
 import styled from "styled-components";
-import { FilePreviewProps } from "./FileCard";
+import { FileCardProps } from "./FileCard";
 
 const IconWrapper = styled.div<{ image: boolean }>`
   display: flex;
@@ -20,7 +20,7 @@ const IconWrapper = styled.div<{ image: boolean }>`
   }
 `;
 
-export function FileCardPreview(props: FilePreviewProps) {
+export function FileCardPreview(props: FileCardProps) {
   const [errored, setErrored] = useState(false);
   const thumbnailUrl = props.file?.url.thumbnail;
   if (!thumbnailUrl || errored) {

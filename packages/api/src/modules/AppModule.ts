@@ -36,7 +36,7 @@ import { Link } from "../entities/Link";
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: config.jwt_secret,
+      secret: config.secret,
       signOptions: {
         expiresIn: "30d",
       },

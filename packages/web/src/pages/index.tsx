@@ -10,7 +10,7 @@ const HomeWrapper = styled.div`
 `;
 
 export default function Home() {
-  const server = useSWR<ConfigResponse>(Endpoints.CONFIG, url => fetch(url).then(r => r.json())); // prettier-ignore
+  const server = useSWR<ConfigResponse>(Endpoints.CONFIG); // prettier-ignore
   const domains = server.data?.domains ?? [];
   const loading = !server.data && !server.error;
 

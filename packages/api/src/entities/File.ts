@@ -37,8 +37,8 @@ export class File extends Content {
   @Expose()
   get url() {
     return {
-      download: `${config.host}/i/${this.id}`,
-      thumbnail: this.thumbnailId ? `${config.host}/t/${this.id}` : null,
+      download: `${config.url}/i/${this.id}`,
+      thumbnail: this.thumbnailId ? `${config.url}/t/${this.id}` : null,
     };
   }
 }

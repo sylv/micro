@@ -2,9 +2,8 @@ import { Button } from "@geist-ui/react";
 import { Crop } from "@geist-ui/react-icons";
 import Link from "next/link";
 import styled from "styled-components";
-import { useUser } from "../../hooks/useUser";
-import { Container } from "../Container";
-import { MenuThemeToggle } from "./MenuThemeToggle";
+import { useUser } from "../hooks/useUser";
+import { Container } from "./Container";
 
 const MenuNav = styled.nav`
   display: flex;
@@ -31,9 +30,9 @@ const MenuContainer = styled.div`
 `;
 
 export function Menu() {
-  const { user } = useUser();
-  const buttonHref = user ? "/dashboard" : "/login";
-  const buttonText = user ? "Enter" : "Sign in";
+  const user = useUser();
+  const buttonHref = user.data ? "/dashboard" : "/login";
+  const buttonText = user.data ? "Enter" : "Sign in";
 
   return (
     <Container>
@@ -44,7 +43,6 @@ export function Menu() {
           </MenuBrand>
         </Link>
         <MenuContainer>
-          <MenuThemeToggle />
           <Link href={buttonHref} passHref>
             <a>
               <Button auto>{buttonText}</Button>

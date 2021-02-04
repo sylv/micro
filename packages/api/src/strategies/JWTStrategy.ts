@@ -9,9 +9,9 @@ import { User } from "../entities/User";
 export class JWTStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: config.jwt_secret,
+      secretOrKey: config.secret,
+      jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeaderAsBearerToken(), (req) => req.cookies.token]),
     });
   }
 

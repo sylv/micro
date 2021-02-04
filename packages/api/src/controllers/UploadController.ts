@@ -33,7 +33,7 @@ export class UploadController {
       };
     }
 
-    if (!config.allow_types.includes(upload.mimetype)) {
+    if (!config.allowTypes.includes(upload.mimetype)) {
       throw new BadRequestException(`"${upload.mimetype}" is not supported by this server.`);
     }
 
