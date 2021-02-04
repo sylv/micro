@@ -1,8 +1,8 @@
-import { getRepository } from "typeorm";
-import { User, UserRole, UserFlag } from "../entities/User";
 import { Logger } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { getRepository } from "typeorm";
+import { User } from "../entities/User";
 
 /**
  * Ensure a default admin user exists. If it doesn't, generate one and log the login details to console.
@@ -18,8 +18,6 @@ export async function ensureDefaultUser() {
   const user = new User();
   user.username = "admin";
   user.password = passwordHashed;
-  user.role = UserRole.ADMINISTRATOR;
-  user.flags = UserFlag.REQUIRE_PASSWORD_CHANGE;
   await userRepo.save(user);
   logger.log(`Created default user, username = ${username} password = ${passwordPlain}`);
 }

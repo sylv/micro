@@ -20,6 +20,7 @@ export function getToken(): string {
  * @param remember Whether to remember the user once they close the page.
  */
 export async function login(username: string, password: string, remember: boolean) {
+  // todo: this should not be stored in local storage
   const { data } = await axios.post<TokenResponse>(Endpoints.AUTH_TOKEN, { username, password });
   if (!data.access_token) return;
   if (remember) localStorage.setItem(TOKEN_KEY, data.access_token);

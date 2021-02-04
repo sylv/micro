@@ -22,12 +22,12 @@ const IconWrapper = styled.div<{ image: boolean }>`
 
 export function FileCardPreview(props: FilePreviewProps) {
   const [errored, setErrored] = useState(false);
-  const thumbnailUrl = props.file?.supports_thumbnails && "/api/t/" + props.file.extension_key; // prettier-ignore
+  const thumbnailUrl = props.file?.url.thumbnail;
   if (!thumbnailUrl || errored) {
     return (
       <IconWrapper image={false}>
         <File />
-        <span>{props.file?.mime_type}</span>
+        <span>{props.file?.type}</span>
       </IconWrapper>
     );
   }

@@ -1,16 +1,6 @@
 # for development only
 version: "3"
 services:
-  minio:
-    image: minio/minio
-    container_name: micro_s3
-    restart: unless-stopped
-    command: -c 'mkdir -p /data/micro && /usr/bin/minio server /data'
-    environment:
-      - MINIO_ACCESS_KEY=YOUSHALLNOTPASSKEY
-      - MINIO_SECRET_KEY=YOUSHALLNOTPASSSECRET
-    ports:
-      - 9000:9000
   postgres:
     image: postgres:12-alpine
     container_name: micro_postgres

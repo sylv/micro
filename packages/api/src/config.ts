@@ -8,14 +8,7 @@ export interface MicroConfig {
   upload_limit: number;
   jwt_secret: string;
   domains: string[];
-  cache_path: string;
   allow_types: string[];
-  s3: {
-    endpoint: string;
-    bucket: string;
-    access_key: string;
-    secret_key: string;
-  };
   database: {
     uri: string;
     synchronize: boolean;

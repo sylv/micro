@@ -1,40 +1,42 @@
 import { BadRequestException, Controller, Post, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
-import getFileType from "file-type";
-import stream from "stream";
 import { getRepository } from "typeorm";
-import { v4 as uuidv4 } from "uuid";
 import { config } from "../config";
-import { s3 } from "../driver";
 import { File } from "../entities/File";
-import { User } from "../entities/User";
 import { TokenAuthGuard } from "../guards/TokenAuthGuard";
+import { ThumbnailService } from "../services/ThumbnailService";
+import { FileService } from "../services/FileService";
 
 @Controller("upload")
 export class UploadController {
-  @UseGuards(TokenAuthGuard)
+  constructor(readonly fileService: FileService, readonly thumbnailService: ThumbnailService) {}
+
   @Post()
+  @UseGuards(TokenAuthGuard)
   async uploadFile(@Req() request: FastifyRequest) {
-    // todo: request limits
+    // todo: upload size limiting
     const uploadMeta = await request.file();
-    const upload = await getFileType.stream(uploadMeta.file as stream.Readable);
-    const uploadMime = upload.fileType?.mime ?? (uploadMeta.mimetype === 'text/plain' ? uploadMeta.mimetype : "application/octet-stream"); // prettier-ignore
-    if (!config.allow_types.includes(uploadMime)) {
-      throw new BadRequestException(`Unsupported content type "${uploadMime}"`);
+    if (!config.allow_types.includes(uploadMeta.mimetype)) {
+      throw new BadRequestException(`"${uploadMeta.mimetype}" is not supported by this server.`);
     }
 
     const fileRepo = getRepository(File);
-    const file = new File();
-    file.id = uuidv4();
-    file.mime_type = uploadMime;
-    file.size_bytes = 0;
-    file.owner = { id: request.user! } as User;
-    file.original_name = uploadMeta.filename ?? null;
-    upload.on("data", (chunk) => (file.size_bytes += chunk.length));
-    upload.pause();
-    await s3.upload({ Bucket: config.s3.bucket, Key: file.storage_key, Body: upload }).promise();
-    // todo: handle duplicate error keys gracefully (thumbnails too)
+    const data = await uploadMeta.toBuffer();
+    const file = fileRepo.create({
+      type: uploadMeta.mimetype,
+      name: uploadMeta.filename,
+      size: data.length,
+      data: data,
+      owner: {
+        id: request.user,
+      },
+    });
+
+    file.metadata = await this.fileService.getMetadata(file);
+    file.thumbnail = await this.thumbnailService.generateThumbnail(file);
     await fileRepo.save(file);
-    return file.getUrls(request.headers.host);
+    return Object.assign(file.url, {
+      delete: `${config.host}/d/${file.deletionId}`,
+    });
   }
 }

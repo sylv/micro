@@ -1,16 +1,16 @@
-import { Strategy } from "passport-local";
-import { PassportStrategy } from "@nestjs/passport";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { getRepository } from "typeorm";
-import { User, UserFlag } from "../entities/User";
+import { PassportStrategy } from "@nestjs/passport";
 import bcrypt from "bcrypt";
+import { Strategy } from "passport-local";
+import { getRepository } from "typeorm";
+import { User } from "../entities/User";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(username: string, password: string): Promise<any> {
     const userRepo = getRepository(User);
-    const user = await userRepo.findOne({ username });
-    if (!user || (user.flags & UserFlag.BANNED) === UserFlag.BANNED) throw new UnauthorizedException();
+    const user = await userRepo.findOne({ username }, { select: ["id", "username", "password"] });
+    if (!user) throw new UnauthorizedException();
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) throw new UnauthorizedException();
     return user.id;

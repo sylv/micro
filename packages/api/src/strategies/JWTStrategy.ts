@@ -1,9 +1,9 @@
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { Injectable, BadRequestException } from "@nestjs/common";
-import { config } from "../config";
+import { ExtractJwt, Strategy } from "passport-jwt";
 import { getRepository } from "typeorm";
-import { User, UserFlag } from "../entities/User";
+import { config } from "../config";
+import { User } from "../entities/User";
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
@@ -19,7 +19,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     // todo: this kind of invalidates the use of JWTs if we're going to double check with a database query anyway
     const userRepo = getRepository(User);
     const user = await userRepo.findOne({ id: payload.id });
-    if (!user || (user.flags & UserFlag.BANNED) === UserFlag.BANNED) throw new BadRequestException();
+    if (!user) throw new BadRequestException();
     return user.id;
   }
 }

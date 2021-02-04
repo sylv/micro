@@ -6,8 +6,8 @@ import { User } from "../entities/User";
 @Injectable()
 export class TokenAuthGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    const req = ctx.switchToHttp().getRequest<FastifyRequest>();
-    const token = req.headers.authorization;
+    const req = ctx.switchToHttp().getRequest<FastifyRequest<{ Querystring: { key?: string } }>>();
+    const token = req.headers.authorization || req.query?.key;
     if (!token) return false;
     const userRepo = getRepository(User);
     const user = await userRepo.findOne({ select: ["id"], where: { token } });

@@ -1,17 +1,7 @@
 import { Exclude } from "class-transformer";
-import { BeforeInsert, Column, Entity, Index, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { generateToken } from "../helpers/generateToken";
+import { BeforeInsert, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { generateId } from "../helpers/generateId";
 import { File } from "./File";
-
-export enum UserRole {
-  USER,
-  ADMINISTRATOR,
-}
-
-export enum UserFlag {
-  REQUIRE_PASSWORD_CHANGE = 1,
-  BANNED = 1 << 1,
-}
 
 @Entity("users")
 export class User {
@@ -22,25 +12,19 @@ export class User {
   @Index()
   username!: string;
 
-  @Column()
+  @Column({ select: false })
   @Exclude()
   password!: string;
 
-  @Column()
+  @Column({ select: false })
+  @Exclude()
   token!: string;
 
-  @Column({ default: 0 })
-  flags!: number;
-
-  @Column({ type: "int", enum: UserRole, default: UserRole.USER })
-  role!: UserRole;
-
   @OneToMany(() => File, (file) => file.owner)
-  @JoinColumn()
   files!: File[];
 
   @BeforeInsert()
   public addToken() {
-    this.token = generateToken(64);
+    this.token = generateId(64);
   }
 }

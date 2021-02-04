@@ -1,10 +1,10 @@
-import { Controller, Get, Param, Req, Request, UseGuards } from "@nestjs/common";
+import { Controller, Get, InternalServerErrorException, Param, Req, Request, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
 import { getRepository } from "typeorm";
-import { File, FileCategory } from "../entities/File";
+import { File } from "../entities/File";
 import { User } from "../entities/User";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
-import { generateToken } from "../helpers/generateToken";
+import { generateId } from "../helpers/generateId";
 import { Await } from "../types";
 import { TokenResponse } from "./AuthController";
 
@@ -17,7 +17,7 @@ export class UserController {
   @Get()
   async user(@Request() req: FastifyRequest) {
     const userRepo = getRepository(User);
-    return await userRepo.findOne({ id: req.user });
+    return await userRepo.findOne(req.user);
   }
 
   @UseGuards(JWTAuthGuard)
@@ -27,20 +27,30 @@ export class UserController {
     return await fileRepo.find({
       take: 24,
       skip: skip,
-      order: { created_at: -1 },
+      order: { createdAt: -1 },
       where: {
-        category: FileCategory.IMAGE,
         owner: req.user,
       },
     });
   }
 
   @UseGuards(JWTAuthGuard)
-  @Get("/token/reset")
-  async userTokenReset(@Req() request: FastifyRequest): Promise<TokenResponse> {
-    const token = generateToken(64);
+  @Get("token")
+  async userToken(@Request() req: FastifyRequest) {
     const userRepo = getRepository(User);
-    await userRepo.update({ id: request.user }, { token });
+    const user = await userRepo.findOne(req.user, { select: ["token"] });
+    if (!user) throw new InternalServerErrorException();
+    return {
+      token: user.token,
+    };
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @Get("token/reset")
+  async userTokenReset(@Req() request: FastifyRequest): Promise<TokenResponse> {
+    const token = generateId(64);
+    const userRepo = getRepository(User);
+    await userRepo.update(request.user, { token });
     return { access_token: token };
   }
 }

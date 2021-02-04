@@ -21,6 +21,7 @@ async function main() {
       headerPairs: 20,
     },
   });
+
   app.enableCors();
 
   await app.listen(8080, "0.0.0.0");

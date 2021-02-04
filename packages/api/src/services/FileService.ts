@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { Readable } from "stream";
 import { getRepository } from "typeorm";
-import { config } from "../config";
-import { s3 } from "../driver";
-import { File } from "../entities/File";
+import { File, FileMetadata } from "../entities/File";
+import sharp from "sharp";
 
 export interface GetFileStream {
   stream: Readable | null;
@@ -13,58 +12,50 @@ export interface GetFileStream {
 
 @Injectable()
 export class FileService {
+  private static readonly METADATA_TYPES = new Set([
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
+  ]);
+
   /**
    * Remove extensions, etc from a file key.
    */
-  cleanFileKey(key: string) {
-    return key.replace(/\.[a-z]{3,4}$/, "");
-  }
-
-  /**
-   * Get a file stream. If stream=null the object no longer exists in s3.
-   * @param file The file to get the stream for
-   */
-  getFileStream(file: File) {
-    return new Promise<GetFileStream>((resolve, reject) => {
-      if (file.deleted) return resolve({ stream: null, headers: {} });
-      const stream: Readable = s3
-        .getObject({ Bucket: config.s3.bucket, Key: file.storage_key })
-        .on("error", reject)
-        .on("httpHeaders", (status, headers) => {
-          if (status === 404) {
-            resolve({ stream: null, headers: {} });
-            if (!file.deleted) {
-              file.deleted = true;
-              const fileRepo = getRepository(File);
-              fileRepo.save(file);
-            }
-
-            return;
-          }
-          if (status !== 200) return; // error will be thrown
-          return resolve({ stream, headers });
-        })
-        .createReadStream()
-        .on("error", reject);
-    });
+  public cleanFileKey(key: string): { id: string; ext?: string } {
+    const groups = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z]{3,4}))?$/.exec(key)?.groups;
+    if (!groups) throw new BadRequestException("Invalid file key");
+    return groups as any;
   }
 
   /**
    * Reply to a request with the given file.
    */
-  async sendFile(file: File, reply: FastifyReply) {
-    const { stream, headers } = await this.getFileStream(file);
-    if (!stream) throw new NotFoundException("That file no longer exists.");
-    reply.header("ETag", headers.etag);
-    reply.header("Content-Length", headers["content-length"]);
-    reply.header("Last-Modified", headers["last-modified"]);
-    reply.header("Content-Type", file.mime_type);
-    reply.header("X-Micro-OwnerId", file.owner_id ?? file.owner?.id);
+  public async sendFile(file: File, reply: FastifyReply) {
+    reply.header("Content-Length", file.size);
+    reply.header("Last-Modified", file.createdAt.toUTCString());
+    reply.header("Content-Type", file.type);
     reply.header("X-Micro-FileId", file.id);
-    if (file.original_name) {
-      reply.header("Content-Disposition", `inline; filename="${file.original_name}"`);
+    reply.header("X-Micro-OwnerId", file.ownerId);
+    if (file.name) reply.header("Content-Disposition", `inline; filename="${file.name}"`);
+    if (file.data) {
+      reply.send(file.data);
+    } else {
+      const fileRepo = getRepository(File);
+      const data = (await fileRepo.findOne(file.id, { select: ["data"] }))?.data;
+      reply.send(data);
     }
+  }
 
-    reply.send(stream);
+  public async getMetadata(file: File): Promise<FileMetadata | undefined> {
+    if (file.metadata) return file.metadata;
+    if (!file.data) throw new InternalServerErrorException("Missing file data");
+    if (!FileService.METADATA_TYPES.has(file.type)) return;
+    const metadata = await sharp(file.data).metadata();
+    return {
+      height: metadata.height,
+      width: metadata.width,
+    };
   }
 }
