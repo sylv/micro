@@ -16,12 +16,23 @@ import { ThumbnailService } from "../services/ThumbnailService";
 import { JWTStrategy } from "../strategies/JWTStrategy";
 import { LocalStrategy } from "../strategies/LocalStrategy";
 import { ThumbnailController } from "../controllers/ThumbnailController";
+import { LinkController } from "../controllers/LinkController";
+import { LinkService } from "../services/LinkService";
+import { Link } from "../entities/Link";
 
 @Module({
   // i am fully aware you are meant to have separate modules, services and controllers for everything
   // but that seems like a shit ton of boilerplate and im a lazy little shit at the moment
-  providers: [FileService, ThumbnailService, JWTStrategy, LocalStrategy],
-  controllers: [AppController, FileController, UploadController, AuthController, UserController, ThumbnailController],
+  providers: [FileService, ThumbnailService, JWTStrategy, LocalStrategy, LinkService],
+  controllers: [
+    AppController,
+    FileController,
+    UploadController,
+    AuthController,
+    UserController,
+    ThumbnailController,
+    LinkController,
+  ],
   imports: [
     PassportModule,
     JwtModule.register({
@@ -34,7 +45,7 @@ import { ThumbnailController } from "../controllers/ThumbnailController";
       type: "postgres",
       url: config.database.uri,
       synchronize: config.database.synchronize,
-      entities: [User, Thumbnail, File],
+      entities: [User, Thumbnail, File, Link],
     }),
   ],
 })

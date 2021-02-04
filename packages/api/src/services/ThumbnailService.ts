@@ -48,10 +48,14 @@ export class ThumbnailService {
     if (!thumbnail.data) throw new InternalServerErrorException("Missing thumbnail data");
     reply.header("Content-Length", thumbnail.size);
     reply.header("Last-Modified", thumbnail.createdAt.toUTCString());
-    reply.header("X-Micro-ThumbnailId", thumbnail.id);
     reply.header("X-Micro-FileId", thumbnail.fileId);
+    reply.header("X-Micro-ThumbnailId", thumbnail.id);
     reply.header("X-Micro-OwnerId", thumbnail.ownerId);
     reply.header("Content-Type", ThumbnailService.THUMBNAIL_TYPE);
     reply.send(thumbnail.data);
+
+    // increment view count
+    const thumbnailRepo = getRepository(Thumbnail);
+    await thumbnailRepo.increment({ id: thumbnail.id }, "views", 1);
   }
 }

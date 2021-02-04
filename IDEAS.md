@@ -1,3 +1,0 @@
-- Thumbnail generation (bytea)
-- Strip EXIF on upload
-- Mobile support

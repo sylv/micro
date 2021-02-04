@@ -1,9 +1,11 @@
 import {
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
+  Query,
   Req,
   Res,
   UnauthorizedException,
@@ -21,16 +23,22 @@ export class FileController {
   constructor(private fileService: FileService) {}
 
   @Get(["i/:key", "f/:key"])
-  async getFile(@Param("key") key: string, @Res() reply: FastifyReply) {
+  async getFile(@Res() reply: FastifyReply, @Param("key") key: string, @Query("delete") deletionId?: string) {
     const fileRepo = getRepository(File);
     const clean = this.fileService.cleanFileKey(key);
-    const file = await fileRepo.findOne(clean.id);
-    if (!file) throw new NotFoundException();
-    if (clean.ext === "json") {
+    if (clean.ext === "json" || deletionId) {
+      const file = await fileRepo.findOne(clean.id);
+      if (!file) throw new NotFoundException();
+      if (deletionId) {
+        if (file.deletionId !== deletionId) throw new ForbiddenException();
+        await fileRepo.delete(file.id);
+        return reply.send({ deleted: true });
+      }
+
       return reply.send(classToPlain(file));
     }
 
-    return this.fileService.sendFile(file, reply);
+    return this.fileService.sendFileById(clean.id, reply);
   }
 
   @Delete(["/i/:key", "f/:key"])

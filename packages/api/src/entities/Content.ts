@@ -11,6 +11,9 @@ export abstract class Content {
   @Exclude()
   deletionId!: string;
 
+  @Column({ default: 0 })
+  views!: number;
+
   @ManyToOne(() => User, { onDelete: "CASCADE", nullable: false })
   @JoinColumn()
   owner!: User;

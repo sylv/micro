@@ -14,6 +14,9 @@ export function generateConfig(token: string, domain: string) {
     URL: "$json:download_url$",
     ThumbnailURL: "$json:thumbnail_url$",
     DeletionURL: "$json:deletion_url$",
+    Parameters: {
+      input: "$input$",
+    },
     Headers: {
       Authorization: token,
       "X-Micro-Host": domain,

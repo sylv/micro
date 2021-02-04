@@ -11,7 +11,7 @@ async function main() {
 
   // should probably move this to per-controller or per-route for perf but it's fine for now
   app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector()));
-  app.register(fastifyMultipart as any, {
+  app.register(fastifyMultipart, {
     limits: {
       fieldNameSize: 100,
       fieldSize: 100,
