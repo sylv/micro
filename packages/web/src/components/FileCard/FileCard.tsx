@@ -7,7 +7,7 @@ export interface FileCardProps {
 }
 
 export function FileCard(props: FileCardProps) {
-  const url = props.file && `/api/i/${props.file.id}`;
+  const url = props.file && props.file.url.download;
   const name = props.file?.name ?? props.file?.id ?? "loading";
 
   return (

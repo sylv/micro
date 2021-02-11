@@ -19,6 +19,9 @@ import { ThumbnailController } from "../controllers/ThumbnailController";
 import { LinkController } from "../controllers/LinkController";
 import { LinkService } from "../services/LinkService";
 import { Link } from "../entities/Link";
+import Next from "next";
+import { RenderModule } from "nest-next";
+import { resolve } from "path";
 
 @Module({
   // i am fully aware you are meant to have separate modules, services and controllers for everything
@@ -47,6 +50,16 @@ import { Link } from "../entities/Link";
       synchronize: config.database.synchronize,
       entities: [User, Thumbnail, File, Link],
     }),
+    RenderModule.forRootAsync(
+      Next({
+        dev: process.env.NODE_ENV !== "production",
+        dir: resolve("../web"),
+      }),
+      {
+        passthrough404: true,
+        viewsDir: null,
+      }
+    ),
   ],
 })
 export class AppModule {}

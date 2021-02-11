@@ -1,6 +1,5 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude } from "class-transformer";
 import { Column, Entity, JoinColumn, OneToOne, RelationId } from "typeorm";
-import { config } from "../config";
 import { Content } from "./Content";
 import { File } from "./File";
 
@@ -22,12 +21,4 @@ export class Thumbnail extends Content {
 
   @RelationId("file")
   fileId!: string;
-
-  @Expose()
-  get url() {
-    return {
-      download: `${config.host}/i/${this.fileId}`,
-      thumbnail: `${config.host}/t/${this.fileId}`,
-    };
-  }
 }

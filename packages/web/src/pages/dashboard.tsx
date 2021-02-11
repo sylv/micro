@@ -2,7 +2,7 @@ import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
 import { DownloadCloud } from "@geist-ui/react-icons";
 import { ConfigResponse } from "@micro/api";
 import Router from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Avatar } from "../components/Avatar";
 import { Container } from "../components/Container";
@@ -13,7 +13,7 @@ import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/downloadFile";
 import { generateConfig } from "../helpers/generateConfig";
 import { replacePlaceholders } from "../helpers/replacePlaceholders";
-import { getToken, logout, useUser } from "../hooks/useUser";
+import { logout, useUser } from "../hooks/useUser";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
@@ -58,8 +58,7 @@ export default function Dashboard() {
     setRegenerating(true);
 
     try {
-      const options: RequestInit = { headers: { Authorization: getToken() } };
-      const response = await fetch(Endpoints.USER_TOKEN_RESET, options);
+      const response = await fetch(Endpoints.USER_TOKEN_RESET);
       if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
       const body = await response.json();
       token.mutate(body, false);

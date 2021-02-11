@@ -1,17 +1,7 @@
 import { UserResponse } from "@micro/api";
 import Router from "next/router";
 import useSWR, { mutate } from "swr";
-import { HTTPError } from "../classes/HTTPError";
-import { Endpoints, TOKEN_KEY } from "../constants";
-
-/**
- * Get the user's token from session/local storage, throwing if one isn't found.
- */
-export function getToken(): string {
-  const token = localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
-  if (token) return `Bearer ${token}`;
-  throw new HTTPError("Unauthorized", 403);
-}
+import { Endpoints } from "../constants";
 
 /**
  * Sign the user in with a username/password combo.

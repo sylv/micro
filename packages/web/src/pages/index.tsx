@@ -1,5 +1,6 @@
 import { Spinner } from "@geist-ui/react";
 import { ConfigResponse } from "@micro/api";
+import { NextPageContext } from "next";
 import styled from "styled-components";
 import useSWR from "swr";
 import { Container } from "../components/Container";
@@ -9,8 +10,8 @@ const HomeWrapper = styled.div`
   padding-top: 5em;
 `;
 
-export default function Home() {
-  const server = useSWR<ConfigResponse>(Endpoints.CONFIG); // prettier-ignore
+export default function Home(props: { domains: string[] }) {
+  const server = useSWR<ConfigResponse>(Endpoints.CONFIG, { initialData: props }); // prettier-ignore
   const domains = server.data?.domains ?? [];
   const loading = !server.data && !server.error;
 
@@ -43,3 +44,9 @@ export default function Home() {
     </Container>
   );
 }
+
+export const getServerSideProps = (ctx: NextPageContext) => {
+  return {
+    props: ctx.query,
+  };
+};

@@ -8,7 +8,7 @@ export interface TokenResponse {
   access_token: string;
 }
 
-@Controller("auth")
+@Controller("api/auth")
 export class AuthController {
   constructor(private jwtService: JwtService) {}
 

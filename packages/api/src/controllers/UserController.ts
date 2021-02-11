@@ -11,7 +11,7 @@ import { TokenResponse } from "./AuthController";
 export type UserResponse = Await<ReturnType<UserController["user"]>>;
 export type UserFilesResponse = Await<ReturnType<UserController["userFiles"]>>;
 
-@Controller("user")
+@Controller("api/user")
 export class UserController {
   @UseGuards(JWTAuthGuard)
   @Get()

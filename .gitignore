@@ -31,5 +31,6 @@ yarn-error.log*
 .env.production.local
 
 packages/*/dist
-packages/web/.next
+packages/*/tsconfig.tsbuildinfo
+packages/*/.next
 .microrc

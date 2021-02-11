@@ -8,7 +8,7 @@ import { FileService } from "../services/FileService";
 import { LinkService } from "../services/LinkService";
 import { ThumbnailService } from "../services/ThumbnailService";
 
-@Controller("upload")
+@Controller("api/upload")
 export class UploadController {
   constructor(
     readonly fileService: FileService,
