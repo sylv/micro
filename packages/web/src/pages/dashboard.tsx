@@ -31,6 +31,11 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  useEffect(() => {
+    // set the default domain once they're loaded
+    if (server && !domain) setDomain(server.data.domains[0]);
+  }, [server]);
+
   /**
    * Set the selected domain to the given option.
    */
@@ -44,7 +49,7 @@ export default function Dashboard() {
   function downloadConfig() {
     const host = replacePlaceholders(domain, { username: user.data.username });
     const name = `micro - ${host}.sxcu`;
-    const content = generateConfig(user.data.token, host);
+    const content = generateConfig(token.data.access_token, host);
     downloadFile(name, content);
   }
 
@@ -126,7 +131,12 @@ export default function Dashboard() {
                 </Select>
               </Grid>
               <Grid xs={12}>
-                <Button icon={<DownloadCloud />} className="max-width" onClick={downloadConfig}>
+                <Button
+                  icon={<DownloadCloud />}
+                  className="max-width"
+                  onClick={downloadConfig}
+                  disabled={!domain}
+                >
                   ShareX Config
                 </Button>
               </Grid>
