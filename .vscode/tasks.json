@@ -19,7 +19,7 @@
     },
     {
       "label": "watch",
-      "dependsOn": ["watch:web", "watch:api"],
+      "dependsOn": ["watch:api", "watch:web"],
       "problemMatcher": [],
       "group": {
         "kind": "build",

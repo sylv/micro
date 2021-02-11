@@ -36,9 +36,19 @@ export class File extends Content {
 
   @Expose()
   get url() {
-    return {
-      download: `${config.url}/i/${this.id}`,
-      thumbnail: this.thumbnailId ? `${config.url}/t/${this.id}` : null,
-    };
+    // this is purely for aesthetics, the actual url does not matter
+    const category = this.type.split("/").shift();
+    switch (category) {
+      case "image":
+        return {
+          download: `${config.host}/i/${this.id}`,
+          thumbnail: this.thumbnailId ? `${config.host}/t/${this.id}` : null,
+        };
+      default:
+        return {
+          download: `${config.host}/f/${this.id}`,
+          thumbnail: this.thumbnailId ? `${config.host}/f/${this.id}` : null,
+        };
+    }
   }
 }

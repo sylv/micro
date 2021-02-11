@@ -26,8 +26,8 @@ export class Thumbnail extends Content {
   @Expose()
   get url() {
     return {
-      download: `${config.url}/i/${this.fileId}`,
-      thumbnail: `${config.url}/t/${this.fileId}`,
+      download: `${config.host}/i/${this.fileId}`,
+      thumbnail: `${config.host}/t/${this.fileId}`,
     };
   }
 }

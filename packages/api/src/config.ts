@@ -2,7 +2,7 @@ import rc from "rc";
 
 export interface MicroConfig {
   /** path to the config path, if any */
-  url: string;
+  host: string;
   secret: string;
   domains: string[];
   uploadLimit: number;

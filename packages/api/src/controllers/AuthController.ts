@@ -16,7 +16,7 @@ export class AuthController {
   @Post("login")
   async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply): Promise<TokenResponse> {
     const token = this.jwtService.sign({ id: req.user });
-    const domain = new URL(config.url).hostname;
+    const domain = new URL(config.host).hostname;
     return reply
       .setCookie("token", token, {
         path: "/",
@@ -29,7 +29,7 @@ export class AuthController {
 
   @Post("logout")
   async logout(@Res() reply: FastifyReply) {
-    const domain = new URL(config.url).hostname;
+    const domain = new URL(config.host).hostname;
     return reply
       .setCookie("token", "", {
         path: "/",
