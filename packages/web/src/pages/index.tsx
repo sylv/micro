@@ -20,8 +20,8 @@ export default function Home(props: { domains: string[] }) {
       <HomeWrapper>
         <h1>Micro</h1>
         <p>
-          An invite-only file sharing service with vanity domains and a ShareX compatible endpoint.
-          Sign in to download a generated ShareX configuration.
+          An invite-only file sharing service with vanity domains and a ShareX compatible endpoint. Sign in to download
+          a generated ShareX configuration.
         </p>
         <h3>Domains</h3>
         <ul>{loading ? <Spinner /> : domains.map((domain) => <li key={domain}>{domain}</li>)}</ul>
@@ -30,15 +30,11 @@ export default function Home(props: { domains: string[] }) {
           <li>Do not upload NSFW content.</li>
           <li>Do not upload illegal content.</li>
           <li>Do not upload content you do not own.</li>
-          <li>
-            Don't upload excessive amounts of content. This is a file sharing server, not a file
-            storage server.
-          </li>
+          <li>Don't upload excessive amounts of content. This is a file sharing server, not a file storage server.</li>
         </ol>
         <h3>Contact</h3>
         <p>
-          To get an account or get a file taken down, email{" "}
-          <a href="mailto:ryan@sylver.me">ryan@sylver.me</a>.
+          To get an account or get a file taken down, email <a href="mailto:ryan@sylver.me">ryan@sylver.me</a>.
         </p>
       </HomeWrapper>
     </Container>
@@ -47,6 +43,6 @@ export default function Home(props: { domains: string[] }) {
 
 export const getServerSideProps = (ctx: NextPageContext) => {
   return {
-    props: ctx.query,
+    props: ctx.query.domains ? { domains: ctx.query.domains } : {},
   };
 };

@@ -28,12 +28,12 @@ export class UploadController {
       if (!url || !url.startsWith("http")) throw new BadRequestException("Could not determine upload format");
       const link = await this.linkService.createLink(url, request.user);
       return {
-        download: link.url,
-        delete: `${link.url}?delete=${link.deletionId}`,
+        direct: link.url,
+        delete: `${config.host}/d/${link.deletionId}`,
       };
     }
 
-    if (!config.allowTypes.includes(upload.mimetype)) {
+    if (config.allowTypes && !config.allowTypes.includes(upload.mimetype)) {
       throw new BadRequestException(`"${upload.mimetype}" is not supported by this server.`);
     }
 
@@ -53,7 +53,7 @@ export class UploadController {
     file.thumbnail = await this.thumbnailService.generateThumbnail(file);
     await fileRepo.save(file);
     return Object.assign(file.url, {
-      delete: `${file.url.download}?delete=${file.deletionId}`,
+      delete: `${config.host}/d/${file.deletionId}`,
     });
   }
 }

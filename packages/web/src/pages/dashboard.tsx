@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (server && !domain) setDomain(server.data.domains[0]);
+    if (server.data && !domain) setDomain(server.data.domains[0]);
   }, [server]);
 
   /**

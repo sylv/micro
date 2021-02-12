@@ -1,22 +1,18 @@
-import { Loading } from "@geist-ui/react";
-import styled from "styled-components";
-
-const PageLoaderContainer = styled.div`
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-`;
+import { Spinner } from "@geist-ui/react";
+import { useEffect } from "react";
+import { ContainerCenter } from "./Container";
 
 export function PageLoader() {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = null;
+    };
+  });
+
   return (
-    <PageLoaderContainer>
-      <Loading size="large" />
-    </PageLoaderContainer>
+    <ContainerCenter>
+      <Spinner size="large" />
+    </ContainerCenter>
   );
 }

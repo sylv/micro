@@ -11,9 +11,10 @@ export function generateConfig(token: string, domain: string) {
     RequestURL: upload,
     Body: "MultipartFormData",
     FileFormName: "file",
-    URL: "$json:download_url$",
-    ThumbnailURL: "$json:thumbnail_url$",
-    DeletionURL: "$json:deletion_url$",
+    // todo: you should be able to choose between using view and download during config generation
+    URL: "$json:view$",
+    ThumbnailURL: "$json:thumbnail$",
+    DeletionURL: "$json:delete$",
     Parameters: {
       input: "$input$",
     },

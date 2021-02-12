@@ -3,11 +3,15 @@ import { Column, Entity, OneToOne, RelationId } from "typeorm";
 import { config } from "../config";
 import { Content } from "./Content";
 import { Thumbnail } from "./Thumbnail";
+import mime from "mime-types";
 
 export interface FileMetadata {
   height?: number;
   width?: number;
-  duration?: number;
+  hasAlpha?: boolean;
+  isProgressive?: boolean;
+  // todo: duration for videos
+  // todo: average colour?
 }
 
 @Entity()
@@ -35,20 +39,33 @@ export class File extends Content {
   thumbnailId?: string;
 
   @Expose()
+  get extension() {
+    return mime.extension(this.type) || null;
+  }
+
+  @Expose()
+  get category() {
+    return this.type.split("/").shift();
+  }
+
+  @Expose()
+  get embeddable() {
+    return this.category === "image" || this.category === "video" || this.category === "audio";
+  }
+
+  @Expose()
+  get displayName() {
+    const ext = this.extension;
+    return this.name ? this.name : ext ? `${this.id}.${this.extension}` : this.id;
+  }
+
+  @Expose()
   get url() {
-    // this is purely for aesthetics, the actual url does not matter
-    const category = this.type.split("/").shift();
-    switch (category) {
-      case "image":
-        return {
-          download: `${config.host}/i/${this.id}`,
-          thumbnail: this.thumbnailId ? `${config.host}/t/${this.id}` : null,
-        };
-      default:
-        return {
-          download: `${config.host}/f/${this.id}`,
-          thumbnail: this.thumbnailId ? `${config.host}/f/${this.id}` : null,
-        };
-    }
+    const extension = this.extension;
+    const view = `${config.host}/f/${this.id}`;
+    const direct = `${view}.${extension}`;
+    const json = `${view}.json`;
+    const thumbnail = this.thumbnailId ? `${config.host}/t/${this.id}` : null;
+    return { view, direct, thumbnail, json };
   }
 }

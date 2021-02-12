@@ -23,18 +23,26 @@ export const Container = styled.div`
   }
 `;
 
-export const ContainerCenter = styled.div`
+export const ContainerCenter = styled(Container)`
   width: 100%;
-  max-width: 240px;
   padding: 15px;
-  text-align: center;
   margin: 0 auto;
   display: flex;
+  align-items: center;
   flex-direction: column;
   justify-content: center;
   position: absolute;
+  pointer-events: none;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  * {
+    pointer-events: all;
+  }
+`;
+
+export const ContainerCenterSmall = styled(ContainerCenter)`
+  max-width: 240px;
+  text-align: center;
 `;

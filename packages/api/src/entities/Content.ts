@@ -3,11 +3,12 @@ import { BeforeInsert, Column, CreateDateColumn, JoinColumn, ManyToOne, PrimaryC
 import { generateId } from "../helpers/generateId";
 import { User } from "./User";
 
+// todo: soft deletion where it removes content.data (for files)
 export abstract class Content {
   @PrimaryColumn()
   id!: string;
 
-  @Column()
+  @Column({ select: false })
   @Exclude()
   deletionId!: string;
 
@@ -19,6 +20,7 @@ export abstract class Content {
   owner!: User;
 
   @RelationId("owner")
+  @Exclude()
   ownerId!: string;
 
   @CreateDateColumn()

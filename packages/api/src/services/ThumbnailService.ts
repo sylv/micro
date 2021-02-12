@@ -7,7 +7,7 @@ import { FastifyReply } from "fastify";
 
 @Injectable()
 export class ThumbnailService {
-  private static readonly THUMBNAIL_SIZE = 200;
+  private static readonly THUMBNAIL_SIZE = 300;
   private static readonly THUMBNAIL_TYPE = "image/jpeg";
   private static readonly THUMBNAIL_TYPES = new Set([
     "image/jpeg",
@@ -23,6 +23,8 @@ export class ThumbnailService {
    * If file.thumbnail is set, it will be returned instead.
    */
   public async generateThumbnail(file: File) {
+    // todo: skip if the file is already <1kb
+    // todo: skip if the file is already a jpeg smaller then THUMBNAIL_SIZE
     if (file.thumbnail) return file.thumbnail;
     if (!file.data) throw new InternalServerErrorException("Missing file data");
     if (!ThumbnailService.THUMBNAIL_TYPES.has(file.type)) return;

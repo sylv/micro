@@ -10,10 +10,10 @@
   "dependencies": {
     "@geist-ui/react": "^2.1.0-canary.2",
     "@geist-ui/react-icons": "^1.0.1",
-    "axios": "^0.21.1",
     "generate-avatar": "^1.4.6",
-    "nanoid": "^3.1.20",
     "next": "10.0.6",
+    "pretty-bytes": "^5.5.0",
+    "prism-react-renderer": "^1.1.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "styled-components": "^5.2.1",
@@ -21,9 +21,6 @@
   },
   "devDependencies": {
     "@types/react": "^17.0.1",
-    "@types/styled-components": "^5.1.7",
-    "express": "^4.17.1",
-    "http-proxy-middleware": "^1.0.6",
-    "rc": "^1.2.8"
+    "@types/styled-components": "^5.1.7"
   }
 }

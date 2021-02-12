@@ -2,7 +2,7 @@ import { Button, Input, Spacer, Text, useToasts } from "@geist-ui/react";
 import { Lock, User } from "@geist-ui/react-icons";
 import Router from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-import { ContainerCenter } from "../components/Container";
+import { ContainerCenterSmall } from "../components/Container";
 import { Title } from "../components/Title";
 import { login, useUser } from "../hooks/useUser";
 
@@ -29,27 +29,16 @@ export default function Login() {
   }
 
   return (
-    <ContainerCenter>
+    <ContainerCenterSmall>
       <Title>Sign in</Title>
       <Text h1>Sign In</Text>
-      <Input
-        width="100%"
-        type="text"
-        placeholder="Username"
-        icon={<User />}
-        onChange={onUsernameChange}
-      />
+      <Input width="100%" type="text" placeholder="Username" icon={<User />} onChange={onUsernameChange} />
       <Spacer y={0.4} />
-      <Input.Password
-        width="100%"
-        placeholder="Password"
-        icon={<Lock />}
-        onChange={onPasswordChange}
-      />
+      <Input.Password width="100%" placeholder="Password" icon={<Lock />} onChange={onPasswordChange} />
       <Spacer y={0.8} />
       <Button className="max-width" type="success" onClick={onContinueClick} disabled={disabled}>
         Continue
       </Button>
-    </ContainerCenter>
+    </ContainerCenterSmall>
   );
 }

@@ -1,4 +1,6 @@
 :root {
+  --micro-preview-min-height: 30vh;
+  --micro-preview-max-height: 60vh;
   --micro-space: 4px;
   --micro-space-2x: 8px;
   --micro-space-4x: 16px;
@@ -56,10 +58,10 @@
   --accents-6: #444;
   --accents-7: #333;
   --accents-8: #111;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  --font-mono: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-mono: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New,
+    monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -110,16 +112,9 @@
   }
 }
 
-html,
-body,
 #__next {
   height: 100vh;
-}
-
-body,
-html {
-  overflow: hidden;
-  scroll-padding: 2.5em;
+  scroll-padding: 5em;
 }
 
 .mb-2 {

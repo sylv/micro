@@ -1,9 +1,9 @@
-import { File } from "@geist-ui/react-icons";
+import { File as FileIcon } from "@geist-ui/react-icons";
 import { useState } from "react";
 import styled from "styled-components";
 import { FileCardProps } from "./FileCard";
 
-const IconWrapper = styled.div<{ image: boolean }>`
+const FileCardPreviewWrapper = styled.div<{ image: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,16 +25,16 @@ export function FileCardPreview(props: FileCardProps) {
   const thumbnailUrl = props.file?.url.thumbnail;
   if (!thumbnailUrl || errored) {
     return (
-      <IconWrapper image={false}>
-        <File />
+      <FileCardPreviewWrapper image={false}>
+        <FileIcon />
         <span>{props.file?.type}</span>
-      </IconWrapper>
+      </FileCardPreviewWrapper>
     );
   }
 
   return (
-    <IconWrapper image>
+    <FileCardPreviewWrapper image>
       <img height="100%" src={thumbnailUrl} onError={() => setErrored(true)} />
-    </IconWrapper>
+    </FileCardPreviewWrapper>
   );
 }

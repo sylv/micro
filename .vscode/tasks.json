@@ -10,16 +10,8 @@
       }
     },
     {
-      "label": "watch:web",
-      "command": "yarn",
-      "args": ["watch"],
-      "options": {
-        "cwd": "${workspaceFolder}/packages/web"
-      }
-    },
-    {
       "label": "watch",
-      "dependsOn": ["watch:api", "watch:web"],
+      "dependsOn": ["watch:api"],
       "problemMatcher": [],
       "group": {
         "kind": "build",

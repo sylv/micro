@@ -6,7 +6,7 @@ export interface MicroConfig {
   secret: string;
   domains: string[];
   uploadLimit: number;
-  allowTypes: string[];
+  allowTypes?: string[];
   database: {
     uri: string;
     synchronize: boolean;
@@ -15,14 +15,4 @@ export interface MicroConfig {
 
 export const config = rc("micro", {
   uploadLimit: 50000000,
-  allowTypes: [
-    "text/plain",
-    "image/png",
-    "image/gif",
-    "image/webp",
-    "image/svg+xml",
-    "audio/webm",
-    "video/webm",
-    "video/mp4",
-  ],
 }) as MicroConfig;
