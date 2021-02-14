@@ -7,3 +7,5 @@ A modern file hosting service with multi-user support and vanity domains. This i
 ### todo
 
 - [ ] Mobile support
+- [ ] .md file rendering
+- [ ] Text viewer should dynamically import prism

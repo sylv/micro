@@ -3,11 +3,13 @@ import styled from "styled-components";
 export const TextContentContainer = styled.div`
   height: 100%;
   pre {
+    margin: 0;
     max-height: var(--micro-preview-max-height);
     min-height: var(--micro-preview-min-height);
     overflow: scroll;
-    margin: 0;
     border-radius: 0;
+    border-color: transparent;
+    border-bottom-color: var(--accents-3);
   }
 `;
 
