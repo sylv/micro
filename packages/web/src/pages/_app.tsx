@@ -12,7 +12,7 @@ import "../styles/globals.css";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SWRConfig value={{ fetcher }}>
-      <GeistProvider theme={GEIST_THEME}>
+      <GeistProvider themes={[GEIST_THEME as any]} themeType={GEIST_THEME.type}>
         <CssBaseline />
         <Title>Home</Title>
         <Head>

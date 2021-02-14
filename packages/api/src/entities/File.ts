@@ -3,7 +3,7 @@ import { Column, Entity, OneToOne, RelationId } from "typeorm";
 import { config } from "../config";
 import { Content } from "./Content";
 import { Thumbnail } from "./Thumbnail";
-import mime from "mime-types";
+import mimeType from "mime-types";
 
 export interface FileMetadata {
   height?: number;
@@ -40,7 +40,7 @@ export class File extends Content {
 
   @Expose()
   get extension() {
-    return mime.extension(this.type) || null;
+    return mimeType.extension(this.type) || null;
   }
 
   @Expose()
@@ -64,8 +64,8 @@ export class File extends Content {
     const extension = this.extension;
     const view = `${config.host}/f/${this.id}`;
     const direct = `${view}.${extension}`;
-    const json = `${view}.json`;
+    const metadata = `${view}/metadata`;
     const thumbnail = this.thumbnailId ? `${config.host}/t/${this.id}` : null;
-    return { view, direct, thumbnail, json };
+    return { view, direct, thumbnail, metadata };
   }
 }

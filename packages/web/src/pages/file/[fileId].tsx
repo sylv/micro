@@ -2,7 +2,7 @@ import { File as APIFile } from "@micro/api";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { ContainerCenter } from "../../components/Container";
-import { FileView } from "../../components/FileView";
+import { FileViewer } from "../../components/FileViewer";
 import { PageLoader } from "../../components/PageLoader";
 import { Title } from "../../components/Title";
 
@@ -10,7 +10,7 @@ export default function File() {
   const router = useRouter();
   const fileId = router.query.fileId;
   const initialData = router.query.file && JSON.parse(router.query.file as string);
-  const file = useSWR<APIFile>(`/f/${fileId}.json`, { initialData });
+  const file = useSWR<APIFile>(`/f/${fileId}/metadata`, { initialData });
   if (file.error) {
     return (
       <ContainerCenter>
@@ -27,7 +27,7 @@ export default function File() {
   return (
     <ContainerCenter>
       <Title>{file.data.name}</Title>
-      <FileView file={file.data}></FileView>
+      <FileViewer file={file.data}></FileViewer>
     </ContainerCenter>
   );
 }

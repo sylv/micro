@@ -24,21 +24,18 @@ export class FileController {
 
   @Get(["file/:key", "f/:key"])
   async getFile(@Res() reply: RenderableReply, @Req() request: FastifyRequest, @Param("key") key: string) {
-    const fileRepo = getRepository(File);
-    const clean = this.fileService.cleanFileKey(key);
-    const options = { relations: ["owner"] };
-    if (clean.ext === "json") {
-      const file = await fileRepo.findOne(clean.id, options);
-      if (!file) throw new NotFoundException();
-      return reply.send(classToPlain(file));
-    }
-
     // discord (and i imagine other sites) wont embed the image unless we return an image
     // so we override defaulting to html here for those user-agents
     const isScraper = isImageScraper(request.headers["user-agent"]);
-    const file = await fileRepo.findOne(clean.id, options);
+    const fileRepo = getRepository(File);
+    const clean = this.fileService.cleanFileKey(key);
+    const file = await fileRepo.findOne(clean.id, { relations: ["owner"] });
     if (!file) {
       return reply.render("404");
+    }
+
+    if (clean.ext && file.extension !== clean.ext) {
+      throw new NotFoundException();
     }
 
     if (clean.ext || (isScraper && file.embeddable)) {
@@ -49,6 +46,15 @@ export class FileController {
       fileId: file.id,
       file: JSON.stringify(classToPlain(file)),
     });
+  }
+
+  @Get(["/file/:key/metadata", "/f/:key/metadata"])
+  async getFileMetadata(@Param("key") key: string) {
+    const fileRepo = getRepository(File);
+    const clean = this.fileService.cleanFileKey(key);
+    const file = await fileRepo.findOne(clean.id, { relations: ["owner"] });
+    if (!file) throw new NotFoundException();
+    return file;
   }
 
   @Delete(["/file/:key", "f/:key"])

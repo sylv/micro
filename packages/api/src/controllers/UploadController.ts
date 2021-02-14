@@ -1,14 +1,15 @@
-import { BadRequestException, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { BadRequestException, Controller, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
 import { getRepository } from "typeorm";
 import { config } from "../config";
 import { File } from "../entities/File";
 import { TokenAuthGuard } from "../guards/TokenAuthGuard";
+import { getTypeFromExtension } from "../helpers/getTypeFromExtension";
 import { FileService } from "../services/FileService";
 import { LinkService } from "../services/LinkService";
 import { ThumbnailService } from "../services/ThumbnailService";
 
-@Controller("api/upload")
+@Controller("api")
 export class UploadController {
   constructor(
     readonly fileService: FileService,
@@ -16,7 +17,7 @@ export class UploadController {
     readonly linkService: LinkService
   ) {}
 
-  @Post()
+  @Post("upload")
   @UseGuards(TokenAuthGuard)
   async uploadFile(@Req() request: FastifyRequest<{ Querystring: { input?: string } }>) {
     // todo: upload size limiting https://github.com/fastify/fastify-multipart/issues/196
@@ -24,23 +25,20 @@ export class UploadController {
     const upload = await request.file();
     if (!upload) {
       // handle shortening urls
-      const url = request.query.input;
-      if (!url || !url.startsWith("http")) throw new BadRequestException("Could not determine upload format");
-      const link = await this.linkService.createLink(url, request.user);
-      return {
-        direct: link.url,
-        delete: `${config.host}/d/${link.deletionId}`,
-      };
+      if (!request.query.input) throw new BadRequestException("Could not determine upload type.");
+      return this.createLink(request, request.query.input);
     }
 
-    if (config.allowTypes && !config.allowTypes.includes(upload.mimetype)) {
-      throw new BadRequestException(`"${upload.mimetype}" is not supported by this server.`);
+    const data = await upload.toBuffer();
+    const mappedType = await getTypeFromExtension(upload.filename, data);
+    const type = mappedType || upload.mimetype;
+    if (config.allowTypes?.includes(type) === false) {
+      throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 
     const fileRepo = getRepository(File);
-    const data = await upload.toBuffer();
     const file = fileRepo.create({
-      type: upload.mimetype,
+      type: type,
       name: upload.filename,
       size: data.length,
       data: data,
@@ -55,5 +53,19 @@ export class UploadController {
     return Object.assign(file.url, {
       delete: `${config.host}/d/${file.deletionId}`,
     });
+  }
+
+  @Post("link")
+  @UseGuards(TokenAuthGuard)
+  async createLink(@Req() request: FastifyRequest, @Query("url") url?: string) {
+    if (!url?.startsWith("http")) {
+      throw new BadRequestException("Unknown or unsupported URL.");
+    }
+
+    const link = await this.linkService.createLink(url, request.user);
+    return {
+      direct: link.url,
+      delete: `${config.host}/d/${link.deletionId}`,
+    };
   }
 }

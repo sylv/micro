@@ -1,10 +1,11 @@
 import { File as APIFile } from "@micro/api";
 import { ImageContent } from "./ImageContent";
-import { TextContent } from "./TextContent";
+import { TextContent, checkSupport } from "./TextContent";
 import { DefaultContent } from "./DefaultContent";
 import Head from "next/head";
 import styled from "styled-components";
 import { VideoContent } from "./VideoContent";
+import { useMemo } from "react";
 
 const FileContentContainer = styled.div`
   max-height: var(--micro-preview-max-height);
@@ -26,17 +27,20 @@ const FileContentWrapper = (props: { file: APIFile; children: React.ReactChild }
 };
 
 export const FileContent = (props: { file: APIFile }) => {
+  const isText = useMemo(() => checkSupport(props.file), [props.file]);
+  if (isText) {
+    return (
+      <FileContentWrapper file={props.file}>
+        <TextContent file={props.file} />
+      </FileContentWrapper>
+    );
+  }
+
   switch (props.file.category) {
     case "image":
       return (
         <FileContentWrapper file={props.file}>
           <ImageContent file={props.file} />
-        </FileContentWrapper>
-      );
-    case "text":
-      return (
-        <FileContentWrapper file={props.file}>
-          <TextContent file={props.file} />
         </FileContentWrapper>
       );
     case "video":

@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@geist-ui/react": "^2.1.0-canary.2",
+    "@geist-ui/react": "^2.1.1",
     "@geist-ui/react-icons": "^1.0.1",
     "generate-avatar": "^1.4.6",
     "next": "10.0.6",
@@ -20,7 +20,7 @@
     "swr": "^0.4.2"
   },
   "devDependencies": {
-    "@types/react": "^17.0.1",
+    "@types/react": "^17.0.2",
     "@types/styled-components": "^5.1.7"
   }
 }

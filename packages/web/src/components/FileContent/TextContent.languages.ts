@@ -1,7 +1,5 @@
 import { Language } from "prism-react-renderer";
 
-// todo: should probably do this server-side with better matching ()
-const DEFAULT_LANGUAGE: Language = "markdown";
 const EXT_LANGUAGE_MAP = new Map<string, Language>();
 EXT_LANGUAGE_MAP.set("md", "markdown");
 EXT_LANGUAGE_MAP.set("js", "javascript");
@@ -27,6 +25,5 @@ EXT_LANGUAGE_MAP.set("coffee", "coffeescript");
 
 export function getLanguage(fileName: string) {
   const ext = fileName.split(".").pop();
-  if (!ext) return DEFAULT_LANGUAGE;
-  return EXT_LANGUAGE_MAP.get(ext) ?? DEFAULT_LANGUAGE;
+  if (ext) return EXT_LANGUAGE_MAP.get(ext);
 }

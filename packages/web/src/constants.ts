@@ -1,9 +1,4 @@
-import { GeistUIThemes } from "@geist-ui/react";
-import { DeepPartial } from "./types";
-
-export const TOKEN_KEY = "session";
-export const THEME_KEY = "theme";
-export const DEFAULT_THEME = "dark";
+import { Themes } from "@geist-ui/react";
 
 export enum Endpoints {
   CONFIG = "/api/config",
@@ -15,8 +10,8 @@ export enum Endpoints {
   AUTH_LOGOUT = "/api/auth/logout",
 }
 
-export const GEIST_THEME: DeepPartial<GeistUIThemes> = {
-  type: "light",
+export const GEIST_THEME = Themes.createFromDark({
+  type: "micro",
   palette: {
     accents_1: "var(--accents-1)",
     accents_2: "var(--accents-2)",
@@ -48,4 +43,4 @@ export const GEIST_THEME: DeepPartial<GeistUIThemes> = {
   layout: {
     radius: "var(--micro-radius)",
   },
-};
+});

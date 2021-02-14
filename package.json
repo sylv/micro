@@ -7,5 +7,11 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "clean": "rimraf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,node_modules"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
 }

@@ -1,6 +1,6 @@
 :root {
-  --micro-preview-min-height: 30vh;
-  --micro-preview-max-height: 60vh;
+  --micro-preview-max-height: 61vh;
+  --micro-preview-min-height: 11vh;
   --micro-space: 4px;
   --micro-space-2x: 8px;
   --micro-space-4x: 16px;

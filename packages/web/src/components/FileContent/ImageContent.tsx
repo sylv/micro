@@ -4,25 +4,9 @@ import Head from "next/head";
 import styled from "styled-components";
 
 const ImageContentContainer = styled.div`
-  overflow: hidden;
-  div {
-    max-height: var(--micro-preview-max-height);
-  }
-  div.img-background {
-    object-fit: cover;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    left: 0;
-    img {
-      transform: scale(1.01);
-      filter: blur(5px);
-    }
-  }
-  div.img-foreground {
-    object-fit: contain;
-    top: 0;
-  }
+  max-height: var(--micro-preview-max-height);
+  display: flex;
+  margin: 0;
 `;
 
 export const ImageContent = (props: { file: APIFile }) => {
@@ -38,10 +22,7 @@ export const ImageContent = (props: { file: APIFile }) => {
           </>
         )}
       </Head>
-      {!props.file.metadata?.hasAlpha && (
-        <Image className="img-background" src={props.file.url.direct} title={props.file.displayName} />
-      )}
-      <Image className="img-foreground" src={props.file.url.direct} title={props.file.displayName} />
+      <Image src={props.file.url.direct} />
     </ImageContentContainer>
   );
 };

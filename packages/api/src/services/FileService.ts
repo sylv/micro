@@ -18,7 +18,7 @@ export class FileService {
    * Remove extensions, etc from a file key.
    */
   public cleanFileKey(key: string): { id: string; ext?: string } {
-    const groups = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{3,4}))?$/.exec(key)?.groups;
+    const groups = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/.exec(key)?.groups;
     if (!groups) throw new BadRequestException("Invalid file key");
     return groups as any;
   }

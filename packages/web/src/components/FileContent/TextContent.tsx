@@ -8,9 +8,19 @@ import { getLanguage } from "./TextContent.languages";
 import { Line, LineContent, LineNo, Pre, TextContentContainer } from "./TextContent.styles";
 import { theme } from "./TextContent.theme";
 
+const DEFAULT_LANGUAGE = "markdown";
+const SUPPORTED_TYPES = new Set<string>(["application/javascript", ""]);
+
+export function checkSupport(file: APIFile): boolean {
+  if (file.type.startsWith("text/")) return true;
+  if (SUPPORTED_TYPES.has(file.type)) return true;
+  if (getLanguage(file.displayName)) return true;
+  return false;
+}
+
 export const TextContent = (props: { file: APIFile }) => {
   const content = useSWR(props.file.url.direct);
-  const language = useMemo(() => getLanguage(props.file.displayName), [props.file]);
+  const language = useMemo(() => getLanguage(props.file.displayName) ?? DEFAULT_LANGUAGE, [props.file]);
   if (content.error) {
     return <DefaultContent file={props.file} />;
   }

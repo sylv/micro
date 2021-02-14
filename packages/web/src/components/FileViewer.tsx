@@ -50,7 +50,7 @@ const FileDetail = styled.span`
 `;
 
 // todo: video preview
-export const FileView = (props: { file: APIFile }) => {
+export const FileViewer = (props: { file: APIFile }) => {
   const [, setToast] = useToasts();
   const clipboard = useClipboard();
 
