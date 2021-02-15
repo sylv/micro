@@ -2,20 +2,19 @@ import { Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../config";
-import { LocalAuthGuard } from "../guards/LocalAuthGuard";
+import { PasswordAuthGuard } from "../guards/PasswordAuthGuard";
+import { TokenAudience } from "../types";
+import { JWTPayloadUser } from "../strategies/JWTStrategy";
 
-export interface TokenResponse {
-  access_token: string;
-}
-
-@Controller("api/auth")
+@Controller()
 export class AuthController {
   constructor(private jwtService: JwtService) {}
 
-  @UseGuards(LocalAuthGuard)
-  @Post("login")
-  async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply): Promise<TokenResponse> {
-    const token = this.jwtService.sign({ id: req.user });
+  @Post("api/auth/login")
+  @UseGuards(PasswordAuthGuard)
+  async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
+    const payload: JWTPayloadUser = { name: req.user.username, sub: req.user.id };
+    const token = this.jwtService.sign(payload, { audience: TokenAudience.USER });
     const domain = new URL(config.host).hostname;
     return reply
       .setCookie("token", token, {
@@ -27,7 +26,7 @@ export class AuthController {
       .send({ ok: true });
   }
 
-  @Post("logout")
+  @Post("api/auth/logout")
   async logout(@Res() reply: FastifyReply) {
     const domain = new URL(config.host).hostname;
     return reply

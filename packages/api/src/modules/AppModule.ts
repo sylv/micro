@@ -6,7 +6,6 @@ import { config } from "../config";
 import { AppController } from "../controllers/AppController";
 import { AuthController } from "../controllers/AuthController";
 import { FileController } from "../controllers/FileController";
-import { UploadController } from "../controllers/UploadController";
 import { UserController } from "../controllers/UserController";
 import { File } from "../entities/File";
 import { Thumbnail } from "../entities/Thumbnail";
@@ -22,19 +21,36 @@ import { Link } from "../entities/Link";
 import Next from "next";
 import { RenderModule } from "nest-next";
 import { resolve } from "path";
+import { Invite } from "../entities/Invite";
+import { InviteController } from "../controllers/InviteController";
+import { DeletionController } from "../controllers/DeletionController";
+import { DeletionService } from "../services/DeletionService";
+import { InviteService } from "../services/InviteService";
+import { UserService } from "../services/UserService";
+import { ShareXController } from "../controllers/ShareXController";
 
 @Module({
-  // i am fully aware you are meant to have separate modules, services and controllers for everything
-  // but that seems like a shit ton of boilerplate and im a lazy little shit at the moment
-  providers: [FileService, ThumbnailService, JWTStrategy, LocalStrategy, LinkService],
+  // this will be done properly soon. maybe.
+  providers: [
+    JWTStrategy,
+    LocalStrategy,
+    DeletionService,
+    FileService,
+    InviteService,
+    LinkService,
+    ThumbnailService,
+    UserService,
+  ],
   controllers: [
     AppController,
-    FileController,
-    UploadController,
     AuthController,
-    UserController,
-    ThumbnailController,
+    DeletionController,
+    FileController,
+    InviteController,
     LinkController,
+    ShareXController,
+    ThumbnailController,
+    UserController,
   ],
   imports: [
     PassportModule,
@@ -48,7 +64,7 @@ import { resolve } from "path";
       type: "postgres",
       url: config.database.uri,
       synchronize: config.database.synchronize,
-      entities: [User, Thumbnail, File, Link],
+      entities: [User, Thumbnail, File, Link, Invite],
     }),
     RenderModule.forRootAsync(
       Next({

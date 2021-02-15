@@ -4,7 +4,7 @@ import { getRepository } from "typeorm";
 import { User } from "../entities/User";
 
 @Injectable()
-export class TokenAuthGuard implements CanActivate {
+export class UploadAuthGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const req = ctx.switchToHttp().getRequest<FastifyRequest<{ Querystring: { key?: string } }>>();
     const token = req.headers.authorization || req.query?.key;
@@ -12,7 +12,7 @@ export class TokenAuthGuard implements CanActivate {
     const userRepo = getRepository(User);
     const user = await userRepo.findOne({ select: ["id"], where: { token } });
     if (!user) return false;
-    req.user = user.id;
+    req.user = user;
     return true;
   }
 }

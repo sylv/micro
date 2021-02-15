@@ -1,22 +1,18 @@
 import { Controller, Get, Render } from "@nestjs/common";
 import { config } from "../config";
-import { Await } from "../types";
-
-export type ConfigResponse = Await<ReturnType<AppController["getConfig"]>>;
 
 @Controller()
 export class AppController {
-  @Get("/")
+  @Get()
   @Render("index")
   getHome() {
-    return {
-      domains: config.domains,
-    };
+    return this.getConfig();
   }
 
-  @Get("/api/config")
+  @Get("api/config")
   getConfig() {
     return {
+      inquires: config.inquires,
       domains: config.domains,
     };
   }

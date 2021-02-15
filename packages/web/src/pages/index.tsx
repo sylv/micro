@@ -10,8 +10,8 @@ const HomeWrapper = styled.div`
   padding-top: 5em;
 `;
 
-export default function Home(props: { domains: string[] }) {
-  const server = useSWR<ConfigResponse>(Endpoints.CONFIG, { initialData: props }); // prettier-ignore
+export default function Home(props: ConfigResponse) {
+  const server = useSWR<ConfigResponse>(Endpoints.CONFIG, { initialData: props });
   const domains = server.data?.domains ?? [];
   const loading = !server.data && !server.error;
 
@@ -34,7 +34,8 @@ export default function Home(props: { domains: string[] }) {
         </ol>
         <h3>Contact</h3>
         <p>
-          To get an account or get a file taken down, email <a href="mailto:ryan@sylver.me">ryan@sylver.me</a>.
+          To get an account or get a file taken down, email{" "}
+          <a href={`mailto:${server.data.inquires}`}>{server.data.inquires}</a>.
         </p>
       </HomeWrapper>
     </Container>

@@ -1,5 +1,5 @@
 import { Card, Grid, Text } from "@geist-ui/react";
-import { UserFilesResponse } from "@micro/api";
+import { GetUserFilesData } from "@micro/api";
 import useSWR from "swr";
 import { Endpoints } from "../constants";
 import { FileCard } from "./FileCard/FileCard";
@@ -7,7 +7,7 @@ import { PageLoader } from "./PageLoader";
 
 export function FileList() {
   // todo: pagination
-  const files = useSWR<UserFilesResponse>(Endpoints.USER_FILES);
+  const files = useSWR<GetUserFilesData>(Endpoints.USER_FILES);
 
   if (files.error) {
     <Grid xs={24}>

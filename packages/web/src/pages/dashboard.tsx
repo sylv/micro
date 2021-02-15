@@ -1,6 +1,6 @@
 import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
 import { DownloadCloud } from "@geist-ui/react-icons";
-import { ConfigResponse } from "@micro/api";
+import { ConfigResponse, GetUploadTokenData, PutUploadTokenData } from "@micro/api";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -12,13 +12,15 @@ import { Title } from "../components/Title";
 import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/downloadFile";
 import { generateConfig } from "../helpers/generateConfig";
+import { http } from "../helpers/http";
 import { replacePlaceholders } from "../helpers/replacePlaceholders";
 import { logout, useUser } from "../hooks/useUser";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
+// todo: requests here need types >:(
 export default function Dashboard() {
   const user = useUser();
-  const token = useSWR(Endpoints.USER_TOKEN);
+  const token = useSWR<GetUploadTokenData>(Endpoints.USER_UPLOAD_TOKEN);
   const server = useSWR<ConfigResponse>(Endpoints.CONFIG);
   const [domain, setDomain] = useState<string>();
   const [regenerating, setRegenerating] = useState(false);
@@ -49,7 +51,7 @@ export default function Dashboard() {
   function downloadConfig() {
     const host = replacePlaceholders(domain, { username: user.data.username });
     const name = `micro - ${host}.sxcu`;
-    const content = generateConfig(token.data.access_token, host);
+    const content = generateConfig(token.data.upload_token, host);
     downloadFile(name, content);
   }
 
@@ -63,9 +65,8 @@ export default function Dashboard() {
     setRegenerating(true);
 
     try {
-      const response = await fetch(Endpoints.USER_TOKEN_RESET);
-      if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
-      const body = await response.json();
+      const response = await http(Endpoints.USER_UPLOAD_TOKEN, { method: "PUT" });
+      const body = (await response.json()) as PutUploadTokenData;
       token.mutate(body, false);
       setRegenerating(false);
       setToast({ type: "success", text: "Your token has been regenerated." });
@@ -105,7 +106,7 @@ export default function Dashboard() {
                   width="100%"
                   label="Upload Token"
                   onFocus={(evt) => evt.target.select()}
-                  value={token.data.access_token}
+                  value={token.data.upload_token}
                   readOnly
                 />
               </Grid>
@@ -115,12 +116,7 @@ export default function Dashboard() {
                 </Button>
               </Grid>
               <Grid xs={12}>
-                <Select
-                  width="100%"
-                  placeholder="Domain"
-                  initialValue={server.data.domains[0]}
-                  onChange={updateDomain}
-                >
+                <Select width="100%" placeholder="Domain" initialValue={server.data.domains[0]} onChange={updateDomain}>
                   {server.data.domains.map((domain) => (
                     <Select.Option key={domain} value={domain}>
                       {replacePlaceholders(domain, {
@@ -131,12 +127,7 @@ export default function Dashboard() {
                 </Select>
               </Grid>
               <Grid xs={12}>
-                <Button
-                  icon={<DownloadCloud />}
-                  className="max-width"
-                  onClick={downloadConfig}
-                  disabled={!domain}
-                >
+                <Button icon={<DownloadCloud />} className="max-width" onClick={downloadConfig} disabled={!domain}>
                   ShareX Config
                 </Button>
               </Grid>

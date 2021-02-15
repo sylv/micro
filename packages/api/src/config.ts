@@ -4,6 +4,7 @@ export interface MicroConfig {
   /** path to the config path, if any */
   host: string;
   secret: string;
+  inquires: string;
   domains: string[];
   uploadLimit: number;
   allowTypes?: string[];

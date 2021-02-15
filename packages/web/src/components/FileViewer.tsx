@@ -1,5 +1,5 @@
 import { Button, Card, Tooltip, useClipboard, useToasts } from "@geist-ui/react";
-import { Download, Eye, FileText, Share2, User } from "@geist-ui/react-icons";
+import { Download, Eye, FileText, Share2 } from "@geist-ui/react-icons";
 import { File as APIFile } from "@micro/api";
 import prettyBytes from "pretty-bytes";
 import styled from "styled-components";
@@ -81,11 +81,6 @@ export const FileViewer = (props: { file: APIFile }) => {
             <Tooltip text="File Size">
               <FileDetail>
                 <FileText /> {prettyBytes(props.file.size)}
-              </FileDetail>
-            </Tooltip>
-            <Tooltip text="Uploader">
-              <FileDetail>
-                <User /> {props.file.owner.username}
               </FileDetail>
             </Tooltip>
           </FileContentName>

@@ -4,8 +4,7 @@ export enum Endpoints {
   CONFIG = "/api/config",
   USER = "/api/user",
   USER_FILES = "/api/user/files",
-  USER_TOKEN = "/api/user/token",
-  USER_TOKEN_RESET = "/api/user/token/reset",
+  USER_UPLOAD_TOKEN = "/api/user/upload_token",
   AUTH_LOGIN = "/api/auth/login",
   AUTH_LOGOUT = "/api/auth/logout",
 }

@@ -1,7 +1,7 @@
 export function generateConfig(token: string, domain: string) {
   const host = window.location.host;
   const protocol = window.location.protocol;
-  const upload = `${protocol}//${host}/api/upload`;
+  const upload = `${protocol}//${host}/api/sharex`;
 
   return JSON.stringify({
     Version: "13.2.1",
@@ -21,6 +21,7 @@ export function generateConfig(token: string, domain: string) {
     Headers: {
       Authorization: token,
       "X-Micro-Host": domain,
+      "X-ShareX": "true",
     },
   });
 }

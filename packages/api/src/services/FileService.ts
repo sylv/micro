@@ -1,11 +1,21 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import sharp from "sharp";
 import { getRepository } from "typeorm";
+import { config } from "../config";
 import { File, FileMetadata } from "../entities/File";
+import { getTypeFromExtension } from "../helpers/getTypeFromExtension";
+import { ThumbnailService } from "./ThumbnailService";
 
 @Injectable()
 export class FileService {
+  private static readonly FILE_KEY_REGEX = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/;
   private static readonly METADATA_TYPES = new Set([
     "image/jpeg",
     "image/png",
@@ -14,49 +24,55 @@ export class FileService {
     "image/svg+xml",
   ]);
 
-  /**
-   * Remove extensions, etc from a file key.
-   */
+  constructor(protected thumbnailService: ThumbnailService) {}
+
   public cleanFileKey(key: string): { id: string; ext?: string } {
-    const groups = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/.exec(key)?.groups;
+    const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
     if (!groups) throw new BadRequestException("Invalid file key");
     return groups as any;
   }
 
-  /**
-   * Reply to a request with the given file.
-   */
-  public async sendFile(file: File, reply: FastifyReply) {
-    if (!file.data) {
-      // todo: this means we're doing 2-3 queries per file view
-      // (get file, inc views, get file data) which is very bad
-      const fileRepo = getRepository(File);
-      const withData = await fileRepo.findOne(file.id, { select: ["data"] });
-      if (!withData) throw new NotFoundException();
-      file.data = withData.data;
-    }
-
-    reply.header("Content-Length", file.size);
-    reply.header("Last-Modified", file.createdAt.toUTCString());
-    reply.header("Content-Type", file.type);
-    reply.header("X-Micro-FileId", file.id);
-    reply.header("X-Micro-ThumbnailId", file.thumbnailId);
-    reply.header("X-Micro-OwnerId", file.ownerId);
-    if (file.name) {
-      reply.header("Content-Disposition", `inline; filename="${file.name}"`);
-    }
-
-    reply.send(file.data);
-
-    // increment view count
+  public getFile(id: string) {
     const fileRepo = getRepository(File);
-    await fileRepo.increment({ id: file.id }, "views", 1);
+    return fileRepo.findOne(id);
   }
 
-  /**
-   * Extract metadata for the file to store alongside it.
-   */
-  public async getMetadata(file: File): Promise<FileMetadata | undefined> {
+  public async deleteFile(id: string, ownerId: string) {
+    const fileRepo = getRepository(File);
+    const file = await fileRepo.findOne(id);
+    if (!file) throw new NotFoundException();
+    if (ownerId && file.ownerId !== ownerId) {
+      throw new UnauthorizedException("You cannot delete other users files.");
+    }
+
+    await fileRepo.remove(file);
+  }
+
+  public async createFile(data: Buffer, fileName: string, mimeType: string, ownerId: string): Promise<File> {
+    const mappedType = await getTypeFromExtension(fileName, data);
+    const type = mappedType || mimeType;
+    if (config.allowTypes?.includes(type) === false) {
+      throw new BadRequestException(`"${type}" is not supported by this server.`);
+    }
+
+    const fileRepo = getRepository(File);
+    const file = fileRepo.create({
+      type: type,
+      name: fileName,
+      size: data.length,
+      data: data,
+      owner: {
+        id: ownerId,
+      },
+    });
+
+    file.metadata = await this.createFileMetadata(file);
+    file.thumbnail = await this.thumbnailService.createThumbnail(file);
+    await fileRepo.save(file);
+    return file;
+  }
+
+  protected async createFileMetadata(file: File): Promise<FileMetadata | undefined> {
     if (file.metadata) return file.metadata;
     if (!file.data) throw new InternalServerErrorException("Missing file data");
     if (!FileService.METADATA_TYPES.has(file.type)) return;
@@ -68,5 +84,30 @@ export class FileService {
       // todo: this is true for images with no transparency, which is annoying
       hasAlpha: metadata.hasAlpha,
     };
+  }
+
+  public async sendFile(id: string, reply: FastifyReply): Promise<void> {
+    const fileRepo = getRepository(File);
+    const file = await fileRepo.findOne(id, {
+      // https://github.com/typeorm/typeorm/issues/6362
+      select: ["id", "size", "type", "name", "data", "createdAt"],
+    });
+
+    if (!file) {
+      throw new NotFoundException();
+    }
+
+    // todo: Accept-Range
+    reply.header("Content-Length", file.size);
+    reply.header("Last-Modified", file.createdAt.toUTCString());
+    reply.header("Content-Type", file.type);
+    reply.header("X-Micro-FileId", file.id);
+    reply.header("X-Micro-ThumbnailId", file.thumbnailId);
+    if (file.name) {
+      reply.header("Content-Disposition", `inline; filename="${file.name}"`);
+    }
+
+    await reply.send(file.data);
+    await fileRepo.increment({ id: file.id }, "views", 1);
   }
 }

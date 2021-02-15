@@ -8,6 +8,9 @@ export class Link extends Content {
   @Column()
   destination!: string;
 
+  @Column({ default: 0 })
+  clicks!: number;
+
   @Expose()
   get url() {
     return `${config.host}/s/${this.id}`;

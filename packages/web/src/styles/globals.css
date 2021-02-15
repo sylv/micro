@@ -151,7 +151,7 @@
 }
 
 /* fixes Input.Password text being a lil far too the right https://i.imgur.com/jZ06vwF.png */
-input[type="password"] {
+.input-icon + input {
   margin-left: 0 !important;
 }
 

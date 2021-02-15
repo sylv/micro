@@ -1,6 +1,11 @@
 import "fastify";
+import { User } from "../src/types";
+
 declare module "fastify" {
   interface FastifyRequest {
-    user: string;
+    user: {
+      id: string;
+      username: string;
+    };
   }
 }

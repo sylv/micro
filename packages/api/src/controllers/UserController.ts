@@ -1,54 +1,86 @@
-import { Controller, Get, InternalServerErrorException, Param, Req, Request, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  InternalServerErrorException,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
+import { IsString, MaxLength, MinLength } from "class-validator";
 import { FastifyRequest } from "fastify";
 import { getRepository } from "typeorm";
+import { RequirePermissions } from "../decorators/RequirePermissions";
+import { UserId } from "../decorators/UserId";
 import { File } from "../entities/File";
-import { User } from "../entities/User";
+import { Permission, User } from "../entities/User";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { generateId } from "../helpers/generateId";
-import { Await } from "../types";
-import { TokenResponse } from "./AuthController";
+import { InviteService } from "../services/InviteService";
+import { UserService } from "../services/UserService";
 
-export type UserResponse = Await<ReturnType<UserController["user"]>>;
-export type UserFilesResponse = Await<ReturnType<UserController["userFiles"]>>;
+export class CreateUserDto {
+  @MaxLength(20)
+  @MinLength(2)
+  @IsString()
+  username!: string;
 
-@Controller("api/user")
+  @MaxLength(100)
+  @MinLength(10)
+  @IsString()
+  password!: string;
+
+  @IsString()
+  invite!: string;
+}
+
+@Controller()
 export class UserController {
+  constructor(protected userService: UserService, protected inviteService: InviteService) {}
+
+  @Get("api/user")
   @UseGuards(JWTAuthGuard)
-  @Get()
-  async user(@Request() req: FastifyRequest) {
-    const userRepo = getRepository(User);
-    return await userRepo.findOne(req.user);
+  async getUser(@UserId() userId: string) {
+    return this.userService.getUser(userId);
   }
 
-  @UseGuards(JWTAuthGuard)
-  @Get("files")
-  async userFiles(@Request() req: FastifyRequest, @Param("skip") skip?: number): Promise<File[]> {
-    const fileRepo = getRepository(File);
-    return await fileRepo.find({
-      take: 24,
-      skip: skip,
-      order: { createdAt: -1 },
-      where: {
-        owner: req.user,
-      },
-    });
+  @Post("/api/user")
+  async createUser(@Body() data: CreateUserDto) {
+    const invite = await this.inviteService.getInvite(data.invite);
+    return this.userService.createUser(data.username, data.password, invite);
   }
 
+  @Delete("api/user/:id")
+  @RequirePermissions(Permission.DELETE_USERS)
   @UseGuards(JWTAuthGuard)
-  @Get("token")
-  async userToken(@Request() req: FastifyRequest): Promise<TokenResponse> {
+  async deleteUser(@Param("id") userId: string) {
+    return this.userService.deleteUser(userId);
+  }
+
+  @Get("api/user/files")
+  @UseGuards(JWTAuthGuard)
+  async getUserFiles(@UserId() userId: string, @Param("skip") skip?: number): Promise<File[]> {
+    return this.userService.getUserFiles(userId, skip ?? 0);
+  }
+
+  @Get("api/user/upload_token")
+  @UseGuards(JWTAuthGuard)
+  async getUserUploadToken(@Request() req: FastifyRequest) {
     const userRepo = getRepository(User);
     const user = await userRepo.findOne(req.user, { select: ["token"] });
     if (!user) throw new InternalServerErrorException();
-    return { access_token: user.token };
+    return { upload_token: user.token };
   }
 
+  @Put("api/user/upload_token")
   @UseGuards(JWTAuthGuard)
-  @Get("token/reset")
-  async userTokenReset(@Req() request: FastifyRequest): Promise<TokenResponse> {
+  async resetUserUploadToken(@UserId() userId: string) {
     const token = generateId(64);
     const userRepo = getRepository(User);
-    await userRepo.update(request.user, { token });
-    return { access_token: token };
+    await userRepo.update(userId, { token });
+    return { upload_token: token };
   }
 }

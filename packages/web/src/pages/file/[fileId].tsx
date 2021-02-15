@@ -10,7 +10,7 @@ export default function File() {
   const router = useRouter();
   const fileId = router.query.fileId;
   const initialData = router.query.file && JSON.parse(router.query.file as string);
-  const file = useSWR<APIFile>(`/f/${fileId}/metadata`, { initialData });
+  const file = useSWR<APIFile>(`/api/file/${fileId}`, { initialData });
   if (file.error) {
     return (
       <ContainerCenter>

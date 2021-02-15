@@ -29,6 +29,9 @@ export class File extends Content {
   @Exclude()
   data!: Buffer;
 
+  @Column({ default: 0 })
+  views!: number;
+
   @Column("jsonb", { nullable: true })
   metadata?: FileMetadata;
 
@@ -64,7 +67,7 @@ export class File extends Content {
     const extension = this.extension;
     const view = `${config.host}/f/${this.id}`;
     const direct = `${view}.${extension}`;
-    const metadata = `${view}/metadata`;
+    const metadata = `${config.host}/api/file/${this.id}`;
     const thumbnail = this.thumbnailId ? `${config.host}/t/${this.id}` : null;
     return { view, direct, thumbnail, metadata };
   }
