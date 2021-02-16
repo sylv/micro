@@ -9,8 +9,9 @@ import { FastifyRequest } from "fastify";
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(username: string, password: string): Promise<FastifyRequest["user"]> {
+    const lowerUsername = username.toLowerCase();
     const userRepo = getRepository(User);
-    const user = await userRepo.findOne({ username }, { select: ["id", "username", "password"] });
+    const user = await userRepo.findOne({ username: lowerUsername }, { select: ["id", "username", "password"] });
     if (!user) throw new UnauthorizedException();
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) throw new UnauthorizedException();
