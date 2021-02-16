@@ -10,7 +10,7 @@ Another private file host. This is all still a work in progress so for now watch
   </tr>
   <tr>
     <td><img src="https://i.imgur.com/uT5tYAB.png" title="Preview" alt="Preview"></td>
-    <td><img src="https://i.imgur.com/mlalfK9.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/TPbxZ7h.png" title="Preview" alt="Preview"></td>
    </tr> 
   </tr>
 </table>
