@@ -13,8 +13,8 @@ export const ImageContent = (props: { file: GetFileData }) => {
   return (
     <ImageContentContainer>
       <Head>
-        <meta name="twitter:image" content={props.file.url.direct} />
-        <meta property="og:image" content={props.file.url.direct} />
+        <meta name="twitter:image" content={props.file.urls.direct} />
+        <meta property="og:image" content={props.file.urls.direct} />
         {props.file.metadata && (
           <>
             <meta property="og:image:width" content={props.file.metadata.width.toString()} />
@@ -22,7 +22,7 @@ export const ImageContent = (props: { file: GetFileData }) => {
           </>
         )}
       </Head>
-      <Image src={props.file.url.direct} />
+      <Image src={props.file.urls.direct} />
     </ImageContentContainer>
   );
 };

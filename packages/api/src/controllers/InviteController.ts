@@ -2,11 +2,10 @@ import { Controller, Get, Param, Post, Res, UseGuards } from "@nestjs/common";
 import { classToPlain } from "class-transformer";
 import { RequirePermissions } from "../decorators/RequirePermissions";
 import { UserId } from "../decorators/UserId";
-import { Permission } from "../entities/User";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { InviteService } from "../services/InviteService";
 import { UserService } from "../services/UserService";
-import { RenderableReply } from "../types";
+import { RenderableReply, Permission } from "../types";
 
 @Controller()
 export class InviteController {

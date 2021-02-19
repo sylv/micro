@@ -16,11 +16,12 @@ import { getRepository } from "typeorm";
 import { RequirePermissions } from "../decorators/RequirePermissions";
 import { UserId } from "../decorators/UserId";
 import { File } from "../entities/File";
-import { Permission, User } from "../entities/User";
+import { User } from "../entities/User";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { generateId } from "../helpers/generateId";
 import { InviteService } from "../services/InviteService";
 import { UserService } from "../services/UserService";
+import { Permission } from "../types";
 
 export class CreateUserDto {
   @MaxLength(20)

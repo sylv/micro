@@ -18,7 +18,7 @@ const FileContentWrapper = (props: { file: GetFileData; children: React.ReactChi
       <Head>
         <meta name="twitter:title" content={props.file.displayName} />
         <meta property="og:title" content={props.file.displayName} />
-        <meta property="og:url" content={props.file.url.view} />
+        <meta property="og:url" content={props.file.urls.view} />
         <meta property="og:type" content="article" />
       </Head>
       {props.children}

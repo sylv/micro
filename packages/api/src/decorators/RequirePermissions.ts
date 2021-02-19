@@ -1,7 +1,7 @@
 import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
-import { Permission } from "../entities/User";
 import { PermissionGuard } from "../guards/PermissionGuard";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
+import { Permission } from "../types";
 
 export function RequirePermissions(...permissions: Array<Permission>) {
   const aggregate = permissions.reduce((acc, bit) => (acc |= bit), 0);

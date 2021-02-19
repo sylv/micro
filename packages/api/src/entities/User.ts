@@ -1,15 +1,10 @@
 import { Exclude } from "class-transformer";
 import { BeforeInsert, Column, Entity, Index, OneToMany, OneToOne } from "typeorm";
 import { generateId } from "../helpers/generateId";
+import { Permission } from "../types";
 import { WithId } from "./base/WithId";
 import { File } from "./File";
 import { Invite } from "./Invite";
-
-export enum Permission {
-  ADMINISTRATOR = 1,
-  CREATE_INVITE = 1 << 1,
-  DELETE_USERS = 1 << 2,
-}
 
 @Entity("users")
 export class User extends WithId {

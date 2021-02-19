@@ -1,5 +1,4 @@
 import "fastify";
-import { User } from "../src/types";
 
 declare module "fastify" {
   interface FastifyRequest {

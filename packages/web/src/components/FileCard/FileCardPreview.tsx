@@ -22,7 +22,7 @@ const FileCardPreviewWrapper = styled.div<{ image: boolean }>`
 
 export function FileCardPreview(props: FileCardProps) {
   const [errored, setErrored] = useState(false);
-  const thumbnailUrl = props.file?.url.thumbnail;
+  const thumbnailUrl = props.file?.urls.thumbnail;
   if (!thumbnailUrl || errored) {
     return (
       <FileCardPreviewWrapper image={false}>

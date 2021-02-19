@@ -1,13 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { getRepository } from "typeorm";
-import { config } from "../config";
 import { ContentType } from "../entities/base/Content";
 import { File } from "../entities/File";
 import { Link } from "../entities/Link";
 import { TokenAudience } from "../types";
 import { FileService } from "./FileService";
-import { formatUrl } from "../helpers/formatUrl";
 
 export interface JWTPayloadDelete {
   type: ContentType;
@@ -28,7 +26,7 @@ export class DeletionService {
 
   getDeletionUrl(type: ContentType, id: string) {
     const token = this.signDeletionToken(type, id);
-    return formatUrl(config.host, `/delete/${token}`);
+    return `/delete/${token}`;
   }
 
   signDeletionToken(type: ContentType, id: string): string {

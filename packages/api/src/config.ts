@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import rc from "rc";
 
 export interface MicroConfig {

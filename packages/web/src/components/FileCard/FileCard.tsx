@@ -10,7 +10,7 @@ export interface FileCardProps {
 export function FileCard(props: FileCardProps) {
   return (
     <Grid xs={4}>
-      <Link href={props.file.url.view} passHref>
+      <Link href={props.file.urls.view} passHref>
         <a>
           <Card hoverable>
             <FileCardPreview {...props} />

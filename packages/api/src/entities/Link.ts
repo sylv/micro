@@ -1,8 +1,7 @@
 import { Expose } from "class-transformer";
-import { Entity, Column } from "typeorm";
-import { config } from "../config";
+import { Column, Entity } from "typeorm";
 import { Content } from "./base/Content";
-import { formatUrl } from "../helpers/formatUrl";
+import { URLData } from "../types";
 
 @Entity()
 export class Link extends Content {
@@ -13,11 +12,9 @@ export class Link extends Content {
   clicks!: number;
 
   @Expose({ name: "url" })
-  getUrl(host = config.host) {
-    return formatUrl(host, `/s/${this.id}`);
+  get url(): URLData {
+    const direct = `/s/${this.id}`;
+    const metadata = `/api/link/${this.id}`;
+    return { direct, metadata };
   }
-}
-
-export interface APILink extends Omit<Link, "getUrl"> {
-  url: string;
 }

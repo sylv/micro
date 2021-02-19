@@ -1,10 +1,9 @@
 import { Exclude, Expose } from "class-transformer";
+import mimeType from "mime-types";
 import { Column, Entity, OneToOne, RelationId } from "typeorm";
-import { config } from "../config";
 import { Content } from "./base/Content";
 import { Thumbnail } from "./Thumbnail";
-import mimeType from "mime-types";
-import { formatUrl } from "../helpers/formatUrl";
+import { URLData } from "../types";
 
 export interface FileMetadata {
   height?: number;
@@ -65,17 +64,13 @@ export class File extends Content {
     return this.name ? this.name : ext ? `${this.id}.${this.extension}` : this.id;
   }
 
-  @Expose({ name: "url" })
-  getUrls(host = config.host) {
+  @Expose()
+  get urls(): URLData {
     const extension = this.extension;
-    const view = formatUrl(host, `/f/${this.id}`);
-    const direct = formatUrl(host, `/f/${this.id}.${extension}`);
-    const metadata = formatUrl(config.host, `/api/file/${this.id}`);
-    const thumbnail = this.thumbnailId ? formatUrl(host, `/t/${this.id}`) : null;
-    return { view, direct, thumbnail, metadata };
+    const view = `/f/${this.id}`;
+    const direct = `/f/${this.id}.${extension}`;
+    const metadata = `/api/file/${this.id}`;
+    const thumbnail = this.thumbnailId ? `/t/${this.id}` : null;
+    return { view, direct, metadata, thumbnail };
   }
-}
-
-export interface APIFile extends Omit<File, "getUrls"> {
-  url: ReturnType<File["getUrls"]>;
 }

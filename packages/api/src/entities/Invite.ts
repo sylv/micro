@@ -10,9 +10,8 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { config } from "../config";
-import { Permission, User } from "./User";
-import { formatUrl } from "../helpers/formatUrl";
+import { User } from "./User";
+import { URLData, Permission } from "../types";
 
 @Entity()
 export class Invite {
@@ -33,9 +32,9 @@ export class Invite {
   createdAt!: Date;
 
   @Expose()
-  get url() {
-    const view = formatUrl(config.host, `/invite/${this.id}`);
-    const metadata = formatUrl(config.host, `/api/invite/${this.id}`);
+  get url(): URLData {
+    const view = `/invite/${this.id}`;
+    const metadata = `/api/invite/${this.id}`;
     return { view, metadata };
   }
 

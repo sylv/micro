@@ -67,7 +67,7 @@ export class FileController {
     const data = await upload.toBuffer();
     const file = await this.fileService.createFile(data, upload.filename, upload.mimetype, userId);
     const deletionUrl = this.deletionService.getDeletionUrl(ContentType.FILE, file.id);
-    return Object.assign(file.getUrls(), {
+    return Object.assign(file.urls, {
       delete: deletionUrl,
     });
   }

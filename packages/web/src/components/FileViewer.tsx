@@ -59,7 +59,7 @@ export const FileViewer = (props: { file: GetFileData }) => {
   const download = async () => {
     try {
       setDisabled(true);
-      await downloadUrl(props.file.url.direct, props.file.displayName);
+      await downloadUrl(props.file.urls.direct, props.file.displayName);
     } catch (err) {
       setToast({ type: "error", text: err.message });
     } finally {

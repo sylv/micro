@@ -13,7 +13,7 @@ export const VideoContent = (props: { file: GetFileData }) => {
   return (
     <VideoContainer>
       <video controls>
-        <source src={props.file.url.direct} type={props.file.type} />
+        <source src={props.file.urls.direct} type={props.file.type} />
       </video>
     </VideoContainer>
   );
