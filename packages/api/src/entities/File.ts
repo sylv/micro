@@ -54,7 +54,9 @@ export class File extends Content {
 
   @Expose()
   get embeddable() {
-    return this.category === "image" || this.category === "video" || this.category === "audio";
+    // discord doesnt like embedding videos
+    // return this.category === "image" || this.category === "video" || this.category === "audio";
+    return this.category === "image" || this.category === "audio";
   }
 
   @Expose()
