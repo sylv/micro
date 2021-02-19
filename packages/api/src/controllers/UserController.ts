@@ -71,7 +71,7 @@ export class UserController {
   async getUserUploadToken(@Request() req: FastifyRequest) {
     const userRepo = getRepository(User);
     const user = await userRepo.findOne(req.user, { select: ["token"] });
-    if (!user) throw new InternalServerErrorException();
+    if (!user) throw new InternalServerErrorException("Expected user was missing");
     return { upload_token: user.token };
   }
 

@@ -1,9 +1,12 @@
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, RelationId } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, RelationId } from "typeorm";
 import { File } from "./File";
 
 @Entity()
 export class Thumbnail {
+  @PrimaryColumn()
+  id!: string;
+
   @Column()
   size!: number;
 

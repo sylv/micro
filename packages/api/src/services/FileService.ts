@@ -73,6 +73,7 @@ export class FileService {
       },
     });
 
+    file.addId();
     file.metadata = await this.createFileMetadata(file);
     file.thumbnail = await this.thumbnailService.createThumbnail(file);
     await fileRepo.save(file);

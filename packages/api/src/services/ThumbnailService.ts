@@ -1,9 +1,9 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { FastifyReply } from "fastify";
 import sharp from "sharp";
 import { getRepository } from "typeorm";
 import { File } from "../entities/File";
 import { Thumbnail } from "../entities/Thumbnail";
-import { FastifyReply } from "fastify";
 
 @Injectable()
 export class ThumbnailService {
@@ -19,12 +19,7 @@ export class ThumbnailService {
 
   public async getThumbnail(fileId: string) {
     const thumbnailRepo = getRepository(Thumbnail);
-    const thumbnail = await thumbnailRepo.findOne({
-      file: {
-        id: fileId,
-      },
-    });
-
+    const thumbnail = await thumbnailRepo.findOne(fileId);
     if (!thumbnail) throw new NotFoundException();
     return thumbnail;
   }
@@ -32,8 +27,9 @@ export class ThumbnailService {
   public async createThumbnail(file: File) {
     if (file.thumbnail) return file.thumbnail;
     if (!ThumbnailService.THUMBNAIL_TYPES.has(file.type)) return;
+    if (!file.id) throw new Error("Missing file ID");
     if (!file.data) {
-      throw new InternalServerErrorException("Missing file data");
+      throw new Error("Missing file data");
     }
 
     const thumbnailRepo = getRepository(Thumbnail);
@@ -41,9 +37,9 @@ export class ThumbnailService {
     const data = await sharp(file.data).resize(ThumbnailService.THUMBNAIL_SIZE).jpeg().toBuffer();
     const duration = Date.now() - start;
     return thumbnailRepo.create({
+      id: file.id,
       data: data,
       duration: duration,
-      owner: file.owner,
       size: data.length,
     });
   }
@@ -58,7 +54,6 @@ export class ThumbnailService {
     reply.header("Last-Modified", thumbnail.createdAt.toUTCString());
     reply.header("X-Micro-FileId", thumbnail.fileId);
     reply.header("X-Micro-ThumbnailId", thumbnail.id);
-    reply.header("X-Micro-OwnerId", thumbnail.ownerId);
     reply.header("Content-Type", ThumbnailService.THUMBNAIL_TYPE);
 
     await reply.send(thumbnail.data);

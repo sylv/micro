@@ -6,7 +6,7 @@ export abstract class WithId {
   id!: string;
 
   @BeforeInsert()
-  protected addId() {
+  public addId() {
     if (!this.id) this.id = generateId(6);
   }
 }

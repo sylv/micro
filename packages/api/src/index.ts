@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, ValidationPipe, InternalServerErrorException } from "@nestjs/common";
+import { ClassSerializerInterceptor, ValidationPipe, InternalServerErrorException, Logger } from "@nestjs/common";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import fastifyMultipart from "fastify-multipart";
@@ -11,6 +11,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 
 async function main() {
   // some routes use jwts in params and they can get very long, hence maxParamLength
+  const logger = new Logger("App");
   const adapter = new FastifyAdapter({ maxParamLength: 500 });
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
 
@@ -33,8 +34,9 @@ async function main() {
   const service = app.get(RenderService);
   service.setErrorHandler(async (err, request: FastifyRequest, reply: FastifyReply) => {
     if (request.url.startsWith("/api")) {
-      const error = err.response ? err : new InternalServerErrorException(err.message);
-      return reply.status(error.status).send(error.response);
+      const wrapped = err.response ? err : new InternalServerErrorException(err.message);
+      if (wrapped.status >= 500) logger.error(err.message, err.stack);
+      return reply.status(wrapped.status).send(wrapped.response);
     }
   });
 
