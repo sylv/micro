@@ -15,12 +15,6 @@ export const ImageContent = (props: { file: GetFileData }) => {
       <Head>
         <meta name="twitter:image" content={props.file.urls.direct} />
         <meta property="og:image" content={props.file.urls.direct} />
-        {props.file.metadata && (
-          <>
-            <meta property="og:image:width" content={props.file.metadata.width.toString()} />
-            <meta property="og:image:height" content={props.file.metadata.height.toString()} />
-          </>
-        )}
       </Head>
       <Image src={props.file.urls.direct} />
     </ImageContentContainer>

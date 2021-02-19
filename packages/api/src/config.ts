@@ -1,7 +1,7 @@
 import rc from "rc";
+import xbytes from "xbytes";
 
 export interface MicroConfig {
-  /** path to the config path, if any */
   host: string;
   url: string;
   ssl: boolean;
@@ -10,6 +10,7 @@ export interface MicroConfig {
   hosts: string[];
   uploadLimit: number;
   allowTypes?: string[];
+  storage: AWS.S3.ClientConfiguration & { bucket: string };
   database: {
     uri: string;
     synchronize: boolean;
@@ -17,8 +18,9 @@ export interface MicroConfig {
 }
 
 export const config = rc("micro", {
-  uploadLimit: 50000000,
+  uploadLimit: "50MB",
   ssl: true,
 }) as MicroConfig;
 
+config.uploadLimit = xbytes.parseSize(config.uploadLimit as any);
 config.host = config.hosts[0];

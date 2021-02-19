@@ -8,6 +8,7 @@ import { JWTPayloadUser } from "../strategies/JWTStrategy";
 
 @Controller()
 export class AuthController {
+  private static readonly DOMAIN = config.host.split(":").shift()!;
   constructor(private jwtService: JwtService) {}
 
   @Post("api/auth/login")
@@ -18,7 +19,7 @@ export class AuthController {
     return reply
       .setCookie("token", token, {
         path: "/",
-        domain: config.host,
+        domain: AuthController.DOMAIN,
         httpOnly: true,
         secure: config.ssl,
       })
@@ -30,7 +31,7 @@ export class AuthController {
     return reply
       .setCookie("token", "", {
         path: "/",
-        domain: config.host,
+        domain: AuthController.DOMAIN,
         httpOnly: true,
         secure: config.ssl,
         expires: new Date(),

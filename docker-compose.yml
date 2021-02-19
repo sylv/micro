@@ -11,8 +11,13 @@ services:
       - POSTGRES_USER=micro
       - POSTGRES_PASSWORD=youshallnotpass
       - POSTGRES_DB=micro
-    volumes:
-      - micro_postgres:/var/lib/postgresql/data
-
-volumes:
-  micro_postgres: {}
+  minio:
+    image: minio/minio
+    container_name: micro_minio
+    restart: unless-stopped
+    command: server /data
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY=micro
+      - MINIO_SECRET_KEY=youshallnotpass

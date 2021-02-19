@@ -1,11 +1,11 @@
 import { Button, Card, Tooltip, useClipboard, useToasts } from "@geist-ui/react";
-import { Download, Eye, FileText, Share2 } from "@geist-ui/react-icons";
+import { Download, FileText, Share2 } from "@geist-ui/react-icons";
 import { GetFileData } from "@micro/api";
 import prettyBytes from "pretty-bytes";
+import { useState } from "react";
 import styled from "styled-components";
 import { downloadUrl } from "../helpers/downloadUrl";
 import { FileContent } from "./FileContent/FileContent";
-import { useState } from "react";
 
 const FileContentHeader = styled.div`
   display: flex;
@@ -81,11 +81,6 @@ export const FileViewer = (props: { file: GetFileData }) => {
         <FileContentHeader>
           <FileContentName>
             <h1>{props.file.displayName}</h1>
-            <Tooltip text="Views">
-              <FileDetail>
-                <Eye /> {props.file.views.toLocaleString()}
-              </FileDetail>
-            </Tooltip>
             <Tooltip text="File Size">
               <FileDetail>
                 <FileText /> {prettyBytes(props.file.size)}

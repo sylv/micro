@@ -28,10 +28,12 @@ import { DeletionService } from "../services/DeletionService";
 import { InviteService } from "../services/InviteService";
 import { UserService } from "../services/UserService";
 import { ShareXController } from "../controllers/ShareXController";
+import { S3Service } from "../services/S3Service";
 
 @Module({
   // this will be done properly soon. maybe.
   providers: [
+    S3Service,
     JWTStrategy,
     LocalStrategy,
     DeletionService,

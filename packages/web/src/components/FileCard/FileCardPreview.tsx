@@ -10,13 +10,10 @@ const FileCardPreviewWrapper = styled.div<{ image: boolean }>`
   flex-direction: column;
   user-select: none;
   max-height: 5em;
-  min-height: 5em;
-  svg {
-    height: 2em;
-    width: 2em;
-  }
-  span {
-    font-size: 0.65rem;
+  overflow: hidden;
+  max-height: 4em;
+  img {
+    object-fit: contain;
   }
 `;
 
@@ -32,9 +29,5 @@ export function FileCardPreview(props: FileCardProps) {
     );
   }
 
-  return (
-    <FileCardPreviewWrapper image>
-      <img height="100%" src={thumbnailUrl} onError={() => setErrored(true)} />
-    </FileCardPreviewWrapper>
-  );
+  return <img src={thumbnailUrl} onError={() => setErrored(true)} />;
 }

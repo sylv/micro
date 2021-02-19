@@ -64,8 +64,7 @@ export class FileController {
   async createFile(@UserId() userId: string, @Req() request: FastifyRequest) {
     const upload = await request.file();
     if (!upload) throw new BadRequestException("Missing upload.");
-    const data = await upload.toBuffer();
-    const file = await this.fileService.createFile(data, upload.filename, upload.mimetype, userId);
+    const file = await this.fileService.createFile(upload, request, userId);
     const deletionUrl = this.deletionService.getDeletionUrl(ContentType.FILE, file.id);
     return Object.assign(file.urls, {
       delete: deletionUrl,

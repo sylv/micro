@@ -1,4 +1,4 @@
-import { Exclude } from "class-transformer";
+import { Expose } from "class-transformer";
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, RelationId } from "typeorm";
 import { File } from "./File";
 
@@ -13,10 +13,6 @@ export class Thumbnail {
   @Column()
   duration!: number;
 
-  @Column("bytea")
-  @Exclude()
-  data!: Buffer;
-
   @OneToOne(() => File, (file) => file.thumbnail, { onDelete: "CASCADE", nullable: false })
   @JoinColumn()
   file!: File;
@@ -26,4 +22,9 @@ export class Thumbnail {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @Expose()
+  get storageKey() {
+    return `thumbnails/${this.id}.jpg`;
+  }
 }

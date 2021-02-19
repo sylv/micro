@@ -1,7 +1,9 @@
 import { Logger } from "@nestjs/common";
 import { getRepository, MoreThan } from "typeorm";
+import { config } from "../config";
 import { Invite } from "../entities/Invite";
 import { User } from "../entities/User";
+import { formatUrl } from "./formatUrl";
 
 // todo: user created with first invite should get admin perms
 export async function createStartupInvite() {
@@ -17,5 +19,5 @@ export async function createStartupInvite() {
     await inviteRepo.save(invite);
   }
 
-  logger.log(`Go to "${invite.url.view}" to create the first account.`);
+  logger.log(`Go to "${formatUrl(config.host, invite.url.view)}" to create the first account.`);
 }

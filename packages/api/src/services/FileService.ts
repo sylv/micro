@@ -1,33 +1,26 @@
+import ExifBeGone from "exif-be-gone";
+import { FastifyRequest, FastifyReply } from "fastify";
+import { Multipart } from "fastify-multipart";
+import { PassThrough } from "stream";
+import { getRepository } from "typeorm";
+import { config } from "../config";
+import { File } from "../entities/File";
+import { getStreamType } from "../helpers/getStreamType";
+import { S3Service } from "./S3Service";
+import { ThumbnailService } from "./ThumbnailService";
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
+  PayloadTooLargeException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { FastifyReply } from "fastify";
-import sharp from "sharp";
-import { getRepository } from "typeorm";
-import { config } from "../config";
-import { File, FileMetadata } from "../entities/File";
-import { getTypeFromExtension } from "../helpers/getTypeFromExtension";
-import { streamToBuffer } from "../helpers/streamToBuffer";
-import { ThumbnailService } from "./ThumbnailService";
-import ExifBeGone from "exif-be-gone";
-import { bufferToStream } from "../helpers/bufferToStream";
 
 @Injectable()
 export class FileService {
   private static readonly FILE_KEY_REGEX = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/;
-  private static readonly METADATA_TYPES = new Set([
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/gif",
-    "image/svg+xml",
-  ]);
 
-  constructor(protected thumbnailService: ThumbnailService) {}
+  constructor(protected thumbnailService: ThumbnailService, protected s3Service: S3Service) {}
 
   public cleanFileKey(key: string): { id: string; ext?: string } {
     const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
@@ -53,69 +46,47 @@ export class FileService {
     await fileRepo.remove(file);
   }
 
-  public async createFile(data: Buffer, fileName: string, mimeType: string, ownerId: string): Promise<File> {
-    const mappedType = await getTypeFromExtension(fileName, data);
-    const type = mappedType || mimeType;
+  public async createFile(multipart: Multipart, request: FastifyRequest, ownerId: string): Promise<File> {
+    // todo: check content-length before doing all this extra shit
+    if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
+    if (+request.headers["content-length"] >= config.uploadLimit) throw new PayloadTooLargeException();
+    const typeStream = multipart.file.pipe(new PassThrough());
+    const exifStream = multipart.file.pipe(new PassThrough());
+    const thumbStream = multipart.file.pipe(new PassThrough());
+    const mappedType = await getStreamType(multipart.filename, typeStream);
+    const type = mappedType || multipart.mimetype;
     if (config.allowTypes?.includes(type) === false) {
       throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 
     const stripExif = new ExifBeGone();
-    const withoutExif = await streamToBuffer(bufferToStream(data).pipe(stripExif));
+    const withoutExif = exifStream.pipe(stripExif);
     const fileRepo = getRepository(File);
     const file = fileRepo.create({
       type: type,
-      name: fileName,
-      size: withoutExif.length,
-      data: withoutExif,
+      name: multipart.filename,
       owner: {
         id: ownerId,
       },
     });
 
-    file.addId();
-    file.metadata = await this.createFileMetadata(file);
-    file.thumbnail = await this.thumbnailService.createThumbnail(file);
+    file.addId(); // required to get storage key and to gen thumbnail
+    file.thumbnail = await this.thumbnailService.createThumbnail(thumbStream, file.id);
+    file.size = await this.s3Service.uploadFile(withoutExif, {
+      Key: file.storageKey,
+      ContentType: file.type,
+      Metadata: {
+        name: file.displayName,
+      },
+    });
+
     await fileRepo.save(file);
     return file;
   }
 
-  protected async createFileMetadata(file: File): Promise<FileMetadata | undefined> {
-    if (file.metadata) return file.metadata;
-    if (!file.data) throw new InternalServerErrorException("Missing file data");
-    if (!FileService.METADATA_TYPES.has(file.type)) return;
-    const metadata = await sharp(file.data).metadata();
-    return {
-      height: metadata.height,
-      width: metadata.width,
-      isProgressive: metadata.isProgressive,
-      // todo: this is true for images with no transparency, which is annoying
-      hasAlpha: metadata.hasAlpha,
-    };
-  }
-
-  public async sendFile(id: string, reply: FastifyReply): Promise<void> {
+  public async sendFile(fileId: string, reply: FastifyReply) {
     const fileRepo = getRepository(File);
-    const file = await fileRepo.findOne(id, {
-      // https://github.com/typeorm/typeorm/issues/6362
-      select: ["id", "size", "type", "name", "data", "createdAt"],
-    });
-
-    if (!file) {
-      throw new NotFoundException();
-    }
-
-    // todo: Accept-Range
-    reply.header("Content-Length", file.size);
-    reply.header("Last-Modified", file.createdAt.toUTCString());
-    reply.header("Content-Type", file.type);
-    reply.header("X-Micro-FileId", file.id);
-    reply.header("X-Micro-ThumbnailId", file.thumbnailId);
-    if (file.name) {
-      reply.header("Content-Disposition", `inline; filename="${file.name}"`);
-    }
-
-    await reply.send(file.data);
-    await fileRepo.increment({ id: file.id }, "views", 1);
+    const file = fileRepo.create({ id: fileId });
+    return this.s3Service.sendFile(file.storageKey, reply);
   }
 }

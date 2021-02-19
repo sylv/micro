@@ -34,18 +34,17 @@ export class ShareXController {
       const deletionUrl = this.deletionService.getDeletionUrl(ContentType.LINK, link.id);
       return {
         direct: formatUrl(host, link.url.direct!),
-        metadata: formatUrl(host, link.url.metadata),
+        metadata: formatUrl(host, link.url.metadata)!,
         delete: formatUrl(host, deletionUrl),
       };
     }
 
     const upload = await request.file();
     if (!upload) throw new BadRequestException("Missing upload.");
-    const data = await upload.toBuffer();
-    const file = await this.fileService.createFile(data, upload.filename, upload.mimetype, userId);
+    const file = await this.fileService.createFile(upload, request, userId);
     const deletionUrl = this.deletionService.getDeletionUrl(ContentType.FILE, file.id);
     return {
-      metadata: formatUrl(host, file.urls.metadata),
+      metadata: formatUrl(host, file.urls.metadata)!,
       thumbnail: formatUrl(host, file.urls.thumbnail),
       view: formatUrl(host, file.urls.view),
       delete: formatUrl(host, deletionUrl),
