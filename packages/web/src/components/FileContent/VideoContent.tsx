@@ -1,4 +1,4 @@
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import styled from "styled-components";
 
 const VideoContainer = styled.div`
@@ -9,7 +9,7 @@ const VideoContainer = styled.div`
   top: 0;
 `;
 
-export const VideoContent = (props: { file: APIFile }) => {
+export const VideoContent = (props: { file: GetFileData }) => {
   return (
     <VideoContainer>
       <video controls>

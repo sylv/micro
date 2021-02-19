@@ -1,5 +1,5 @@
 import { Image } from "@geist-ui/react";
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import Head from "next/head";
 import styled from "styled-components";
 
@@ -9,7 +9,7 @@ const ImageContentContainer = styled.div`
   margin: 0;
 `;
 
-export const ImageContent = (props: { file: APIFile }) => {
+export const ImageContent = (props: { file: GetFileData }) => {
   return (
     <ImageContentContainer>
       <Head>

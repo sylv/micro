@@ -1,6 +1,6 @@
 import { Button, Card, Tooltip, useClipboard, useToasts } from "@geist-ui/react";
 import { Download, Eye, FileText, Share2 } from "@geist-ui/react-icons";
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import prettyBytes from "pretty-bytes";
 import styled from "styled-components";
 import { downloadUrl } from "../helpers/downloadUrl";
@@ -50,7 +50,7 @@ const FileDetail = styled.span`
 `;
 
 // todo: video preview
-export const FileViewer = (props: { file: APIFile }) => {
+export const FileViewer = (props: { file: GetFileData }) => {
   const [, setToast] = useToasts();
   const clipboard = useClipboard();
 

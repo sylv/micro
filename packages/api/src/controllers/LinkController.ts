@@ -51,7 +51,7 @@ export class LinkController {
     const link = await this.linkService.createLink(url, userId);
     const deletionUrl = this.deletionService.getDeletionUrl(ContentType.LINK, link.id);
     return {
-      direct: link.url,
+      direct: link.getUrl(),
       delete: deletionUrl,
     };
   }

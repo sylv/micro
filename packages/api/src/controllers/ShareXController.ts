@@ -1,11 +1,13 @@
-import { Post, Query, UseGuards, BadRequestException, Req, Controller } from "@nestjs/common";
-import { UploadAuthGuard } from "../guards/UploadAuthGuard";
+import { BadRequestException, Controller, Headers, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
+import { config } from "../config";
 import { UserId } from "../decorators/UserId";
-import { FileService } from "../services/FileService";
-import { DeletionService } from "../services/DeletionService";
-import { LinkService } from "../services/LinkService";
 import { ContentType } from "../entities/base/Content";
+import { UploadAuthGuard } from "../guards/UploadAuthGuard";
+import { getRandomElement } from "../helpers/getRandomElement";
+import { DeletionService } from "../services/DeletionService";
+import { FileService } from "../services/FileService";
+import { LinkService } from "../services/LinkService";
 
 @Controller()
 export class ShareXController {
@@ -17,12 +19,19 @@ export class ShareXController {
 
   @Post("api/sharex")
   @UseGuards(UploadAuthGuard)
-  async createShareXUpload(@Req() request: FastifyRequest, @UserId() userId: string, @Query("input") input?: string) {
+  async createShareXUpload(
+    @Req() request: FastifyRequest,
+    @UserId() userId: string,
+    @Query("input") input?: string,
+    @Headers("x-micro-host") hosts = config.host
+  ) {
+    // todo: it would be nice if we validated this and threw an error on invalid domains
+    const host = getRandomElement(hosts.split(/, ?/g));
     if (input?.startsWith("http")) {
       const link = await this.linkService.createLink(input, userId);
       const deletionUrl = this.deletionService.getDeletionUrl(ContentType.LINK, link.id);
       return {
-        direct: link.url,
+        direct: link.getUrl(host),
         delete: deletionUrl,
       };
     }
@@ -32,7 +41,7 @@ export class ShareXController {
     const data = await upload.toBuffer();
     const file = await this.fileService.createFile(data, upload.filename, upload.mimetype, userId);
     const deletionUrl = this.deletionService.getDeletionUrl(ContentType.FILE, file.id);
-    return Object.assign(file.url, {
+    return Object.assign(file.getUrls(host), {
       delete: deletionUrl,
     });
   }

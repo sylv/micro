@@ -1,4 +1,4 @@
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import { ImageContent } from "./ImageContent";
 import { TextContent, checkSupport } from "./TextContent";
 import { DefaultContent } from "./DefaultContent";
@@ -12,7 +12,7 @@ const FileContentContainer = styled.div`
   min-height: var(--micro-preview-min-height);
 `;
 
-const FileContentWrapper = (props: { file: APIFile; children: React.ReactChild }) => {
+const FileContentWrapper = (props: { file: GetFileData; children: React.ReactChild }) => {
   return (
     <FileContentContainer>
       <Head>
@@ -26,7 +26,7 @@ const FileContentWrapper = (props: { file: APIFile; children: React.ReactChild }
   );
 };
 
-export const FileContent = (props: { file: APIFile }) => {
+export const FileContent = (props: { file: GetFileData }) => {
   const isText = useMemo(() => checkSupport(props.file), [props.file]);
   if (isText) {
     return (

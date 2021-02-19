@@ -1,4 +1,4 @@
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import React, { useMemo } from "react";
 import useSWR from "swr";
@@ -10,13 +10,13 @@ import { theme } from "./TextContent.theme";
 
 const DEFAULT_LANGUAGE = "markdown";
 
-export function checkSupport(file: APIFile): boolean {
+export function checkSupport(file: GetFileData): boolean {
   if (file.type.startsWith("text/")) return true;
   if (getLanguage(file.displayName)) return true;
   return false;
 }
 
-export const TextContent = (props: { file: APIFile }) => {
+export const TextContent = (props: { file: GetFileData }) => {
   const content = useSWR(props.file.url.direct);
   const language = useMemo(() => getLanguage(props.file.displayName) ?? DEFAULT_LANGUAGE, [props.file]);
   if (content.error) {

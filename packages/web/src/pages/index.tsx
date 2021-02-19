@@ -1,6 +1,6 @@
 import { Spinner } from "@geist-ui/react";
-import { ConfigResponse } from "@micro/api";
-import { NextPageContext } from "next";
+import { GetServerConfigData } from "@micro/api";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import useSWR from "swr";
 import { Container } from "../components/Container";
@@ -10,9 +10,11 @@ const HomeWrapper = styled.div`
   padding-top: 5em;
 `;
 
-export default function Home(props: ConfigResponse) {
-  const server = useSWR<ConfigResponse>(Endpoints.CONFIG, { initialData: props });
-  const domains = server.data?.domains ?? [];
+export default function Home() {
+  const router = useRouter();
+  const initialData = router.query.invite && JSON.parse(router.query.invite as string);
+  const server = useSWR<GetServerConfigData>(Endpoints.CONFIG, { initialData });
+  const hosts = server.data?.hosts ?? [];
   const loading = !server.data && !server.error;
 
   return (
@@ -24,7 +26,7 @@ export default function Home(props: ConfigResponse) {
           a generated ShareX configuration.
         </p>
         <h3>Domains</h3>
-        <ul>{loading ? <Spinner /> : domains.map((domain) => <li key={domain}>{domain}</li>)}</ul>
+        <ul>{loading ? <Spinner /> : hosts.map((domain) => <li key={domain}>{domain}</li>)}</ul>
         <h3>Rules</h3>
         <ol>
           <li>Do not upload NSFW content.</li>
@@ -33,17 +35,22 @@ export default function Home(props: ConfigResponse) {
           <li>Don't upload excessive amounts of content. This is a file sharing server, not a file storage server.</li>
         </ol>
         <h3>Contact</h3>
-        <p>
-          To get an account or get a file taken down, email{" "}
-          <a href={`mailto:${server.data.inquires}`}>{server.data.inquires}</a>.
-        </p>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <p>
+            To get an account or get a file taken down, email{" "}
+            <a href={`mailto:${server.data.inquiries}`}>{server.data.inquiries}</a>.
+          </p>
+        )}
       </HomeWrapper>
     </Container>
   );
 }
 
-export const getServerSideProps = (ctx: NextPageContext) => {
+// without this router.query.invite does not exist
+export const getServerSideProps = () => {
   return {
-    props: ctx.query.domains ? { domains: ctx.query.domains } : {},
+    props: {},
   };
 };

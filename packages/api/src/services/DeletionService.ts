@@ -7,6 +7,7 @@ import { File } from "../entities/File";
 import { Link } from "../entities/Link";
 import { TokenAudience } from "../types";
 import { FileService } from "./FileService";
+import { formatUrl } from "../helpers/formatUrl";
 
 export interface JWTPayloadDelete {
   type: ContentType;
@@ -27,7 +28,7 @@ export class DeletionService {
 
   getDeletionUrl(type: ContentType, id: string) {
     const token = this.signDeletionToken(type, id);
-    return `${config.host}/delete/${token}`;
+    return formatUrl(config.host, `/delete/${token}`);
   }
 
   signDeletionToken(type: ContentType, id: string): string {

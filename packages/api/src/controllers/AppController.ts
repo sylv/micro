@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from "@nestjs/common";
 import { config } from "../config";
+import { GetServerConfigData } from "../types";
 
 @Controller()
 export class AppController {
@@ -10,10 +11,11 @@ export class AppController {
   }
 
   @Get("api/config")
-  getConfig() {
+  getConfig(): GetServerConfigData {
     return {
-      inquires: config.inquires,
-      domains: config.domains,
+      host: config.host,
+      inquiries: config.inquiries,
+      hosts: config.hosts,
     };
   }
 }

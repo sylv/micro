@@ -1,6 +1,6 @@
 import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
 import { DownloadCloud } from "@geist-ui/react-icons";
-import { ConfigResponse, GetUploadTokenData, PutUploadTokenData } from "@micro/api";
+import { GetServerConfigData, GetUploadTokenData, PutUploadTokenData } from "@micro/api";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -21,10 +21,11 @@ import { logout, useUser } from "../hooks/useUser";
 export default function Dashboard() {
   const user = useUser();
   const token = useSWR<GetUploadTokenData>(Endpoints.USER_UPLOAD_TOKEN);
-  const server = useSWR<ConfigResponse>(Endpoints.CONFIG);
-  const [domain, setDomain] = useState<string>();
+  const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
+  const [hosts, setHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const [, setToast] = useToasts();
+  const downloadable = !!hosts[0];
 
   useEffect(() => {
     // redirect home if any of the requests fail
@@ -35,24 +36,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (server.data && !domain) setDomain(server.data.domains[0]);
+    if (server.data && !hosts[0]) setHosts([server.data.host]);
   }, [server]);
 
   /**
    * Set the selected domain to the given option.
    */
-  function updateDomain(option: string | string[]) {
-    setDomain(Array.isArray(option) ? option[0] : option);
+  function updateDomain(options: string[]) {
+    setHosts(options);
   }
 
   /**
    * Download a customised ShareX config for the user based on their options.
    */
   function downloadConfig() {
-    const host = replacePlaceholders(domain, { username: user.data.username });
-    const name = `micro - ${host}.sxcu`;
-    const content = generateConfig(token.data.upload_token, host);
-    downloadFile(name, content);
+    const formatted = hosts.map((host) => replacePlaceholders(host, user.data));
+    const config = generateConfig(token.data.upload_token, formatted);
+    downloadFile(config.name, config.content);
   }
 
   /**
@@ -116,8 +116,14 @@ export default function Dashboard() {
                 </Button>
               </Grid>
               <Grid xs={12}>
-                <Select width="100%" placeholder="Domain" initialValue={server.data.domains[0]} onChange={updateDomain}>
-                  {server.data.domains.map((domain) => (
+                <Select
+                  multiple
+                  width="100%"
+                  placeholder="Hosts"
+                  initialValue={server.data.hosts[0]}
+                  onChange={updateDomain}
+                >
+                  {server.data.hosts.map((domain) => (
                     <Select.Option key={domain} value={domain}>
                       {replacePlaceholders(domain, {
                         username: user.data.username,
@@ -127,7 +133,12 @@ export default function Dashboard() {
                 </Select>
               </Grid>
               <Grid xs={12}>
-                <Button icon={<DownloadCloud />} className="max-width" onClick={downloadConfig} disabled={!domain}>
+                <Button
+                  icon={<DownloadCloud />}
+                  className="max-width"
+                  onClick={downloadConfig}
+                  disabled={!downloadable}
+                >
                   ShareX Config
                 </Button>
               </Grid>

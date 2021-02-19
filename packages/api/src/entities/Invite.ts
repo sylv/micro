@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { config } from "../config";
 import { Permission, User } from "./User";
+import { formatUrl } from "../helpers/formatUrl";
 
 @Entity()
 export class Invite {
@@ -33,8 +34,8 @@ export class Invite {
 
   @Expose()
   get url() {
-    const view = `${config.host}/invite/${this.id}`;
-    const metadata = `${config.host}/api/invite/${this.id}`;
+    const view = formatUrl(config.host, `/invite/${this.id}`);
+    const metadata = formatUrl(config.host, `/api/invite/${this.id}`);
     return { view, metadata };
   }
 

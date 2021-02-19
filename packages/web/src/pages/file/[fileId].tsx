@@ -1,4 +1,4 @@
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { ContainerCenter } from "../../components/Container";
@@ -10,7 +10,7 @@ export default function File() {
   const router = useRouter();
   const fileId = router.query.fileId;
   const initialData = router.query.file && JSON.parse(router.query.file as string);
-  const file = useSWR<APIFile>(`/api/file/${fileId}`, { initialData });
+  const file = useSWR<GetFileData>(`/api/file/${fileId}`, { initialData });
   if (file.error) {
     return (
       <ContainerCenter>

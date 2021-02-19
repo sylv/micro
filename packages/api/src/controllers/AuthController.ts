@@ -15,26 +15,24 @@ export class AuthController {
   async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
     const payload: JWTPayloadUser = { name: req.user.username, sub: req.user.id };
     const token = this.jwtService.sign(payload, { audience: TokenAudience.USER });
-    const domain = new URL(config.host).hostname;
     return reply
       .setCookie("token", token, {
         path: "/",
-        domain: domain,
+        domain: config.host,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: config.ssl,
       })
       .send({ ok: true });
   }
 
   @Post("api/auth/logout")
   async logout(@Res() reply: FastifyReply) {
-    const domain = new URL(config.host).hostname;
     return reply
       .setCookie("token", "", {
         path: "/",
-        domain: domain,
+        domain: config.host,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: config.ssl,
         expires: new Date(),
       })
       .send({ ok: true });

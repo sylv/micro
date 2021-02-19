@@ -1,10 +1,10 @@
 import { Card, Grid } from "@geist-ui/react";
-import { File } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import { FileCardPreview } from "./FileCardPreview";
 import Link from "next/link";
 
 export interface FileCardProps {
-  file: File;
+  file: GetFileData;
 }
 
 export function FileCard(props: FileCardProps) {

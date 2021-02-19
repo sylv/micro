@@ -1,4 +1,4 @@
-import { Invite as APIInvite } from "@micro/api";
+import { GetInviteData } from "@micro/api";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { ContainerCenter, ContainerCenterSmall } from "../../components/Container";
@@ -20,7 +20,7 @@ export default function Invite() {
   const disabled = loading || !username || !password;
   const inviteId = router.query.inviteId;
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
-  const invite = useSWR<APIInvite>(`/api/invite/${inviteId}`, { initialData });
+  const invite = useSWR<GetInviteData>(`/api/invite/${inviteId}`, { initialData });
   if (invite.error) {
     return (
       <ContainerCenter>

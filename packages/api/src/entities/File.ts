@@ -4,6 +4,7 @@ import { config } from "../config";
 import { Content } from "./base/Content";
 import { Thumbnail } from "./Thumbnail";
 import mimeType from "mime-types";
+import { formatUrl } from "../helpers/formatUrl";
 
 export interface FileMetadata {
   height?: number;
@@ -62,13 +63,17 @@ export class File extends Content {
     return this.name ? this.name : ext ? `${this.id}.${this.extension}` : this.id;
   }
 
-  @Expose()
-  get url() {
+  @Expose({ name: "url" })
+  getUrls(host = config.host) {
     const extension = this.extension;
-    const view = `${config.host}/f/${this.id}`;
-    const direct = `${view}.${extension}`;
-    const metadata = `${config.host}/api/file/${this.id}`;
-    const thumbnail = this.thumbnailId ? `${config.host}/t/${this.id}` : null;
+    const view = formatUrl(host, `/f/${this.id}`);
+    const direct = formatUrl(host, `/f/${this.id}.${extension}`);
+    const metadata = formatUrl(config.host, `/api/file/${this.id}`);
+    const thumbnail = this.thumbnailId ? formatUrl(host, `/t/${this.id}`) : null;
     return { view, direct, thumbnail, metadata };
   }
+}
+
+export interface APIFile extends Omit<File, "getUrls"> {
+  url: ReturnType<File["getUrls"]>;
 }

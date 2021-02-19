@@ -1,4 +1,4 @@
-import { File as APIFile } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import styled from "styled-components";
 import { File as FileIcon } from "@geist-ui/react-icons";
 
@@ -22,7 +22,7 @@ export const DefaultContentContainer = styled.div`
   }
 `;
 
-export const DefaultContent = (props: { file: APIFile }) => {
+export const DefaultContent = (props: { file: GetFileData }) => {
   return (
     <DefaultContentContainer>
       <h1>{props.file.displayName}</h1>
