@@ -3,7 +3,7 @@ import { getRepository, MoreThan } from "typeorm";
 import { Invite } from "../entities/Invite";
 import { User } from "../entities/User";
 
-// todo: user created with invite should get admin perms
+// todo: user created with first invite should get admin perms
 export async function createStartupInvite() {
   const logger = new Logger("createStartupInvite");
   const userRepo = getRepository(User);

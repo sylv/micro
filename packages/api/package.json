@@ -17,6 +17,7 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
+    "exif-be-gone": "^1.2.0",
     "fastify-cookie": "^5.1.0",
     "fastify-multipart": "^4.0.0",
     "file-type": "^16.2.0",

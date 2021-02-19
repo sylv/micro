@@ -11,7 +11,10 @@ import { getRepository } from "typeorm";
 import { config } from "../config";
 import { File, FileMetadata } from "../entities/File";
 import { getTypeFromExtension } from "../helpers/getTypeFromExtension";
+import { streamToBuffer } from "../helpers/streamToBuffer";
 import { ThumbnailService } from "./ThumbnailService";
+import ExifBeGone from "exif-be-gone";
+import { bufferToStream } from "../helpers/bufferToStream";
 
 @Injectable()
 export class FileService {
@@ -55,12 +58,14 @@ export class FileService {
       throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 
+    const stripExif = new ExifBeGone();
+    const withoutExif = await streamToBuffer(bufferToStream(data).pipe(stripExif));
     const fileRepo = getRepository(File);
     const file = fileRepo.create({
       type: type,
       name: fileName,
-      size: data.length,
-      data: data,
+      size: withoutExif.length,
+      data: withoutExif,
       owner: {
         id: ownerId,
       },

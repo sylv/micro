@@ -28,6 +28,7 @@ Another private file host. This is all still a work in progress so for now watch
 - [x] Permissions
 - [x] Invite links
 - [x] URL Shortening
+- [x] EXIF metadata removal
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Mobile support
@@ -37,3 +38,5 @@ Another private file host. This is all still a work in progress so for now watch
 
 - [ ] Text viewer should dynamically import prism so the bundle size isnt hilariously large
 - [ ] The annoying flash of light theme has returned and needs to be fixed, likely caused by a geist-ui update.
+- [ ] "random" mode that randomly picks a domain from a list. Might be better to just change the domain list to a multi-select and if there are multiple randomly pick one.
+- [ ] Uploads should not buffer the entire file into memory.
