@@ -9,11 +9,9 @@ import { Line, LineContent, LineNo, Pre, TextContentContainer } from "./TextCont
 import { theme } from "./TextContent.theme";
 
 const DEFAULT_LANGUAGE = "markdown";
-const SUPPORTED_TYPES = new Set<string>(["application/javascript", ""]);
 
 export function checkSupport(file: APIFile): boolean {
   if (file.type.startsWith("text/")) return true;
-  if (SUPPORTED_TYPES.has(file.type)) return true;
   if (getLanguage(file.displayName)) return true;
   return false;
 }
