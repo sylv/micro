@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
-import { BeforeInsert, Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, OneToMany, OneToOne } from "typeorm";
 import { generateId } from "../helpers/generateId";
+import { WithId } from "./base/WithId";
 import { File } from "./File";
 import { Invite } from "./Invite";
 
@@ -11,10 +12,7 @@ export enum Permission {
 }
 
 @Entity("users")
-export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
-
+export class User extends WithId {
   @Column({ unique: true })
   @Index()
   username!: string;
