@@ -160,3 +160,14 @@
 .item .card {
   height: 100%;
 }
+
+/* fixes tooltips being too fat https://i.imgur.com/tdNkXir.png */
+.tooltip-content .inner {
+  padding: 0.5em 1em !important;
+  font-size: 0.85rem !important;
+}
+
+/* fixes the tooltip point matching the background https://i.imgur.com/DkOpvSf.png */
+.tooltip-content .inner span {
+  border-color: transparent var(--accents-2) transparent transparent !important;
+}
