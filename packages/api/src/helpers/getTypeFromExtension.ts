@@ -17,6 +17,7 @@ export async function getTypeFromExtension(fileName: string, buffer: Buffer) {
   }
 
   const ext = path.extname(fileName).slice(1);
+  if (!ext) return "application/octet-stream";
   const mapped = EXT_TEXT_MAP.get(ext);
   if (mapped) return mapped;
   return mimeType.lookup(ext);

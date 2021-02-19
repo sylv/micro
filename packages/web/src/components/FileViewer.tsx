@@ -50,7 +50,6 @@ const FileDetail = styled.span`
   }
 `;
 
-// todo: video preview
 export const FileViewer = (props: { file: GetFileData }) => {
   const [, setToast] = useToasts();
   const [disabled, setDisabled] = useState(false);

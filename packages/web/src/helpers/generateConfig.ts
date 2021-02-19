@@ -1,4 +1,4 @@
-export function generateConfig(token: string, hosts: string[]) {
+export function generateConfig(token: string, hosts: string[], direct: boolean) {
   const host = window.location.host;
   const protocol = window.location.protocol;
   const upload = `${protocol}//${host}/api/sharex`;
@@ -15,7 +15,7 @@ export function generateConfig(token: string, hosts: string[]) {
       Body: "MultipartFormData",
       FileFormName: "file",
       // todo: you should be able to choose between using view and download during config generation
-      URL: "$json:view$",
+      URL: direct ? "$json:direct$" : "$json:view$",
       ThumbnailURL: "$json:thumbnail$",
       DeletionURL: "$json:delete$",
       Parameters: {

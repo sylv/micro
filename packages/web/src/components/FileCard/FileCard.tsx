@@ -12,7 +12,7 @@ export function FileCard(props: FileCardProps) {
     <Grid xs={4}>
       <Link href={props.file.urls.view} passHref>
         <a>
-          <Card hoverable>
+          <Card hoverable style={{ overflow: "hidden" }}>
             <FileCardPreview {...props} />
             <Card.Footer>{props.file.displayName}</Card.Footer>
           </Card>

@@ -129,10 +129,6 @@
   position: relative;
 }
 
-.card .content {
-  overflow: hidden;
-}
-
 .max-width {
   min-width: 0 !important;
   width: 100% !important;
@@ -145,10 +141,22 @@
 
 /* sketch fix for this shit https://i.imgur.com/UOhPOg0.png */
 .item .btn,
-.item .select {
+.item .select,
+.item .btn-dropdown,
+.item .btn-group {
   height: calc(1.688 * 16pt) !important;
   display: flex !important;
   align-items: center !important;
+}
+
+/* for some reason btn groups have margins but regular buttons dont which means they throw everything out */
+.item .btn-group {
+  margin: 0 !important;
+}
+
+/* fix button dropdown overflowing its parent height with the above height fix */
+.item .btn-dropdown * {
+  height: 100%;
 }
 
 /* fixes Input.Password text being a lil far too the right https://i.imgur.com/jZ06vwF.png */

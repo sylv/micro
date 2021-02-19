@@ -1,5 +1,5 @@
-import { Button, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
-import { DownloadCloud } from "@geist-ui/react-icons";
+import { Button, ButtonGroup, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
+import { Box as BoxIcon, Download as DownloadIcon } from "@geist-ui/react-icons";
 import { GetServerConfigData, GetUploadTokenData, PutUploadTokenData } from "@micro/api";
 import Router from "next/router";
 import { useEffect, useState } from "react";
@@ -17,7 +17,6 @@ import { replacePlaceholders } from "../helpers/replacePlaceholders";
 import { logout, useUser } from "../hooks/useUser";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
-// todo: requests here need types >:(
 export default function Dashboard() {
   const user = useUser();
   const token = useSWR<GetUploadTokenData>(Endpoints.USER_UPLOAD_TOKEN);
@@ -49,9 +48,9 @@ export default function Dashboard() {
   /**
    * Download a customised ShareX config for the user based on their options.
    */
-  function downloadConfig() {
+  function downloadConfig(direct: boolean) {
     const formatted = hosts.map((host) => replacePlaceholders(host, user.data));
-    const config = generateConfig(token.data.upload_token, formatted);
+    const config = generateConfig(token.data.upload_token, formatted, direct);
     downloadFile(config.name, config.content);
   }
 
@@ -133,14 +132,24 @@ export default function Dashboard() {
                 </Select>
               </Grid>
               <Grid xs={12}>
-                <Button
-                  icon={<DownloadCloud />}
-                  className="max-width"
-                  onClick={downloadConfig}
-                  disabled={!downloadable}
-                >
-                  ShareX Config
-                </Button>
+                <ButtonGroup>
+                  <Button
+                    icon={<BoxIcon />}
+                    className="max-width"
+                    onClick={() => downloadConfig(false)}
+                    disabled={!downloadable}
+                  >
+                    Embedded ShareX Config
+                  </Button>
+                  <Button
+                    icon={<DownloadIcon />}
+                    className="max-width"
+                    onClick={() => downloadConfig(true)}
+                    disabled={!downloadable}
+                  >
+                    Direct ShareX Config
+                  </Button>
+                </ButtonGroup>
               </Grid>
             </Grid.Container>
           </Card>

@@ -20,7 +20,7 @@ export function checkSupport(file: GetFileData): boolean {
 export const TextContent = (props: { file: GetFileData }) => {
   const { copy } = useClipboard();
   const [, setToast] = useToasts();
-  const content = useSWR(props.file.urls.direct);
+  const content = useSWR<string>(props.file.urls.direct);
   const language = useMemo(() => getLanguage(props.file.displayName) ?? DEFAULT_LANGUAGE, [props.file]);
   if (content.error) {
     return <DefaultContent file={props.file} />;
