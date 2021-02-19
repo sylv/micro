@@ -9,7 +9,7 @@ export const TextContentContainer = styled.div`
     overflow: scroll;
     border-radius: 0;
     border-color: transparent;
-    border-bottom-color: var(--accents-3);
+    border-bottom-color: var(--accents-2) !important;
   }
 `;
 
@@ -43,4 +43,16 @@ export const LineNo = styled.span`
 
 export const LineContent = styled.span`
   display: table-cell;
+`;
+
+export const TextContentCopy = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0.5em;
+  opacity: 0.35;
+  transition: opacity 250ms;
+  :hover {
+    opacity: 1;
+  }
 `;
