@@ -5,7 +5,7 @@ import { UserId } from "../decorators/UserId";
 import { FileService } from "../services/FileService";
 import { DeletionService } from "../services/DeletionService";
 import { LinkService } from "../services/LinkService";
-import { ContentType } from "../entities/Content";
+import { ContentType } from "../entities/base/Content";
 
 @Controller()
 export class ShareXController {

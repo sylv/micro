@@ -1,10 +1,9 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, JoinColumn, OneToOne, RelationId } from "typeorm";
-import { Content } from "./Content";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, RelationId } from "typeorm";
 import { File } from "./File";
 
 @Entity()
-export class Thumbnail extends Content {
+export class Thumbnail {
   @Column()
   size!: number;
 
@@ -21,4 +20,7 @@ export class Thumbnail extends Content {
 
   @RelationId("file")
   fileId!: string;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 }

@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 import { Entity, Column } from "typeorm";
 import { config } from "../config";
-import { Content } from "./Content";
+import { Content } from "./base/Content";
 
 @Entity()
 export class Link extends Content {

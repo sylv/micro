@@ -1,7 +1,7 @@
 import { classToPlain } from "class-transformer";
 import { FastifyRequest } from "fastify";
 import { UserId } from "../decorators/UserId";
-import { ContentType } from "../entities/Content";
+import { ContentType } from "../entities/base/Content";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { UploadAuthGuard } from "../guards/UploadAuthGuard";
 import { isImageScraper } from "../helpers/isImageScraper";

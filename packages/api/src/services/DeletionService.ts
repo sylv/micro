@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { getRepository } from "typeorm";
 import { config } from "../config";
-import { ContentType } from "../entities/Content";
+import { ContentType } from "../entities/base/Content";
 import { File } from "../entities/File";
 import { Link } from "../entities/Link";
 import { TokenAudience } from "../types";

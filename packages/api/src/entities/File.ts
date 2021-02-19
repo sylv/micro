@@ -1,7 +1,7 @@
 import { Exclude, Expose } from "class-transformer";
 import { Column, Entity, OneToOne, RelationId } from "typeorm";
 import { config } from "../config";
-import { Content } from "./Content";
+import { Content } from "./base/Content";
 import { Thumbnail } from "./Thumbnail";
 import mimeType from "mime-types";
 

@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { FastifyReply } from "fastify";
 import { UserId } from "../decorators/UserId";
-import { ContentType } from "../entities/Content";
+import { ContentType } from "../entities/base/Content";
 import { DeletionService } from "../services/DeletionService";
 import { FileService } from "../services/FileService";
 import { LinkService } from "../services/LinkService";
