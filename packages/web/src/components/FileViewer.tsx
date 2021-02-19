@@ -5,6 +5,7 @@ import prettyBytes from "pretty-bytes";
 import styled from "styled-components";
 import { downloadUrl } from "../helpers/downloadUrl";
 import { FileContent } from "./FileContent/FileContent";
+import { useState } from "react";
 
 const FileContentHeader = styled.div`
   display: flex;
@@ -52,16 +53,24 @@ const FileDetail = styled.span`
 // todo: video preview
 export const FileViewer = (props: { file: GetFileData }) => {
   const [, setToast] = useToasts();
+  const [disabled, setDisabled] = useState(false);
   const clipboard = useClipboard();
 
-  const download = () => {
-    downloadUrl(props.file.url.direct);
+  const download = async () => {
+    try {
+      setDisabled(true);
+      await downloadUrl(props.file.url.direct, props.file.displayName);
+    } catch (err) {
+      setToast({ type: "error", text: err.message });
+    } finally {
+      setDisabled(false);
+    }
   };
 
   const copy = () => {
-    clipboard.copy(props.file.url.view);
+    clipboard.copy(window.location.href);
     setToast({
-      text: `Copied view link to clipboard`,
+      text: `Copied link to clipboard`,
       type: "success",
     });
   };
@@ -89,7 +98,7 @@ export const FileViewer = (props: { file: GetFileData }) => {
               <Button icon={<Share2 />} onClick={copy}>
                 Copy Link
               </Button>
-              <Button icon={<Download />} onClick={download}>
+              <Button icon={<Download />} onClick={download} disabled={disabled}>
                 Download
               </Button>
             </FileContentButtons>
