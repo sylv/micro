@@ -4,10 +4,10 @@ import { isBinaryFile } from "isbinaryfile";
 import * as mimeType from "mime-types";
 
 // overrides for types that are poorly mapped by sharex
-const EXT_TEXT_TYPE_MAP = new Map<string, string>();
-EXT_TEXT_TYPE_MAP.set("ts", "text/plain");
-EXT_TEXT_TYPE_MAP.set("tsx", "text/plain");
-EXT_TEXT_TYPE_MAP.set("jsx", "text/plain");
+const EXT_TEXT_MAP = new Map<string, string>();
+EXT_TEXT_MAP.set("ts", "text/plain");
+EXT_TEXT_MAP.set("tsx", "text/plain");
+EXT_TEXT_MAP.set("jsx", "text/plain");
 
 export async function getTypeFromExtension(fileName: string, buffer: Buffer) {
   const isBinary = await isBinaryFile(buffer);
@@ -17,7 +17,7 @@ export async function getTypeFromExtension(fileName: string, buffer: Buffer) {
   }
 
   const ext = path.extname(fileName).slice(1);
-  const mapped = EXT_TEXT_TYPE_MAP.get(ext);
+  const mapped = EXT_TEXT_MAP.get(ext);
   if (mapped) return mapped;
   return mimeType.lookup(ext);
 }

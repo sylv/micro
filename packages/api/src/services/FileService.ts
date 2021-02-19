@@ -35,9 +35,11 @@ export class FileService {
     return groups as any;
   }
 
-  public getFile(id: string) {
+  public async getFile(id: string) {
     const fileRepo = getRepository(File);
-    return fileRepo.findOne(id);
+    const file = await fileRepo.findOne(id);
+    if (!file) throw new NotFoundException();
+    return file;
   }
 
   public async deleteFile(id: string, ownerId: string) {
