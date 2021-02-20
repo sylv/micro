@@ -33,7 +33,7 @@ const FileCardImageContainer = styled.div`
   }
   svg {
     width: auto;
-    height: 1.25em;
+    height: 1.2em;
     margin-bottom: 0.25em;
   }
   span {
@@ -49,7 +49,7 @@ const FileCardFooter = styled.div`
 
 function FileCardImage(props: { file: GetFileData }) {
   const [errored, setErrored] = useState(false);
-  if (errored) {
+  if (!props.file.urls.thumbnail || errored) {
     return (
       <FileCardImageContainer>
         <QuestionCircle />
