@@ -14,7 +14,7 @@
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-fastify": "^7.6.12",
     "@nestjs/typeorm": "^7.1.5",
-    "aws-sdk": "^2.847.0",
+    "aws-sdk": "^2.848.0",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",

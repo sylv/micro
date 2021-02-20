@@ -1,8 +1,8 @@
-import { s3 } from "../s3";
+import { Injectable, NotFoundException, PayloadTooLargeException } from "@nestjs/common";
+import { S3 } from "aws-sdk";
 import { FastifyReply } from "fastify";
 import { config } from "../config";
-import { S3 } from "aws-sdk";
-import { Injectable, PayloadTooLargeException, NotFoundException } from "@nestjs/common";
+import { s3 } from "../s3";
 
 @Injectable()
 export class S3Service {
@@ -14,13 +14,11 @@ export class S3Service {
       // complete spaghetti mode on the code its just not gonna work so im gonna leave this to future me
       // to fix and for now just break the rules and buffer it all in to memory. good luck cunt
       const object = await s3.getObject({ Key: key, Bucket: config.storage.bucket }).promise();
-      const name = object.Metadata?.name;
       reply.header("Last-Modified", object.LastModified);
       reply.header("Content-Length", object.ContentLength);
       reply.header("Content-Type", object.ContentType);
+      reply.header("Content-Disposition", object.ContentDisposition);
       reply.header("ETag", object.ETag);
-      if (name) reply.header("Content-Disposition", `inline; filename="${name}"`);
-      else reply.header("Content-Disposition", "inline;");
       await reply.send(object.Body);
     } catch (err) {
       switch (err.code) {

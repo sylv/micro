@@ -46,6 +46,7 @@ export class ShareXController {
     return {
       metadata: formatUrl(host, file.urls.metadata)!,
       thumbnail: formatUrl(host, file.urls.thumbnail),
+      direct: formatUrl(host, file.urls.direct),
       view: formatUrl(host, file.urls.view),
       delete: formatUrl(host, deletionUrl),
     };

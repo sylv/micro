@@ -1,4 +1,5 @@
 import fileType from "file-type";
+import fs from "fs";
 import { isBinary } from "istextorbinary";
 import * as mimeType from "mime-types";
 import path from "path";
@@ -21,12 +22,15 @@ async function readFirstBytes(stream: NodeJS.ReadableStream) {
     if (count > SCAN_BYTE_COUNT) break;
   }
 
+  stream.pause();
   return Buffer.concat(chunks);
 }
 
-export async function getStreamType(fileName: string, stream: NodeJS.ReadableStream) {
+export async function getFileType(uploadPath: string, fileName: string) {
+  const stream = fs.createReadStream(uploadPath);
   const firstBytes = await readFirstBytes(stream);
   const binary = isBinary(fileName, firstBytes);
+  stream.close();
   if (binary) {
     const result = await fileType.fromBuffer(firstBytes);
     return result?.mime ?? "application/octet-stream";

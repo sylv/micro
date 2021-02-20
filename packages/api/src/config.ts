@@ -1,5 +1,6 @@
 import rc from "rc";
 import xbytes from "xbytes";
+import AWS from "aws-sdk";
 
 export interface MicroConfig {
   host: string;

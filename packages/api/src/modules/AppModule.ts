@@ -2,33 +2,30 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { RenderModule } from "nest-next";
-import Next from "next";
 import { config } from "../config";
 import { AppController } from "../controllers/AppController";
 import { AuthController } from "../controllers/AuthController";
+import { DeletionController } from "../controllers/DeletionController";
 import { FileController } from "../controllers/FileController";
+import { InviteController } from "../controllers/InviteController";
+import { LinkController } from "../controllers/LinkController";
+import { ShareXController } from "../controllers/ShareXController";
+import { ThumbnailController } from "../controllers/ThumbnailController";
 import { UserController } from "../controllers/UserController";
 import { File } from "../entities/File";
+import { Invite } from "../entities/Invite";
+import { Link } from "../entities/Link";
 import { Thumbnail } from "../entities/Thumbnail";
 import { User } from "../entities/User";
+import { DeletionService } from "../services/DeletionService";
 import { FileService } from "../services/FileService";
+import { InviteService } from "../services/InviteService";
+import { LinkService } from "../services/LinkService";
+import { S3Service } from "../services/S3Service";
 import { ThumbnailService } from "../services/ThumbnailService";
+import { UserService } from "../services/UserService";
 import { JWTStrategy } from "../strategies/JWTStrategy";
 import { LocalStrategy } from "../strategies/LocalStrategy";
-import { ThumbnailController } from "../controllers/ThumbnailController";
-import { LinkController } from "../controllers/LinkController";
-import { LinkService } from "../services/LinkService";
-import { Link } from "../entities/Link";
-import { resolve } from "path";
-import { Invite } from "../entities/Invite";
-import { InviteController } from "../controllers/InviteController";
-import { DeletionController } from "../controllers/DeletionController";
-import { DeletionService } from "../services/DeletionService";
-import { InviteService } from "../services/InviteService";
-import { UserService } from "../services/UserService";
-import { ShareXController } from "../controllers/ShareXController";
-import { S3Service } from "../services/S3Service";
 
 @Module({
   // this will be done properly soon. maybe.
@@ -68,16 +65,16 @@ import { S3Service } from "../services/S3Service";
       synchronize: config.database.synchronize,
       entities: [User, Thumbnail, File, Link, Invite],
     }),
-    RenderModule.forRootAsync(
-      Next({
-        dev: process.env.NODE_ENV !== "production",
-        dir: resolve("../web"),
-      }),
-      {
-        passthrough404: true,
-        viewsDir: null,
-      }
-    ),
+    // RenderModule.forRootAsync(
+    //   Next({
+    //     dev: process.env.NODE_ENV !== "production",
+    //     dir: resolve("../web"),
+    //   }),
+    //   {
+    //     passthrough404: true,
+    //     viewsDir: null,
+    //   }
+    // ),
   ],
 })
 export class AppModule {}

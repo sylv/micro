@@ -28,15 +28,10 @@ export class File extends Content {
   }
 
   @Expose()
-  get category() {
-    return this.type.split("/").shift();
-  }
-
-  @Expose()
   get embeddable() {
-    // discord doesnt like embedding videos
-    // return this.category === "image" || this.category === "video" || this.category === "audio";
-    return this.category === "image" || this.category === "audio";
+    // discord doesnt like embedding videos,
+    // return this.type.startsWith('image') || this.type.startsWith('audio') || this.type.startsWith('video')
+    return this.type.startsWith("image") || this.type.startsWith("audio");
   }
 
   @Expose()

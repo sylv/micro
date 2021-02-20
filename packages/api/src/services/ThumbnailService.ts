@@ -6,11 +6,14 @@ import { config } from "../config";
 import { Thumbnail } from "../entities/Thumbnail";
 import { s3 } from "../s3";
 import { S3Service } from "./S3Service";
+import { File } from "../entities/File";
+import { PassThrough } from "stream";
 
 @Injectable()
 export class ThumbnailService {
-  private static readonly THUMBNAIL_SIZE = 300;
+  private static readonly THUMBNAIL_SIZE = 200;
   private static readonly THUMBNAIL_TYPE = "image/jpeg";
+  private static readonly SUPPORTED_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
 
   constructor(private s3Service: S3Service) {}
 
@@ -21,12 +24,14 @@ export class ThumbnailService {
     return thumbnail;
   }
 
-  public async createThumbnail(fileStream: NodeJS.ReadableStream, id: string) {
+  public async createThumbnail(rawStream: NodeJS.ReadableStream, file: File) {
+    if (!ThumbnailService.SUPPORTED_TYPES.has(file.type)) return;
+    const passthrough = rawStream.pipe(new PassThrough());
     const start = Date.now();
     const thumbnailRepo = getRepository(Thumbnail);
     const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).jpeg();
-    const thumbnailStream = fileStream.pipe(transformer);
-    const thumbnail = thumbnailRepo.create({ id, size: 0 });
+    const thumbnailStream = passthrough.pipe(transformer);
+    const thumbnail = thumbnailRepo.create({ id: file.id, size: 0 });
     transformer.on("chunk", (chunk) => (thumbnail.size += chunk.length));
     await s3
       .upload({

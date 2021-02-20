@@ -36,7 +36,7 @@ export const FileContent = (props: { file: GetFileData }) => {
     );
   }
 
-  switch (props.file.category) {
+  switch (props.file.type.split("/").shift()) {
     case "image":
       return (
         <FileContentWrapper file={props.file}>

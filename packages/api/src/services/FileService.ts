@@ -1,13 +1,3 @@
-import ExifBeGone from "exif-be-gone";
-import { FastifyRequest, FastifyReply } from "fastify";
-import { Multipart } from "fastify-multipart";
-import { PassThrough } from "stream";
-import { getRepository } from "typeorm";
-import { config } from "../config";
-import { File } from "../entities/File";
-import { getStreamType } from "../helpers/getStreamType";
-import { S3Service } from "./S3Service";
-import { ThumbnailService } from "./ThumbnailService";
 import {
   BadRequestException,
   Injectable,
@@ -15,11 +5,27 @@ import {
   PayloadTooLargeException,
   UnauthorizedException,
 } from "@nestjs/common";
+import ExifBeGone from "exif-be-gone";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { Multipart } from "fastify-multipart";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import stream from "stream";
+import { getRepository } from "typeorm";
+import { promisify } from "util";
+import { config } from "../config";
+import { File } from "../entities/File";
+import { generateId } from "../helpers/generateId";
+import { getFileType } from "../helpers/getFileType";
+import { S3Service } from "./S3Service";
+import { ThumbnailService } from "./ThumbnailService";
+
+const pipeline = promisify(stream.pipeline);
 
 @Injectable()
 export class FileService {
   private static readonly FILE_KEY_REGEX = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/;
-
   constructor(protected thumbnailService: ThumbnailService, protected s3Service: S3Service) {}
 
   public cleanFileKey(key: string): { id: string; ext?: string } {
@@ -47,41 +53,45 @@ export class FileService {
   }
 
   public async createFile(multipart: Multipart, request: FastifyRequest, ownerId: string): Promise<File> {
-    // todo: check content-length before doing all this extra shit
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
-    if (+request.headers["content-length"] >= config.uploadLimit) throw new PayloadTooLargeException();
-    const typeStream = multipart.file.pipe(new PassThrough());
-    const exifStream = multipart.file.pipe(new PassThrough());
-    const thumbStream = multipart.file.pipe(new PassThrough());
-    const mappedType = await getStreamType(multipart.filename, typeStream);
-    const type = mappedType || multipart.mimetype;
-    if (config.allowTypes?.includes(type) === false) {
-      throw new BadRequestException(`"${type}" is not supported by this server.`);
+    if (+request.headers["content-length"] >= config.uploadLimit) {
+      throw new PayloadTooLargeException();
     }
 
-    const stripExif = new ExifBeGone();
-    const withoutExif = exifStream.pipe(stripExif);
-    const fileRepo = getRepository(File);
-    const file = fileRepo.create({
-      type: type,
-      name: multipart.filename,
-      owner: {
-        id: ownerId,
-      },
-    });
+    // i know using temporary files is shitty but streams are a nightmare otherwise
+    const uploadId = generateId(16);
+    const uploadPath = path.join(os.tmpdir(), `__micro${uploadId}`);
 
-    file.addId(); // required to get storage key and to gen thumbnail
-    file.thumbnail = await this.thumbnailService.createThumbnail(thumbStream, file.id);
-    file.size = await this.s3Service.uploadFile(withoutExif, {
-      Key: file.storageKey,
-      ContentType: file.type,
-      Metadata: {
-        name: file.displayName,
-      },
-    });
+    try {
+      const stream = fs.createWriteStream(uploadPath);
+      await pipeline(multipart.file, new ExifBeGone(), stream);
+      const type = (await getFileType(uploadPath, multipart.filename)) || multipart.mimetype;
+      if (config.allowTypes?.includes(type) === false) {
+        throw new BadRequestException(`"${type}" is not supported by this server.`);
+      }
 
-    await fileRepo.save(file);
-    return file;
+      const fileRepo = getRepository(File);
+      const file = fileRepo.create({
+        type: type,
+        name: multipart.filename,
+        owner: {
+          id: ownerId,
+        },
+      });
+
+      file.addId(); // required to get storage key and to gen thumbnail
+      file.thumbnail = await this.thumbnailService.createThumbnail(fs.createReadStream(uploadPath), file);
+      file.size = await this.s3Service.uploadFile(fs.createReadStream(uploadPath), {
+        Key: file.storageKey,
+        ContentType: file.type,
+        ContentDisposition: `inline; filename="${file.displayName}"`,
+      });
+
+      await fileRepo.save(file);
+      return file;
+    } finally {
+      await fs.promises.unlink(uploadPath);
+    }
   }
 
   public async sendFile(fileId: string, reply: FastifyReply) {
