@@ -132,7 +132,7 @@ export default function Dashboard() {
                 </Select>
               </Grid>
               <Grid xs={12}>
-                <ButtonGroup>
+                <ButtonGroup className="max-width">
                   <Button
                     icon={<BoxIcon />}
                     className="max-width"

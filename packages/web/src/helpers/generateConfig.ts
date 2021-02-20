@@ -14,7 +14,6 @@ export function generateConfig(token: string, hosts: string[], direct: boolean) 
       RequestURL: upload,
       Body: "MultipartFormData",
       FileFormName: "file",
-      // todo: you should be able to choose between using view and download during config generation
       URL: direct ? "$json:direct$" : "$json:view$",
       ThumbnailURL: "$json:thumbnail$",
       DeletionURL: "$json:delete$",

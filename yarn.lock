@@ -2541,9 +2541,9 @@ needle@^2.5.0:
     sax "^1.2.4"
 
 nest-next@^9.3.0-beta.0:
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/nest-next/-/nest-next-9.4.0.tgz#a4d5e3c9c25d1a4eb2dd2e6b266c29c6a1bc6fda"
-  integrity sha512-uM11kyNGHjUKJXmQduqljS/NO9cS8JtVQu/21CPbHBpRiL1bgoLmODk253vHKsDFP1/nNrGUJ1lH5XShvFa6rg==
+  version "9.3.0-beta.0"
+  resolved "https://registry.yarnpkg.com/nest-next/-/nest-next-9.3.0-beta.0.tgz#1c4ef33a2c4b273f4b34fe14ce2e07864af0c2af"
+  integrity sha512-G2ZvSq2hhvQY7s5Ff5noUEjF7fXALtLMFc/I+gg3ro9wCt9bNmkHQgm84w1D8FxSunNbHyy7kbVgy4ZDL8NImw==
   dependencies:
     rxjs "^6.4"
 

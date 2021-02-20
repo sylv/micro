@@ -25,6 +25,7 @@ export class Thumbnail {
 
   @Expose()
   get storageKey() {
-    return `thumbnails/${this.id}.jpg`;
+    if (!this.id) throw new Error("Missing thumbnail ID");
+    return `thumbnails/${this.id}`;
   }
 }

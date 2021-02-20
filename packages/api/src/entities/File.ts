@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Expose, Exclude } from "class-transformer";
 import mimeType from "mime-types";
 import { Column, Entity, OneToOne, RelationId } from "typeorm";
 import { URLData } from "../types";
@@ -45,9 +45,10 @@ export class File extends Content {
     return this.name ? this.name : ext ? `${this.id}.${ext}` : this.id;
   }
 
-  @Expose()
+  @Exclude()
   get storageKey() {
-    return `files/${this.id}.${this.extension}`;
+    if (!this.id) throw new Error("Missing file ID");
+    return `files/${this.id}`;
   }
 
   @Expose()
