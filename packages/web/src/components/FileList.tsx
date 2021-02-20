@@ -2,7 +2,7 @@ import { Card, Grid, Text } from "@geist-ui/react";
 import { GetUserFilesData } from "@micro/api";
 import useSWR from "swr";
 import { Endpoints } from "../constants";
-import { FileCard } from "./FileCard/FileCard";
+import { FileCard } from "./FileCard";
 import { PageLoader } from "./PageLoader";
 
 export function FileList() {

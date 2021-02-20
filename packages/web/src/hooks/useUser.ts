@@ -23,7 +23,7 @@ export async function login(username: string, password: string) {
  * Sign the user out.
  */
 export async function logout() {
-  await http(Endpoints.AUTH_LOGOUT);
+  await http(Endpoints.AUTH_LOGOUT, { method: "POST" });
   mutate(Endpoints.USER, null, false);
   Router.push("/dashboard");
 }
