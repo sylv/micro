@@ -68,7 +68,7 @@ export class FileService {
     });
 
     file.addId(); // required to get storage key
-    file.size = await this.s3Service.uploadFile(uploadStream, {
+    file.size = await this.s3Service.createObject(uploadStream, {
       Key: file.storageKey,
       ContentType: file.type,
       ContentDisposition: `inline; filename="${file.displayName}"`,
@@ -81,6 +81,6 @@ export class FileService {
   public async sendFile(fileId: string, reply: FastifyReply) {
     const fileRepo = getRepository(File);
     const file = fileRepo.create({ id: fileId });
-    return this.s3Service.sendFile(file.storageKey, reply);
+    return this.s3Service.sendObject(file.storageKey, reply);
   }
 }

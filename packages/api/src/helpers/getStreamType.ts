@@ -27,7 +27,6 @@ async function readFirstBytes(stream: PassThrough) {
 
 export async function getStreamType(fileName: string, stream: PassThrough): Promise<string | undefined> {
   const firstBytes = await readFirstBytes(stream);
-  stream.end();
   const binary = isBinary(fileName, firstBytes);
   if (binary) {
     const result = await fileType.fromBuffer(firstBytes);

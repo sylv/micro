@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, PayloadTooLargeException } from "@nestjs/common";
+import { Injectable, PayloadTooLargeException, NotFoundException } from "@nestjs/common";
 import { S3 } from "aws-sdk";
 import { FastifyReply } from "fastify";
 import { config } from "../config";
@@ -6,32 +6,37 @@ import { s3 } from "../s3";
 
 @Injectable()
 export class S3Service {
-  public async getStream(key: string) {
+  public async getObjectStream(key: string) {
     return s3.getObject({ Key: key, Bucket: config.storage.bucket }).createReadStream();
   }
 
-  public async sendFile(key: string, reply: FastifyReply): Promise<void> {
-    try {
-      // todo: this buffers it all into memory but i swear to fucking god the aws-sdk library is complete
-      // dogshit and refuses to let me get the headers as a promise and catch errors before returning
-      // the stream and ive been trying to get it to work properly for like 5 hours and without going
-      // complete spaghetti mode on the code its just not gonna work so im gonna leave this to future me
-      // to fix and for now just break the rules and buffer it all in to memory. good luck cunt
-      const object = await s3.getObject({ Key: key, Bucket: config.storage.bucket }).promise();
-      if (object.LastModified) reply.header("Last-Modified", object.LastModified);
-      if (object.ContentLength) reply.header("Content-Length", object.ContentLength);
-      if (object.ContentType) reply.header("Content-Type", object.ContentType);
-      if (object.ContentDisposition) reply.header("Content-Disposition", object.ContentDisposition);
-      if (object.ETag) reply.header("ETag", object.ETag);
-      await reply.send(object.Body);
-    } catch (err) {
-      switch (err.code) {
-        case "NoSuchKey":
-          throw new NotFoundException();
-        default:
-          throw err;
-      }
-    }
+  public sendObject(key: string, reply: FastifyReply) {
+    return new Promise((resolve, reject) => {
+      const stream = s3
+        .getObject({ Key: key, Bucket: config.storage.bucket })
+        .on("httpHeaders", (statusCode, headers) => {
+          if (statusCode >= 300) {
+            return;
+          }
+
+          reply.header("Last-Modified", headers["last-modified"]);
+          reply.header("Content-Length", headers["content-length"]);
+          reply.header("Content-Type", headers["content-type"]);
+          reply.header("Content-Disposition", headers["content-disposition"]);
+          reply.header("ETag", headers["etag"]);
+          reply.send(stream);
+        })
+        .createReadStream()
+        .on("end", resolve)
+        .on("error", (err: any) => {
+          switch (err.code) {
+            case "NoSuchKey":
+              return reject(new NotFoundException());
+            default:
+              return reject(err);
+          }
+        });
+    });
   }
 
   /**
@@ -41,7 +46,7 @@ export class S3Service {
    * @throws PayloadTooLargeException
    * @returns the size of the upload
    */
-  public async uploadFile(
+  public async createObject(
     stream: NodeJS.ReadableStream,
     options: Partial<S3.PutObjectRequest> & { Key: string }
   ): Promise<number> {

@@ -33,11 +33,11 @@ export class ThumbnailService {
 
     const start = Date.now();
     const thumbnailRepo = getRepository(Thumbnail);
-    const stream = await this.s3Service.getStream(file.storageKey);
+    const stream = await this.s3Service.getObjectStream(file.storageKey);
     const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).jpeg();
     const transformed = stream.pipe(transformer);
     const thumbnail = thumbnailRepo.create({ id: file.id, size: 0 });
-    thumbnail.size = await this.s3Service.uploadFile(transformed, {
+    thumbnail.size = await this.s3Service.createObject(transformed, {
       Key: thumbnail.storageKey,
       ContentType: ThumbnailService.THUMBNAIL_TYPE,
     });
@@ -52,7 +52,7 @@ export class ThumbnailService {
     const existing = await thumbnailRepo.findOne({ id: fileId });
     if (existing) {
       reply.header("X-Micro-Generated", "false");
-      return this.s3Service.sendFile(existing.storageKey, reply);
+      return this.s3Service.sendObject(existing.storageKey, reply);
     }
 
     const file = await this.fileService.getFile(fileId);
@@ -60,6 +60,6 @@ export class ThumbnailService {
     const thumbnail = await this.createThumbnail(file);
     reply.header("X-Micro-Generated", "true");
     reply.header("X-Micro-Duration", thumbnail.duration);
-    return this.s3Service.sendFile(thumbnail.storageKey, reply);
+    return this.s3Service.sendObject(thumbnail.storageKey, reply);
   }
 }
