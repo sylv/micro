@@ -17,6 +17,6 @@ export abstract class Content extends WithId {
   @RelationId("owner")
   ownerId!: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 }

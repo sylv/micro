@@ -16,7 +16,7 @@ export class Thumbnail {
   @OneToOne(() => File, { onDelete: "CASCADE", nullable: false })
   file!: File;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
   @Expose()

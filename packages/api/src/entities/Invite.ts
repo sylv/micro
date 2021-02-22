@@ -28,7 +28,7 @@ export class Invite {
   @Column("bigint")
   expiresAt!: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
   @Expose()
