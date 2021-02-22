@@ -6,6 +6,10 @@ import { s3 } from "../s3";
 
 @Injectable()
 export class S3Service {
+  public async getStream(key: string) {
+    return s3.getObject({ Key: key, Bucket: config.storage.bucket }).createReadStream();
+  }
+
   public async sendFile(key: string, reply: FastifyReply): Promise<void> {
     try {
       // todo: this buffers it all into memory but i swear to fucking god the aws-sdk library is complete
@@ -14,11 +18,11 @@ export class S3Service {
       // complete spaghetti mode on the code its just not gonna work so im gonna leave this to future me
       // to fix and for now just break the rules and buffer it all in to memory. good luck cunt
       const object = await s3.getObject({ Key: key, Bucket: config.storage.bucket }).promise();
-      reply.header("Last-Modified", object.LastModified);
-      reply.header("Content-Length", object.ContentLength);
-      reply.header("Content-Type", object.ContentType);
-      reply.header("Content-Disposition", object.ContentDisposition);
-      reply.header("ETag", object.ETag);
+      if (object.LastModified) reply.header("Last-Modified", object.LastModified);
+      if (object.ContentLength) reply.header("Content-Length", object.ContentLength);
+      if (object.ContentType) reply.header("Content-Type", object.ContentType);
+      if (object.ContentDisposition) reply.header("Content-Disposition", object.ContentDisposition);
+      if (object.ETag) reply.header("ETag", object.ETag);
       await reply.send(object.Body);
     } catch (err) {
       switch (err.code) {

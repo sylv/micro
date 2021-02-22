@@ -1,9 +1,9 @@
-import { Expose, Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import mimeType from "mime-types";
-import { Column, Entity, OneToOne, RelationId } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { ThumbnailService } from "../services/ThumbnailService";
 import { URLData } from "../types";
 import { Content } from "./base/Content";
-import { Thumbnail } from "./Thumbnail";
 
 @Entity()
 export class File extends Content {
@@ -16,11 +16,10 @@ export class File extends Content {
   @Column("text", { nullable: true })
   name?: string;
 
-  @OneToOne(() => Thumbnail, (thumbnail) => thumbnail.file, { onDelete: "SET NULL", nullable: true, cascade: true })
-  thumbnail?: Thumbnail;
-
-  @RelationId("thumbnail")
-  thumbnailId?: string;
+  @Expose()
+  get thumbnail() {
+    return ThumbnailService.checkSupport(this.type);
+  }
 
   @Expose()
   get extension() {
@@ -52,7 +51,7 @@ export class File extends Content {
     const view = `/f/${this.id}`;
     const direct = `/f/${this.id}.${extension}`;
     const metadata = `/api/file/${this.id}`;
-    const thumbnail = this.thumbnailId ? `/t/${this.id}` : null;
+    const thumbnail = this.thumbnail ? `/t/${this.id}` : null;
     return { view, direct, metadata, thumbnail };
   }
 }

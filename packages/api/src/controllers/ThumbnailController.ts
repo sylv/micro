@@ -5,7 +5,7 @@ import { ThumbnailService } from "../services/ThumbnailService";
 
 @Controller()
 export class ThumbnailController {
-  constructor(protected fileService: FileService, protected thumbnailService: ThumbnailService) {}
+  constructor(private fileService: FileService, private thumbnailService: ThumbnailService) {}
 
   @Get("t/:key")
   async getThumbnailPage(@Param("key") key: string, @Res() reply: FastifyReply) {

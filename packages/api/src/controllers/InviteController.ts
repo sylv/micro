@@ -4,12 +4,11 @@ import { RequirePermissions } from "../decorators/RequirePermissions";
 import { UserId } from "../decorators/UserId";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { InviteService } from "../services/InviteService";
-import { UserService } from "../services/UserService";
-import { RenderableReply, Permission } from "../types";
+import { Permission, RenderableReply } from "../types";
 
 @Controller()
 export class InviteController {
-  constructor(protected inviteService: InviteService, protected userService: UserService) {}
+  constructor(private inviteService: InviteService) {}
 
   @Get("invite/:id")
   async getInvitePage(@Res() reply: RenderableReply, @Param("id") id: string) {

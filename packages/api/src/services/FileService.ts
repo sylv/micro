@@ -8,25 +8,17 @@ import {
 import ExifBeGone from "exif-be-gone";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Multipart } from "fastify-multipart";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import stream from "stream";
+import { PassThrough } from "stream";
 import { getRepository } from "typeorm";
-import { promisify } from "util";
 import { config } from "../config";
 import { File } from "../entities/File";
-import { generateId } from "../helpers/generateId";
-import { getFileType } from "../helpers/getFileType";
+import { getStreamType } from "../helpers/getStreamType";
 import { S3Service } from "./S3Service";
-import { ThumbnailService } from "./ThumbnailService";
-
-const pipeline = promisify(stream.pipeline);
 
 @Injectable()
 export class FileService {
   private static readonly FILE_KEY_REGEX = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/;
-  constructor(protected thumbnailService: ThumbnailService, protected s3Service: S3Service) {}
+  constructor(private s3Service: S3Service) {}
 
   public cleanFileKey(key: string): { id: string; ext?: string } {
     const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
@@ -58,40 +50,32 @@ export class FileService {
       throw new PayloadTooLargeException();
     }
 
-    // i know using temporary files is shitty but streams are a nightmare otherwise
-    const uploadId = generateId(16);
-    const uploadPath = path.join(os.tmpdir(), `__micro${uploadId}`);
-
-    try {
-      const stream = fs.createWriteStream(uploadPath);
-      await pipeline(multipart.file, new ExifBeGone(), stream);
-      const type = (await getFileType(uploadPath, multipart.filename)) || multipart.mimetype;
-      if (config.allowTypes?.includes(type) === false) {
-        throw new BadRequestException(`"${type}" is not supported by this server.`);
-      }
-
-      const fileRepo = getRepository(File);
-      const file = fileRepo.create({
-        type: type,
-        name: multipart.filename,
-        owner: {
-          id: ownerId,
-        },
-      });
-
-      file.addId(); // required to get storage key and to gen thumbnail
-      file.thumbnail = await this.thumbnailService.createThumbnail(fs.createReadStream(uploadPath), file);
-      file.size = await this.s3Service.uploadFile(fs.createReadStream(uploadPath), {
-        Key: file.storageKey,
-        ContentType: file.type,
-        ContentDisposition: `inline; filename="${file.displayName}"`,
-      });
-
-      await fileRepo.save(file);
-      return file;
-    } finally {
-      await fs.promises.unlink(uploadPath);
+    const stream = multipart.file.pipe(new ExifBeGone());
+    const typeStream = stream.pipe(new PassThrough());
+    const uploadStream = stream.pipe(new PassThrough());
+    const type = (await getStreamType(multipart.filename, typeStream)) ?? multipart.mimetype;
+    if (config.allowTypes?.includes(type) === false) {
+      throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
+
+    const fileRepo = getRepository(File);
+    const file = fileRepo.create({
+      type: type,
+      name: multipart.filename,
+      owner: {
+        id: ownerId,
+      },
+    });
+
+    file.addId(); // required to get storage key
+    file.size = await this.s3Service.uploadFile(uploadStream, {
+      Key: file.storageKey,
+      ContentType: file.type,
+      ContentDisposition: `inline; filename="${file.displayName}"`,
+    });
+
+    await fileRepo.save(file);
+    return file;
   }
 
   public async sendFile(fileId: string, reply: FastifyReply) {

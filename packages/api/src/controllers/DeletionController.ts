@@ -3,7 +3,7 @@ import { DeletionService } from "../services/DeletionService";
 
 @Controller()
 export class DeletionController {
-  constructor(protected deletionService: DeletionService) {}
+  constructor(private deletionService: DeletionService) {}
 
   @Get("delete/:token")
   async getDeletionPage(@Param("token") token: string) {

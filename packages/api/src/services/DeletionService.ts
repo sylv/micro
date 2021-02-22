@@ -5,7 +5,6 @@ import { ContentType } from "../entities/base/Content";
 import { File } from "../entities/File";
 import { Link } from "../entities/Link";
 import { TokenAudience } from "../types";
-import { FileService } from "./FileService";
 
 export interface JWTPayloadDelete {
   type: ContentType;
@@ -14,7 +13,7 @@ export interface JWTPayloadDelete {
 
 @Injectable()
 export class DeletionService {
-  constructor(protected jwtService: JwtService, protected fileService: FileService) {}
+  constructor(private jwtService: JwtService) {}
 
   async delete(token: string) {
     const payload = await this.verifyDeletionToken(token);

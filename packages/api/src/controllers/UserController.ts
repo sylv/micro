@@ -40,7 +40,7 @@ export class CreateUserDto {
 
 @Controller()
 export class UserController {
-  constructor(protected userService: UserService, protected inviteService: InviteService) {}
+  constructor(private userService: UserService, private inviteService: InviteService) {}
 
   @Get("api/user")
   @UseGuards(JWTAuthGuard)

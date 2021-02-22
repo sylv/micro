@@ -5,7 +5,7 @@ import { UserService } from "../services/UserService";
 
 @Injectable()
 export class PermissionGuard {
-  constructor(protected userService: UserService, protected reflector: Reflector) {}
+  constructor(private userService: UserService, private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermissions = this.reflector.get<number>("permissions", context.getHandler());
