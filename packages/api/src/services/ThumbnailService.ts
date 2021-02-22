@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
-import { FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import sharp from "sharp";
 import { getRepository } from "typeorm";
 import { File } from "../entities/File";
@@ -47,12 +47,12 @@ export class ThumbnailService {
     return thumbnail;
   }
 
-  public async sendThumbnail(fileId: string, reply: FastifyReply) {
+  public async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const thumbnailRepo = getRepository(Thumbnail);
     const existing = await thumbnailRepo.findOne({ id: fileId });
     if (existing) {
       reply.header("X-Micro-Generated", "false");
-      return this.s3Service.sendObject(existing.storageKey, reply);
+      return this.s3Service.sendObject(existing.storageKey, request, reply);
     }
 
     const file = await this.fileService.getFile(fileId);
@@ -60,6 +60,6 @@ export class ThumbnailService {
     const thumbnail = await this.createThumbnail(file);
     reply.header("X-Micro-Generated", "true");
     reply.header("X-Micro-Duration", thumbnail.duration);
-    return this.s3Service.sendObject(thumbnail.storageKey, reply);
+    return this.s3Service.sendObject(thumbnail.storageKey, request, reply);
   }
 }

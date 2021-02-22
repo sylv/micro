@@ -1,6 +1,6 @@
 import { Injectable, PayloadTooLargeException, NotFoundException } from "@nestjs/common";
 import { S3 } from "aws-sdk";
-import { FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../config";
 import { s3 } from "../s3";
 
@@ -10,20 +10,23 @@ export class S3Service {
     return s3.getObject({ Key: key, Bucket: config.storage.bucket }).createReadStream();
   }
 
-  public sendObject(key: string, reply: FastifyReply) {
+  public sendObject(key: string, request: FastifyRequest, reply: FastifyReply) {
     return new Promise((resolve, reject) => {
+      const range = request.headers["content-range"] || undefined;
       const stream = s3
-        .getObject({ Key: key, Bucket: config.storage.bucket })
+        .getObject({ Key: key, Bucket: config.storage.bucket, Range: range })
         .on("httpHeaders", (statusCode, headers) => {
           if (statusCode >= 300) {
             return;
           }
 
+          reply.header("Accept-Ranges", headers["accept-ranges"]);
           reply.header("Last-Modified", headers["last-modified"]);
           reply.header("Content-Length", headers["content-length"]);
           reply.header("Content-Type", headers["content-type"]);
-          reply.header("Content-Disposition", headers["content-disposition"]);
           reply.header("ETag", headers["etag"]);
+          if (headers["content-disposition"]) reply.header("Content-Disposition", headers["content-disposition"]);
+          if (headers["content-range"]) reply.header("Content-Range", headers["content-range"]);
           reply.send(stream);
         })
         .createReadStream()

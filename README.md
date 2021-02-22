@@ -37,6 +37,5 @@ Another private file host. This is all still a work in progress so for now watch
 ## todo
 
 - [ ] The annoying flash of light theme has returned and needs to be fixed, likely caused by a geist-ui update.
-- [ ] Uploads should not buffer the entire file into memory.
 - [ ] Show created date relative to now on files
 - [ ] wget and curl should work with view urls

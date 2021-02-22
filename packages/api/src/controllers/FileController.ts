@@ -29,7 +29,7 @@ export class FileController {
   async getFilePage(@Res() reply: RenderableReply, @Req() request: FastifyRequest, @Param("key") key: string) {
     const clean = this.fileService.cleanFileKey(key);
     if (clean.ext) {
-      return this.fileService.sendFile(clean.id, reply);
+      return this.fileService.sendFile(clean.id, request, reply);
     }
 
     // discord wont embed unless we return an image, so we have to detect their user-agents and
@@ -38,7 +38,7 @@ export class FileController {
     const file = await this.getFile(clean.id);
     if (!file) throw new NotFoundException();
     if (isScraper && file.embeddable) {
-      return this.fileService.sendFile(file.id, reply);
+      return this.fileService.sendFile(file.id, request, reply);
     }
 
     return reply.render("file/[fileId]", {

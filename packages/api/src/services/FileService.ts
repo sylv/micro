@@ -78,9 +78,9 @@ export class FileService {
     return file;
   }
 
-  public async sendFile(fileId: string, reply: FastifyReply) {
+  public async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const fileRepo = getRepository(File);
     const file = fileRepo.create({ id: fileId });
-    return this.s3Service.sendObject(file.storageKey, reply);
+    return this.s3Service.sendObject(file.storageKey, request, reply);
   }
 }
