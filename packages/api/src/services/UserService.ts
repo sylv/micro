@@ -22,7 +22,7 @@ export class UserService {
     return fileRepo.find({
       take: 24,
       skip: skip,
-      order: { createdAt: -1 },
+      order: { createdAt: "DESC" },
       where: {
         owner: id,
       },
