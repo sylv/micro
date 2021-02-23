@@ -3,8 +3,10 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import cookie from "fastify-cookie";
 import fastifyMultipart from "fastify-multipart";
+import { RenderService } from "nest-next";
 import { createStartupInvite } from "./helpers/createStartupInvite";
 import { AppModule } from "./modules/AppModule";
+import { nestErrorHandler } from "./helpers/errorHandler";
 
 async function main() {
   // some routes use jwts in params and they can get very long, hence maxParamLength
@@ -30,8 +32,8 @@ async function main() {
     },
   });
 
-  // const service = app.get(RenderService);
-  // service.setErrorHandler(nestErrorHandler);
+  const service = app.get(RenderService);
+  service.setErrorHandler(nestErrorHandler);
 
   await app.listen(8080, "0.0.0.0");
   await createStartupInvite();
