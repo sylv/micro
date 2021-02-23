@@ -1,0 +1,22 @@
+{
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules"],
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": true,
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": ".next/api",
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": false,
+    "noEmit": false,
+    "allowJs": false
+  }
+}

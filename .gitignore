@@ -30,7 +30,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-packages/*/dist
-packages/*/tsconfig.tsbuildinfo
-packages/*/.next
+*.tsbuildinfo
 .microrc
+dist
