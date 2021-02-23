@@ -50,6 +50,7 @@ export class FileService {
       throw new PayloadTooLargeException();
     }
 
+    // todo: re-enable, it was breaking build
     // const stream = multipart.file.pipe(new ExifBeGone());
     const stream = multipart.file;
     const typeStream = stream.pipe(new PassThrough());
