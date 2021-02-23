@@ -1,11 +1,14 @@
 {
+  "exclude": ["node_modules/*"],
   "compilerOptions": {
     "strict": true,
     "composite": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@micro/api": ["packages/api/src/types.ts"]
+    }
   }
 }

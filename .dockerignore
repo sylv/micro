@@ -1,0 +1,13 @@
+node_modules
+packages/*/.next
+packages/*/.cache
+packages/*/node_modules
+packages/*/dist
+packages/*/tsconfig.tsbuildinfo
+packages/*/*.log
+.microrc
+.github
+.vscode
+docker-compose.yml
+README.md
+.gitignore

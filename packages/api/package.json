@@ -40,8 +40,8 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^14.14.30",
-    "@types/passport-jwt": "^3.0.4",
+    "@types/node": "^14.14.31",
+    "@types/passport-jwt": "^3.0.5",
     "@types/passport-local": "^1.0.33",
     "@types/rc": "^1.1.0",
     "@types/sharp": "^0.27.1",
