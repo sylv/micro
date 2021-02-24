@@ -10,6 +10,7 @@ import { http } from "../../helpers/http";
 import Router from "next/router";
 import { GetInviteData } from "../../types";
 import { Endpoints } from "../../constants";
+import Error from "../_error";
 
 export default function Invite() {
   const router = useRouter();
@@ -22,12 +23,7 @@ export default function Invite() {
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
   const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`, { initialData });
   if (invite.error) {
-    return (
-      <ContainerCenter>
-        <h1>{invite.error.status}</h1>
-        <p>{invite.error.text}</p>
-      </ContainerCenter>
-    );
+    return <Error title={invite.error.status} message={invite.error.text} />;
   }
 
   if (!invite.data) {

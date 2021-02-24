@@ -5,6 +5,7 @@ import { FileViewer } from "../../components/FileViewer";
 import { PageLoader } from "../../components/PageLoader";
 import { Title } from "../../components/Title";
 import { GetFileData } from "../../types";
+import Error from "../_error";
 
 export default function File() {
   const router = useRouter();
@@ -12,12 +13,7 @@ export default function File() {
   const initialData = router.query.file && JSON.parse(router.query.file as string);
   const file = useSWR<GetFileData>(`/api/file/${fileId}`, { initialData });
   if (file.error) {
-    return (
-      <ContainerCenter>
-        <h1>{file.error.status}</h1>
-        <p>{file.error.text}</p>
-      </ContainerCenter>
-    );
+    return <Error title={file.error.status} message={file.error.text} />;
   }
 
   if (!file.data) {
