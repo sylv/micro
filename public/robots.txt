@@ -1,0 +1,14 @@
+User-agent: AhrefsBot
+Disallow: *
+
+User-agent: SemrushBot
+Disallow: *
+
+User-agent: *
+Disallow: /api/*
+Disallow: /file/*
+Disallow: /invite/*
+Disallow: /f/* # files 
+Disallow: /l/* # links
+Disallow: /t/* # thumbnails
+Allow: /
