@@ -70,6 +70,7 @@ import Next from "next";
     RenderModule.forRootAsync(
       Next({
         dev: process.env.NODE_ENV !== "production",
+        // dev: false,
       }),
       {
         passthrough404: true,

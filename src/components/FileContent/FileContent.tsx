@@ -1,9 +1,9 @@
-import { ImageContent } from "./ImageContent";
-import { TextContent, checkSupport } from "./TextContent";
+import { checkImageSupport, ImageContent } from "./ImageContent";
+import { TextContent, checkTextSupport } from "./TextContent";
 import { DefaultContent } from "./DefaultContent";
 import Head from "next/head";
 import styled from "styled-components";
-import { VideoContent } from "./VideoContent";
+import { checkVideoSupport, VideoContent } from "./VideoContent";
 import { useMemo } from "react";
 import { GetFileData } from "../../types";
 
@@ -27,7 +27,10 @@ const FileContentWrapper = (props: { file: GetFileData; children: React.ReactChi
 };
 
 export const FileContent = (props: { file: GetFileData }) => {
-  const isText = useMemo(() => checkSupport(props.file), [props.file]);
+  const isText = useMemo(() => checkTextSupport(props.file), [props.file.type]);
+  const isImage = useMemo(() => checkImageSupport(props.file), [props.file.type]);
+  const isVideo = useMemo(() => checkVideoSupport(props.file), [props.file.type]);
+
   if (isText) {
     return (
       <FileContentWrapper file={props.file}>
@@ -36,24 +39,25 @@ export const FileContent = (props: { file: GetFileData }) => {
     );
   }
 
-  switch (props.file.type.split("/").shift()) {
-    case "image":
-      return (
-        <FileContentWrapper file={props.file}>
-          <ImageContent file={props.file} />
-        </FileContentWrapper>
-      );
-    case "video":
-      return (
-        <FileContentWrapper file={props.file}>
-          <VideoContent file={props.file} />
-        </FileContentWrapper>
-      );
-    default:
-      return (
-        <FileContentWrapper file={props.file}>
-          <DefaultContent file={props.file} />
-        </FileContentWrapper>
-      );
+  if (isImage) {
+    return (
+      <FileContentWrapper file={props.file}>
+        <ImageContent file={props.file} />
+      </FileContentWrapper>
+    );
   }
+
+  if (isVideo) {
+    return (
+      <FileContentWrapper file={props.file}>
+        <VideoContent file={props.file} />
+      </FileContentWrapper>
+    );
+  }
+
+  return (
+    <FileContentWrapper file={props.file}>
+      <DefaultContent file={props.file} />
+    </FileContentWrapper>
+  );
 };

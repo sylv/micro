@@ -43,6 +43,6 @@ export const ContainerCenter = styled(Container)`
 `;
 
 export const ContainerCenterSmall = styled(ContainerCenter)`
-  max-width: 240px;
+  max-width: 340px;
   text-align: center;
 `;

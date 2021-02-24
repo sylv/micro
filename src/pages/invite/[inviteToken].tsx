@@ -9,7 +9,7 @@ import { ChangeEvent, useState } from "react";
 import { http } from "../../helpers/http";
 import Router from "next/router";
 import { GetInviteData } from "../../types";
-import { Endpoints } from "../../endpoints";
+import { Endpoints } from "../../constants";
 
 export default function Invite() {
   const router = useRouter();

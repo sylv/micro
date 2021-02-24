@@ -1,10 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { getRepository } from "typeorm";
+import { TokenAudience } from "../constants";
 import { ContentType } from "../entities/base/Content";
-import { File } from "../entities/File";
-import { Link } from "../entities/Link";
-import { TokenAudience } from "../types";
 import { FileService } from "./FileService";
 import { LinkService } from "./LinkService";
 
@@ -18,16 +15,24 @@ export class DeletionService {
   constructor(private jwtService: JwtService, private fileService: FileService, private linkService: LinkService) {}
 
   async delete(token: string) {
-    const payload = await this.verifyDeletionToken(token);
-    switch (payload.type) {
-      case ContentType.FILE:
-        await this.fileService.deleteFile(payload.sub, undefined);
-        break;
-      case ContentType.LINK:
-        await this.linkService.deleteLink(payload.sub, undefined);
-        break;
-      default:
-        throw new BadRequestException("Unknown deletion type.");
+    try {
+      const payload = await this.verifyDeletionToken(token);
+      switch (payload.type) {
+        case ContentType.FILE:
+          await this.fileService.deleteFile(payload.sub, undefined);
+          break;
+        case ContentType.LINK:
+          await this.linkService.deleteLink(payload.sub, undefined);
+          break;
+        default:
+          throw new BadRequestException("Unknown deletion type.");
+      }
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw new BadRequestException("That content has already been deleted.");
+      }
+
+      throw e;
     }
   }
 
@@ -44,9 +49,13 @@ export class DeletionService {
     });
   }
 
-  verifyDeletionToken(key: string): Promise<JWTPayloadDelete> {
-    return this.jwtService.verifyAsync<JWTPayloadDelete>(key, {
-      audience: TokenAudience.DELETION,
-    });
+  async verifyDeletionToken(key: string): Promise<JWTPayloadDelete> {
+    try {
+      return await this.jwtService.verifyAsync<JWTPayloadDelete>(key, {
+        audience: TokenAudience.DELETION,
+      });
+    } catch (e) {
+      throw new BadRequestException("Token validation failed.");
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { Image } from "@geist-ui/react";
 import Head from "next/head";
+import { EMBEDDABLE_IMAGE_TYPES } from "src/constants";
 import styled from "styled-components";
 import { GetFileData } from "../../types";
 
@@ -8,6 +9,10 @@ const ImageContentContainer = styled.div`
   display: flex;
   margin: 0;
 `;
+
+export function checkImageSupport(file: GetFileData) {
+  return EMBEDDABLE_IMAGE_TYPES.includes(file.type);
+}
 
 export const ImageContent = (props: { file: GetFileData }) => {
   return (

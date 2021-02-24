@@ -1,7 +1,7 @@
 import { Exclude } from "class-transformer";
 import { CreateDateColumn, JoinColumn, ManyToOne, RelationId } from "typeorm";
-import { User } from "../User";
 import { WithId } from "./WithId";
+import { User } from "../User";
 
 export enum ContentType {
   FILE,

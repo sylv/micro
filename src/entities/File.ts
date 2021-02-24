@@ -2,8 +2,8 @@ import { Exclude, Expose } from "class-transformer";
 import mimeType from "mime-types";
 import { config } from "../config";
 import { s3 } from "../s3";
+import { EMBEDDABLE_IMAGE_TYPES } from "../constants";
 import { BeforeRemove, Column, Entity } from "typeorm";
-import { ThumbnailService } from "../services/ThumbnailService";
 import { Content } from "./base/Content";
 import { Logger } from "@nestjs/common";
 
@@ -20,7 +20,7 @@ export class File extends Content {
 
   @Expose()
   get thumbnail() {
-    return ThumbnailService.checkSupport(this.type);
+    return EMBEDDABLE_IMAGE_TYPES.includes(this.type);
   }
 
   @Expose()

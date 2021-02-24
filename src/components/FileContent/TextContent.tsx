@@ -11,7 +11,7 @@ import { GetFileData } from "../../types";
 
 const DEFAULT_LANGUAGE = "markdown";
 
-export function checkSupport(file: GetFileData): boolean {
+export function checkTextSupport(file: GetFileData): boolean {
   if (file.type.startsWith("text/")) return true;
   if (getLanguage(file.displayName)) return true;
   return false;

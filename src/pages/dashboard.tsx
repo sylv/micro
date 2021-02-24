@@ -14,7 +14,7 @@ import { http } from "../helpers/http";
 import { replacePlaceholders } from "../helpers/replacePlaceholders";
 import { logout, useUser } from "../hooks/useUser";
 import { GetUploadTokenData, GetServerConfigData, PutUploadTokenData } from "../types";
-import { Endpoints } from "../endpoints";
+import { Endpoints } from "../constants";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {

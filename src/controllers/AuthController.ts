@@ -2,8 +2,8 @@ import { Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../config";
+import { TokenAudience } from "../constants";
 import { PasswordAuthGuard } from "../guards/PasswordAuthGuard";
-import { TokenAudience } from "../types";
 import { JWTPayloadUser } from "../strategies/JWTStrategy";
 
 @Controller()

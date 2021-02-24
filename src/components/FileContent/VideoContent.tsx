@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { GetFileData } from "../../types";
+import { EMBEDDABLE_VIDEO_TYPES } from "../../constants";
 
 const VideoContainer = styled.div`
   max-height: var(--micro-preview-max-height);
@@ -8,6 +9,10 @@ const VideoContainer = styled.div`
   display: flex;
   top: 0;
 `;
+
+export function checkVideoSupport(file: GetFileData) {
+  return EMBEDDABLE_VIDEO_TYPES.includes(file.type);
+}
 
 export const VideoContent = (props: { file: GetFileData }) => {
   return (

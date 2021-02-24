@@ -26,7 +26,7 @@ export default function File() {
 
   return (
     <ContainerCenter>
-      <Title>{file.data.name}</Title>
+      <Title>{file.data.displayName}</Title>
       <FileViewer file={file.data}></FileViewer>
     </ContainerCenter>
   );

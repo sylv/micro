@@ -4,7 +4,7 @@ import styled from "styled-components";
 import useSWR from "swr";
 import { Container } from "../components/Container";
 import { GetServerConfigData } from "../types";
-import { Endpoints } from "../endpoints";
+import { Endpoints } from "../constants";
 
 const HomeWrapper = styled.div`
   padding-top: 5em;

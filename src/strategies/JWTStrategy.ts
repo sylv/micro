@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { config } from "../config";
-import { TokenAudience } from "../types";
 import { FastifyRequest } from "fastify";
+import { TokenAudience } from "../constants";
 
 export interface JWTPayloadUser {
   sub: string;

@@ -4,7 +4,7 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import cookie from "fastify-cookie";
 import fastifyMultipart from "fastify-multipart";
 import { RenderService } from "nest-next";
-import { nestErrorHandler } from "./helpers/errorHandler";
+import { errorHandler } from "./helpers/errorHandler";
 import { AppModule } from "./modules/AppModule";
 
 async function main() {
@@ -32,7 +32,7 @@ async function main() {
   });
 
   const service = app.get(RenderService);
-  service.setErrorHandler(nestErrorHandler);
+  service.setErrorHandler(errorHandler);
 
   await app.listen(8080, "0.0.0.0");
 }

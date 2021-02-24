@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { generateId } from "../helpers/generateId";
-import { Permission, TokenAudience, User } from "../types";
+import { Permission, TokenAudience } from "../constants";
 import { getRepository } from "typeorm";
 import { formatUrl } from "../helpers/formatUrl";
 import { config } from "../config";
+import { User } from "../entities/User";
 
 export interface JWTPayloadInvite {
   id: string;
@@ -30,14 +31,18 @@ export class InviteService implements OnApplicationBootstrap {
   }
 
   async verifyInviteToken(key: string): Promise<JWTPayloadInvite> {
-    const payload = await this.jwtService.verifyAsync<JWTPayloadInvite>(key, {
-      audience: TokenAudience.INVITE,
-    });
+    try {
+      const payload = await this.jwtService.verifyAsync<JWTPayloadInvite>(key, {
+        audience: TokenAudience.INVITE,
+      });
 
-    const userRepo = getRepository(User);
-    const existing = await userRepo.findOne({ invite: payload.id });
-    if (existing) throw new BadRequestException("That invite has already been used.");
-    return payload;
+      const userRepo = getRepository(User);
+      const existing = await userRepo.findOne({ invite: payload.id });
+      if (existing) throw new BadRequestException("That invite has already been used.");
+      return payload;
+    } catch (e) {
+      throw new BadRequestException("Token validation failed.");
+    }
   }
 
   async onApplicationBootstrap() {

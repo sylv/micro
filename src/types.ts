@@ -7,18 +7,6 @@ import { User } from "./entities/User";
 
 export type RenderableReply = RenderableResponse & FastifyReply;
 
-export enum TokenAudience {
-  USER = "USER",
-  DELETION = "DELETION",
-  INVITE = "INVITE",
-}
-
-export enum Permission {
-  ADMINISTRATOR = 1,
-  CREATE_INVITE = 1 << 1,
-  DELETE_USERS = 1 << 2,
-}
-
 export type GetInviteData = JWTPayloadInvite;
 export type GetUserFilesData = File[];
 export type GetUserData = User;

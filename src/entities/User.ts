@@ -1,9 +1,8 @@
 import { Exclude } from "class-transformer";
-import { BeforeInsert, Column, Entity, Index, OneToMany, OneToOne } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, OneToOne } from "typeorm";
+import { Permission } from "../constants";
 import { generateId } from "../helpers/generateId";
-import { Permission } from "../types";
 import { WithId } from "./base/WithId";
-import { File } from "./File";
 
 @Entity("users")
 export class User extends WithId {
@@ -21,9 +20,6 @@ export class User extends WithId {
   @Column()
   @Exclude()
   token!: string;
-
-  @OneToMany(() => File, (file) => file.owner)
-  files!: File[];
 
   @Column()
   invite!: string;

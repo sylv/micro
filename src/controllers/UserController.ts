@@ -13,6 +13,7 @@ import {
 import { IsString, MaxLength, MinLength } from "class-validator";
 import { FastifyRequest } from "fastify";
 import { getRepository } from "typeorm";
+import { Permission } from "../constants";
 import { RequirePermissions } from "../decorators/RequirePermissions";
 import { UserId } from "../decorators/UserId";
 import { File } from "../entities/File";
@@ -21,7 +22,6 @@ import { JWTAuthGuard } from "../guards/JWTAuthGuard";
 import { generateId } from "../helpers/generateId";
 import { InviteService } from "../services/InviteService";
 import { UserService } from "../services/UserService";
-import { Permission } from "../types";
 
 export class CreateUserDto {
   @MaxLength(20)

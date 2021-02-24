@@ -1,6 +1,6 @@
 import Router from "next/router";
 import useSWR, { mutate } from "swr";
-import { Endpoints } from "../endpoints";
+import { Endpoints } from "../constants";
 import { http } from "../helpers/http";
 import { GetUserData } from "../types";
 

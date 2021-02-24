@@ -11,13 +11,8 @@ import { S3Service } from "./S3Service";
 export class ThumbnailService {
   private static readonly THUMBNAIL_SIZE = 200;
   private static readonly THUMBNAIL_TYPE = "image/jpeg";
-  private static readonly SUPPORTED_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
 
   constructor(private s3Service: S3Service, private fileService: FileService) {}
-
-  public static checkSupport(type: string) {
-    return ThumbnailService.SUPPORTED_TYPES.has(type);
-  }
 
   public async getThumbnail(fileId: string) {
     const thumbnailRepo = getRepository(Thumbnail);
