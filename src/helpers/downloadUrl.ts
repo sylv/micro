@@ -1,7 +1,7 @@
 import { http } from "./http";
 
 export async function downloadUrl(url: string, name: string = ""): Promise<void> {
-  if (url.startsWith("blob") || url.includes(window.location.hostname)) {
+  if (url.startsWith("blob") || url.includes(window.location.hostname) || url.startsWith("/")) {
     // this only works on same-origin urls
     var link = document.createElement("a");
     link.href = url;
