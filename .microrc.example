@@ -7,7 +7,7 @@
     "{{username}}-is.a-very-nice.person"
   ],
   "database": {
-    "uri": "postgresql://user:password@host/database",
+    "uri": "postgresql://user:password@host:5433/database",
     "synchronize": false
   },
   "storage": {

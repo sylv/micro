@@ -179,3 +179,11 @@
 .tooltip-content .inner span {
   border-color: transparent var(--accents-2) transparent transparent !important;
 }
+
+/* 
+  fixes multi selects having too much padding on the left
+  forgive me for i have sinned
+ */
+.select.multiple .item:first-child {
+  margin-left: -2.5pt !important;
+}
