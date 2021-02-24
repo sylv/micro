@@ -19,6 +19,10 @@ export default function Login() {
     if (user.data) Router.replace("/dashboard");
   }, [user]);
 
+  useEffect(() => {
+    Router.prefetch("/dashboard");
+  });
+
   const onUsernameChange = (evt: ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value);
   const onPasswordChange = (evt: ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value);
 

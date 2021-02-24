@@ -5,7 +5,7 @@ import { PageLoader } from "../../components/PageLoader";
 import { Title } from "../../components/Title";
 import { Lock, User } from "@geist-ui/react-icons";
 import { Input, Spacer, Button, useToasts } from "@geist-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { http } from "../../helpers/http";
 import Router from "next/router";
 import { GetInviteData } from "../../types";
@@ -22,6 +22,11 @@ export default function Invite() {
   const inviteToken = router.query.inviteToken;
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
   const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`, { initialData });
+
+  useEffect(() => {
+    Router.prefetch("/login");
+  }, []);
+
   if (invite.error) {
     return <Error title={invite.error.status} message={invite.error.text} />;
   }

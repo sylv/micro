@@ -23,8 +23,8 @@ export default function Dashboard() {
   const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
   const [hosts, setHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
-  const [, setToast] = useToasts();
   const downloadable = !!hosts[0];
+  const [, setToast] = useToasts();
 
   useEffect(() => {
     // redirect home if any of the requests fail
@@ -37,6 +37,10 @@ export default function Dashboard() {
     // set the default domain once they're loaded
     if (server.data && !hosts[0]) setHosts([server.data.host]);
   }, [server]);
+
+  useEffect(() => {
+    Router.prefetch("/file/[fileId]");
+  }, []);
 
   /**
    * Set the selected domain to the given option.
