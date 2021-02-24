@@ -6,7 +6,11 @@ import { GetFileData } from "../../types";
 
 const ImageContentContainer = styled.div`
   max-height: var(--micro-preview-max-height);
+  min-height: var(--micro-preview-min-height);
+  border-bottom: 1px solid var(--accents-3);
   display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
 `;
 
