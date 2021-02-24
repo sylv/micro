@@ -1,0 +1,21 @@
+{
+  "ssl": true,
+  "secret": "you should change this to something very long",
+  "inquiries": "you@youremail.tld",
+  "hosts": [
+    "i.sylver.me",
+    "{{username}}-is.a-very-nice.person"
+  ],
+  "database": {
+    "uri": "postgresql://user:password@host/database",
+    "synchronize": false
+  },
+  "storage": {
+    "bucket": "micro",
+    "accessKeyId": "minio_access_key",
+    "secretAccessKey": "minio_access_secret",
+    "endpoint": "http://127.0.0.1:9000",
+    "s3ForcePathStyle": true,
+    "signatureVersion": "v4"
+  }
+}
