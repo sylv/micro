@@ -23,7 +23,7 @@ export class LinkService {
     return link;
   }
 
-  async deleteLink(id: string, ownerId: string) {
+  async deleteLink(id: string, ownerId: string | undefined) {
     const linkRepo = getRepository(Link);
     const link = await linkRepo.findOne(id);
     if (!link) throw new NotFoundException();

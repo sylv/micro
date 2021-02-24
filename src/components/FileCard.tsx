@@ -45,6 +45,9 @@ const FileCardImageContainer = styled.div`
 const FileCardFooter = styled.div`
   border-top: 1px solid var(--accents-2);
   padding: var(--micro-gap-half);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 function FileCardImage(props: { file: GetFileData }) {

@@ -1,7 +1,7 @@
 import { FastifyReply } from "fastify";
 import { RenderableResponse } from "nest-next";
+import { JWTPayloadInvite } from "./services/InviteService";
 import { File } from "./entities/File";
-import { Invite } from "./entities/Invite";
 import { Link } from "./entities/Link";
 import { User } from "./entities/User";
 
@@ -10,6 +10,7 @@ export type RenderableReply = RenderableResponse & FastifyReply;
 export enum TokenAudience {
   USER = "USER",
   DELETION = "DELETION",
+  INVITE = "INVITE",
 }
 
 export enum Permission {
@@ -18,7 +19,7 @@ export enum Permission {
   DELETE_USERS = 1 << 2,
 }
 
-export type GetInviteData = Invite;
+export type GetInviteData = JWTPayloadInvite;
 export type GetUserFilesData = File[];
 export type GetUserData = User;
 export type GetFileData = File;
@@ -36,6 +37,5 @@ export interface GetServerConfigData {
 }
 
 export * from "./entities/File";
-export * from "./entities/Invite";
 export * from "./entities/User";
 export * from "./entities/Thumbnail";

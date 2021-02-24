@@ -50,7 +50,7 @@ export class UserController {
 
   @Post("/api/user")
   async createUser(@Body() data: CreateUserDto) {
-    const invite = await this.inviteService.getInvite(data.invite);
+    const invite = await this.inviteService.verifyInviteToken(data.invite);
     return this.userService.createUser(data.username, data.password, invite);
   }
 

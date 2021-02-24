@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { getRepository } from "typeorm";
 import { ContentType } from "../entities/base/Content";
 import { File } from "../entities/File";
 import { Link } from "../entities/Link";
 import { TokenAudience } from "../types";
+import { FileService } from "./FileService";
+import { LinkService } from "./LinkService";
 
 export interface JWTPayloadDelete {
   type: ContentType;
@@ -13,14 +15,20 @@ export interface JWTPayloadDelete {
 
 @Injectable()
 export class DeletionService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService, private fileService: FileService, private linkService: LinkService) {}
 
   async delete(token: string) {
     const payload = await this.verifyDeletionToken(token);
-    const repo = payload.type == ContentType.FILE ? getRepository(File) : getRepository(Link);
-    const count = await repo.delete(payload.sub);
-    if (count.affected! === 0) throw new NotFoundException();
-    return;
+    switch (payload.type) {
+      case ContentType.FILE:
+        await this.fileService.deleteFile(payload.sub, undefined);
+        break;
+      case ContentType.LINK:
+        await this.linkService.deleteLink(payload.sub, undefined);
+        break;
+      default:
+        throw new BadRequestException("Unknown deletion type.");
+    }
   }
 
   getDeletionUrl(type: ContentType, id: string) {

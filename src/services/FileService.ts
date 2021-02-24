@@ -33,7 +33,7 @@ export class FileService {
     return file;
   }
 
-  public async deleteFile(id: string, ownerId: string) {
+  public async deleteFile(id: string, ownerId: string | undefined) {
     const fileRepo = getRepository(File);
     const file = await fileRepo.findOne(id);
     if (!file) throw new NotFoundException();

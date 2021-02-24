@@ -18,9 +18,9 @@ export default function Invite() {
   const [loading, setLoading] = useState(false);
   const [, setToast] = useToasts();
   const disabled = loading || !username || !password;
-  const inviteId = router.query.inviteId;
+  const inviteToken = router.query.inviteToken;
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
-  const invite = useSWR<GetInviteData>(`/api/invite/${inviteId}`, { initialData });
+  const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`, { initialData });
   if (invite.error) {
     return (
       <ContainerCenter>
@@ -42,7 +42,7 @@ export default function Invite() {
       await http(Endpoints.USER, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, invite: inviteId }),
+        body: JSON.stringify({ username, password, invite: inviteToken }),
       });
 
       Router.push("/login");

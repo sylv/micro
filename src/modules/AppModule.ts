@@ -15,7 +15,6 @@ import { ShareXController } from "../controllers/ShareXController";
 import { ThumbnailController } from "../controllers/ThumbnailController";
 import { UserController } from "../controllers/UserController";
 import { File } from "../entities/File";
-import { Invite } from "../entities/Invite";
 import { Link } from "../entities/Link";
 import { Thumbnail } from "../entities/Thumbnail";
 import { User } from "../entities/User";
@@ -66,7 +65,7 @@ import Next from "next";
       type: "postgres",
       url: config.database.uri,
       synchronize: config.database.synchronize,
-      entities: [User, Thumbnail, File, Link, Invite],
+      entities: [User, Thumbnail, File, Link],
     }),
     RenderModule.forRootAsync(
       Next({

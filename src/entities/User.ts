@@ -4,7 +4,6 @@ import { generateId } from "../helpers/generateId";
 import { Permission } from "../types";
 import { WithId } from "./base/WithId";
 import { File } from "./File";
-import { Invite } from "./Invite";
 
 @Entity("users")
 export class User extends WithId {
@@ -26,8 +25,11 @@ export class User extends WithId {
   @OneToMany(() => File, (file) => file.owner)
   files!: File[];
 
-  @OneToOne(() => Invite, { nullable: false, onDelete: "CASCADE" })
-  invite!: Invite;
+  @Column()
+  invite!: string;
+
+  @OneToOne((type) => User, { nullable: true, onDelete: "CASCADE" })
+  inviter?: User;
 
   @BeforeInsert()
   protected beforeInsert() {
