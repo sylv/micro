@@ -17,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Title>Home</Title>
         <Head>
           <meta property="og:site_name" content="micro" />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         </Head>
         <Menu />
         <Component {...pageProps} />
