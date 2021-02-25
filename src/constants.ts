@@ -1,5 +1,6 @@
 export const EMBEDDABLE_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 export const EMBEDDABLE_VIDEO_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+export const IS_DEV = process.env.NODE_ENV !== "production";
 
 export enum Endpoints {
   CONFIG = "/api/config",

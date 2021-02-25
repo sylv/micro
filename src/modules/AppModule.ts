@@ -3,7 +3,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RenderModule } from "nest-next";
-import { resolve } from "path";
 import { config } from "../config";
 import { AppController } from "../controllers/AppController";
 import { AuthController } from "../controllers/AuthController";
@@ -28,6 +27,7 @@ import { UserService } from "../services/UserService";
 import { JWTStrategy } from "../strategies/JWTStrategy";
 import { LocalStrategy } from "../strategies/LocalStrategy";
 import Next from "next";
+import { IS_DEV } from "../constants";
 
 @Module({
   // this will be done properly soon. maybe.
@@ -67,16 +67,10 @@ import Next from "next";
       synchronize: config.database.synchronize,
       entities: [User, Thumbnail, File, Link],
     }),
-    RenderModule.forRootAsync(
-      Next({
-        dev: process.env.NODE_ENV !== "production",
-        // dev: false,
-      }),
-      {
-        passthrough404: true,
-        viewsDir: null,
-      }
-    ),
+    RenderModule.forRootAsync(Next({ dev: IS_DEV }), {
+      passthrough404: true,
+      viewsDir: null,
+    }),
   ],
 })
 export class AppModule {}

@@ -4,6 +4,9 @@
 !types/**/*
 !package.json
 !yarn.lock
-!tsconfig*.json
+!tsconfig.json
+!tsconfig.server.json
 !next-env.d.ts
+!next.config.js
+!public
 !LICENSE
