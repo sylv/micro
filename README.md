@@ -40,3 +40,4 @@ Another private file host. This is all still a work in progress so for now watch
 - [ ] wget and curl should work with view urls
 - [ ] Thumbnails should ideally be generated on upload
 - [ ] Re-enable EXIF remover
+- [ ] Files in public/ arent being served in the docker container.

@@ -9,7 +9,7 @@ const DEFAULT_TYPE = "application/octet-stream";
 // file-type scans the first 4.2kb
 const SCAN_BYTE_COUNT = 4200;
 // overrides for types that are poorly mapped by sharex
-const EXT_TEXT_MAP = new Set(["ts", "tsx", "jsx"]);
+const EXT_TEXT_MAP = new Set(["ts", "tsx", "jsx", "ejs", "cjs", "mjs"]);
 const EXT_TEXT_TYPE = "text/plain";
 
 async function readFirstBytes(stream: PassThrough) {
@@ -28,6 +28,7 @@ async function readFirstBytes(stream: PassThrough) {
 export async function getStreamType(fileName: string, stream: PassThrough): Promise<string | undefined> {
   const firstBytes = await readFirstBytes(stream);
   const binary = isBinary(fileName, firstBytes);
+  console.log({ binary });
   if (binary) {
     const result = await fileType.fromBuffer(firstBytes);
     return result?.mime ?? DEFAULT_TYPE;

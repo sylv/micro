@@ -1,6 +1,8 @@
 import { Language } from "prism-react-renderer";
 
-const EXT_LANGUAGE_MAP = new Map<string, Language>();
+const EXT_LANGUAGE_MAP = new Map<string, Language | string>();
+EXT_LANGUAGE_MAP.set("ejs", "html");
+EXT_LANGUAGE_MAP.set("html", "html");
 EXT_LANGUAGE_MAP.set("md", "markdown");
 EXT_LANGUAGE_MAP.set("js", "javascript");
 EXT_LANGUAGE_MAP.set("ts", "typescript");
