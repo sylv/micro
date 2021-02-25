@@ -25,7 +25,7 @@ export const theme: PrismTheme = {
       },
     },
     {
-      types: ["property", "function", "parameter", "string"],
+      types: ["function", "parameter", "string"],
       style: {
         color: "var(--atlas-foreground)",
       },
@@ -57,6 +57,7 @@ export const theme: PrismTheme = {
         "at-rule",
         "placeholder",
         "variable",
+        "property",
       ],
       style: {
         color: "#f079e6",
