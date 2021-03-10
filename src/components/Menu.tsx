@@ -1,12 +1,16 @@
 import { Button } from "@geist-ui/react";
 import { Crop } from "@geist-ui/react-icons";
 import Link from "next/link";
+import { useState } from "react";
 import styled from "styled-components";
+import useSWR from "swr";
+import { Endpoints } from "../constants";
 import { useUser } from "../hooks/useUser";
+import { GetServerConfigData } from "../types";
 import { Container } from "./Container";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 
-const MenuNav = styled.nav`
+const MenuNav = styled.nav<{ visible: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,6 +18,9 @@ const MenuNav = styled.nav`
   position: relative;
   margin: 0 auto;
   height: 60px;
+  transition: opacity 150ms;
+  pointer-events: ${(props) => !props.visible && "none"};
+  opacity: ${(props) => !props.visible && "0"};
 `;
 
 const MenuBrand = styled.a`
@@ -32,17 +39,22 @@ const MenuContainer = styled.div`
 
 export function Menu() {
   const user = useUser();
-  const buttonHref = user.data ? "/dashboard" : "/login";
+  const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
+  const windowHost = typeof window === "undefined" ? "" : window.location.host;
+  const base = server.data && server.data?.host !== windowHost ? `//${server.data.host}` : "/";
+  const buttonHref = base + (user.data ? "/dashboard" : "/login");
   const buttonText = user.data ? "Enter" : "Sign in";
 
   return (
     <Container>
-      <MenuNav>
-        <Link href="/" passHref>
-          <MenuBrand>
-            <Crop /> micro
-          </MenuBrand>
-        </Link>
+      <MenuNav visible={!!server.data}>
+        <MenuContainer>
+          <Link href={base} passHref>
+            <MenuBrand>
+              <Crop /> micro
+            </MenuBrand>
+          </Link>
+        </MenuContainer>
         <MenuContainer>
           <ThemeSwitcher />
           <Link href={buttonHref} passHref>

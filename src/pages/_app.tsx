@@ -1,4 +1,5 @@
 import { CssBaseline, GeistProvider } from "@geist-ui/react";
+import { GetStaticProps } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
