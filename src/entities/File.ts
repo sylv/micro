@@ -1,11 +1,11 @@
+import { Logger } from "@nestjs/common";
 import { Exclude, Expose } from "class-transformer";
 import mimeType from "mime-types";
-import { config } from "../config";
-import { s3 } from "../s3";
-import { EMBEDDABLE_IMAGE_TYPES } from "../constants";
 import { BeforeRemove, Column, Entity } from "typeorm";
+import { config } from "../config";
+import { EMBEDDABLE_IMAGE_TYPES } from "../constants";
+import { s3 } from "../s3";
 import { Content } from "./base/Content";
-import { Logger } from "@nestjs/common";
 
 @Entity()
 export class File extends Content {
@@ -26,13 +26,6 @@ export class File extends Content {
   @Expose()
   get extension() {
     return mimeType.extension(this.type) || null;
-  }
-
-  @Expose()
-  get embeddable() {
-    // discord doesnt like embedding videos,
-    // return this.type.startsWith('image') || this.type.startsWith('audio') || this.type.startsWith('video')
-    return this.type.startsWith("image") || this.type.startsWith("audio");
   }
 
   @Expose()

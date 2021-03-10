@@ -34,10 +34,10 @@ export class FileController {
 
     // discord wont embed unless we return an image, so we have to detect their user-agents and
     // return it specifically for them. this might break if they update their second scraper ua
-    const isScraper = isImageScraper(request.headers["user-agent"]);
+    const scraper = isImageScraper(request.headers["user-agent"]);
     const file = await this.getFile(clean.id);
     if (!file) throw new NotFoundException();
-    if (isScraper && file.embeddable) {
+    if (scraper && (!scraper.types || scraper.types.includes(file.type))) {
       return this.fileService.sendFile(file.id, request, reply);
     }
 
