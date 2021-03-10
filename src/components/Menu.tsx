@@ -41,8 +41,8 @@ export function Menu() {
   const user = useUser();
   const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
   const windowHost = typeof window === "undefined" ? "" : window.location.host;
-  const base = server.data && server.data?.host !== windowHost ? `//${server.data.host}` : "/";
-  const buttonHref = base + (user.data ? "/dashboard" : "/login");
+  const base = server.data && server.data.host !== windowHost ? `//${server.data.host}/` : "/";
+  const buttonHref = base + (user.data ? "dashboard" : "login");
   const buttonText = user.data ? "Enter" : "Sign in";
 
   return (
