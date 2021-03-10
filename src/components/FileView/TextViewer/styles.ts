@@ -1,15 +1,13 @@
 import styled from "styled-components";
 
-export const TextContentContainer = styled.div`
+export const TextViewerContainer = styled.div`
   height: 100%;
   pre {
     margin: 0;
     max-height: var(--micro-preview-max-height);
     min-height: var(--micro-preview-min-height);
     overflow: scroll;
-    border-radius: 0;
     border-color: transparent;
-    border-bottom-color: var(--accents-2) !important;
   }
 `;
 
@@ -45,14 +43,17 @@ export const LineContent = styled.span`
   display: table-cell;
 `;
 
-export const TextContentCopy = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin: 0.5em;
-  opacity: 0.35;
-  transition: opacity 250ms;
-  :hover {
-    opacity: 1;
+export const TextViewerCopyButton = styled.div`
+  position: relative;
+  button {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    margin: 0.5em;
+    opacity: 0.35;
+    transition: opacity 250ms;
+    :hover {
+      opacity: 1;
+    }
   }
 `;

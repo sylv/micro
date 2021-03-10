@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { File as FileIcon } from "@geist-ui/react-icons";
 import { GetFileData } from "../../types";
 
-export const DefaultContentContainer = styled.div`
+export const DefaultViewerContainer = styled.div`
   height: var(--micro-preview-min-height);
   width: 100%;
   display: flex;
@@ -22,13 +22,13 @@ export const DefaultContentContainer = styled.div`
   }
 `;
 
-export const DefaultContent = (props: { file: GetFileData }) => {
+export const DefaultViewer = (props: { file: GetFileData }) => {
   return (
-    <DefaultContentContainer>
+    <DefaultViewerContainer>
       <h1>{props.file.displayName}</h1>
       <span>
         <FileIcon /> {props.file.type}
       </span>
-    </DefaultContentContainer>
+    </DefaultViewerContainer>
   );
 };

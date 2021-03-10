@@ -2,13 +2,13 @@ import { Button, useToasts, useClipboard } from "@geist-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import React, { useMemo } from "react";
 import useSWR from "swr";
-import { PageLoader } from "../PageLoader";
-import { DefaultContent } from "./DefaultContent";
-import { getLanguage } from "./TextContent.languages";
-import { Line, LineContent, LineNo, Pre, TextContentContainer, TextContentCopy } from "./TextContent.styles";
-import { theme } from "./TextContent.theme";
-import { GetFileData } from "../../types";
-import { http } from "../../helpers/http";
+import { PageLoader } from "../../PageLoader";
+import { DefaultViewer } from "../DefaultViewer";
+import { getLanguage } from "./languages";
+import { Line, LineContent, LineNo, Pre, TextViewerContainer, TextViewerCopyButton } from "./styles";
+import { theme } from "./theme";
+import { GetFileData } from "../../../types";
+import { http } from "../../../helpers/http";
 
 const DEFAULT_LANGUAGE = "markdown";
 
@@ -23,13 +23,13 @@ export function checkTextSupport(file: GetFileData): boolean {
   return false;
 }
 
-export const TextContent = (props: { file: GetFileData }) => {
+export const TextViewer = (props: { file: GetFileData }) => {
   const { copy } = useClipboard();
   const [, setToast] = useToasts();
   const content = useSWR<string>(props.file.urls.direct, { fetcher });
   const language = useMemo(() => getLanguage(props.file.displayName) ?? DEFAULT_LANGUAGE, [props.file]);
   if (content.error) {
-    return <DefaultContent file={props.file} />;
+    return <DefaultViewer file={props.file} />;
   }
 
   if (!content.data) {
@@ -42,12 +42,12 @@ export const TextContent = (props: { file: GetFileData }) => {
   };
 
   return (
-    <TextContentContainer>
-      <TextContentCopy>
+    <TextViewerContainer>
+      <TextViewerCopyButton>
         <Button size="mini" onClick={copyContent}>
           Copy Content
         </Button>
-      </TextContentCopy>
+      </TextViewerCopyButton>
       <Highlight {...defaultProps} theme={theme} code={content.data} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <Pre className={className} style={style}>
@@ -64,6 +64,6 @@ export const TextContent = (props: { file: GetFileData }) => {
           </Pre>
         )}
       </Highlight>
-    </TextContentContainer>
+    </TextViewerContainer>
   );
 };

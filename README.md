@@ -22,7 +22,7 @@ Another private file host. This is all still a work in progress so for now watch
 - [x] Config generation
 - [x] File name preservation
 - [x] Video, image and text previews
-- [x] Syntax highlighting on [supported](packages/web/src/components/FileContent/TextContent.tsx) [files](./packages/web/src/components/FileContent/TextContent.languages.ts)
+- [x] Syntax highlighting for supported files
 - [x] Deletion URLs
 - [x] Dashboard
 - [x] Permissions
