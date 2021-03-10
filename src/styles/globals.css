@@ -1,6 +1,6 @@
 :root {
-  --micro-preview-max-height: 51vh;
-  --micro-preview-min-height: 80wh;
+  --micro-preview-max-height: 61vh;
+  --micro-preview-min-height: 11vh;
   --micro-space: 4px;
   --micro-space-2x: 8px;
   --micro-space-4x: 16px;
@@ -64,52 +64,50 @@
     monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --micro-foreground: #fff;
-    --micro-background: #000;
-    --micro-selection: var(--micro-purple);
-    --accents-8: #fafafa;
-    --accents-7: #eaeaea;
-    --accents-6: #999;
-    --accents-5: #888;
-    --accents-4: #666;
-    --accents-3: #444;
-    --accents-2: #333;
-    --accents-1: #111;
-    --micro-success: #0070f3;
-    --micro-success-dark: #0366d6;
-    --micro-error: red;
-    --micro-error-dark: #e60000;
-    --micro-warning: #f5a623;
-    --micro-warning-dark: #f49b0b;
-    --micro-secondary: var(--accents-5);
-    --micro-secondary-dark: var(--accents-7);
-    --micro-marketing-gray: var(--accents-1);
-    --micro-code: var(--micro-cyan);
-    --dropdown-box-shadow: 0 0 0 1px var(--accents-2);
-    --dropdown-triangle-stroke: #333;
-    --scroller-start: #000;
-    --scroller-end: transparent;
-    --header-border-bottom: inset 0 -1px 0 0 hsla(0, 0%, 100%, 0.1);
-    --shadow-small: 0 0 0 1px var(--accents-2);
-    --shadow-medium: 0 0 0 1px var(--accents-2);
-    --shadow-large: 0 0 0 1px var(--accents-2);
-    --portal-opacity: 0.75;
-  }
+html.dark:root {
+  --micro-foreground: #fff;
+  --micro-background: #000;
+  --micro-selection: var(--micro-purple);
+  --accents-8: #fafafa;
+  --accents-7: #eaeaea;
+  --accents-6: #999;
+  --accents-5: #888;
+  --accents-4: #666;
+  --accents-3: #444;
+  --accents-2: #333;
+  --accents-1: #111;
+  --micro-success: #0070f3;
+  --micro-success-dark: #0366d6;
+  --micro-error: red;
+  --micro-error-dark: #e60000;
+  --micro-warning: #f5a623;
+  --micro-warning-dark: #f49b0b;
+  --micro-secondary: var(--accents-5);
+  --micro-secondary-dark: var(--accents-7);
+  --micro-marketing-gray: var(--accents-1);
+  --micro-code: var(--micro-cyan);
+  --dropdown-box-shadow: 0 0 0 1px var(--accents-2);
+  --dropdown-triangle-stroke: #333;
+  --scroller-start: #000;
+  --scroller-end: transparent;
+  --header-border-bottom: inset 0 -1px 0 0 hsla(0, 0%, 100%, 0.1);
+  --shadow-small: 0 0 0 1px var(--accents-2);
+  --shadow-medium: 0 0 0 1px var(--accents-2);
+  --shadow-large: 0 0 0 1px var(--accents-2);
+  --portal-opacity: 0.75;
+}
 
-  ::-webkit-scrollbar {
-    background-color: var(--micro-background);
-    color: var(--micro-foreground);
-  }
+html.dark ::-webkit-scrollbar {
+  background-color: var(--micro-background);
+  color: var(--micro-foreground);
+}
 
-  ::-webkit-scrollbar-corner {
-    background-color: var(--micro-background);
-  }
+html.dark ::-webkit-scrollbar-corner {
+  background-color: var(--micro-background);
+}
 
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--accents-1);
-  }
+html.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--accents-1);
 }
 
 #__next {

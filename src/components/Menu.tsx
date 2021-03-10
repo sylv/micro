@@ -4,6 +4,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import { useUser } from "../hooks/useUser";
 import { Container } from "./Container";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 const MenuNav = styled.nav`
   display: flex;
@@ -43,9 +44,12 @@ export function Menu() {
           </MenuBrand>
         </Link>
         <MenuContainer>
+          <ThemeSwitcher />
           <Link href={buttonHref} passHref>
             <a>
-              <Button auto>{buttonText}</Button>
+              <Button auto style={{ marginLeft: "var(--micro-gap-half)" }} type="success" size="small">
+                {buttonText}
+              </Button>
             </a>
           </Link>
         </MenuContainer>
