@@ -17,10 +17,13 @@ export const scrapers: ScraperDefinition[] = [
       "image/webp",
       "image/gif",
       "video/webm",
-      "video/mp4",
       "audio/wav",
       "audio/mpeg",
       "audio/ogg",
+      // for some reason discord will only embed mp4s if the url contains a ".mp4" extension
+      // i honestly have no clue why, the only fix that would work is using direct urls *only* for
+      // mp4 uploads *only* for discord which isn't something i want to do.
+      // "video/mp4"
     ],
   },
   {

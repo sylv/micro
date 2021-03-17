@@ -37,7 +37,6 @@ Another private file host. This is all still a work in progress so for now watch
 ## todo
 
 - [ ] The annoying flash of light theme has returned and needs to be fixed, likely caused by a geist-ui update.
-- [ ] wget and curl should work with view urls
 - [ ] Thumbnails should ideally be generated on upload
 - [ ] Re-enable EXIF remover
-- [ ] Files in public/ arent being served in the docker container.
+- [ ] Image width+height should be stored so the image preview doesn't flash while loading.
