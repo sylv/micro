@@ -4,13 +4,13 @@ Another private file host. This is all still a work in progress so for now watch
 
 <table>
   <tr>
-    <td><img src="https://i.imgur.com/1wKeCNj.png" title="Preview" alt="Preview"></td>
-    <td><img src="https://i.imgur.com/zJoQX37.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/9OG82jM.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/21rYxiu.png" title="Preview" alt="Preview"></td>
    </tr> 
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/uT5tYAB.png" title="Preview" alt="Preview"></td>
-    <td><img src="https://i.imgur.com/TPbxZ7h.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/WJ72q4q.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/8gjY8FK.png" title="Preview" alt="Preview"></td>
    </tr> 
   </tr>
 </table>
@@ -28,15 +28,18 @@ Another private file host. This is all still a work in progress so for now watch
 - [x] Permissions
 - [x] Invite links
 - [x] URL Shortening
-- [x] EXIF metadata removal
+- [X] Mobile support
+- [ ] EXIF metadata removal
 - [ ] Video thumbnails
 - [ ] Markdown previews
-- [ ] Mobile support
 - [ ] Pastes
 
 ## todo
 
-- [ ] The annoying flash of light theme has returned and needs to be fixed, likely caused by a geist-ui update.
 - [ ] Thumbnails should ideally be generated on upload
 - [ ] Re-enable EXIF remover
 - [ ] Image width+height should be stored so the image preview doesn't flash while loading.
+- [ ] Ratelimiting
+- [ ] Link shortening might be broken..?
+- [ ] FileEmbed.tsx has trouble scaling down on mobile. May be due to the file name not truncating properly, also an issue with text previews that are long and wide.
+- [ ] Domain dropdown should be a multi-select like the pre-tailwind design.

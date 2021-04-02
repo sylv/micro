@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { EMBEDDABLE_IMAGE_TYPES } from "src/constants";
+import { EMBEDDABLE_IMAGE_TYPES } from "../../constants";
 import { GetFileData } from "../../types";
 
 export function checkImageSupport(file: GetFileData) {
@@ -8,12 +8,12 @@ export function checkImageSupport(file: GetFileData) {
 
 export const ImageViewer = (props: { file: GetFileData }) => {
   return (
-    <>
+    <div className="flex items-center justify-center">
       <Head>
         <meta name="twitter:image" content={props.file.urls.direct} />
         <meta property="og:image" content={props.file.urls.direct} />
       </Head>
-      <img src={props.file.urls.direct} alt={props.file.displayName} />
-    </>
+      <img className="object-contain" src={props.file.urls.direct} alt={props.file.displayName} />
+    </div>
   );
 };

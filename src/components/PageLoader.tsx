@@ -1,8 +1,8 @@
-import { Spinner } from "@geist-ui/react";
-import { useEffect } from "react";
-import { ContainerCenter } from "./Container";
+import { FunctionComponent, useEffect } from "react";
+import { Container } from "./Container";
+import { Spinner } from "./Spinner";
 
-export function PageLoader() {
+export const PageLoader: FunctionComponent = () => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -11,8 +11,8 @@ export function PageLoader() {
   });
 
   return (
-    <ContainerCenter>
+    <Container center>
       <Spinner size="large" />
-    </ContainerCenter>
+    </Container>
   );
-}
+};

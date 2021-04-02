@@ -1,34 +1,11 @@
-import styled from "styled-components";
-import { File as FileIcon } from "@geist-ui/react-icons";
 import { GetFileData } from "../../types";
+import { FunctionComponent } from "react";
 
-export const DefaultViewerContainer = styled.div`
-  height: var(--micro-preview-min-height);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  > * {
-    margin: 0;
-  }
-  span {
-    display: flex;
-    align-items: center;
-    color: var(--accents-4);
-  }
-  svg {
-    height: 1rem;
-  }
-`;
-
-export const DefaultViewer = (props: { file: GetFileData }) => {
+export const DefaultViewer: FunctionComponent<{ file: GetFileData }> = (props) => {
   return (
-    <DefaultViewerContainer>
-      <h1>{props.file.displayName}</h1>
-      <span>
-        <FileIcon /> {props.file.type}
-      </span>
-    </DefaultViewerContainer>
+    <div className="flex flex-col items-center justify-center w-full select-none h-44">
+      <h1 className="flex items-center mb-2 text-xl font-bold">{props.file.type}</h1>
+      <span className="text-sm text-gray-500">No preview available for this file type.</span>
+    </div>
   );
 };

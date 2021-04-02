@@ -1,10 +1,11 @@
 import Head from "next/head";
+import { FunctionComponent } from "react";
 
-export function Title({ children }: { children: string | number }) {
+export const Title: FunctionComponent = (props) => {
   return (
     <Head>
-      <title>{children} &mdash; micro</title>
-      <meta property="og:title" content={children.toString()} key="title" />
+      <title>{props.children} &mdash; micro</title>
+      <meta property="og:title" content={`${props.children}`} key="title" />
     </Head>
   );
-}
+};

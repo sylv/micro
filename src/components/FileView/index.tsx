@@ -2,19 +2,13 @@ import { checkImageSupport, ImageViewer } from "./ImageViewer";
 import { TextViewer, checkTextSupport } from "./TextViewer";
 import { DefaultViewer } from "./DefaultViewer";
 import Head from "next/head";
-import styled from "styled-components";
 import { checkVideoSupport, VideoViewer } from "./VideoViewer";
-import { useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 import { GetFileData } from "../../types";
 
-const FileViewWrapperContainer = styled.div`
-  max-height: var(--micro-preview-max-height);
-  min-height: var(--micro-preview-min-height);
-`;
-
-const FileViewWrapper = (props: { file: GetFileData; children: React.ReactChild }) => {
+const FileViewWrapper: FunctionComponent<{ file: GetFileData; children: React.ReactChild }> = (props) => {
   return (
-    <FileViewWrapperContainer>
+    <>
       <Head>
         <meta name="twitter:title" content={props.file.displayName} />
         <meta property="og:title" content={props.file.displayName} key="title" />
@@ -22,11 +16,11 @@ const FileViewWrapper = (props: { file: GetFileData; children: React.ReactChild 
         <meta property="og:type" content="article" />
       </Head>
       {props.children}
-    </FileViewWrapperContainer>
+    </>
   );
 };
 
-export const FileView = (props: { file: GetFileData }) => {
+export const FileView: FunctionComponent<{ file: GetFileData }> = (props) => {
   const isText = useMemo(() => checkTextSupport(props.file), [props.file.type]);
   const isImage = useMemo(() => checkImageSupport(props.file), [props.file.type]);
   const isVideo = useMemo(() => checkVideoSupport(props.file), [props.file.type]);

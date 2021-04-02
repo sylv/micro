@@ -1,110 +1,64 @@
-import { Button, Card, Tooltip, useClipboard, useToasts } from "@geist-ui/react";
-import { Download, FileText, Share2, Clock } from "@geist-ui/react-icons";
 import prettyBytes from "pretty-bytes";
-import { useState } from "react";
-import styled from "styled-components";
+import { FunctionComponent, useState } from "react";
+import { Box, Clock, Download, FileText, Share2 } from "react-feather";
 import { downloadUrl } from "../helpers/downloadUrl";
-import { FileView } from "./FileView";
 import { formatDate } from "../helpers/formatDate";
+import { useToasts } from "../hooks/useToasts";
 import { GetFileData } from "../types";
+import { Button } from "./Button";
+import { FileView } from "./FileView";
+import copyToClipboard from "copy-to-clipboard";
 
-const FileEmbedContainer = styled.div`
-  border: 1px solid var(--accents-2);
-  border-radius: var(--micro-radius);
-  overflow: hidden;
-  img,
-  video {
-    max-height: var(--micro-preview-max-height);
-    min-height: var(--micro-preview-min-height);
-    object-fit: contain;
-    width: 100%;
-  }
-`;
-
-const FileEmbedInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 1em;
-  border-top: 1px solid var(--accents-2);
-`;
-
-const FileEmbedName = styled.div`
-  align-self: center;
-  margin-right: var(--micro-gap);
-`;
-
-const FileEmbedButtons = styled.div`
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  button {
-    margin-bottom: var(--micro-gap-quarter);
-  }
-`;
-
-const FileEmbedMetadata = styled.span`
-  display: inline-flex;
-  align-items: center;
-  padding-right: 0.5em;
-  font-size: 0.7rem;
-  color: var(--accents-5);
-  svg {
-    height: 1rem;
-    width: 1rem;
-    margin-right: 0.25em;
-  }
-`;
-
-export const FileEmbed = (props: { file: GetFileData }) => {
-  const [, setToast] = useToasts();
+export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
+  const setToast = useToasts();
   const [disabled, setDisabled] = useState(false);
-  const clipboard = useClipboard();
 
   const download = async () => {
     try {
       setDisabled(true);
       await downloadUrl(props.file.urls.direct, props.file.displayName);
     } catch (err) {
-      setToast({ type: "error", text: err.message });
+      setToast({ error: true, text: err.message });
     } finally {
       setDisabled(false);
     }
   };
 
   const copy = () => {
-    clipboard.copy(window.location.href);
+    copyToClipboard(window.location.href);
     setToast({
       text: `Copied link to clipboard`,
-      type: "success",
     });
   };
 
+  // todo: this doesn't scale down properly on mobile with long file names
   return (
-    <FileEmbedContainer>
+    <div className="overflow-hidden border rounded md:mx-24 border-dark-600">
       <FileView file={props.file} />
-      <FileEmbedInfo>
-        <FileEmbedName>
-          <h1 style={{ fontSize: "2rem", margin: 0 }}>{props.file.displayName}</h1>
-          <Tooltip text="File Size">
-            <FileEmbedMetadata>
-              <FileText /> {prettyBytes(props.file.size)}
-            </FileEmbedMetadata>
-          </Tooltip>
-          <Tooltip text="Created At">
-            <FileEmbedMetadata>
-              <Clock /> {formatDate(props.file.createdAt)}
-            </FileEmbedMetadata>
-          </Tooltip>
-        </FileEmbedName>
-        <FileEmbedButtons>
-          <Button icon={<Share2 />} onClick={copy}>
+      <div className="flex items-center justify-between p-3 border-t border-dark-600">
+        <div>
+          <h1 className="mb-2 text-4xl font-bold">{props.file.displayName}</h1>
+          <div className="flex">
+            <div className="flex items-center justify-center mr-2 text-xs text-gray-600 " title="File Size">
+              <FileText className="h-4" /> {prettyBytes(props.file.size)}
+            </div>
+            <div className="flex items-center justify-center text-xs text-gray-600" title="Created At">
+              <Clock className="h-4" /> {formatDate(props.file.createdAt)}
+            </div>
+            <div className="flex items-center justify-center text-xs text-gray-600" title="File Type">
+              <Box className="h-4" /> {props.file.type}
+            </div>
+          </div>
+        </div>
+        <div className="w-1/4">
+          <Button prefix={<Share2 />} onClick={copy} className="mb-2">
             Copy Link
           </Button>
-          <Button icon={<Download />} onClick={download} disabled={disabled}>
+          <Button prefix={<Download />} onClick={download} disabled={disabled}>
             Download
           </Button>
-        </FileEmbedButtons>
-      </FileEmbedInfo>
-    </FileEmbedContainer>
+        </div>
+      </div>
+    </div>
   );
 };

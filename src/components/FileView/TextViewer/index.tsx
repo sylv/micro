@@ -1,31 +1,31 @@
-import { Button, useToasts, useClipboard } from "@geist-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import React, { useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import useSWR from "swr";
 import { PageLoader } from "../../PageLoader";
 import { DefaultViewer } from "../DefaultViewer";
 import { getLanguage } from "./languages";
-import { Line, LineContent, LineNo, Pre, TextViewerContainer, TextViewerCopyButton } from "./styles";
 import { theme } from "./theme";
 import { GetFileData } from "../../../types";
 import { http } from "../../../helpers/http";
+import classNames from "classnames";
+import copyToClipboard from "copy-to-clipboard";
+import { Button } from "../../Button";
+import { useToasts } from "../../../hooks/useToasts";
 
 const DEFAULT_LANGUAGE = "markdown";
-
-async function fetcher(url: string) {
+const fetcher = async (url: string) => {
   const response = await http(url);
   return response.text();
-}
+};
 
-export function checkTextSupport(file: GetFileData): boolean {
+export const checkTextSupport = (file: GetFileData): boolean => {
   if (file.type.startsWith("text/")) return true;
   if (getLanguage(file.displayName)) return true;
   return false;
-}
+};
 
-export const TextViewer = (props: { file: GetFileData }) => {
-  const { copy } = useClipboard();
-  const [, setToast] = useToasts();
+export const TextViewer: FunctionComponent<{ file: GetFileData }> = (props) => {
+  const setToast = useToasts();
   const content = useSWR<string>(props.file.urls.direct, { fetcher });
   const language = useMemo(() => getLanguage(props.file.displayName) ?? DEFAULT_LANGUAGE, [props.file]);
   if (content.error) {
@@ -37,33 +37,36 @@ export const TextViewer = (props: { file: GetFileData }) => {
   }
 
   const copyContent = () => {
-    copy(content.data!);
-    setToast({ type: "success", text: "Copied file content to clipboard." });
+    copyToClipboard(content.data!);
+    setToast({ text: "Copied file content to clipboard." });
   };
 
   return (
-    <TextViewerContainer>
-      <TextViewerCopyButton>
+    <div className="relative ">
+      <div className="absolute top-0 right-0 m-2 transition duration-100 opacity-25 hover:opacity-100">
         <Button size="mini" onClick={copyContent}>
           Copy Content
         </Button>
-      </TextViewerCopyButton>
+      </div>
       <Highlight {...defaultProps} theme={theme} code={content.data} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <Pre className={className} style={style}>
-            {tokens.map((line, i) => (
-              <Line key={i} {...getLineProps({ line, key: i })}>
-                <LineNo>{i + 1}</LineNo>
-                <LineContent>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
-                  ))}
-                </LineContent>
-              </Line>
-            ))}
-          </Pre>
+          <pre className={classNames(className, "text-left mx-1 p-0.5 overflow-auto max-h-96")} style={style}>
+            {tokens.map((line, i) => {
+              const props = getLineProps({ line, key: i });
+              return (
+                <div {...props} className={classNames(props.className, "table-row")} key={i}>
+                  <span className="table-cell pr-1 text-sm text-gray-500 select-none">{i + 1}</span>
+                  <span className="table-cell">
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token, key })} />
+                    ))}
+                  </span>
+                </div>
+              );
+            })}
+          </pre>
         )}
       </Highlight>
-    </TextViewerContainer>
+    </div>
   );
 };

@@ -1,7 +1,7 @@
 import { Exclude } from "class-transformer";
+import { nanoid } from "nanoid";
 import { BeforeInsert, Column, Entity, Index, OneToOne } from "typeorm";
 import { Permission } from "../constants";
-import { generateId } from "../helpers/generateId";
 import { WithId } from "./base/WithId";
 
 @Entity("users")
@@ -29,7 +29,7 @@ export class User extends WithId {
 
   @BeforeInsert()
   protected beforeInsert() {
-    if (!this.token) this.token = generateId(64);
+    if (!this.token) this.token = nanoid(64);
   }
 
   public checkPermissions(permission: Permission | number) {

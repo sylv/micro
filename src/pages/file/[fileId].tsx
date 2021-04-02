@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { ContainerCenter } from "../../components/Container";
+import { Container } from "../../components/Container";
 import { FileEmbed } from "../../components/FileEmbed";
 import { PageLoader } from "../../components/PageLoader";
 import { Title } from "../../components/Title";
@@ -21,10 +21,10 @@ export default function File() {
   }
 
   return (
-    <ContainerCenter>
+    <Container center>
       <Title>{file.data.displayName}</Title>
       <FileEmbed file={file.data}></FileEmbed>
-    </ContainerCenter>
+    </Container>
   );
 }
 

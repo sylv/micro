@@ -1,13 +1,16 @@
 import { BadRequestException, Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { generateId } from "../helpers/generateId";
-import { Permission, TokenAudience } from "../constants";
+import { nanoid } from "nanoid";
 import { getRepository } from "typeorm";
-import { formatUrl } from "../helpers/formatUrl";
 import { config } from "../config";
+import { Permission, TokenAudience } from "../constants";
 import { User } from "../entities/User";
+import { formatUrl } from "../helpers/formatUrl";
 
 export interface JWTPayloadInvite {
+  aud?: TokenAudience;
+  exp?: number;
+  iat?: number;
   id: string;
   inviter?: string;
   permissions?: number;
@@ -23,7 +26,7 @@ export class InviteService implements OnApplicationBootstrap {
   }
 
   signInviteToken(inviterId: string | undefined, permissions?: Permission | undefined) {
-    const payload: JWTPayloadInvite = { id: generateId(16), inviter: inviterId, permissions };
+    const payload: JWTPayloadInvite = { id: nanoid(16), inviter: inviterId, permissions };
     return this.jwtService.sign(payload, {
       audience: TokenAudience.INVITE,
       expiresIn: "1h",

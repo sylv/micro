@@ -1,20 +1,18 @@
-import { Card, Grid, Text } from "@geist-ui/react";
 import useSWR from "swr";
 import { FileCard } from "./FileCard";
 import { PageLoader } from "./PageLoader";
 import { Endpoints } from "../constants";
 import { GetUserFilesData } from "../types";
+import { FunctionComponent } from "react";
+import { Card } from "./Card";
 
-export function FileList() {
-  // todo: pagination
+export const FileList: FunctionComponent = () => {
   const files = useSWR<GetUserFilesData>(Endpoints.USER_FILES);
 
   if (files.error) {
-    <Grid xs={24}>
-      <Card>
-        <Text type="secondary">Something went wrong while loading your files.</Text>
-      </Card>
-    </Grid>;
+    <Card className="col-span-full">
+      <p>Something went wrong while loading your files.</p>
+    </Card>;
   }
 
   if (!files.data) {
@@ -23,11 +21,9 @@ export function FileList() {
 
   if (!files.data[0]) {
     return (
-      <Grid xs={24}>
-        <Card>
-          <Text type="secondary">Upload something and it will appear here!</Text>
-        </Card>
-      </Grid>
+      <Card className="col-span-full">
+        <p>Upload something and it will appear here!</p>
+      </Card>
     );
   }
 
@@ -38,4 +34,4 @@ export function FileList() {
       ))}
     </>
   );
-}
+};

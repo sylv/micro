@@ -25,7 +25,7 @@ EXT_LANGUAGE_MAP.set("go", "go");
 EXT_LANGUAGE_MAP.set("h", "c");
 EXT_LANGUAGE_MAP.set("coffee", "coffeescript");
 
-export function getLanguage(fileName: string): any {
+export const getLanguage = (fileName: string): any => {
   const ext = fileName.split(".").pop();
   if (ext) return EXT_LANGUAGE_MAP.get(ext);
-}
+};

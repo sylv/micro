@@ -1,14 +1,14 @@
 import { BadRequestException, Controller, Headers, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
+import randomItem from "random-item";
 import { config } from "../config";
 import { UserId } from "../decorators/UserId";
 import { ContentType } from "../entities/base/Content";
 import { UploadAuthGuard } from "../guards/UploadAuthGuard";
-import { getRandomElement } from "../helpers/getRandomElement";
+import { formatUrl } from "../helpers/formatUrl";
 import { DeletionService } from "../services/DeletionService";
 import { FileService } from "../services/FileService";
 import { LinkService } from "../services/LinkService";
-import { formatUrl } from "../helpers/formatUrl";
 
 @Controller()
 export class ShareXController {
@@ -27,7 +27,7 @@ export class ShareXController {
     @Headers("x-micro-host") hosts = config.host
   ) {
     // todo: it would be nice if we validated this and threw an error on invalid domains
-    const host = getRandomElement(hosts.split(/, ?/g));
+    const host = randomItem(hosts.split(/, ?/g));
     if (input?.startsWith("http")) {
       const link = await this.linkService.createLink(input, userId);
       const deletionUrl = this.deletionService.getDeletionUrl(ContentType.LINK, link.id);

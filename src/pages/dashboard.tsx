@@ -1,20 +1,26 @@
-import { Button, ButtonGroup, Card, Grid, Input, Select, useToasts } from "@geist-ui/react";
-import { Box as BoxIcon, Download as DownloadIcon } from "@geist-ui/react-icons";
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
+import { Download as DownloadIcon } from "react-feather";
 import useSWR from "swr";
 import { Avatar } from "../components/Avatar";
+import { Button } from "../components/Button";
+import { Card } from "../components/Card";
 import { Container } from "../components/Container";
+import { Dropdown, DropdownTab } from "../components/Dropdown";
+import { DropdownContent } from "../components/Dropdown/content";
 import { FileList } from "../components/FileList";
+import { Input } from "../components/Input";
 import { PageLoader } from "../components/PageLoader";
+import { Select } from "../components/Select";
 import { Title } from "../components/Title";
+import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/downloadFile";
 import { generateConfig } from "../helpers/generateConfig";
 import { http } from "../helpers/http";
 import { replacePlaceholders } from "../helpers/replacePlaceholders";
+import { useToasts } from "../hooks/useToasts";
 import { logout, useUser } from "../hooks/useUser";
-import { GetUploadTokenData, GetServerConfigData, PutUploadTokenData } from "../types";
-import { Endpoints } from "../constants";
+import { GetServerConfigData, GetUploadTokenData, PutUploadTokenData } from "../types";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
@@ -24,7 +30,7 @@ export default function Dashboard() {
   const [hosts, setHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const downloadable = !!hosts[0];
-  const [, setToast] = useToasts();
+  const setToast = useToasts();
 
   useEffect(() => {
     // redirect home if any of the requests fail
@@ -42,29 +48,25 @@ export default function Dashboard() {
     Router.prefetch("/file/[fileId]");
   }, []);
 
-  /**
-   * Set the selected domain to the given option.
-   */
-  function updateDomain(options: string | string[]) {
-    if (typeof options === "string") throw new Error("Unexpected option type.");
-    setHosts(options);
-  }
+  const onDomainChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
+    setHosts([event.target.value]);
+  };
 
   /**
    * Download a customised ShareX config for the user based on their options.
    */
-  function downloadConfig(direct: boolean) {
+  const onDownloadClick = (direct: boolean) => {
     const formatted = hosts.map((host) => replacePlaceholders(host, user.data!));
     const config = generateConfig(token.data!.upload_token, formatted, direct);
     downloadFile(config.name, config.content);
-  }
+  };
 
   /**
    * Regenerate the users token and mutate the global user object.
    */
-  async function regenerateToken() {
+  const regenerateToken = async () => {
     if (regenerating) return;
-    const confirmation = confirm('Are you sure you want to regenerate your token? This will invalidate previous ShareX configurations.') // prettier-ignore
+    const confirmation = confirm('Are you sure you want to regenerate your token? Previously generated ShareX configs will be invalidated and anything using the old token will cease to function.') // prettier-ignore
     if (!confirmation) return;
     setRegenerating(true);
 
@@ -73,12 +75,12 @@ export default function Dashboard() {
       const body = (await response.json()) as PutUploadTokenData;
       token.mutate(body, false);
       setRegenerating(false);
-      setToast({ type: "success", text: "Your token has been regenerated." });
+      setToast({ text: "Your token has been regenerated." });
     } catch (e) {
       setRegenerating(false);
-      setToast({ type: "error", text: e.message });
+      setToast({ error: true, text: e.message });
     }
-  }
+  };
 
   if (!user.data || !server.data || !token.data) {
     return (
@@ -92,73 +94,59 @@ export default function Dashboard() {
   return (
     <Container className="mt-5">
       <Title>Dashboard</Title>
-      <Grid.Container gap={0.8}>
-        <Grid xs={3}>
-          <Card>
-            <Avatar size="100%" id={user.data.id} className="mb-2"></Avatar>
-            <Button className="max-width" onClick={logout}>
-              Logout
-            </Button>
-          </Card>
-        </Grid>
-        <Grid xs={21}>
-          <Card>
-            <h3>Hello {user.data.username}</h3>
-            <Grid.Container gap={0.8}>
-              <Grid xs={18}>
-                <Input
-                  width="100%"
-                  label="Upload Token"
-                  onFocus={(evt) => evt.target.select()}
-                  value={token.data.upload_token}
-                  readOnly
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Button className="max-width" disabled={regenerating} onClick={regenerateToken}>
-                  Regenerate
-                </Button>
-              </Grid>
-              <Grid xs={12}>
-                <Select
-                  multiple
-                  width="100%"
-                  placeholder="Hosts"
-                  initialValue={server.data.hosts[0]}
-                  onChange={updateDomain}
-                >
-                  {server.data.hosts.map((domain) => (
-                    <Select.Option key={domain} value={domain}>
-                      {replacePlaceholders(domain, { username: user.data!.username })}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid xs={12}>
-                <ButtonGroup className="max-width">
-                  <Button
-                    icon={<BoxIcon />}
-                    className="max-width"
-                    onClick={() => downloadConfig(false)}
-                    disabled={!downloadable}
-                  >
-                    Embedded ShareX Config
+      <div className="grid grid-cols-8 gap-2">
+        <Card className="flex-col items-center justify-center hidden col-span-1 md:flex">
+          <Avatar id={user.data.id} className="w-24 mb-3"></Avatar>
+          <Button type="secondary" onClick={logout}>
+            Logout
+          </Button>
+        </Card>
+        <Card className="col-span-full md:col-span-7">
+          <h1 className="mb-3 text-3xl font-bold">Hello {user.data.username}</h1>
+          <div className="grid grid-cols-8 gap-2">
+            <div className="col-span-full md:col-span-6">
+              <Input
+                prefix="Upload Token"
+                onFocus={(evt) => evt.target.select()}
+                value={token.data.upload_token}
+                readOnly
+              />
+            </div>
+            <div className="col-span-full md:col-span-2">
+              <Button disabled={regenerating} onClick={regenerateToken}>
+                Regenerate
+              </Button>
+            </div>
+            <div className="col-span-full md:col-span-6">
+              <Select placeholder="Hosts" onChange={onDomainChange}>
+                {server.data.hosts.map((domain) => (
+                  <option key={domain} value={domain}>
+                    {replacePlaceholders(domain, { username: user.data!.username })}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="col-span-full md:col-span-2">
+              <Dropdown
+                trigger={
+                  <Button prefix={<DownloadIcon />} disabled={!downloadable}>
+                    Download ShareX Config
                   </Button>
-                  <Button
-                    icon={<DownloadIcon />}
-                    className="max-width"
-                    onClick={() => downloadConfig(true)}
-                    disabled={!downloadable}
-                  >
-                    Direct ShareX Config
-                  </Button>
-                </ButtonGroup>
-              </Grid>
-            </Grid.Container>
-          </Card>
-        </Grid>
+                }
+              >
+                <DropdownContent matchWidth>
+                  <DropdownTab onClick={() => onDownloadClick(false)}>
+                    <p className="text-xs text-gray-600">Recommended</p>
+                    Embedded
+                  </DropdownTab>
+                  <DropdownTab onClick={() => onDownloadClick(true)}>Direct</DropdownTab>
+                </DropdownContent>
+              </Dropdown>
+            </div>
+          </div>
+        </Card>
         <FileList />
-      </Grid.Container>
+      </div>
     </Container>
   );
 }

@@ -12,6 +12,7 @@ import {
 } from "@nestjs/common";
 import { IsString, MaxLength, MinLength } from "class-validator";
 import { FastifyRequest } from "fastify";
+import { nanoid } from "nanoid";
 import { getRepository } from "typeorm";
 import { Permission } from "../constants";
 import { RequirePermissions } from "../decorators/RequirePermissions";
@@ -19,7 +20,6 @@ import { UserId } from "../decorators/UserId";
 import { File } from "../entities/File";
 import { User } from "../entities/User";
 import { JWTAuthGuard } from "../guards/JWTAuthGuard";
-import { generateId } from "../helpers/generateId";
 import { InviteService } from "../services/InviteService";
 import { UserService } from "../services/UserService";
 
@@ -79,7 +79,7 @@ export class UserController {
   @Put("api/user/upload_token")
   @UseGuards(JWTAuthGuard)
   async resetUserUploadToken(@UserId() userId: string) {
-    const token = generateId(64);
+    const token = nanoid(64);
     const userRepo = getRepository(User);
     await userRepo.update(userId, { token });
     return { upload_token: token };

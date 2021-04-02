@@ -1,13 +1,14 @@
-import { Button, Input, Spacer, Text, useToasts } from "@geist-ui/react";
-import { Lock, User } from "@geist-ui/react-icons";
 import Router from "next/router";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import { ContainerCenterSmall } from "../components/Container";
+import { Button } from "../components/Button";
+import { Container } from "../components/Container";
+import { Input } from "../components/Input";
 import { Title } from "../components/Title";
+import { useToasts } from "../hooks/useToasts";
 import { login, useUser } from "../hooks/useUser";
 
 export default function Login() {
-  const [, setToast] = useToasts();
+  const setToast = useToasts();
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,8 +32,8 @@ export default function Login() {
       setLoading(true);
       await login(username, password);
     } catch (err) {
-      if (err.status === 401) setToast({ type: "error", text: "Your password was incorrect." });
-      else setToast({ type: "error", text: err.message });
+      if (err.status === 401) setToast({ error: true, text: "Your password was incorrect." });
+      else setToast({ error: true, text: err.message });
     } finally {
       setLoading(false);
     }
@@ -49,30 +50,14 @@ export default function Login() {
   };
 
   return (
-    <ContainerCenterSmall>
+    <Container center small>
       <Title>Sign in</Title>
-      <Text h1>Sign In</Text>
-      <Input
-        width="100%"
-        type="text"
-        placeholder="Username"
-        icon={<User />}
-        onKeyDown={onKeyDown}
-        onChange={onUsernameChange}
-      />
-      <Spacer y={0.4} />
-      <Input.Password
-        width="100%"
-        placeholder="Password"
-        icon={<Lock />}
-        ref={passwordRef}
-        onKeyDown={onKeyDown}
-        onChange={onPasswordChange}
-      />
-      <Spacer y={0.8} />
-      <Button className="max-width" type="success" onClick={onContinueClick} onKeyDown={onKeyDown} disabled={disabled}>
+      <h1 className="my-5 text-4xl font-bold">Sign In</h1>
+      <Input placeholder="Username" onChange={onUsernameChange} />
+      <Input className="mt-2" type="password" placeholder="Password" onChange={onPasswordChange} />
+      <Button className="mt-4" type="primary" onClick={onContinueClick} onKeyDown={onKeyDown} disabled={disabled}>
         Continue
       </Button>
-    </ContainerCenterSmall>
+    </Container>
   );
 }

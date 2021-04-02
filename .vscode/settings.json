@@ -1,0 +1,13 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.associations": {
+    ".microrc": "json",
+    ".microrc.example": "json"
+  },
+  "headwind.classRegex": {
+    "typescriptreact": "className(?:s\\((?:\\s+?)?|=)[\"'`]([A-z0-9-:/ ]+)[\"'`]"
+  }
+}

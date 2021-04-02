@@ -1,0 +1,35 @@
+.input {
+  @apply w-full h-full px-4 py-2 text-sm placeholder-gray-600 bg-black border border-dark-900 focus:outline-none focus:ring-gray-100;
+  height: 2.5rem;
+}
+
+.input:focus {
+  @apply transition duration-100 ease-in-out border-gray-700;
+}
+
+.input:disabled {
+  @apply bg-dark-100;
+}
+
+.container {
+  @apply flex items-center w-full;
+  height: 2.5rem;
+}
+
+.prefix,
+.suffix {
+  @apply flex items-center justify-center flex-shrink-0 h-full px-3 text-sm text-gray-600 border border-dark-900 bg-dark-100;
+}
+
+.prefix {
+  @apply border-r-0 rounded-l;
+}
+
+.suffix {
+  @apply border-l-0 rounded-r;
+}
+
+.prefix svg,
+.suffix svg {
+  height: 1.35em;
+}

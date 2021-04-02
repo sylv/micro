@@ -11,13 +11,15 @@ import { Multipart } from "fastify-multipart";
 import { PassThrough } from "stream";
 import { getRepository } from "typeorm";
 import { config } from "../config";
+import { idLength } from "../entities/base/WithId";
 import { File } from "../entities/File";
 import { getStreamType } from "../helpers/getStreamType";
 import { S3Service } from "./S3Service";
 
 @Injectable()
 export class FileService {
-  private static readonly FILE_KEY_REGEX = /^(?<id>[a-z0-9]+)(?:\.(?<ext>[a-z0-9]{2,4}))?$/;
+  // https://regex101.com/r/6oAcAf/1
+  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${idLength}})(?<ext>\\.[a-z]{2,})?$`);
   constructor(private s3Service: S3Service) {}
 
   public cleanFileKey(key: string): { id: string; ext?: string } {

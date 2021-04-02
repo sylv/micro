@@ -2,8 +2,8 @@ import { PrismTheme } from "prism-react-renderer";
 
 export const theme: PrismTheme = {
   plain: {
-    backgroundColor: "var(--micro-background)",
-    color: "var(--micro-foreground)",
+    backgroundColor: "black",
+    color: "white",
   },
   styles: [
     {

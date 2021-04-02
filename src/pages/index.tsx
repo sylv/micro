@@ -1,14 +1,9 @@
-import { Spinner } from "@geist-ui/react";
 import { useRouter } from "next/router";
-import styled from "styled-components";
 import useSWR from "swr";
 import { Container } from "../components/Container";
-import { GetServerConfigData } from "../types";
+import { Spinner } from "../components/Spinner";
 import { Endpoints } from "../constants";
-
-const HomeWrapper = styled.div`
-  padding-top: 5em;
-`;
+import { GetServerConfigData } from "../types";
 
 export default function Home() {
   const router = useRouter();
@@ -19,31 +14,32 @@ export default function Home() {
 
   return (
     <Container>
-      <HomeWrapper>
-        <h1>Micro</h1>
-        <p>
-          An invite-only file sharing service with vanity domains and a ShareX compatible endpoint. Sign in to download
-          a generated ShareX configuration.
+      <div className="pt-16">
+        <h1 className="text-4xl font-bold">Micro</h1>
+        <p className="mb-2">
+          An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint. Sign in to
+          download a generated ShareX configuration. You can view the source code{" "}
+          <a className="text-brand" href="https://github.com/sylv/micro" target="_blank">
+            here.
+          </a>
         </p>
-        <h3>Domains</h3>
-        <ul>{loading ? <Spinner /> : hosts.map((domain) => <li key={domain}>{domain}</li>)}</ul>
-        <h3>Rules</h3>
-        <ol>
-          <li>Do not upload NSFW content.</li>
-          <li>Do not upload illegal content.</li>
-          <li>Do not upload content you do not own.</li>
-          <li>Don't upload excessive amounts of content. This is a file sharing server, not a file storage server.</li>
-        </ol>
-        <h3>Contact</h3>
+        <h3 className="text-2xl font-bold">Domains</h3>
+        <ul className="mb-2 ml-2 list-disc list-inside">
+          {loading ? <Spinner /> : hosts.map((domain) => <li key={domain}>{domain}</li>)}
+        </ul>
+        <h3 className="text-2xl font-bold">Contact</h3>
         {loading ? (
           <Spinner />
         ) : (
           <p>
             To get an account or get a file taken down, email{" "}
-            <a href={`mailto:${server.data!.inquiries}`}>{server.data!.inquiries}</a>.
+            <a href={`mailto:${server.data!.inquiries}`} className="text-brand">
+              {server.data!.inquiries}
+            </a>
+            .
           </p>
         )}
-      </HomeWrapper>
+      </div>
     </Container>
   );
 }

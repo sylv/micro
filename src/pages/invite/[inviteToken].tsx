@@ -1,15 +1,17 @@
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { Key, User } from "react-feather";
 import useSWR from "swr";
-import { ContainerCenter, ContainerCenterSmall } from "../../components/Container";
+import { Button } from "../../components/Button";
+import { Container } from "../../components/Container";
+import { Input } from "../../components/Input";
 import { PageLoader } from "../../components/PageLoader";
 import { Title } from "../../components/Title";
-import { Lock, User } from "@geist-ui/react-icons";
-import { Input, Spacer, Button, useToasts } from "@geist-ui/react";
-import { ChangeEvent, useEffect, useState } from "react";
-import { http } from "../../helpers/http";
-import Router from "next/router";
-import { GetInviteData } from "../../types";
 import { Endpoints } from "../../constants";
+import { formatDate } from "../../helpers/formatDate";
+import { http } from "../../helpers/http";
+import { useToasts } from "../../hooks/useToasts";
+import { GetInviteData } from "../../types";
 import Error from "../_error";
 
 export default function Invite() {
@@ -17,11 +19,14 @@ export default function Invite() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [, setToast] = useToasts();
+  const setToast = useToasts();
   const disabled = loading || !username || !password;
   const inviteToken = router.query.inviteToken;
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
   const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`, { initialData });
+  const expiry = useMemo(() => (invite.data ? formatDate(new Date(invite.data.exp! * 1000)) : undefined), [
+    invite.data?.exp,
+  ]);
 
   useEffect(() => {
     Router.prefetch("/login");
@@ -47,26 +52,37 @@ export default function Invite() {
       });
 
       Router.push("/login");
-      setToast({ type: "success", text: "Account created successfully. Please sign in." });
+      setToast({ text: "Account created successfully. Please sign in." });
     } catch (err) {
-      setToast({ type: "error", text: err.message });
+      setToast({ error: true, text: err.message });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ContainerCenterSmall>
+    <Container centerY>
       <Title>You're Invited</Title>
-      <h1>Sign Up</h1>
-      <Input width="100%" type="text" placeholder="Username" icon={<User />} onChange={onUsernameChange} />
-      <Spacer y={0.4} />
-      <Input.Password width="100%" placeholder="Password" icon={<Lock />} onChange={onPasswordChange} />
-      <Spacer y={0.8} />
-      <Button className="max-width" type="success" disabled={disabled} onClick={onSubmit}>
-        Create Account
-      </Button>
-    </ContainerCenterSmall>
+      <h1 className="text-4xl font-bold text-center md:hidden">Sign Up</h1>
+      <p className="mt-2 mb-2 text-xs text-center text-gray-600 md:hidden">This invite will expire {expiry}.</p>
+      <div className="grid flex-row-reverse grid-cols-6 gap-12">
+        <div className="col-span-6 md:col-span-2">
+          <Input type="text" placeholder="Username" prefix={<User />} onChange={onUsernameChange} className="mt-2" />
+          <Input type="password" placeholder="Password" className="mt-2" prefix={<Key />} onChange={onPasswordChange} />
+          <Button type="primary" disabled={disabled} onClick={onSubmit} className="mt-4">
+            Create Account
+          </Button>
+        </div>
+        <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
+          <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>
+          <p>
+            You've been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an
+            account, then download the ShareX config and start uploading with your favourite vanity domain.
+          </p>
+          <p className="mt-2 text-xs text-gray-600">This invite will expire {expiry}.</p>
+        </div>
+      </div>
+    </Container>
   );
 }
 

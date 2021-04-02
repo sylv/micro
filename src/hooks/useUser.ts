@@ -25,7 +25,7 @@ export async function login(username: string, password: string) {
 export async function logout() {
   await http(Endpoints.AUTH_LOGOUT, { method: "POST" });
   mutate(Endpoints.USER, null, false);
-  Router.push("/dashboard");
+  Router.push("/");
 }
 
 export const useUser = () => {

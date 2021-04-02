@@ -1,16 +1,18 @@
 import { GetServerSideProps } from "next";
-import Link from "next/link";
-import { ContainerCenterSmall } from "../components/Container";
+import { Container } from "../components/Container";
+import { Link } from "../components/Link";
 import { Title } from "../components/Title";
 
 export default function Error(props: { message: string; title: string }) {
   return (
-    <ContainerCenterSmall>
+    <Container small center>
       <Title>{props.title}</Title>
-      <h1 style={{ margin: "0" }}>{props.title}</h1>
-      <p>{props.message}</p>
-      <Link href="/">Go Home</Link>
-    </ContainerCenterSmall>
+      <h1 className="mb-2 text-5xl font-bold">{props.title}</h1>
+      <p className="mb-2 text-lg">{props.message}</p>
+      <Link className="text-brand" href="/">
+        Go Home
+      </Link>
+    </Container>
   );
 }
 

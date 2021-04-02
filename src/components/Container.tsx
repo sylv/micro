@@ -1,48 +1,25 @@
-import styled from "styled-components";
+import classNames from "classnames";
+import { FunctionComponent } from "react";
 
-export const Container = styled.div`
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+export interface ContainerProps {
+  centerX?: boolean;
+  centerY?: boolean;
+  center?: boolean;
+  small?: boolean;
+  className?: string;
+}
 
-  @media (min-width: 576px) {
-    max-width: 540px;
-  }
+export const Container: FunctionComponent<ContainerProps> = (props) => {
+  const centerX = props.centerX ?? props.center;
+  const centerY = props.centerY ?? props.center;
+  const center = centerX ?? centerY;
+  const classes = classNames(props.className, "px-4 mx-auto", {
+    "sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl": !props.small,
+    "flex justify-center flex-col": center,
+    "absolute top-0 bottom-0 right-0 left-0 h-full": centerY,
+    "items-center": centerX,
+    "max-w-xs": props.small,
+  });
 
-  @media (min-width: 768px) {
-    max-width: 720px;
-  }
-
-  @media (min-width: 992px) {
-    max-width: 960px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  }
-`;
-
-export const ContainerCenter = styled(Container)`
-  width: 100%;
-  padding: 15px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  * {
-    pointer-events: all;
-  }
-`;
-
-export const ContainerCenterSmall = styled(ContainerCenter)`
-  max-width: 340px;
-  text-align: center;
-`;
+  return <div className={classes}>{props.children}</div>;
+};

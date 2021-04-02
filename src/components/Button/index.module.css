@@ -1,0 +1,49 @@
+.button {
+  @apply flex items-center justify-center w-full px-3 py-2 text-sm font-medium border border-transparent rounded;
+  transition: all 150ms ease;
+}
+
+.button:focus {
+  outline: none !important;
+}
+
+.content {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.disabled {
+  @apply bg-dark-100 border border-dark-600 text-white cursor-not-allowed !important;
+  filter: none !important;
+}
+
+.primary {
+  @apply text-white bg-brand;
+}
+
+.primary:hover,
+.primary:active {
+  filter: drop-shadow(0 0 6px var(--brand));
+}
+
+.secondary {
+  @apply text-gray-500 bg-black border focus:border-gray-500 border-dark-600 hover:text-white hover:bg-black hover:border-gray-500;
+}
+
+.prefix {
+  @apply mr-1;
+}
+
+.suffix {
+  @apply ml-1;
+}
+
+.prefix svg,
+.suffix svg {
+  height: 1.35em;
+}
+
+.size-mini {
+  @apply h-6 px-2 font-normal;
+}

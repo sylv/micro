@@ -1,71 +1,41 @@
-import { Button } from "@geist-ui/react";
-import { Crop } from "@geist-ui/react-icons";
-import Link from "next/link";
-import { useState } from "react";
-import styled from "styled-components";
+import classNames from "classnames";
+import { FunctionComponent } from "react";
+import { Crop } from "react-feather";
 import useSWR from "swr";
 import { Endpoints } from "../constants";
 import { useUser } from "../hooks/useUser";
 import { GetServerConfigData } from "../types";
+import { Button } from "./Button";
 import { Container } from "./Container";
-import { ThemeSwitcher } from "./ThemeSwitcher";
+import { Link } from "./Link";
 
-const MenuNav = styled.nav<{ visible: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  user-select: none;
-  position: relative;
-  margin: 0 auto;
-  height: 60px;
-  transition: opacity 150ms;
-  pointer-events: ${(props) => !props.visible && "none"};
-  opacity: ${(props) => !props.visible && "0"};
-`;
-
-const MenuBrand = styled.a`
-  display: flex;
-  align-items: center;
-  color: inherit;
-  svg {
-    margin-right: 0.5em;
-  }
-`;
-
-const MenuContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export function Menu() {
+export const Menu: FunctionComponent = () => {
   const user = useUser();
   const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
   const windowHost = typeof window === "undefined" ? "" : window.location.host;
   const base = server.data && server.data.host !== windowHost ? `//${server.data.host}/` : "/";
   const buttonHref = base + (user.data ? "dashboard" : "login");
   const buttonText = user.data ? "Enter" : "Sign in";
+  const invisible = !server.data;
+  const classes = classNames("relative z-10 flex items-center justify-between h-16 my-auto transition duration-150 ", {
+    "pointer-events-none": invisible,
+    invisible: invisible,
+  });
 
   return (
     <Container>
-      <MenuNav visible={!!server.data}>
-        <MenuContainer>
-          <Link href={base} passHref>
-            <MenuBrand>
-              <Crop /> micro
-            </MenuBrand>
+      <nav className={classes}>
+        <div className="flex items-center">
+          <Link href={base} className="flex">
+            <Crop className="mr-2" /> micro
           </Link>
-        </MenuContainer>
-        <MenuContainer>
-          <ThemeSwitcher />
-          <Link href={buttonHref} passHref>
-            <a>
-              <Button auto style={{ marginLeft: "var(--micro-gap-half)" }} type="success" size="small">
-                {buttonText}
-              </Button>
-            </a>
-          </Link>
-        </MenuContainer>
-      </MenuNav>
+        </div>
+        <div className="flex items-center">
+          <Button className="w-20 p-1.5 rounded-full" type="primary" href={buttonHref}>
+            {buttonText}
+          </Button>
+        </div>
+      </nav>
     </Container>
   );
-}
+};
