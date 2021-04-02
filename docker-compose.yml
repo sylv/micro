@@ -1,10 +1,5 @@
-#
-# !!!
-# THIS IS INTENDED FOR DEVELOPMENT ONLY.
-# This is not secure and should not be exposed to the internet.
-# !!!
-#
-
+# THIS FILE IS FOR DEVELOPMENT ONLY.
+# If you want complete examples on how to host micro, see the /examples directory.
 version: "3"
 services:
   postgres:

@@ -1,0 +1,38 @@
+{
+  // set to "false" for micro to use http urls instead of https
+  "ssl": true,
+  // IMPORTANT
+  // replace this value with a very long (32-64) random string of characters.
+  // it will be used to sign JWT tokens, which means you should treat this like
+  // a password that protects everyones account. if this isn't changed or is set to something stupid
+  // like "password", anyone can create their own invites, sign in as other users, etc.
+  "secret": "REPLACE_ME_WITH_A_VERY_LONG_RANDOM_STRING",
+  "inquiries": "admin@example.com",
+  "hosts": [
+    // the first domain in this list will be the "primary" domain,
+    // and users will be redirected to it if they try to access
+    // the dashboard from another domain in this list.
+    "i.example.com"
+    // you can add as many as you want, with or without wildcards.
+    // * will be replaced with the users username.
+    // "*.example.com"
+  ],
+  "database": {
+    "uri": "postgresql://micro:youshallnotpass@postgres/micro",
+    // IMPORTANT
+    // set this to "true" when you start micro for the first time so it populates your database.
+    // after that, set it to "false" or you'll risk losing all your data when micro updates.
+    "synchronize": false
+  },
+  "storage": {
+    // fill in your s3 credentials here, options are passed directly to
+    // aws-sdk so you can add more if required.
+    // i would recommend backblaze as it's easy to get started with and has a generous
+    // free tier that doesn't require a credit card, but there are limited regions
+    // and the further you are from backblaze the slower uploads will be.
+    "bucket": "my-bucket-name",
+    "accessKeyId": "accessKeyId",
+    "secretAccessKey": "secretAccessKey",
+    "endpoint": "s3.us-west-002.backblazeb2.com"
+  }
+}

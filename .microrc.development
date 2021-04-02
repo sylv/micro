@@ -1,0 +1,19 @@
+{
+  "ssl": false,
+  "secret": "youshallnotpass",
+  "inquiries": "admin@example.com",
+  "hosts": ["localhost:8080", "micro.sylver.me"],
+  "database": {
+    "uri": "postgresql://micro:youshallnotpass@localhost:5433/micro",
+    "synchronize": true
+  },
+  "storage": {
+    // you're gonna have to manually create the "micro" bucket in the minio UI
+    "bucket": "micro",
+    "accessKeyId": "micro",
+    "secretAccessKey": "youshallnotpass",
+    "endpoint": "http://127.0.0.1:9000",
+    "s3ForcePathStyle": true,
+    "signatureVersion": "v4"
+  }
+}

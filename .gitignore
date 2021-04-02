@@ -31,5 +31,5 @@ yarn-error.log*
 .env.production.local
 
 *.tsbuildinfo
-.microrc
 dist
+/.microrc

@@ -1,0 +1,32 @@
+version: "3"
+services:
+  micro:
+    image: sylver/micro
+    restart: unless-stopped
+    volumes:
+      - $PWD/.microrc:/usr/src/micro/.microrc
+    # uncomment this if you dont care about https, then comment out the proxy service
+    # ports:
+    #   - 80:8080
+  postgres:
+    image: postgres:12-alpine
+    restart: unless-stopped
+    environment:
+      # lleaving this as default should be fine as postgres will only ever be exposed to services
+      # in this docker-compose file, but you might still want to consider changing it to something more secure.
+      - POSTGRES_PASSWORD=youshallnotpass
+      - POSTGRES_USER=micro
+      - POSTGRES_DB=micro
+    volumes:
+      - $PWD/.pg-data:/var/lib/postgresql/data
+  # comment this out if you dont care about https, then uncomment the above ports
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - $PWD/.caddy-data:/data
+      - $PWD/.caddy-config:/config
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
