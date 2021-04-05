@@ -1,21 +1,17 @@
 import rc from "rc";
 import xbytes from "xbytes";
-import AWS from "aws-sdk";
 
 export interface MicroConfig {
   host: string;
   url: string;
   ssl: boolean;
+  database: string;
   secret: string;
   inquiries: string;
   hosts: string[];
   uploadLimit: number;
   allowTypes?: string[];
-  storage: AWS.S3.ClientConfiguration & { bucket: string };
-  database: {
-    uri: string;
-    synchronize: boolean;
-  };
+  storagePath: string;
 }
 
 export const config = rc("micro", {

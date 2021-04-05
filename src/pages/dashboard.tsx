@@ -14,7 +14,7 @@ import { PageLoader } from "../components/PageLoader";
 import { Select } from "../components/Select";
 import { Title } from "../components/Title";
 import { Endpoints } from "../constants";
-import { downloadFile } from "../helpers/downloadFile";
+import { downloadFile } from "../helpers/download";
 import { generateConfig } from "../helpers/generateConfig";
 import { http } from "../helpers/http";
 import { replacePlaceholders } from "../helpers/replacePlaceholders";

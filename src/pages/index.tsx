@@ -28,13 +28,13 @@ export default function Home() {
           {loading ? <Spinner /> : hosts.map((domain) => <li key={domain}>{domain}</li>)}
         </ul>
         <h3 className="text-2xl font-bold">Contact</h3>
-        {loading ? (
+        {!server.data ? (
           <Spinner />
         ) : (
           <p>
             To get an account or get a file taken down, email{" "}
-            <a href={`mailto:${server.data!.inquiries}`} className="text-brand">
-              {server.data!.inquiries}
+            <a href={`mailto:${server.data.inquiries}`} className="text-brand">
+              {server.data.inquiries}
             </a>
             .
           </p>

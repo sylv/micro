@@ -17,22 +17,14 @@
     // * will be replaced with the users username.
     // "*.example.com"
   ],
-  "database": {
-    "uri": "postgresql://micro:youshallnotpass@postgres/micro",
-    // IMPORTANT
-    // set this to "true" when you start micro for the first time so it populates your database.
-    // after that, set it to "false" or you'll risk losing all your data when micro updates.
-    "synchronize": false
-  },
-  "storage": {
-    // fill in your s3 credentials here, options are passed directly to
-    // aws-sdk so you can add more if required.
-    // i would recommend backblaze as it's easy to get started with and has a generous
-    // free tier that doesn't require a credit card, but there are limited regions
-    // and the further you are from backblaze the slower uploads will be.
-    "bucket": "my-bucket-name",
-    "accessKeyId": "accessKeyId",
-    "secretAccessKey": "secretAccessKey",
-    "endpoint": "s3.us-west-002.backblazeb2.com"
-  }
+  "uploadLimit": "50MB",
+  // null or undefined = "anything goes"
+  // otherwise you can define a list of mime types that are allowed to be
+  // uploaded. applies to everyone.
+  // "allowTypes": ["image/png", "image/jpeg", "video/mp4"],
+  "allowTypes": null,
+  "database": "postgresql://micro:youshallnotpass@postgres/micro",
+  // where uploaded files are stored. can be relative from process cwd
+  // in docker the cwd should be /usr/src/micro
+  "storagePath": "/data"
 }

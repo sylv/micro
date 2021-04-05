@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - $PWD/.microrc:/usr/src/micro/.microrc
+      - $PWD/data:/data
     # uncomment this if you dont care about https, then comment out the proxy service
     # ports:
     #   - 80:8080

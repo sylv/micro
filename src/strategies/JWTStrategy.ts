@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
+import { FastifyRequest } from "fastify";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { config } from "../config";
-import { FastifyRequest } from "fastify";
-import { TokenAudience } from "../constants";
+import { TokenType } from "../modules/auth/auth.service";
 
 export interface JWTPayloadUser {
   sub: string;
@@ -14,7 +14,7 @@ export interface JWTPayloadUser {
 export class JWTStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      audience: TokenAudience.USER,
+      audience: TokenType.USER,
       ignoreExpiration: false,
       secretOrKey: config.secret,
       jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeaderAsBearerToken(), (req) => req.cookies.token]),

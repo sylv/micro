@@ -1,8 +1,8 @@
-import { ExecutionContext, Injectable } from "@nestjs/common";
+import { ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { FastifyRequest } from "fastify";
 import { Permission } from "../constants";
-import { UserService } from "../services/UserService";
+import { UserService } from "../modules/user/user.service";
 
 @Injectable()
 export class PermissionGuard {
@@ -14,9 +14,10 @@ export class PermissionGuard {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     if (!request.user.id) return false;
     const userId = request.user.id;
-    const user = await this.userService.getUser(userId);
-    if (user?.checkPermissions(Permission.ADMINISTRATOR)) return true;
-    if (!user?.checkPermissions(requiredPermissions)) return false;
+    const user = await this.userService.get(userId);
+    if (!user) throw new ForbiddenException();
+    if (this.userService.checkPermissions(user.permissions, Permission.ADMINISTRATOR)) return true;
+    if (!this.userService.checkPermissions(user.permissions, requiredPermissions)) return false;
     return true;
   }
 }

@@ -1,14 +1,23 @@
-import { GetServerSideProps } from "next";
+import { getReasonPhrase, StatusCodes } from "http-status-codes";
+import { NextPageContext } from "next";
+import { useRouter } from "next/router";
 import { Container } from "../components/Container";
 import { Link } from "../components/Link";
 import { Title } from "../components/Title";
 
-export default function Error(props: { message: string; title: string }) {
+const ERROR_LENNIES = ["ಠ_ಠ", "(ಥ﹏ಥ)", "ʕ•ᴥ•ʔ", "≧☉_☉≦", "ლ,ᔑ•ﺪ͟͠•ᔐ.ლ", "( ͡ಠ ʖ̯ ͡ಠ)", "(◉͜ʖ◉)", "¯\\_(⊙_ʖ⊙)_/¯"];
+
+export default function Error(props: { status?: StatusCodes; message?: string }) {
+  const router = useRouter();
+  const status = props.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
+  const lenny = ERROR_LENNIES[status % ERROR_LENNIES.length];
+  const message = props.message ?? router.query.message ?? getReasonPhrase(status);
+
   return (
-    <Container small center>
-      <Title>{props.title}</Title>
-      <h1 className="mb-2 text-5xl font-bold">{props.title}</h1>
-      <p className="mb-2 text-lg">{props.message}</p>
+    <Container center>
+      <Title>Error {status}</Title>
+      <h1 className="mb-4 text-4xl font-fold">{lenny}</h1>
+      <p className="text-lg">{message}</p>
       <Link className="text-brand" href="/">
         Go Home
       </Link>
@@ -16,11 +25,11 @@ export default function Error(props: { message: string; title: string }) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: NextPageContext) => {
   return {
     props: {
-      title: ctx.query.title ?? ctx.res.statusCode,
-      message: ctx.query.message ?? "Internal Server Error",
+      status: ctx.res?.statusCode,
+      message: ctx.query.message,
     },
   };
 };

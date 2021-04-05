@@ -8,12 +8,12 @@ export function checkImageSupport(file: GetFileData) {
 
 export const ImageViewer = (props: { file: GetFileData }) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center overflow-auto" style={{ maxHeight: "65vh" }}>
       <Head>
         <meta name="twitter:image" content={props.file.urls.direct} />
         <meta property="og:image" content={props.file.urls.direct} />
       </Head>
-      <img className="object-contain" src={props.file.urls.direct} alt={props.file.displayName} />
+      <img src={props.file.urls.direct} alt={props.file.displayName} />
     </div>
   );
 };

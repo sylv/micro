@@ -19,8 +19,6 @@ an invite-only file sharing service with support for ShareX.
 
 Before you get started, please keep in mind micro isn't really intended to be self-hosted; setting it up can be tricky and managing it isn't particularly fun. This is a *very* rough guide to help people that already know what they're doing. If you can't follow along, you should hold off on hosting your own instance until there are better instructions. I'd also recommend you read through the files in [/example](/example) first to see if you can follow along, because if you can't you're just gonna waste time trying to follow the instructions below.
 
-Before you get started, you'll want to setup an S3 bucket. It doesn't really matter where, just make sure it's as close to the server micro is running on as possible for fast upload speeds. I'd recommend [Backblaze B2](https://www.backblaze.com/b2/cloud-storage.html) as it's easy to get started with and has a fairly generous free tier.
-
 1. Install `git`, `docker` and `docker-compose`
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
 3. Copy the example configs to the current directory, `cp ./micro/example/* ./`
@@ -49,17 +47,14 @@ You can create invites for other users by going to `/api/invite` and copying the
 - [x] Invite links
 - [x] URL Shortening
 - [X] Mobile support
-- [ ] EXIF metadata removal
+- [X] EXIF metadata removal
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Pastes
 
 ## todo
 
-- [ ] Thumbnails should ideally be generated on upload
-- [ ] Re-enable EXIF remover
-- [ ] Image width+height should be stored so the image preview doesn't flash while loading.
 - [ ] Ratelimiting
-- [ ] Link shortening might be broken..?
+- [ ] Image width+height should be stored so the image preview doesn't flash while loading.
 - [ ] FileEmbed.tsx has trouble scaling down on mobile. May be due to the file name not truncating properly, also an issue with text previews that are long and wide.
 - [ ] Domain dropdown should be a multi-select like the pre-tailwind design.

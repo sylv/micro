@@ -13,7 +13,7 @@ export default function File() {
   const initialData = router.query.file && JSON.parse(router.query.file as string);
   const file = useSWR<GetFileData>(`/api/file/${fileId}`, { initialData });
   if (file.error) {
-    return <Error title={file.error.status} message={file.error.text} />;
+    return <Error status={file.error.status} message={file.error.text} />;
   }
 
   if (!file.data) {

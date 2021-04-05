@@ -1,13 +1,13 @@
+import copyToClipboard from "copy-to-clipboard";
 import prettyBytes from "pretty-bytes";
 import { FunctionComponent, useState } from "react";
 import { Box, Clock, Download, FileText, Share2 } from "react-feather";
-import { downloadUrl } from "../helpers/downloadUrl";
-import { formatDate } from "../helpers/formatDate";
+import { downloadUrl } from "../helpers/download";
 import { useToasts } from "../hooks/useToasts";
 import { GetFileData } from "../types";
 import { Button } from "./Button";
 import { FileView } from "./FileView";
-import copyToClipboard from "copy-to-clipboard";
+import { Time } from "./Time";
 
 export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
   const setToast = useToasts();
@@ -33,7 +33,7 @@ export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
 
   // todo: this doesn't scale down properly on mobile with long file names
   return (
-    <div className="overflow-hidden border rounded md:mx-24 border-dark-600">
+    <div className="border rounded md:mx-24 border-dark-600">
       <FileView file={props.file} />
       <div className="flex items-center justify-between p-3 border-t border-dark-600">
         <div>
@@ -43,7 +43,7 @@ export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
               <FileText className="h-4" /> {prettyBytes(props.file.size)}
             </div>
             <div className="flex items-center justify-center text-xs text-gray-600" title="Created At">
-              <Clock className="h-4" /> {formatDate(props.file.createdAt)}
+              <Clock className="h-4" /> <Time date={props.file.createdAt} />
             </div>
             <div className="flex items-center justify-center text-xs text-gray-600" title="File Type">
               <Box className="h-4" /> {props.file.type}

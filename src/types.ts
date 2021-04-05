@@ -1,29 +1,34 @@
-import { FastifyReply } from "fastify";
-import { RenderableResponse } from "nest-next";
-import { JWTPayloadInvite } from "./services/InviteService";
-import { File } from "./entities/File";
-import { Link } from "./entities/Link";
-import { User } from "./entities/User";
+import type { File, Link, User } from "@prisma/client";
+import type { FastifyReply } from "fastify";
+import type { RenderableResponse } from "nest-next";
+import type { AppController } from "./modules/app.controller";
+import type { FileController } from "./modules/file/file.controller";
+import type { InviteController } from "./modules/invite/invite.controller";
+import type { LinkController } from "./modules/link/link.controller";
+import type { UserController } from "./modules/user/user.controller";
 
+export type { File, User, Link };
 export type RenderableReply = RenderableResponse & FastifyReply;
-
-export type GetInviteData = JWTPayloadInvite;
-export type GetUserFilesData = File[];
-export type GetUserData = User;
-export type GetFileData = File;
-export type GetLinkData = Link;
-export type PutUploadTokenData = GetUploadTokenData;
-
-export interface GetUploadTokenData {
-  upload_token: string;
+export type Await<T> = T extends {
+  then(onfulfilled?: (value: infer U) => unknown): unknown;
 }
+  ? U
+  : T;
 
-export interface GetServerConfigData {
-  host: string;
-  inquiries: string;
-  hosts: string[];
-}
+// invite
+export type GetInviteData = Await<ReturnType<InviteController["getInvite"]>>;
 
-export * from "./entities/File";
-export * from "./entities/User";
-export * from "./entities/Thumbnail";
+// user
+export type GetUserData = Await<ReturnType<UserController["getUser"]>>;
+export type GetUserFilesData = Await<ReturnType<UserController["getUserFiles"]>>;
+export type GetUploadTokenData = Await<ReturnType<UserController["getUserUploadToken"]>>;
+export type PutUploadTokenData = Await<ReturnType<UserController["resetUserUploadToken"]>>;
+
+// file
+export type GetFileData = Await<ReturnType<FileController["getFile"]>>;
+
+// link
+export type GetLinkData = Await<ReturnType<LinkController["getLink"]>>;
+
+// app
+export type GetServerConfigData = Await<ReturnType<AppController["getConfig"]>>;

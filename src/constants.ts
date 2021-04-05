@@ -11,12 +11,6 @@ export enum Endpoints {
   AUTH_LOGOUT = "/api/auth/logout",
 }
 
-export enum TokenAudience {
-  USER = "USER",
-  DELETION = "DELETION",
-  INVITE = "INVITE",
-}
-
 export enum Permission {
   ADMINISTRATOR = 1,
   CREATE_INVITE = 1 << 1,

@@ -50,7 +50,7 @@ export const TextViewer: FunctionComponent<{ file: GetFileData }> = (props) => {
       </div>
       <Highlight {...defaultProps} theme={theme} code={content.data} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={classNames(className, "text-left mx-1 p-0.5 overflow-auto max-h-96")} style={style}>
+          <pre className={classNames(className, "text-left overflow-auto max-h-96 px-1")} style={style}>
             {tokens.map((line, i) => {
               const props = getLineProps({ line, key: i });
               return (
