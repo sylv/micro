@@ -23,8 +23,9 @@ Before you get started, please keep in mind micro isn't really intended to be se
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
 3. Copy the example configs to the current directory, `cp ./micro/example/* ./`
 4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **You need to read through each file carefully or you'll risk fucking up your entire micro instance.** The comments are important and include information on initial startup and security. Caddy is optional but it will handle encrypting traffic and redirecting insecure requests, so for anything but a test environment you should use it or something similar.
-5. Run `docker-compose up micro` to populate the database, once it's calmed down press `Ctrl+C` then `docker-compose up -d`.
-6. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
+5. Run `docker-compose run micro prisma db push --preview-feature` to create database tables.
+6. Run `docker-compose up micro -d` to start micro.
+7. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
 ## usage
 
