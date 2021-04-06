@@ -5,9 +5,8 @@ import { SWRConfig } from "swr";
 import { Menu } from "../components/Menu";
 import { Title } from "../components/Title";
 import { fetcher } from "../helpers/fetcher";
-import "tailwindcss/tailwind.css";
-import "../styles/globals.css";
 import { ToastWrapper } from "../components/Toast";
+import "../styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

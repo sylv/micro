@@ -1,12 +1,17 @@
 *
 
-!src/**/*
-!types/**/*
+!prisma
+!public
+!src
+!types
+
+!LICENSE
+
 !package.json
-!yarn.lock
 !tsconfig.json
 !tsconfig.server.json
+!tailwind.config.js
 !next-env.d.ts
 !next.config.js
-!public
-!LICENSE
+!postcss.config.js
+!yarn.lock

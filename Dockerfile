@@ -1,29 +1,18 @@
-FROM node:15-alpine AS builder
+FROM node:15-alpine
 ENV NODE_ENV development
 
 # install build dependencies
-WORKDIR /build
-COPY package.json yarn.lock ./
-RUN yarn install
-
-# copy src and build
-COPY . .
-RUN yarn build
-
-# dont copy node_modules to next stage
-# https://stackoverflow.com/a/56566461/11783069
-RUN rm -rf ./node_modules
-
-FROM node:15-alpine
-ENV NODE_ENV production
-
-# install production dependencies
 WORKDIR /usr/src/micro
 COPY package.json yarn.lock ./
 RUN yarn install
+RUN npm i -g prisma
 
-# copy built app from builder
-COPY --from=builder /build/public public
-COPY --from=builder /build/.next .next
+# copy src and build
+COPY . .
+RUN prisma generate
+RUN yarn build
 
 CMD ["npm", "run", "start"]
+
+# todo: this should be a multistage build that yeets dev dependencies once
+# the app is built. that would probably cut the image size in half.

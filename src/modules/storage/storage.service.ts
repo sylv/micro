@@ -17,7 +17,7 @@ export class StorageService {
   private readonly createdPaths = new Set();
   private readonly path: string;
   constructor() {
-    this.path = path.join(process.cwd(), config.storagePath);
+    this.path = path.resolve(config.storagePath);
   }
 
   public async create(stream: NodeJS.ReadableStream) {
@@ -69,6 +69,8 @@ export class StorageService {
   }
 
   public createReadStream(hash: string, range?: { start?: number | null; end?: number | null } | null) {
+    // todo: we should throw an error if the file doesn't exist, at the moment
+    // the entire app will crash.
     const filePath = this.getPathFromHash(hash);
     return fs.createReadStream(filePath, {
       start: range?.start ?? undefined,
