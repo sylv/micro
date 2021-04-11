@@ -20,7 +20,7 @@ import { StorageService } from "../storage/storage.service";
 
 @Injectable()
 export class FileService {
-  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${shortIdLength}})(?<ext>\\.[a-z]{2,})?$`);
+  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${shortIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
   constructor(private storageService: StorageService) {}
 
   public cleanKey(key: string): { id: string; ext?: string } {
