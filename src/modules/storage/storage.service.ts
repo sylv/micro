@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import crypto from "crypto";
 import fs from "fs";
 import { nanoid } from "nanoid";
-import os from "os";
 import path from "path";
 import stream from "stream";
 import getSizeTransform from "stream-size";
@@ -22,7 +21,9 @@ export class StorageService {
 
   public async create(stream: NodeJS.ReadableStream) {
     const uploadId = nanoid();
-    const uploadPath = path.join(os.tmpdir(), `.micro${uploadId}`);
+    // using .tmp in the upload dir solves cross-device link issues
+    const uploadPath = path.join(this.path, ".tmp", `.micro${uploadId}`);
+    await this.ensureDirectoryExists(uploadPath);
 
     try {
       const hashStream = crypto.createHash("sha256");
@@ -37,12 +38,7 @@ export class StorageService {
 
       const digest = hashStream.digest("hex");
       const filePath = this.getPathFromHash(digest);
-      const fileDirectory = path.dirname(filePath);
-      if (!this.createdPaths.has(fileDirectory)) {
-        await fs.promises.mkdir(fileDirectory, { recursive: true });
-        this.createdPaths.add(fileDirectory);
-      }
-
+      await this.ensureDirectoryExists(filePath);
       await fs.promises.rename(uploadPath, filePath);
       return {
         hash: digest,
@@ -80,5 +76,13 @@ export class StorageService {
 
   private getPathFromHash(hash: string) {
     return path.join(this.path, hash[0], hash[1], hash);
+  }
+
+  private async ensureDirectoryExists(filePath: string) {
+    const fileDirectory = path.dirname(filePath);
+    if (!this.createdPaths.has(fileDirectory)) {
+      await fs.promises.mkdir(fileDirectory, { recursive: true });
+      this.createdPaths.add(fileDirectory);
+    }
   }
 }

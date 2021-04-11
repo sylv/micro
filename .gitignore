@@ -34,4 +34,4 @@ yarn-error.log*
 dist
 /.microrc
 /.env
-/files
+/data
