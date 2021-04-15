@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "private": true,
   "scripts": {
-    "watch": "NODE_ENV=development && ts-node-dev --ignore-watch '/\\.next/.*' --project tsconfig.server.json src/main.ts",
+    "watch": "ts-node-dev --exit-child --ignore-watch '/\\.next/.*' --project tsconfig.server.json src/main.ts",
     "build:clean": "rimraf .next",
     "build:web": "next build",
     "build:api": "tsc --project tsconfig.server.json",
