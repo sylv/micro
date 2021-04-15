@@ -38,7 +38,7 @@ export default function Invite() {
     return <PageLoader />;
   }
 
-  const onUsernameChange = (evt: ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value);
+  const onUsernameChange = (evt: ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value.toLowerCase());
   const onPasswordChange = (evt: ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value);
   const onSubmit = async () => {
     try {
