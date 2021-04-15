@@ -14,8 +14,8 @@
     // the dashboard from another domain in this list.
     "i.example.com"
     // you can add as many as you want, with or without wildcards.
-    // * will be replaced with the users username.
-    // "*.example.com"
+    // {{username}} will be replaced with the users username.
+    // "{{username}}.example.com"
   ],
   "uploadLimit": "50MB",
   // null or undefined = "anything goes"
