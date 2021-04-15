@@ -53,8 +53,14 @@ export default function Login() {
     <Container center small>
       <Title>Sign in</Title>
       <h1 className="my-5 text-4xl font-bold">Sign In</h1>
-      <Input placeholder="Username" onChange={onUsernameChange} />
-      <Input className="mt-2" type="password" placeholder="Password" onChange={onPasswordChange} />
+      <Input placeholder="Username" onKeyDown={onKeyDown} onChange={onUsernameChange} />
+      <Input
+        className="mt-2"
+        type="password"
+        placeholder="Password"
+        onKeyDown={onKeyDown}
+        onChange={onPasswordChange}
+      />
       <Button className="mt-4" type="primary" onClick={onContinueClick} onKeyDown={onKeyDown} disabled={disabled}>
         Continue
       </Button>
