@@ -25,7 +25,7 @@ Before you get started, please keep in mind micro isn't really intended to be se
 4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **You need to read through each file carefully or you'll risk fucking up your entire micro instance.** The comments are important and include information on initial startup and security. Caddy is optional but it will handle encrypting traffic and redirecting insecure requests, so for anything but a test environment you should use it or something similar.
 5. Run `docker-compose up -d postgres` to start the database.
 6. Run `docker-compose run -e DATABASE_URL=postgresql://micro:youshallnotpass@postgres/micro micro prisma db push --preview-feature` to create database tables.
-7. Run `docker-compose up micro -d` to start micro.
+7. Run `docker-compose up -d micro` to start micro.
 8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
 ## administration
