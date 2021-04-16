@@ -1,6 +1,7 @@
 .button {
   @apply flex items-center justify-center w-full px-3 py-2 text-sm font-medium border border-transparent rounded;
   transition: all 150ms ease;
+  height: 2.5rem;
 }
 
 .button:focus {

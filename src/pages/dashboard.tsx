@@ -9,40 +9,46 @@ import { Container } from "../components/Container";
 import { Dropdown, DropdownTab } from "../components/Dropdown";
 import { DropdownContent } from "../components/Dropdown/content";
 import { FileList } from "../components/FileList";
-import { Input } from "../components/Input";
+import { Input } from "../components/Input/input";
+import { Select } from "../components/Input/select";
 import { PageLoader } from "../components/PageLoader";
-import { Select } from "../components/Select";
 import { Title } from "../components/Title";
 import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/download";
 import { generateConfig } from "../helpers/generateConfig";
 import { http } from "../helpers/http";
-import { replacePlaceholders } from "../helpers/replacePlaceholders";
+import { useConfig } from "../hooks/useConfig";
 import { useToasts } from "../hooks/useToasts";
 import { logout, useUser } from "../hooks/useUser";
-import { GetServerConfigData, GetUploadTokenData, PutUploadTokenData } from "../types";
+import { GetUploadTokenData, PutUploadTokenData } from "../types";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
   const user = useUser();
-  const token = useSWR<GetUploadTokenData>(Endpoints.USER_UPLOAD_TOKEN);
-  const server = useSWR<GetServerConfigData>(Endpoints.CONFIG);
+  const token = useSWR<GetUploadTokenData>(Endpoints.USER_TOKEN);
+  const config = useConfig(true);
   const [hosts, setHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
-  const downloadable = !!hosts[0];
   const setToast = useToasts();
+  const downloadable = hosts.length;
 
   useEffect(() => {
-    // redirect home if any of the requests fail
-    if (user.error || server.error || token.error) {
+    if (config.error || token.error) Router.replace("/");
+    if (user.error) {
+      // todo: for some reason making this /login results in
+      // infinite loops of redirects between /login and /dashboard
+      // but only sometimes. that shouldn't happen.
       Router.replace("/");
     }
-  }, [user]);
+  }, [user, config, token]);
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (server.data && !hosts[0]) setHosts([server.data.host]);
-  }, [server]);
+    if (config.data && !hosts[0]) {
+      const root = config.data.hosts.find((host) => host.root);
+      if (root) setHosts([root?.data.key]);
+    }
+  }, [config]);
 
   useEffect(() => {
     Router.prefetch("/file/[fileId]");
@@ -56,9 +62,8 @@ export default function Dashboard() {
    * Download a customised ShareX config for the user based on their options.
    */
   const onDownloadClick = (direct: boolean) => {
-    const formatted = hosts.map((host) => replacePlaceholders(host, user.data!));
-    const config = generateConfig(token.data!.upload_token, formatted, direct);
-    downloadFile(config.name, config.content);
+    const config = generateConfig(token.data!.token, hosts, direct);
+    downloadFile(config.name.split("{{username}}").join(user.data!.username), config.content);
   };
 
   /**
@@ -71,7 +76,7 @@ export default function Dashboard() {
     setRegenerating(true);
 
     try {
-      const response = await http(Endpoints.USER_UPLOAD_TOKEN, { method: "PUT" });
+      const response = await http(Endpoints.USER_TOKEN, { method: "PUT" });
       const body = (await response.json()) as PutUploadTokenData;
       token.mutate(body, false);
       setRegenerating(false);
@@ -82,7 +87,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!user.data || !server.data || !token.data) {
+  if (!user.data || !config.data || !token.data) {
     return (
       <>
         <Title>Dashboard</Title>
@@ -105,12 +110,7 @@ export default function Dashboard() {
           <h1 className="mb-3 text-3xl font-bold">Hello {user.data.username}</h1>
           <div className="grid grid-cols-8 gap-2">
             <div className="col-span-full md:col-span-6">
-              <Input
-                prefix="Upload Token"
-                onFocus={(evt) => evt.target.select()}
-                value={token.data.upload_token}
-                readOnly
-              />
+              <Input prefix="Upload Token" onFocus={(evt) => evt.target.select()} value={token.data.token} readOnly />
             </div>
             <div className="col-span-full md:col-span-2">
               <Button disabled={regenerating} onClick={regenerateToken}>
@@ -118,10 +118,10 @@ export default function Dashboard() {
               </Button>
             </div>
             <div className="col-span-full md:col-span-6">
-              <Select placeholder="Hosts" onChange={onDomainChange}>
-                {server.data.hosts.map((domain) => (
-                  <option key={domain} value={domain}>
-                    {replacePlaceholders(domain, { username: user.data!.username })}
+              <Select prefix="Host" placeholder="Hosts" onChange={onDomainChange}>
+                {config.data.hosts.map((host) => (
+                  <option key={host.data.key} value={host.data.key}>
+                    {host.data.key.replace("{{username}}", user.data!.username)}
                   </option>
                 ))}
               </Select>

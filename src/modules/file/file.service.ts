@@ -5,7 +5,7 @@ import {
   PayloadTooLargeException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { File } from "@prisma/client";
+import { File, User } from "@prisma/client";
 import contentRange from "content-range";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Multipart } from "fastify-multipart";
@@ -16,12 +16,13 @@ import { EMBEDDABLE_IMAGE_TYPES } from "../../constants";
 import { getStreamType } from "../../helpers/getStreamType";
 import { shortId, shortIdLength } from "../../helpers/shortId";
 import { prisma } from "../../prisma";
+import { HostsService } from "../hosts/hosts.service";
 import { StorageService } from "../storage/storage.service";
 
 @Injectable()
 export class FileService {
   private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${shortIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
-  constructor(private storageService: StorageService) {}
+  constructor(private storageService: StorageService, private hostService: HostsService) {}
 
   public cleanKey(key: string): { id: string; ext?: string } {
     const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
@@ -49,12 +50,17 @@ export class FileService {
     await prisma.file.delete({ where: { id: file.id } });
   }
 
-  public async create(multipart: Multipart, request: FastifyRequest, ownerId: string): Promise<File> {
+  public async create(
+    multipart: Multipart,
+    request: FastifyRequest,
+    owner: { id: string; tags?: string[] }
+  ): Promise<File> {
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     if (+request.headers["content-length"] >= config.uploadLimit) {
       throw new PayloadTooLargeException();
     }
 
+    const host = await this.hostService.resolve(request.headers["x-micro-host"] as string | undefined, owner.tags);
     const stream = multipart.file;
     const typeStream = stream.pipe(new PassThrough());
     const uploadStream = stream.pipe(new PassThrough());
@@ -70,7 +76,8 @@ export class FileService {
         id: fileId,
         type: type,
         name: multipart.filename,
-        ownerId: ownerId,
+        ownerId: owner.id,
+        host: host.key,
         hash: hash,
         size: size,
       },

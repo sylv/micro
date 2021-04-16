@@ -1,5 +1,6 @@
 import Router from "next/router";
 import useSWR, { mutate } from "swr";
+import { LoginData } from "../components/LoginForm";
 import { Endpoints } from "../constants";
 import { http } from "../helpers/http";
 import { GetUserData } from "../types";
@@ -8,15 +9,17 @@ import { GetUserData } from "../types";
  * Sign the user in with a username/password combo.
  * @param remember Whether to remember the user once they close the page.
  */
-export async function login(username: string, password: string) {
+export async function login(data: LoginData) {
   await http(Endpoints.AUTH_LOGIN, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(data),
   });
 
   mutate(Endpoints.USER, null, true);
-  Router.push("/dashboard");
+  process.nextTick(() => {
+    Router.push("/dashboard");
+  });
 }
 
 /**

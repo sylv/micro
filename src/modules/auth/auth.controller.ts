@@ -1,26 +1,35 @@
 import { Controller, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../../config";
-import { PasswordAuthGuard } from "../../guards/PasswordAuthGuard";
-import { JWTPayloadUser } from "../../strategies/JWTStrategy";
+import { PasswordAuthGuard } from "../../guards/password.guard";
+import { JWTPayloadUser } from "../../strategies/jwt.strategy";
 import { AuthService, TokenType } from "./auth.service";
+import ms from "ms";
 
 @Controller()
 export class AuthController {
-  private static readonly DOMAIN = config.host.split(":").shift()!;
+  private static readonly DOMAIN = config.hosts[0].key.split(":").shift()!;
+  private static readonly SECURE = config.hosts[0].url.startsWith("https");
+  private static readonly ONE_YEAR = ms("1y");
+  private static readonly COOKIE_OPTIONS = {
+    path: "/",
+    httpOnly: true,
+    domain: AuthController.DOMAIN,
+    secure: AuthController.SECURE,
+  };
+
   constructor(private authService: AuthService) {}
 
   @Post("api/auth/login")
   @UseGuards(PasswordAuthGuard)
   async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
-    const payload: JWTPayloadUser = { name: req.user.username, sub: req.user.id };
-    const token = await this.authService.signToken(TokenType.USER, payload);
+    const payload: JWTPayloadUser = { name: req.user.username, id: req.user.id, secret: req.user.secret };
+    const expiresAt = Date.now() + AuthController.ONE_YEAR;
+    const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, payload, "1y");
     return reply
       .setCookie("token", token, {
-        path: "/",
-        domain: AuthController.DOMAIN,
-        httpOnly: true,
-        secure: config.ssl,
+        ...AuthController.COOKIE_OPTIONS,
+        expires: new Date(expiresAt),
       })
       .send({ ok: true });
   }
@@ -29,10 +38,7 @@ export class AuthController {
   async logout(@Res() reply: FastifyReply) {
     return reply
       .setCookie("token", "", {
-        path: "/",
-        domain: AuthController.DOMAIN,
-        httpOnly: true,
-        secure: config.ssl,
+        ...AuthController.COOKIE_OPTIONS,
         expires: new Date(),
       })
       .send({ ok: true });

@@ -1,8 +1,8 @@
 import { applyDecorators, createParamDecorator, ExecutionContext, SetMetadata, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
 import { Permission } from "../../constants";
-import { JWTAuthGuard } from "../../guards/JWTAuthGuard";
-import { PermissionGuard } from "../../guards/PermissionGuard";
+import { JWTAuthGuard } from "../../guards/jwt.guard";
+import { PermissionGuard } from "../../guards/permission.guard";
 
 export const RequirePermissions = (...permissions: Array<Permission>) => {
   const aggregate = permissions.reduce((acc, bit) => (acc |= bit), 0);

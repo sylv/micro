@@ -4,7 +4,8 @@ import { Key, User } from "react-feather";
 import useSWR from "swr";
 import { Button } from "../../components/Button";
 import { Container } from "../../components/Container";
-import { Input } from "../../components/Input";
+import { Input } from "../../components/Input/input";
+import { LoginForm, LoginData } from "../../components/LoginForm";
 import { PageLoader } from "../../components/PageLoader";
 import { Time } from "../../components/Time";
 import { Title } from "../../components/Title";
@@ -16,11 +17,8 @@ import Error from "../_error";
 
 export default function Invite() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const setToast = useToasts();
-  const disabled = loading || !username || !password;
   const inviteToken = router.query.inviteToken;
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
   const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`, { initialData });
@@ -38,15 +36,13 @@ export default function Invite() {
     return <PageLoader />;
   }
 
-  const onUsernameChange = (evt: ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value.toLowerCase());
-  const onPasswordChange = (evt: ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value);
-  const onSubmit = async () => {
+  const onSubmit = async (data: LoginData) => {
     try {
       setLoading(true);
       await http(Endpoints.USER, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, invite: inviteToken }),
+        body: JSON.stringify({ ...data, invite: inviteToken }),
       });
 
       Router.push("/login");
@@ -67,11 +63,7 @@ export default function Invite() {
       </p>
       <div className="grid flex-row-reverse grid-cols-6 gap-12">
         <div className="col-span-6 md:col-span-2">
-          <Input type="text" placeholder="Username" prefix={<User />} onChange={onUsernameChange} className="mt-2" />
-          <Input type="password" placeholder="Password" className="mt-2" prefix={<Key />} onChange={onPasswordChange} />
-          <Button type="primary" disabled={disabled} onClick={onSubmit} className="mt-4">
-            Create Account
-          </Button>
+          <LoginForm buttonText="Create Account" onContinue={onSubmit} loading={loading} />
         </div>
         <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
           <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>

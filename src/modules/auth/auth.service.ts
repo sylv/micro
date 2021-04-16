@@ -17,7 +17,7 @@ export interface TokenPayload {
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  signToken<PayloadType extends {}>(type: TokenType, payload: PayloadType, expiresIn = "1y") {
+  signToken<PayloadType extends {}>(type: TokenType, payload: PayloadType, expiresIn: string = "1y") {
     return this.jwtService.signAsync(payload, {
       audience: type,
       expiresIn: expiresIn,

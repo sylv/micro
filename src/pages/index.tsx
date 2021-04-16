@@ -1,16 +1,14 @@
 import { useRouter } from "next/router";
-import useSWR from "swr";
 import { Container } from "../components/Container";
 import { Spinner } from "../components/Spinner";
-import { Endpoints } from "../constants";
-import { GetServerConfigData } from "../types";
+import { useConfig } from "../hooks/useConfig";
 
 export default function Home() {
   const router = useRouter();
   const initialData = router.query.invite && JSON.parse(router.query.invite as string);
-  const server = useSWR<GetServerConfigData>(Endpoints.CONFIG, { initialData });
-  const hosts = server.data?.hosts ?? [];
-  const loading = !server.data && !server.error;
+  const config = useConfig(true, initialData);
+  const hosts = config.data?.hosts ?? [];
+  const loading = !config.data && !config.error;
 
   return (
     <Container>
@@ -25,16 +23,16 @@ export default function Home() {
         </p>
         <h3 className="text-2xl font-bold">Domains</h3>
         <ul className="mb-2 ml-2 list-disc list-inside">
-          {loading ? <Spinner /> : hosts.map((domain) => <li key={domain}>{domain}</li>)}
+          {loading ? <Spinner /> : hosts.map((host) => <li key={host.data.key}>{host.data.key}</li>)}
         </ul>
         <h3 className="text-2xl font-bold">Contact</h3>
-        {!server.data ? (
+        {!config.data ? (
           <Spinner />
         ) : (
           <p>
             To get an account or get a file taken down, email{" "}
-            <a href={`mailto:${server.data.inquiries}`} className="text-brand">
-              {server.data.inquiries}
+            <a href={`mailto:${config.data.inquiries}`} className="text-brand">
+              {config.data.inquiries}
             </a>
             .
           </p>

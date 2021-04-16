@@ -1,56 +1,58 @@
 import { BadRequestException, Controller, Headers, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
-import randomItem from "random-item";
 import { config } from "../../config";
-import { UploadAuthGuard } from "../../guards/UploadAuthGuard";
-import { formatUrl } from "../../helpers/formatUrl";
-import { ContentType, DeletionService } from "../deletion/deletion.service";
-import { LinkService } from "../link/link.service";
-import { FileService } from "../file/file.service";
+import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { UserId } from "../auth/auth.decorators";
+import { ContentType, DeletionService } from "../deletion/deletion.service";
+import { FileService } from "../file/file.service";
+import { HostsService } from "../hosts/hosts.service";
+import { LinkService } from "../link/link.service";
+import { UserService } from "../user/user.service";
 
 @Controller()
 export class ShareXController {
   constructor(
     private fileService: FileService,
     private linkService: LinkService,
-    private deletionService: DeletionService
+    private deletionService: DeletionService,
+    private hostService: HostsService,
+    private userService: UserService
   ) {}
 
   @Post("api/sharex")
-  @UseGuards(UploadAuthGuard)
+  @UseGuards(JWTAuthGuard)
   async createShareXUpload(
     @Req() request: FastifyRequest,
     @UserId() userId: string,
     @Query("input") input?: string,
-    @Headers("x-micro-host") hosts = config.host
+    @Headers("x-micro-host") hosts = config.hosts[0].url
   ) {
-    // todo: it would be nice if we validated this and threw an error on invalid domains
-    const host = randomItem(hosts.split(/, ?/g));
+    const user = await this.userService.get(userId);
+    const host = await this.hostService.resolve(hosts, user.tags);
     if (input?.startsWith("http")) {
       const link = await this.linkService.create(input, userId);
       const urls = this.linkService.getUrls(link);
       const deletion = await this.deletionService.create(ContentType.LINK, link.id);
       return {
-        // "view" aliases to "direct" for compatibility
-        view: formatUrl(host, urls.direct),
-        direct: formatUrl(host, urls.direct),
-        metadata: formatUrl(host, urls.metadata),
-        delete: formatUrl(host, deletion.url),
+        // "view" aliases to "direct" for compatibility with the image uploader
+        view: this.hostService.format(host.url, user.username, urls.direct),
+        direct: this.hostService.format(host.url, user.username, urls.direct),
+        metadata: this.hostService.format(host.url, user.username, urls.metadata),
+        delete: this.hostService.format(host.url, user.username, deletion.url),
       };
     }
 
     const upload = await request.file();
     if (!upload) throw new BadRequestException("Missing upload.");
-    const file = await this.fileService.create(upload, request, userId);
+    const file = await this.fileService.create(upload, request, user);
     const deletion = await this.deletionService.create(ContentType.FILE, file.id);
     const urls = this.fileService.getUrls(file);
     return {
-      metadata: formatUrl(host, urls.metadata)!,
-      thumbnail: formatUrl(host, urls.thumbnail),
-      direct: formatUrl(host, urls.direct),
-      view: formatUrl(host, urls.view),
-      delete: formatUrl(host, deletion.url),
+      metadata: this.hostService.format(host.url, user.username, urls.metadata),
+      thumbnail: this.hostService.format(host.url, user.username, urls.thumbnail),
+      direct: this.hostService.format(host.url, user.username, urls.direct),
+      view: this.hostService.format(host.url, user.username, urls.view),
+      delete: this.hostService.format(host.url, user.username, deletion.url),
     };
   }
 }

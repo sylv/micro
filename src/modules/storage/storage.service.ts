@@ -14,15 +14,11 @@ const pipeline = promisify(stream.pipeline);
 @Injectable()
 export class StorageService {
   private readonly createdPaths = new Set();
-  private readonly path: string;
-  constructor() {
-    this.path = path.resolve(config.storagePath);
-  }
 
   public async create(stream: NodeJS.ReadableStream) {
     const uploadId = nanoid();
     // using .tmp in the upload dir solves cross-device link issues
-    const uploadPath = path.join(this.path, ".tmp", `.micro${uploadId}`);
+    const uploadPath = path.join(config.storagePath, ".tmp", `.micro${uploadId}`);
     await this.ensureDirectoryExists(uploadPath);
 
     try {
@@ -75,7 +71,7 @@ export class StorageService {
   }
 
   private getPathFromHash(hash: string) {
-    return path.join(this.path, hash[0], hash[1], hash);
+    return path.join(config.storagePath, hash[0], hash[1], hash);
   }
 
   private async ensureDirectoryExists(filePath: string) {

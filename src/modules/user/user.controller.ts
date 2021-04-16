@@ -1,22 +1,22 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Put,
-  Request,
   UseGuards,
 } from "@nestjs/common";
-import { File } from "@prisma/client";
-import { FastifyRequest } from "fastify";
 import { nanoid } from "nanoid";
 import { Permission } from "../../constants";
-import { JWTAuthGuard } from "../../guards/JWTAuthGuard";
+import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { prisma } from "../../prisma";
+import { JWTPayloadUser } from "../../strategies/jwt.strategy";
 import { RequirePermissions, UserId } from "../auth/auth.decorators";
+import { AuthService, TokenType } from "../auth/auth.service";
 import { FileService } from "../file/file.service";
 import { InviteService } from "../invite/invite.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -27,31 +27,25 @@ export class UserController {
   constructor(
     private userService: UserService,
     private inviteService: InviteService,
-    private fileService: FileService
+    private fileService: FileService,
+    private authService: AuthService
   ) {}
 
   @Get("api/user")
   @UseGuards(JWTAuthGuard)
-  async getUser(@UserId() userId: string) {
+  async get(@UserId() userId: string) {
     return this.userService.get(userId);
   }
 
   @Post("/api/user")
-  async createUser(@Body() data: CreateUserDto) {
+  async create(@Body() data: CreateUserDto) {
     const invite = await this.inviteService.verifyToken(data.invite);
     return this.userService.create(data.username, data.password, invite);
   }
 
-  @Delete("api/user/:id")
-  @RequirePermissions(Permission.DELETE_USERS)
-  @UseGuards(JWTAuthGuard)
-  async deleteUser(@Param("id") userId: string) {
-    return this.userService.delete(userId);
-  }
-
   @Get("api/user/files")
   @UseGuards(JWTAuthGuard)
-  async getUserFiles(@UserId() userId: string, @Param("cursor") cursor?: string) {
+  async getFiles(@UserId() userId: string, @Param("cursor") cursor?: string) {
     const files = await this.userService.getFiles(userId, cursor);
     return files.map((file) =>
       Object.assign(file, {
@@ -61,27 +55,78 @@ export class UserController {
     );
   }
 
-  @Get("api/user/upload_token")
+  @Get("api/user/token")
   @UseGuards(JWTAuthGuard)
-  async getUserUploadToken(@Request() req: FastifyRequest) {
-    const user = await prisma.user.findFirst({
-      where: { id: req.user.id },
-      select: { token: true },
+  async getToken(@UserId() userId: string) {
+    const user = await this.userService.get(userId);
+    const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
+      name: user.username,
+      secret: user.secret,
+      id: user.id,
     });
 
-    if (!user) throw new InternalServerErrorException("Expected user was missing");
-    return { upload_token: user.token };
+    return { token };
   }
 
-  @Put("api/user/upload_token")
+  @Put("api/user/token")
   @UseGuards(JWTAuthGuard)
-  async resetUserUploadToken(@UserId() userId: string) {
-    const token = nanoid(64);
+  async resetToken(@UserId() userId: string) {
+    const secret = nanoid();
+    await prisma.user.update({ where: { id: userId }, data: { secret } });
+    return this.getToken(userId);
+  }
+
+  // temporary until admin UI
+  @Get("api/user/:id/delete")
+  @RequirePermissions(Permission.DELETE_USERS)
+  @UseGuards(JWTAuthGuard)
+  async delete(@Param("id") targetId: string) {
+    const target = await this.userService.get(targetId);
+    if (this.userService.checkPermissions(target.permissions, Permission.ADMINISTRATOR)) {
+      throw new ForbiddenException("You can't do that to that user.");
+    }
+
+    await this.userService.delete(targetId);
+    return { deleted: true };
+  }
+
+  // temporary until admin UI
+  @Get("api/user/:id/tags/add/:tag")
+  @RequirePermissions(Permission.ADD_USER_TAGS)
+  @UseGuards(JWTAuthGuard)
+  async addTagToUser(@Param("id") targetId: string, @Param("tag") tag: string) {
+    const target = await this.userService.get(targetId);
+    if (target.tags.includes(tag.toLowerCase())) {
+      throw new BadRequestException("User already has that tag.");
+    }
+
     await prisma.user.update({
-      where: { id: userId },
-      data: { token },
+      where: { id: target.id },
+      data: {
+        tags: target.tags.concat(tag.toLowerCase()),
+      },
     });
 
-    return { upload_token: token };
+    return { added: true, tag };
+  }
+
+  // temporary until admin UI
+  @Get("api/user/:id/tags/remove/:tag")
+  @RequirePermissions(Permission.ADD_USER_TAGS)
+  @UseGuards(JWTAuthGuard)
+  async removeTagFromUser(@Param("id") targetId: string, @Param("tag") tag: string) {
+    const target = await this.userService.get(targetId);
+    if (!target.tags.includes(tag)) {
+      throw new BadRequestException("User does not have that tag.");
+    }
+
+    await prisma.user.update({
+      where: { id: target.id },
+      data: {
+        tags: target.tags.filter((existing) => existing !== tag),
+      },
+    });
+
+    return { removed: true, tag };
   }
 }

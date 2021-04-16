@@ -4,9 +4,10 @@ export const IS_DEV = process.env.NODE_ENV !== "production";
 
 export enum Endpoints {
   CONFIG = "/api/config",
+  HOSTS = "/api/hosts",
   USER = "/api/user",
   USER_FILES = "/api/user/files",
-  USER_UPLOAD_TOKEN = "/api/user/upload_token",
+  USER_TOKEN = "/api/user/token",
   AUTH_LOGIN = "/api/auth/login",
   AUTH_LOGOUT = "/api/auth/logout",
 }
@@ -15,4 +16,5 @@ export enum Permission {
   ADMINISTRATOR = 1,
   CREATE_INVITE = 1 << 1,
   DELETE_USERS = 1 << 2,
+  ADD_USER_TAGS = 1 << 3,
 }

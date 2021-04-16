@@ -1,30 +1,37 @@
 {
-  // set to "false" for micro to use http urls instead of https
-  "ssl": true,
-  // IMPORTANT
-  // replace this value with a very long (32-64) random string of characters.
-  // it will be used to sign JWT tokens, which means you should treat this like
-  // a password that protects everyones account. if this isn't changed or is set to something stupid
-  // like "password", anyone can create their own invites, sign in as other users, etc.
-  "secret": "REPLACE_ME_WITH_A_VERY_LONG_RANDOM_STRING",
+  // THIS IS THE MOST IMPORTANT PART IN THIS CONFIG
+  // You need to change this to a very long, very random string.
+  // this is used to sign JWT tokens, if someone knows this secret they can impersonate
+  // users, act as an admin for the entire instance, etc.
+  "secret": "YOU_SHALL_NOT_PASS",
+  // set this to your email.
   "inquiries": "admin@example.com",
+  // leave as default for docker.
+  // set to a postgres connection URI for your database.
+  "database": "postgresql://micro:youshallnotpass@localhost:5433/micro",
+  // can be relative to thw cwd or absolute.
+  // for docker you'll want this to be absolute.
+  "storagePath": "/data",
   "hosts": [
-    // the first domain in this list will be the "primary" domain,
-    // and users will be redirected to it if they try to access
-    // the dashboard from another domain in this list.
-    "i.example.com"
-    // you can add as many as you want, with or without wildcards.
-    // * will be replaced with the users username.
-    // "*.example.com"
-  ],
-  "uploadLimit": "50MB",
-  // null or undefined = "anything goes"
-  // otherwise you can define a list of mime types that are allowed to be
-  // uploaded. applies to everyone.
-  // "allowTypes": ["image/png", "image/jpeg", "video/mp4"],
-  "allowTypes": null,
-  "database": "postgresql://micro:youshallnotpass@postgres/micro",
-  // where uploaded files are stored. can be relative from process cwd
-  // in docker the cwd should be /usr/src/micro
-  "storagePath": "/data"
+    {
+      // the first host in this array is the "default" host, and all other domains
+      // will redirect to it.
+      "url": "https://i.example.com"
+    },
+    {
+      "url": "https://i.example.net",
+      // only allow users with the "admin" tag to use this host
+      "tags": ["admin"],
+      // redirect to "https://example.net" whenever possible
+      // such as when the user views a file then clicks the micro icon in the header.
+      "redirect": "https://example.net"
+    },
+    {
+      // {{username}} is a placeholder for the users username,
+      // users would be able to use this as admin.example.com if their
+      // usename was "admin".
+      // currently this is the only available placeholder.
+      "url": "https://{{username}}.example.com"
+    }
+  ]
 }

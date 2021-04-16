@@ -16,11 +16,13 @@ export class UserService {
         id: true,
         username: true,
         invite: true,
+        secret: true,
         permissions: true,
+        tags: true,
       },
     });
 
-    if (!user) throw new NotFoundException();
+    if (!user) throw new NotFoundException(`Invalid user ID`);
     return user;
   }
 
@@ -50,7 +52,7 @@ export class UserService {
     const user = await prisma.user.create({
       data: {
         id: shortId(),
-        token: nanoid(64),
+        secret: nanoid(),
         password: hashedPassword,
         username: lowerUsername,
         invite: invite.id,

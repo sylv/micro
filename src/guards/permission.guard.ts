@@ -1,11 +1,11 @@
-import { ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { FastifyRequest } from "fastify";
 import { Permission } from "../constants";
 import { UserService } from "../modules/user/user.service";
 
 @Injectable()
-export class PermissionGuard {
+export class PermissionGuard implements CanActivate {
   constructor(private userService: UserService, private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

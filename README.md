@@ -28,13 +28,15 @@ Before you get started, please keep in mind micro isn't really intended to be se
 7. Run `docker-compose up micro -d` to start micro.
 8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
-## usage
+## administration
 
-Basically just sign in and download a ShareX config. The embedded config will embed files on the micro site with fancy UI and extra information like file size, creation date, etc. Direct links go directly to the file and skip the UI entirely. What you pick is really up to personal preference, but you should try out both before settling on one or the other.
+There currently isn't an admin interface, only endpoints that let you do some basic tasks.
 
-You can create invites for other users by going to `/api/invite` and copying the URL it gives you. Each invite is valid for an hour and cannot be revoked. **Passwords are set in stone and cannot be changed.** This will change in the future to allow you to manually reset users passwords. There isn't any other hidden admin UI as of yet.
+- To create an invite, go to `/api/invite` and copy the link. Invites are valid for an hour and cannot be revoked once generated.
+- To add a tag to a user, go to `/api/user/:id/tags/add/:tag`, where `:id` is the **id** of the user you want to add the tag to, and `:tag` is the name of the tag to add.
+- To remove a tag, go to `/api/user/:id/tags/remove/:tag`. See above for parameters.
+- To delete a user, go to `/api/user/:id/delete`. **This will only delete the user, files they have uploaded will not be removed from disk.** 
 
- 
 ## features
 
 - [x] ShareX Support
@@ -60,3 +62,6 @@ You can create invites for other users by going to `/api/invite` and copying the
 - [ ] Image width+height should be stored so the image preview doesn't flash while loading.
 - [ ] FileEmbed.tsx has trouble scaling down on mobile. May be due to the file name not truncating properly, also an issue with text previews that are long and wide.
 - [ ] Domain dropdown should be a multi-select like the pre-tailwind design.
+- [ ] Dashboard pagination for files.
+- [ ] Cleanup that deletes files larger then X bytes after Y days (of no views?)
+- [ ] Toasts overflow on mobile
