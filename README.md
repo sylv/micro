@@ -1,6 +1,32 @@
 # micro
 
-An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** 
+An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** You can see a preview at https://micro.sylo.digital
+
+- [micro](#micro)
+  - [features](#features)
+  - [screenshots](#screenshots)
+  - [installation](#installation)
+  - [administration](#administration)
+  - [todo](#todo)
+  - [discord](#discord)
+
+## features
+
+- [x] ShareX Support
+- [x] Thumbnails
+- [x] Config generation
+- [x] File name preservation
+- [x] Video, image and text previews
+- [x] Syntax highlighting for supported files
+- [x] Deletion URLs
+- [x] Dashboard
+- [x] Permissions
+- [x] Invite links
+- [x] URL Shortening
+- [X] Mobile support
+- [X] EXIF metadata removal
+
+## screenshots
 
 <table>
   <tr>
@@ -37,25 +63,6 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - To remove a tag, go to `/api/user/:id/tags/remove/:tag`. See above for parameters.
 - To delete a user, go to `/api/user/:id/delete`. **This will only delete the user, files they have uploaded will not be removed from disk.** 
 
-## features
-
-- [x] ShareX Support
-- [x] Thumbnails
-- [x] Config generation
-- [x] File name preservation
-- [x] Video, image and text previews
-- [x] Syntax highlighting for supported files
-- [x] Deletion URLs
-- [x] Dashboard
-- [x] Permissions
-- [x] Invite links
-- [x] URL Shortening
-- [X] Mobile support
-- [X] EXIF metadata removal
-- [ ] Video thumbnails
-- [ ] Markdown previews
-- [ ] Pastes
-
 ## todo
 
 - [ ] Ratelimiting
@@ -66,3 +73,15 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Cleanup that deletes files larger then X bytes after Y days (of no views?)
 - [ ] Toasts overflow on mobile
 - [ ] Deletion is broken due to prisma not copying cascades from typeorm >:(
+- [ ] Pretty sure regenerating the users token will also log them out.
+- [ ] Video thumbnails
+- [ ] Markdown previews
+- [ ] Paste support
+
+## discord
+
+it's pretty cool and my mum made cookies if you wanna come. might even give you an account on the official instance or help you setup your own 😳 that would be crazy haha 👉👈
+
+<a href="https://discord.gg/VDMX6VQRZm" target="__blank">
+  <img src="https://discordapp.com/api/guilds/778444719553511425/widget.png?style=banner2" alt="sylo.digital"/>
+</a>
