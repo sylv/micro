@@ -17,15 +17,15 @@ export enum ContentType {
 export class DeletionService {
   constructor(private authService: AuthService, private fileService: FileService, private linkService: LinkService) {}
 
-  async use(token: string) {
+  async useToken(token: string) {
     try {
-      const payload = await this.verify(token);
+      const payload = await this.verifyToken(token);
       switch (payload.type) {
         case ContentType.FILE:
-          await this.fileService.delete(payload.sub, undefined);
+          await this.fileService.deleteFile(payload.sub, undefined);
           break;
         case ContentType.LINK:
-          await this.linkService.delete(payload.sub, undefined);
+          await this.linkService.deleteLink(payload.sub, undefined);
           break;
         default:
           throw new BadRequestException("Unknown deletion type.");
@@ -39,11 +39,11 @@ export class DeletionService {
     }
   }
 
-  verify(token: string) {
+  verifyToken(token: string) {
     return this.authService.verifyToken<JWTPayloadDelete>(TokenType.DELETION, token);
   }
 
-  async create(type: ContentType, id: string) {
+  async createToken(type: ContentType, id: string) {
     const payload: JWTPayloadDelete = { type, sub: id };
     const token = await this.authService.signToken(TokenType.DELETION, payload);
     const url = `/delete/${token}`;

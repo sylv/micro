@@ -10,8 +10,8 @@ export class InviteController {
   constructor(private inviteService: InviteService) {}
 
   @Get("invite/:token")
-  async getPage(@Res() reply: RenderableReply, @Param("token") token: string) {
-    const payload = await this.get(token);
+  async getInvitePage(@Res() reply: RenderableReply, @Param("token") token: string) {
+    const payload = await this.getInvite(token);
     return reply.render("invite/[inviteToken]", {
       inviteToken: token,
       invite: JSON.stringify(payload),
@@ -19,7 +19,7 @@ export class InviteController {
   }
 
   @Get("api/invite/:token")
-  async get(@Param("token") token: string) {
+  async getInvite(@Param("token") token: string) {
     return this.inviteService.verifyToken(token);
   }
 
@@ -27,7 +27,7 @@ export class InviteController {
   @Post("api/invite")
   @RequirePermissions(Permission.CREATE_INVITE)
   @UseGuards(JWTAuthGuard)
-  async create(@UserId() userId: string) {
+  async createInvite(@UserId() userId: string) {
     return this.inviteService.create(userId, undefined);
   }
 }

@@ -38,6 +38,7 @@ model Link {
   id          String   @id
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
   destination String
+  host        String?
   clicks      Int      @default(0)
   owner       User     @relation(fields: [ownerId], references: [id])
   ownerId     String

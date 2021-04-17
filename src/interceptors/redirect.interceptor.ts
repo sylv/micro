@@ -8,11 +8,10 @@ import { config } from "../config";
 export class RedirectInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
-    if (request.url.includes("/api")) return next.handle();
     const response = context.switchToHttp().getResponse<FastifyReply>();
     const host = config.hosts.find((host) => host.pattern.test(request.hostname));
     if (!host) {
-      response.redirect(StatusCodes.TEMPORARY_REDIRECT, config.hosts[0].url);
+      response.redirect(StatusCodes.TEMPORARY_REDIRECT, config.rootHost.url);
       return next.handle();
     }
 
@@ -21,6 +20,7 @@ export class RedirectInterceptor implements NestInterceptor {
       return next.handle();
     }
 
+    request.host = host;
     return next.handle();
   }
 }

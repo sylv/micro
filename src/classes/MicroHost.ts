@@ -18,7 +18,7 @@ export class MicroHost {
 
   @Expose()
   get key() {
-    return HostsService.normalize(this.url);
+    return HostsService.normaliseHostUrl(this.url);
   }
 
   @Expose()

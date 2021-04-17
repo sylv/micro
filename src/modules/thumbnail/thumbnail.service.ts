@@ -56,7 +56,7 @@ export class ThumbnailService {
         .send(existing.data);
     }
 
-    const file = await this.fileService.get(fileId);
+    const file = await this.fileService.getFile(fileId, request.host);
     const supported = this.checkThumbnailSupport(file.type);
     if (!supported) throw new NotFoundException("That file does not support thumbnails.");
     const thumbnail = await this.createThumbnail(file);

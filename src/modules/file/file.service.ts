@@ -5,52 +5,61 @@ import {
   PayloadTooLargeException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { File, User } from "@prisma/client";
+import { File } from "@prisma/client";
 import contentRange from "content-range";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Multipart } from "fastify-multipart";
 import mimeType from "mime-types";
 import { PassThrough } from "stream";
+import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
 import { EMBEDDABLE_IMAGE_TYPES } from "../../constants";
+import { generateContentId, contentIdLength } from "../../helpers/generateContentId";
 import { getStreamType } from "../../helpers/getStreamType";
-import { shortId, shortIdLength } from "../../helpers/shortId";
 import { prisma } from "../../prisma";
 import { HostsService } from "../hosts/hosts.service";
 import { StorageService } from "../storage/storage.service";
 
 @Injectable()
 export class FileService {
-  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${shortIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
-  constructor(private storageService: StorageService, private hostService: HostsService) {}
+  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${contentIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
+  constructor(private storageService: StorageService, private hostsService: HostsService) {}
 
-  public cleanKey(key: string): { id: string; ext?: string } {
+  public cleanFileKey(key: string): { id: string; ext?: string } {
     const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
     if (!groups) throw new BadRequestException("Invalid file key");
     return groups as any;
   }
 
-  public async get(id: string) {
+  public async getFile(id: string, host: MicroHost) {
     const file = await prisma.file.findFirst({ where: { id } });
     if (!file) throw new NotFoundException();
+    if (!this.hostsService.checkHostCanSendFile(file, host)) {
+      throw new NotFoundException("Your file is in another castle.");
+    }
+
     return Object.assign(file, {
-      displayName: this.getDisplayName(file),
-      urls: this.getUrls(file),
+      displayName: this.getFileDisplayName(file),
+      urls: this.getFileUrls(file),
     });
   }
 
-  public async delete(id: string, ownerId: string | undefined) {
+  public async deleteFile(id: string, ownerId: string | undefined) {
     const file = await prisma.file.findFirst({ where: { id } });
     if (!file) throw new NotFoundException();
     if (ownerId && file.ownerId !== ownerId) {
       throw new UnauthorizedException("You cannot delete other users files.");
     }
 
-    await this.storageService.delete(file.hash);
+    const filesWithHash = await prisma.file.count({ where: { hash: file.hash } });
+    if (filesWithHash === 1) {
+      await this.storageService.delete(file.hash);
+    }
+
     await prisma.file.delete({ where: { id: file.id } });
   }
 
-  public async create(
+  public async createFile(
     multipart: Multipart,
     request: FastifyRequest,
     owner: { id: string; tags?: string[] }
@@ -60,7 +69,8 @@ export class FileService {
       throw new PayloadTooLargeException();
     }
 
-    const host = await this.hostService.resolve(request.headers["x-micro-host"] as string | undefined, owner.tags);
+    const header = request.headers["x-micro-host"] as string | undefined;
+    const host = await this.hostsService.resolveHost(header, owner.tags, true);
     const stream = multipart.file;
     const typeStream = stream.pipe(new PassThrough());
     const uploadStream = stream.pipe(new PassThrough());
@@ -69,7 +79,7 @@ export class FileService {
       throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 
-    const fileId = shortId();
+    const fileId = generateContentId();
     const { hash, size } = await this.storageService.create(uploadStream);
     const file = await prisma.file.create({
       data: {
@@ -86,22 +96,10 @@ export class FileService {
     return file;
   }
 
-  public async send(fileId: string, request: FastifyRequest, reply: FastifyReply) {
-    const file = await prisma.file.findFirst({
-      where: { id: fileId },
-      select: {
-        id: true,
-        name: true,
-        hash: true,
-        type: true,
-        size: true,
-        createdAt: true,
-      },
-    });
-
-    if (!file) throw new NotFoundException();
+  public async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
+    const file = await this.getFile(fileId, request.host);
     const range = request.headers["content-range"] ? contentRange.parse(request.headers["content-range"]) : null;
-    const displayName = this.getDisplayName(file);
+    const displayName = this.getFileDisplayName(file);
     const stream = this.storageService.createReadStream(file.hash, range);
     if (range) reply.header("Content-Range", contentRange.format(range));
     return reply
@@ -114,13 +112,13 @@ export class FileService {
       .send(stream);
   }
 
-  public getDisplayName(file: Pick<File, "type" | "id" | "name">) {
+  public getFileDisplayName(file: Pick<File, "type" | "id" | "name">) {
     if (!file.id) throw new Error("Missing file ID");
     const extension = mimeType.extension(file.type);
     return file.name ? file.name : extension ? `${file.id}.${extension}` : file.id;
   }
 
-  public getUrls(file: Pick<File, "id" | "type">) {
+  public getFileUrls(file: Pick<File, "id" | "type">) {
     const extension = mimeType.extension(file.type);
     const supportsThumbnail = EMBEDDABLE_IMAGE_TYPES.includes(file.type);
     const view = `/f/${file.id}`;

@@ -14,7 +14,7 @@ export class PermissionGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     if (!request.user.id) return false;
     const userId = request.user.id;
-    const user = await this.userService.get(userId);
+    const user = await this.userService.getUser(userId);
     if (!user) throw new ForbiddenException();
     if (this.userService.checkPermissions(user.permissions, Permission.ADMINISTRATOR)) return true;
     if (!this.userService.checkPermissions(user.permissions, requiredPermissions)) return false;

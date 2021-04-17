@@ -7,12 +7,12 @@ export class DeletionController {
 
   @Get("delete/:token")
   async getDeletionPage(@Param("token") token: string) {
-    await this.deletionService.use(token);
+    await this.deletionService.useToken(token);
     return { deleted: true };
   }
 
   @Get("api/delete/:token")
   async getDeletion(@Param("token") token: string) {
-    return this.deletionService.verify(token);
+    return this.deletionService.verifyToken(token);
   }
 }

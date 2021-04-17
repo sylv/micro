@@ -7,9 +7,10 @@ import {
   Param,
   Post,
   Query,
+  Request,
   Res,
 } from "@nestjs/common";
-import { FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../prisma";
 import { UserId } from "../auth/auth.decorators";
 import { ContentType, DeletionService } from "../deletion/deletion.service";
@@ -20,7 +21,7 @@ export class LinkController {
   constructor(private linkService: LinkService, private deletionService: DeletionService) {}
 
   @Get(["link/:id", "s/:id"])
-  async getPage(@Res() reply: FastifyReply, @Param("id") id: string) {
+  async getLinkPage(@Res() reply: FastifyReply, @Param("id") id: string) {
     const link = await prisma.link.findFirst({ where: { id } });
     if (!link) throw new NotFoundException();
     await reply.redirect(301, link.destination);
@@ -35,21 +36,21 @@ export class LinkController {
   }
 
   @Get("api/link/:id")
-  async get(@Param("id") id: string) {
-    return this.linkService.get(id);
+  async getLink(@Param("id") id: string, @Request() request: FastifyRequest) {
+    return this.linkService.getLink(id, request.host);
   }
 
   @Delete("api/link/:id")
-  async delete(@UserId() userId: string, @Param("id") id: string) {
-    return this.linkService.delete(id, userId);
+  async deleteLink(@UserId() userId: string, @Param("id") id: string) {
+    return this.linkService.deleteLink(id, userId);
   }
 
   @Post("api/link")
-  async create(@UserId() userId: string, @Query("url") url?: string) {
+  async createLink(@UserId() userId: string, @Query("url") url?: string) {
     if (!url?.startsWith("http")) throw new BadRequestException("Invalid URL.");
-    const link = await this.linkService.create(url, userId);
-    const deletionUrl = this.deletionService.create(ContentType.LINK, link.id);
-    const urls = this.linkService.getUrls(link);
+    const link = await this.linkService.createLink(url, userId);
+    const deletionUrl = this.deletionService.createToken(ContentType.LINK, link.id);
+    const urls = this.linkService.getLinkUrls(link);
     return Object.assign(urls, { delete: deletionUrl });
   }
 }

@@ -9,7 +9,7 @@ export class ThumbnailController {
 
   @Get("t/:key")
   async getThumbnailPage(@Param("key") key: string, @Req() request: FastifyRequest, @Res() reply: FastifyReply) {
-    const clean = this.fileService.cleanKey(key);
+    const clean = this.fileService.cleanFileKey(key);
     return this.thumbnailService.sendThumbnail(clean.id, request, reply);
   }
 

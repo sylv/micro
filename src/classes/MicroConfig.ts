@@ -1,5 +1,15 @@
 import { Transform, Type } from "class-transformer";
-import { IsEmail, IsIn, IsNotIn, IsNumber, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsEmail,
+  IsIn,
+  IsNotIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  ValidateNested,
+} from "class-validator";
 import fileType from "file-type";
 import path from "path";
 import xbytes from "xbytes";
@@ -29,7 +39,14 @@ export class MicroConfig {
   @Transform(({ value }) => path.resolve(value))
   storagePath!: string;
 
+  @IsBoolean()
+  restrictFilesToHost!: boolean;
+
   @ValidateNested({ each: true })
   @Type(() => MicroHost)
   hosts!: MicroHost[];
+
+  get rootHost() {
+    return this.hosts[0];
+  }
 }

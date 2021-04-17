@@ -17,52 +17,51 @@ import { Endpoints } from "../constants";
 import { downloadFile } from "../helpers/download";
 import { generateConfig } from "../helpers/generateConfig";
 import { http } from "../helpers/http";
-import { useConfig } from "../hooks/useConfig";
 import { useToasts } from "../hooks/useToasts";
 import { logout, useUser } from "../hooks/useUser";
-import { GetUploadTokenData, PutUploadTokenData } from "../types";
+import { GetHostsData, GetUploadTokenData, PutUploadTokenData } from "../types";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
   const user = useUser();
   const token = useSWR<GetUploadTokenData>(Endpoints.USER_TOKEN);
-  const config = useConfig(true);
-  const [hosts, setHosts] = useState<string[]>([]);
+  const hosts = useSWR<GetHostsData>(Endpoints.HOSTS);
+  const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const setToast = useToasts();
-  const downloadable = hosts.length;
+  const downloadable = selectedHosts.length;
 
   useEffect(() => {
-    if (config.error || token.error) Router.replace("/");
+    if (hosts.error || token.error) Router.replace("/");
     if (user.error) {
       // todo: for some reason making this /login results in
       // infinite loops of redirects between /login and /dashboard
       // but only sometimes. that shouldn't happen.
       Router.replace("/");
     }
-  }, [user, config, token]);
+  }, [user, hosts, token]);
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (config.data && !hosts[0]) {
-      const root = config.data.hosts.find((host) => host.root);
-      if (root) setHosts([root?.data.key]);
+    if (hosts.data && !selectedHosts[0]) {
+      const root = hosts.data.find((host) => host.root);
+      if (root) setSelectedHosts([root?.data.key]);
     }
-  }, [config]);
+  }, [hosts]);
 
   useEffect(() => {
     Router.prefetch("/file/[fileId]");
   }, []);
 
   const onDomainChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    setHosts([event.target.value]);
+    setSelectedHosts([event.target.value]);
   };
 
   /**
    * Download a customised ShareX config for the user based on their options.
    */
   const onDownloadClick = (direct: boolean) => {
-    const config = generateConfig(token.data!.token, hosts, direct);
+    const config = generateConfig(token.data!.token, selectedHosts, direct);
     downloadFile(config.name.split("{{username}}").join(user.data!.username), config.content);
   };
 
@@ -87,7 +86,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!user.data || !config.data || !token.data) {
+  if (!user.data || !hosts.data || !token.data) {
     return (
       <>
         <Title>Dashboard</Title>
@@ -119,7 +118,7 @@ export default function Dashboard() {
             </div>
             <div className="col-span-full md:col-span-6">
               <Select prefix="Host" placeholder="Hosts" onChange={onDomainChange}>
-                {config.data.hosts.map((host) => (
+                {hosts.data.map((host) => (
                   <option key={host.data.key} value={host.data.key}>
                     {host.data.key.replace("{{username}}", user.data!.username)}
                   </option>

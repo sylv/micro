@@ -1,6 +1,6 @@
 # micro
 
-an invite-only file sharing service with support for ShareX.
+An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** 
 
 <table>
   <tr>

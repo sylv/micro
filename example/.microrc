@@ -12,6 +12,9 @@
   // can be relative to thw cwd or absolute.
   // for docker you'll want this to be absolute.
   "storagePath": "/data",
+  // whether files should only be available on the root domain and the domain they were
+  // uploaded to. if you intend to use tags, this should be enabled.
+  "restrictFilesToHost": true,
   "hosts": [
     {
       // the first host in this array is the "default" host, and all other domains

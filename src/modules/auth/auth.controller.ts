@@ -8,8 +8,8 @@ import ms from "ms";
 
 @Controller()
 export class AuthController {
-  private static readonly DOMAIN = config.hosts[0].key.split(":").shift()!;
-  private static readonly SECURE = config.hosts[0].url.startsWith("https");
+  private static readonly DOMAIN = config.rootHost.key.split(":").shift()!;
+  private static readonly SECURE = config.rootHost.url.startsWith("https");
   private static readonly ONE_YEAR = ms("1y");
   private static readonly COOKIE_OPTIONS = {
     path: "/",

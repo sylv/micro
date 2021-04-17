@@ -1,22 +1,25 @@
+import { User } from ".prisma/client";
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 import { Permission } from "../../constants";
-import { shortId } from "../../helpers/shortId";
+import { generateContentId } from "../../helpers/generateContentId";
 import { prisma } from "../../prisma";
 import { JWTPayloadInvite } from "../invite/invite.service";
-import { User } from "@prisma/client";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserService {
-  async get(id: string) {
+  async getUser(id: string, secret: true): Promise<Omit<User, "password">>;
+  async getUser(id: string, secret?: false): Promise<Omit<User, "password" | "secret">>;
+  async getUser(id: string, secret = false) {
     const user = await prisma.user.findFirst({
       where: { id },
       select: {
         id: true,
         username: true,
         invite: true,
-        secret: true,
+        secret: secret,
         permissions: true,
         tags: true,
       },
@@ -26,7 +29,7 @@ export class UserService {
     return user;
   }
 
-  getFiles(userId: string, cursor?: string) {
+  getUserFiles(userId: string, cursor?: string) {
     return prisma.file.findMany({
       take: 24,
       skip: cursor ? 1 : 0,
@@ -38,23 +41,22 @@ export class UserService {
     });
   }
 
-  delete(id: string) {
+  deleteUser(id: string) {
     return prisma.user.delete({
       where: { id },
     });
   }
 
-  async create(username: string, password: string, invite: JWTPayloadInvite) {
-    const lowerUsername = username.toLowerCase();
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const existing = await prisma.user.findFirst({ where: { username: lowerUsername } });
+  async createUser(data: CreateUserDto, invite: JWTPayloadInvite) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const existing = await prisma.user.findFirst({ where: { username: data.username } });
     if (existing) throw new ConflictException("A user with that username already exists.");
     const user = await prisma.user.create({
       data: {
-        id: shortId(),
+        id: generateContentId(),
         secret: nanoid(),
         password: hashedPassword,
-        username: lowerUsername,
+        username: data.username,
         invite: invite.id,
         permissions: invite.permissions,
       },

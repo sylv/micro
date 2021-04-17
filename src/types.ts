@@ -17,22 +17,22 @@ export type Await<T> = T extends {
   : T;
 
 // invite
-export type GetInviteData = Await<ReturnType<InviteController["get"]>>;
+export type GetInviteData = Await<ReturnType<InviteController["getInvite"]>>;
 
 // user
-export type GetUserData = Await<ReturnType<UserController["get"]>>;
-export type GetUserFilesData = Await<ReturnType<UserController["getFiles"]>>;
-export type GetUploadTokenData = Await<ReturnType<UserController["getToken"]>>;
-export type PutUploadTokenData = Await<ReturnType<UserController["resetToken"]>>;
+export type GetUserData = Await<ReturnType<UserController["getUser"]>>;
+export type GetUserFilesData = Await<ReturnType<UserController["getUserFiles"]>>;
+export type GetUploadTokenData = Await<ReturnType<UserController["getUserToken"]>>;
+export type PutUploadTokenData = Await<ReturnType<UserController["resetUserToken"]>>;
 
 // file
-export type GetFileData = Await<ReturnType<FileController["get"]>>;
+export type GetFileData = Await<ReturnType<FileController["getFile"]>>;
 
 // link
-export type GetLinkData = Await<ReturnType<LinkController["get"]>>;
+export type GetLinkData = Await<ReturnType<LinkController["getLink"]>>;
 
 // app
 export type GetServerConfigData = Await<ReturnType<AppController["getConfig"]>>;
 
 // hosts
-export type GetHostsData = Await<ReturnType<HostsController["get"]>>;
+export type GetHostsData = Await<ReturnType<HostsController["getHosts"]>>;

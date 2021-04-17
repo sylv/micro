@@ -1,9 +1,12 @@
-import { IsString, MaxLength, MinLength } from "class-validator";
+import { IsLowercase, IsNotIn, IsString, MaxLength, MinLength } from "class-validator";
+import blocklist from "../../../data/blocklist.json";
 
 export class CreateUserDto {
   @MaxLength(20)
   @MinLength(2)
   @IsString()
+  @IsLowercase()
+  @IsNotIn(blocklist, { message: ({ value }) => `Restricted username "${value}"` })
   username!: string;
 
   @MaxLength(100)

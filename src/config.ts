@@ -11,5 +11,5 @@ if (errors.length) {
   throw errors.toString();
 }
 
-if (config.hosts[0].wildcard) throw new Error(`First host cannot be a wildcard domain.`);
+if (config.rootHost.wildcard) throw new Error(`First host cannot be a wildcard domain.`);
 export { config };

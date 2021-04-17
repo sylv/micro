@@ -16,8 +16,8 @@ export class StorageService {
   private readonly createdPaths = new Set();
 
   public async create(stream: NodeJS.ReadableStream) {
-    const uploadId = nanoid();
     // using .tmp in the upload dir solves cross-device link issues
+    const uploadId = nanoid(6);
     const uploadPath = path.join(config.storagePath, ".tmp", `.micro${uploadId}`);
     await this.ensureDirectoryExists(uploadPath);
 

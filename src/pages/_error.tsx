@@ -1,5 +1,5 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
-import { NextPageContext } from "next";
+import { GetServerSideProps, NextPageContext } from "next";
 import { useRouter } from "next/router";
 import { Container } from "../components/Container";
 import { Link } from "../components/Link";
@@ -27,10 +27,10 @@ export default function Error(props: { status?: StatusCodes; message?: string })
   );
 }
 
-export const getServerSideProps = async (ctx: NextPageContext) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
-      status: ctx.res?.statusCode,
+      status: ctx.query.status,
       message: ctx.query.message,
     },
   };

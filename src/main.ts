@@ -5,12 +5,14 @@ import cookie from "fastify-cookie";
 import multipart from "fastify-multipart";
 import { RenderService } from "nest-next";
 import { errorHandler } from "./helpers/errorHandler";
+import { RedirectInterceptor } from "./interceptors/redirect.interceptor";
 import { AppModule } from "./modules/app.module";
 
 async function main() {
   const adapter = new FastifyAdapter({ maxParamLength: 500 });
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector(), {}));
+  app.useGlobalInterceptors(new RedirectInterceptor());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, forbidUnknownValues: true }));
   app.register(cookie);
   app.register(multipart, {

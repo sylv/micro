@@ -6,24 +6,34 @@ import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
 
 export class HostsService {
-  static normalize(url: string) {
+  static normaliseHostUrl(url: string) {
     return normalizeUrl(url, { stripProtocol: true, stripWWW: true }).toLowerCase();
   }
 
-  async resolve(raw: string | undefined, tags: string[] | undefined): Promise<MicroHost> {
-    if (!raw) return config.hosts[0];
+  formatHostUrl(url: string, username: string, path?: string | null) {
+    const formatted = url.replace("{{username}}", username);
+    if (path) return formatted + path;
+    return formatted;
+  }
+
+  async resolveHost(raw: string | undefined, tags: string[] | undefined, requireAuth: boolean): Promise<MicroHost> {
+    if (!raw) return config.rootHost;
     const domain = randomItem(raw.split(/, ?/g));
-    const normalised = HostsService.normalize(domain);
-    const hosts = this.get(tags);
+    const normalised = HostsService.normaliseHostUrl(domain);
+    const hosts = this.getHosts(tags);
     for (const host of hosts) {
       if (!host.data.pattern.test(normalised)) continue;
+      if (requireAuth && !host.authorised) {
+        throw new ForbiddenException("Missing host authorisation.");
+      }
+
       return host.data;
     }
 
     throw new BadRequestException(`Invalid host URL.`);
   }
 
-  get(tags: string[] | undefined): Array<{ authorised: boolean; root: boolean; data: MicroHost }> {
+  getHosts(tags: string[] | undefined): Array<{ authorised: boolean; root: boolean; data: MicroHost }> {
     const parsed = [];
     for (let i = 0; i < config.hosts.length; i++) {
       const data = config.hosts[i];
@@ -35,9 +45,17 @@ export class HostsService {
     return parsed;
   }
 
-  format(url: string, username: string, path?: string | null) {
-    const formatted = url.replace("{{username}}", username);
-    if (path) return formatted + path;
-    return formatted;
+  public checkHostCanSendFile(file: { host: string | null }, host: MicroHost) {
+    // todo: if host.wildcard, we should check to make sure the file owner
+    // matches the given username in the request url. so uploads to
+    // sylver.is-fucking.gay can't be accessed on cyk.is-fucking.gay and vice versa
+    if (!config.restrictFilesToHost) return true;
+    // files without a host can be accessed anywhere
+    if (!file.host) return true;
+    // file upload host can serve the file
+    if (file.host === host.key) return true;
+    // root host can serve all files.
+    if (host.key === config.rootHost.key) return true;
+    return false;
   }
 }

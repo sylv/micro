@@ -19,7 +19,7 @@ export class InviteService implements OnApplicationBootstrap {
   public async create(inviterId: string | undefined, permissions: Permission | undefined) {
     const payload: JWTPayloadInvite = { id: nanoid(16), inviter: inviterId, permissions };
     const token = await this.authService.signToken(TokenType.INVITE, payload, "1h");
-    const url = config.hosts[0].url + `/invite/${token}`;
+    const url = config.rootHost.url + `/invite/${token}`;
     return {
       token,
       url,
