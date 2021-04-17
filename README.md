@@ -65,3 +65,4 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Dashboard pagination for files.
 - [ ] Cleanup that deletes files larger then X bytes after Y days (of no views?)
 - [ ] Toasts overflow on mobile
+- [ ] Deletion is broken due to prisma not copying cascades from typeorm >:(
