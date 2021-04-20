@@ -56,7 +56,11 @@ export class FileService {
       await this.storageService.delete(file.hash);
     }
 
-    await prisma.file.delete({ where: { id: file.id } });
+    // await prisma.file.delete({ where: { id: file.id } });
+    // todo: https://github.com/prisma/prisma/issues/2057
+    // prisma doesnt support cascade deletes, so we have to have our own migration
+    // that adds them then call this directly so prisma doesnt think it will fail
+    await prisma.$executeRaw`DELETE FROM files WHERE id = ${file.id}`;
   }
 
   public async createFile(
