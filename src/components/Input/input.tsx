@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { FunctionComponent, InputHTMLAttributes, MouseEventHandler, useState } from "react";
+import React, { InputHTMLAttributes } from "react";
 import { InputContainer } from "./container";
 import style from "./index.module.css";
 

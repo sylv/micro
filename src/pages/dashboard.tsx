@@ -129,7 +129,7 @@ export default function Dashboard() {
               <Dropdown
                 trigger={
                   <Button prefix={<DownloadIcon />} disabled={!downloadable}>
-                    Download ShareX Config
+                    ShareX Config
                   </Button>
                 }
               >

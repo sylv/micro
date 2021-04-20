@@ -14,6 +14,6 @@ export class HostsController {
   async getHosts(@UserId() userId: string) {
     const user = await this.userService.getUser(userId);
     const hosts = this.hostsService.getHosts(user.tags);
-    return classToPlain(hosts);
+    return classToPlain(hosts) as typeof hosts;
   }
 }

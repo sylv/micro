@@ -45,6 +45,10 @@
   height: 1.35em;
 }
 
-.size-mini {
+.sizeMini {
   @apply h-6 px-2 font-normal;
+}
+
+.round {
+  @apply rounded-full !important;
 }

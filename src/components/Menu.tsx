@@ -1,8 +1,6 @@
 import classNames from "classnames";
 import { FunctionComponent } from "react";
 import { Crop } from "react-feather";
-import { useConfig } from "../hooks/useConfig";
-import { useHost } from "../hooks/useHost";
 import { usePaths } from "../hooks/usePaths";
 import { useUser } from "../hooks/useUser";
 import { Button } from "./Button";
@@ -28,7 +26,7 @@ export const Menu: FunctionComponent = () => {
           </Link>
         </div>
         <div className="flex items-center">
-          <Button className="w-20 p-1.5 rounded-full" type="primary" href={buttonHref}>
+          <Button type="primary" href={buttonHref} rounded style={{ width: "5rem" }}>
             {buttonText}
           </Button>
         </div>

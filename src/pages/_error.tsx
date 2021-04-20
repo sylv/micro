@@ -1,5 +1,5 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
-import { GetServerSideProps, NextPageContext } from "next";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { Container } from "../components/Container";
 import { Link } from "../components/Link";
