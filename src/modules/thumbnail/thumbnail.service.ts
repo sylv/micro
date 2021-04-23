@@ -10,7 +10,7 @@ import { StorageService } from "../storage/storage.service";
 @Injectable()
 export class ThumbnailService {
   private static readonly THUMBNAIL_SIZE = 200;
-  private static readonly THUMBNAIL_TYPE = "image/jpeg";
+  private static readonly THUMBNAIL_TYPE = "image/webp";
   constructor(private storageService: StorageService, private fileService: FileService) {}
 
   public async getThumbnail(fileId: string) {
@@ -27,7 +27,7 @@ export class ThumbnailService {
     }
 
     const stream = this.storageService.createReadStream(file.hash);
-    const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).jpeg();
+    const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).webp({ quality: 40 });
     const data = await stream.pipe(transformer).toBuffer();
     const duration = Date.now() - start;
     const thumbnail = prisma.thumbnail.create({
@@ -50,10 +50,7 @@ export class ThumbnailService {
   public async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const existing = await prisma.thumbnail.findFirst({ where: { id: fileId } });
     if (existing) {
-      return reply
-        .header("X-Micro-Generated", "false")
-        .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
-        .send(existing.data);
+      return reply.header("X-Micro-Generated", "false").header("Content-Type", ThumbnailService.THUMBNAIL_TYPE).send(existing.data);
     }
 
     const file = await this.fileService.getFile(fileId, request.host);
