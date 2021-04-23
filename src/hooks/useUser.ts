@@ -1,6 +1,6 @@
 import Router from "next/router";
 import useSWR, { mutate } from "swr";
-import { LoginData } from "../components/LoginForm";
+import { LoginData } from "../components/login-form";
 import { Endpoints } from "../constants";
 import { http } from "../helpers/http";
 import { GetUserData } from "../types";
@@ -38,7 +38,6 @@ export const useUser = () => {
   return {
     data: user.data,
     error: user.error,
-    mutate: user.mutate,
     loading,
   };
 };

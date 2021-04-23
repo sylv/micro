@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Container } from "../../components/Container";
-import { FileEmbed } from "../../components/FileEmbed";
-import { PageLoader } from "../../components/PageLoader";
-import { Title } from "../../components/Title";
+import { Container } from "../../components/container";
+import { FileEmbed } from "../../components/file-embed";
+import { PageLoader } from "../../components/page-loader";
+import { Title } from "../../components/title";
 import { GetFileData } from "../../types";
 import Error from "../_error";
 

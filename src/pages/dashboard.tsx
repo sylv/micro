@@ -1,24 +1,19 @@
 import Router from "next/router";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import { Download as DownloadIcon } from "react-feather";
-import useSWR from "swr";
-import { Avatar } from "../components/Avatar";
-import { Button } from "../components/Button";
-import { Card } from "../components/Card";
-import { Container } from "../components/Container";
-import { Dropdown, DropdownTab } from "../components/Dropdown";
-import { DropdownContent } from "../components/Dropdown/content";
-import { FileList } from "../components/FileList";
-import { Input } from "../components/Input/input";
-import { Select } from "../components/Input/select";
-import { PageLoader } from "../components/PageLoader";
-import { Title } from "../components/Title";
+import useSWR, { mutate } from "swr";
+import { Button } from "../components/button/button";
+import { Container } from "../components/container";
+import { FileList } from "../components/file-list/file-list";
+import { Input } from "../components/input/input";
+import { Select } from "../components/input/select";
+import { PageLoader } from "../components/page-loader";
+import { Section } from "../components/section";
+import { ShareXButton } from "../components/sharex-button";
+import { Title } from "../components/title";
 import { Endpoints } from "../constants";
-import { downloadFile } from "../helpers/download";
-import { generateConfig } from "../helpers/generateConfig";
 import { http } from "../helpers/http";
 import { useToasts } from "../hooks/useToasts";
-import { logout, useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/useUser";
 import { GetHostsData, GetUploadTokenData, PutUploadTokenData } from "../types";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
@@ -29,7 +24,6 @@ export default function Dashboard() {
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const setToast = useToasts();
-  const downloadable = selectedHosts.length;
 
   useEffect(() => {
     if (hosts.error || token.error) Router.replace("/");
@@ -58,26 +52,19 @@ export default function Dashboard() {
   };
 
   /**
-   * Download a customised ShareX config for the user based on their options.
-   */
-  const onDownloadClick = (direct: boolean) => {
-    const config = generateConfig(token.data!.token, selectedHosts, direct);
-    downloadFile(config.name.split("{{username}}").join(user.data!.username), config.content);
-  };
-
-  /**
    * Regenerate the users token and mutate the global user object.
    */
   const regenerateToken = async () => {
     if (regenerating) return;
-    const confirmation = confirm('Are you sure you want to regenerate your token? Previously generated ShareX configs will be invalidated and anything using the old token will cease to function.') // prettier-ignore
+    const confirmation = confirm('Are you sure you want to regenerate your token? Existing tokens and configs will be revoked and you will be signed out.') // prettier-ignore
     if (!confirmation) return;
     setRegenerating(true);
 
     try {
       const response = await http(Endpoints.USER_TOKEN, { method: "PUT" });
       const body = (await response.json()) as PutUploadTokenData;
-      token.mutate(body, false);
+      mutate(Endpoints.USER, null);
+      mutate(Endpoints.USER_TOKEN, body, false);
       setRegenerating(false);
       setToast({ text: "Your token has been regenerated." });
     } catch (e) {
@@ -96,17 +83,10 @@ export default function Dashboard() {
   }
 
   return (
-    <Container className="mt-5">
-      <Title>Dashboard</Title>
-      <div className="grid grid-cols-8 gap-2">
-        <Card className="flex-col items-center justify-center hidden col-span-1 md:flex">
-          <Avatar id={user.data.id} className="w-24 mb-3"></Avatar>
-          <Button type="secondary" onClick={logout}>
-            Logout
-          </Button>
-        </Card>
-        <Card className="col-span-full md:col-span-7">
-          <h1 className="mb-3 text-3xl font-bold">Hello {user.data.username}</h1>
+    <>
+      <Section className="mt-5">
+        <Title>Dashboard</Title>
+        <Container>
           <div className="grid grid-cols-8 gap-2">
             <div className="col-span-full md:col-span-6">
               <Input prefix="Upload Token" onFocus={(evt) => evt.target.select()} value={token.data.token} readOnly />
@@ -126,26 +106,14 @@ export default function Dashboard() {
               </Select>
             </div>
             <div className="col-span-full md:col-span-2">
-              <Dropdown
-                trigger={
-                  <Button prefix={<DownloadIcon />} disabled={!downloadable}>
-                    ShareX Config
-                  </Button>
-                }
-              >
-                <DropdownContent matchWidth>
-                  <DropdownTab onClick={() => onDownloadClick(false)}>
-                    <p className="text-xs text-gray-600">Recommended</p>
-                    Embedded
-                  </DropdownTab>
-                  <DropdownTab onClick={() => onDownloadClick(true)}>Direct</DropdownTab>
-                </DropdownContent>
-              </Dropdown>
+              <ShareXButton hosts={selectedHosts} token={token.data.token} />
             </div>
           </div>
-        </Card>
+        </Container>
+      </Section>
+      <Container className="mt-4">
         <FileList />
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }

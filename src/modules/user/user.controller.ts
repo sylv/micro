@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { nanoid } from "nanoid";
@@ -19,6 +20,7 @@ import { AuthService, TokenType } from "../auth/auth.service";
 import { FileService } from "../file/file.service";
 import { InviteService } from "../invite/invite.service";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UserFilesQueryDto } from "./dto/user-files-query.dto";
 import { UserService } from "./user.service";
 
 @Controller()
@@ -44,8 +46,8 @@ export class UserController {
 
   @Get("api/user/files")
   @UseGuards(JWTAuthGuard)
-  async getUserFiles(@UserId() userId: string, @Param("cursor") cursor?: string) {
-    const files = await this.userService.getUserFiles(userId, cursor);
+  async getUserFiles(@UserId() userId: string, @Query() dto?: UserFilesQueryDto) {
+    const files = await this.userService.getUserFiles(userId, dto);
     return files.map((file) =>
       Object.assign(file, {
         displayName: this.fileService.getFileDisplayName(file),

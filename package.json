@@ -6,7 +6,7 @@
   "license": "GPL-3.0",
   "private": true,
   "scripts": {
-    "watch": "ts-node-dev --transpile-only --exit-child --ignore-watch '/\\.next/.*' --project tsconfig.server.json src/main.ts",
+    "watch": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child --ignore-watch '/\\.next/.*' --project tsconfig.server.json src/main.ts",
     "build:clean": "rimraf .next",
     "build:web": "next build",
     "build:api": "tsc --project tsconfig.server.json",
@@ -14,6 +14,7 @@
     "start": "cross-env NODE_ENV=production node .next/api/main.js"
   },
   "dependencies": {
+    "@headlessui/react": "^1.0.0",
     "@nestjs/common": "^7.6.15",
     "@nestjs/core": "^7.6.15",
     "@nestjs/jwt": "^7.2.0",
@@ -54,6 +55,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-feather": "^2.0.9",
+    "react-infinite-scroll-component": "^6.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.7",
     "sharp": "^0.28.1",

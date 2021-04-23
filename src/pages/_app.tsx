@@ -2,10 +2,10 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
 import { SWRConfig } from "swr";
-import { Menu } from "../components/Menu";
-import { Title } from "../components/Title";
+import { Header } from "../components/header/header";
+import { Title } from "../components/title";
 import { fetcher } from "../helpers/fetcher";
-import { ToastWrapper } from "../components/Toast";
+import { ToastWrapper } from "../components/toast/toast-wrapper";
 import "../styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -16,8 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:site_name" content="micro" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </Head>
-      <Menu />
       <ToastWrapper>
+        <Header />
         <Component {...pageProps} />
       </ToastWrapper>
     </SWRConfig>

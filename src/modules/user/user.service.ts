@@ -7,6 +7,7 @@ import { generateContentId } from "../../helpers/generateContentId";
 import { prisma } from "../../prisma";
 import { JWTPayloadInvite } from "../invite/invite.service";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UserFilesQueryDto } from "./dto/user-files-query.dto";
 
 @Injectable()
 export class UserService {
@@ -29,11 +30,11 @@ export class UserService {
     return user;
   }
 
-  getUserFiles(userId: string, cursor?: string) {
+  getUserFiles(userId: string, dto?: UserFilesQueryDto) {
     return prisma.file.findMany({
-      take: 24,
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { id: cursor } : undefined,
+      take: dto?.take ?? 24,
+      skip: dto?.cursor ? 1 : 0,
+      cursor: dto?.cursor ? { id: dto?.cursor } : undefined,
       orderBy: { createdAt: "desc" },
       where: {
         ownerId: userId,

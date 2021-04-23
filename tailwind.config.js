@@ -1,6 +1,6 @@
 module.exports = {
-  purge: ["./src/pages/**/*.{js,ts,jsx,tsx}", "./src/components/**/*.{js,ts,jsx,tsx}"],
-  darkMode: false,
+  mode: "jit",
+  purge: ["./src/**/*.tsx"],
   theme: {
     extend: {
       colors: {
@@ -31,11 +31,11 @@ module.exports = {
       },
     },
   },
+  plugins: [],
   variants: {
     extend: {
       backgroundColor: ["disabled"],
       cursor: ["disabled"],
     },
   },
-  plugins: [],
 };

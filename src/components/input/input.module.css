@@ -1,0 +1,33 @@
+/* input */
+.input {
+  @apply w-full h-full px-4 py-2 text-sm placeholder-gray-600 transition ease-in-out bg-dark-300 focus:outline-none focus:ring-gray-100 focus:bg-dark-600;
+  height: 2.5rem;
+}
+
+.input:disabled {
+  @apply text-gray-600 bg-dark-300;
+}
+
+/* prefix + suffix */
+.prefix,
+.suffix {
+  @apply flex items-center justify-center flex-shrink-0 h-full px-3 text-sm text-gray-600 bg-dark-300 border-dark-900 select-none;
+}
+
+.prefix {
+  @apply border-r;
+}
+
+.suffix {
+  @apply border-l;
+}
+
+.prefix svg,
+.suffix svg {
+  height: 1.35em;
+}
+
+/* container */
+.container {
+  @apply flex items-center w-full overflow-hidden rounded border border-dark-600;
+}

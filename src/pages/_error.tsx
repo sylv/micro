@@ -1,9 +1,9 @@
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Container } from "../components/Container";
-import { Link } from "../components/Link";
-import { Title } from "../components/Title";
+import { Container } from "../components/container";
+import { Link } from "../components/link";
+import { Title } from "../components/title";
 import { usePaths } from "../hooks/usePaths";
 
 const ERROR_LENNIES = ["ಠ_ಠ", "(ಥ﹏ಥ)", "ʕ•ᴥ•ʔ", "≧☉_☉≦", "ლ,ᔑ•ﺪ͟͠•ᔐ.ლ", "( ͡ಠ ʖ̯ ͡ಠ)", "(◉͜ʖ◉)", "¯\\_(⊙_ʖ⊙)_/¯"];

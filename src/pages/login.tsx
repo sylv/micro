@@ -1,8 +1,8 @@
 import Router from "next/router";
 import { useEffect, useState } from "react";
-import { Container } from "../components/Container";
-import { LoginData, LoginForm } from "../components/LoginForm";
-import { Title } from "../components/Title";
+import { Container } from "../components/container";
+import { LoginData, LoginForm } from "../components/login-form";
+import { Title } from "../components/title";
 import { useToasts } from "../hooks/useToasts";
 import { login, useUser } from "../hooks/useUser";
 

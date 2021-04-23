@@ -1,11 +1,11 @@
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Container } from "../../components/Container";
-import { LoginData, LoginForm } from "../../components/LoginForm";
-import { PageLoader } from "../../components/PageLoader";
-import { Time } from "../../components/Time";
-import { Title } from "../../components/Title";
+import { Container } from "../../components/container";
+import { LoginData, LoginForm } from "../../components/login-form";
+import { PageLoader } from "../../components/page-loader";
+import { Time } from "../../components/time";
+import { Title } from "../../components/title";
 import { Endpoints } from "../../constants";
 import { http } from "../../helpers/http";
 import { useToasts } from "../../hooks/useToasts";
