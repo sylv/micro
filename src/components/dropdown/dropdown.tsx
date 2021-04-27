@@ -10,6 +10,7 @@ export interface DropdownProps {
 
 export const Dropdown: FunctionComponent<DropdownProps> = ({ trigger, children, className }) => {
   const classes = classNames(className, "absolute right-0 mt-2 rounded-md shadow-lg bg-dark-300 focus:outline-none");
+
   // todo: "z-10" is a hack that also makes the button z-10 which is stupid
   // but if its just applied to Menu.Items the transition (im assuming) transitions it
   // and it shows behind content for a second before popping to the front and is really jarring.

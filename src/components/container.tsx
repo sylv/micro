@@ -16,7 +16,7 @@ export const Container: FunctionComponent<ContainerProps> = (props) => {
   const classes = classNames(props.className, "px-4 mx-auto", {
     "sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl": !props.small,
     "flex justify-center flex-col": center,
-    "absolute top-0 bottom-0 right-0 left-0 h-full": centerY,
+    "absolute top-16 bottom-0 right-0 left-0": centerY,
     "items-center": centerX,
     "max-w-xs": props.small,
   });

@@ -73,6 +73,7 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Paste support
+- [ ] Syntax highlighting for Atlas actions
 
 ## discord
 

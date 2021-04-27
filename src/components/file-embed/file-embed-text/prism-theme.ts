@@ -1,5 +1,4 @@
 import { PrismTheme } from "prism-react-renderer";
-
 export const theme: PrismTheme = {
   plain: {
     backgroundColor: "black",

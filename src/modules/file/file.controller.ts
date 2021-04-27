@@ -1,16 +1,4 @@
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Req,
-  Request,
-  Res,
-  UseGuards,
-} from "@nestjs/common";
+import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, Post, Req, Request, Res, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
 import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { isImageScraper } from "../../helpers/isImageScraper";

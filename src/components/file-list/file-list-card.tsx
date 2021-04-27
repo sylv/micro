@@ -33,7 +33,7 @@ const FileListCardContent: FunctionComponent<FileCardProps> = (props) => {
 export const FileListCard: FunctionComponent<FileCardProps> = (props) => {
   return (
     <Link
-      className="relative flex items-center justify-center h-full overflow-hidden transition border rounded border-dark-400 hover:border-gray-700"
+      className="relative flex items-center justify-center h-full overflow-hidden transition border rounded max-h-56 border-dark-400 hover:border-gray-700"
       href={props.file.urls.view}
     >
       <FileListCardContent file={props.file} />

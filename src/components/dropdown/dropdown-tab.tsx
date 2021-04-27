@@ -5,13 +5,16 @@ import { Link } from "../link";
 
 export interface DropdownTabProps {
   href?: string;
+  active?: boolean;
   className?: string;
   onClick?: () => void;
 }
 
-export const DropdownTab: FunctionComponent<DropdownTabProps> = ({ href, className, onClick, children }) => {
+export const DropdownTab: FunctionComponent<DropdownTabProps> = ({ href, className, children, active, onClick }) => {
   const base = "px-3 py-2 my-1 transition ease-in-out border-none text-gray-400 cursor-pointer hover:bg-dark-700 hover:text-white";
-  const classes = classNames(base, className);
+  const classes = classNames(base, className, {
+    "bg-dark-700 text-white": active,
+  });
 
   if (href) {
     return (
