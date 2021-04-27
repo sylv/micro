@@ -9,7 +9,7 @@ export const FileEmbedImage = ({ file }: { file: GetFileData }) => {
         <meta name="twitter:image" content={file.urls.direct} />
         <meta property="og:image" content={file.urls.direct} />
       </Head>
-      <img className="h-full" src={file.urls.direct} alt={file.displayName} />
+      <img className="object-contain h-full" src={file.urls.direct} alt={file.displayName} />
     </>
   );
 };

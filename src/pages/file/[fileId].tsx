@@ -43,7 +43,7 @@ export default function File() {
   };
 
   return (
-    <Container className="mt-5 md:mt-10">
+    <Container className="mt-5 md-2 md:mt-10 md:mb-5">
       <Title>{file.data.displayName}</Title>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
         <div className="flex items-end col-span-5">

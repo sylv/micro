@@ -8,35 +8,8 @@ import { Spinner } from "../spinner";
 import { FileListCard } from "./file-list-card";
 
 const PER_PAGE = 24;
-// const getKey = (pageIndex: number, previousPageData: GetUserFilesData | null) => {
-//   if (pageIndex === 0) return `${Endpoints.USER_FILES}?take=${PER_PAGE}`;
-//   if (!previousPageData || !previousPageData[0]) return null;
-//   const cursor = previousPageData[previousPageData.length - 1].id;
-//   if (!cursor) return null;
-//   return `${Endpoints.USER_FILES}?cursor=${cursor}&take=${PER_PAGE}`;
-// };
 
 export const FileList: FunctionComponent = () => {
-  // const { data, size, error, setSize } = useSWRInfinite<GetUserFilesData>(getKey);
-  // if (error) {
-  //   <Card>
-  //     <p>Something went wrong while loading your files.</p>
-  //   </Card>;
-  // }
-
-  // if (!data) {
-  //   return <PageLoader />;
-  // }
-
-  // const files = data.reduce((files, body) => files.concat(body));
-  // const cursor = files[files.length - 1].id;
-  // if (!files[0]) {
-  //   return (
-  //     <Card>
-  //       <p>Upload something and it will appear here!</p>
-  //     </Card>
-  //   );
-  // }
   const [files, setFiles] = useState<GetUserFilesData>([]);
   const [loading, setLoading] = useState(true);
   const [cursor, setCursor] = useState<string | null | undefined>();
@@ -78,7 +51,7 @@ export const FileList: FunctionComponent = () => {
       }
     >
       <div className="pb-5">
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
           {files.map((file) => (
             <FileListCard key={file.id} file={file} />
           ))}

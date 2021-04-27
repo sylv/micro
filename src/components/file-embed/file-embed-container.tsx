@@ -4,7 +4,7 @@ import { GetFileData } from "../../types";
 
 export const FileEmbedContainer: FunctionComponent<{ file: GetFileData; children: React.ReactChild }> = (props) => {
   return (
-    <div className="flex items-center justify-center col-span-5 overflow-hidden rounded shadow-2xl md:mb-5 bg-dark-200 max-h-[75vh]">
+    <div className="flex items-center justify-center col-span-5 overflow-hidden rounded shadow-2xl bg-dark-200 max-h-[75vh] min-h-[3em]">
       <Head>
         <meta name="twitter:title" content={props.file.displayName} />
         <meta property="og:title" content={props.file.displayName} key="title" />
