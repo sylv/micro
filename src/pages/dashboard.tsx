@@ -99,7 +99,7 @@ export default function Dashboard() {
             <div className="col-span-full md:col-span-6">
               <Select prefix="Host" placeholder="Hosts" onChange={onDomainChange}>
                 {hosts.data.map((host) => (
-                  <option key={host.data.key} value={host.data.key}>
+                  <option key={host.data.key} value={host.data.key} disabled={!host.authorised}>
                     {host.data.key.replace("{{username}}", user.data!.username)}
                   </option>
                 ))}
