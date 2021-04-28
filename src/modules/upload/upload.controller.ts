@@ -10,7 +10,7 @@ import { LinkService } from "../link/link.service";
 import { UserService } from "../user/user.service";
 
 @Controller()
-export class ShareXController {
+export class UploadController {
   constructor(
     private fileService: FileService,
     private linkService: LinkService,
@@ -19,9 +19,9 @@ export class ShareXController {
     private userService: UserService
   ) {}
 
-  @Post("api/sharex")
+  @Post(["api/upload", "api/sharex"])
   @UseGuards(JWTAuthGuard)
-  async createShareXUpload(
+  async createUpload(
     @Req() request: FastifyRequest,
     @UserId() userId: string,
     @Query("input") input?: string,
@@ -29,6 +29,7 @@ export class ShareXController {
   ) {
     const user = await this.userService.getUser(userId);
     const host = await this.hostsService.resolveHost(hosts, user.tags, true);
+    // todo: this is a shitty way to detect urls
     if (input?.startsWith("http")) {
       const link = await this.linkService.createLink(input, userId);
       const urls = this.linkService.getLinkUrls(link);

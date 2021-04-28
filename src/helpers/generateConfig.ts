@@ -21,7 +21,6 @@ export function generateConfig(token: string, hosts: string[], direct: boolean) 
     Headers: {
       Authorization: token,
       "X-Micro-Host": joined,
-      "X-ShareX": "true",
     },
   };
 

@@ -1,0 +1,19 @@
+.dropdown {
+  @apply relative z-10;
+}
+
+.dropdownDivider {
+  @apply w-full !border-none bg-dark-900 h-px;
+}
+
+.dropdownItems {
+  @apply absolute right-0 mt-2 rounded-md shadow-lg bg-dark-300 focus:outline-none;
+}
+
+.dropdownItem {
+  @apply px-3 py-2 my-1 text-gray-400 transition ease-in-out border-none cursor-pointer;
+}
+
+.dropdownItemActive {
+  @apply text-white bg-dark-700;
+}

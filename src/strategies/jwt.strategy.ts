@@ -19,7 +19,8 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       audience: TokenType.USER,
       ignoreExpiration: false,
       secretOrKey: config.secret,
-      jwtFromRequest: (req: FastifyRequest) => req.cookies.token || req.headers["authorization"],
+      jwtFromRequest: (req: FastifyRequest<{ Querystring: { token?: string } }>) =>
+        req.cookies.token ?? req.query.token ?? req.headers["authorization"],
     });
   }
 

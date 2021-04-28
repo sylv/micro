@@ -12,7 +12,7 @@ import { FileModule } from "./file/file.module";
 import { HostsModule } from "./hosts/hosts.module";
 import { InviteModule } from "./invite/invite.module";
 import { LinkModule } from "./link/link.module";
-import { ShareXModule } from "./sharex/sharex.module";
+import { UploadModule } from "./upload/upload.module";
 import { StorageModule } from "./storage/storage.module";
 import { ThumbnailModule } from "./thumbnail/thumbnail.module";
 import { UserModule } from "./user/user.module";
@@ -32,7 +32,7 @@ import { UserModule } from "./user/user.module";
     ThumbnailModule,
     InviteModule,
     LinkModule,
-    ShareXModule,
+    UploadModule,
     UserModule,
     RenderModule.forRootAsync(next({ dev: IS_DEV }), {
       passthrough404: true,

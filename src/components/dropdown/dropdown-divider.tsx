@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
+import style from "./dropdown.module.css";
 
 export const DropdownDivider: FunctionComponent = () => {
-  return <hr className="w-full !border-none bg-dark-900 h-px" style={{ height: "1px" }}></hr>;
+  return <hr className={style.dropdownDivider} />;
 };

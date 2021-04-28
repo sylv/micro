@@ -9,6 +9,7 @@ export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTM
   primary?: boolean;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  small?: boolean;
 }
 
 export const Button: FunctionComponent<ButtonProps> = ({
@@ -18,6 +19,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   suffix,
   className,
   primary,
+  small,
   onClick,
   onKeyDown,
   children,
@@ -28,6 +30,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   const classes = classNames(className, style.button, {
     [style.disabled]: disabled,
     [style.primary]: primary,
+    [style.small]: small,
   });
 
   if (href) {
