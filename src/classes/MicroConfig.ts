@@ -1,18 +1,9 @@
 import { Transform, Type } from "class-transformer";
-import {
-  IsBoolean,
-  IsEmail,
-  IsIn,
-  IsNotIn,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateNested,
-} from "class-validator";
+import { IsBoolean, IsEmail, IsIn, IsNumber, IsOptional, IsString, IsUrl, NotEquals, ValidateNested } from "class-validator";
 import fileType from "file-type";
 import path from "path";
 import xbytes from "xbytes";
+import { MicroConfigPurge } from "./MicroConfigPurge";
 import { MicroHost } from "./MicroHost";
 
 export class MicroConfig {
@@ -20,7 +11,7 @@ export class MicroConfig {
   database!: string;
 
   @IsString()
-  @IsNotIn(["YOU_SHALL_NOT_PASS"])
+  @NotEquals("YOU_SHALL_NOT_PASS")
   secret!: string;
 
   @IsEmail()
@@ -41,6 +32,11 @@ export class MicroConfig {
 
   @IsBoolean()
   restrictFilesToHost!: boolean;
+
+  @ValidateNested()
+  @Type(() => MicroConfigPurge)
+  @IsOptional()
+  purge?: MicroConfigPurge;
 
   @ValidateNested({ each: true })
   @Type(() => MicroHost)

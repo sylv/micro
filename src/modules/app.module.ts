@@ -16,6 +16,7 @@ import { UploadModule } from "./upload/upload.module";
 import { StorageModule } from "./storage/storage.module";
 import { ThumbnailModule } from "./thumbnail/thumbnail.module";
 import { UserModule } from "./user/user.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   controllers: [AppController],
@@ -34,6 +35,7 @@ import { UserModule } from "./user/user.module";
     LinkModule,
     UploadModule,
     UserModule,
+    ScheduleModule.forRoot(),
     RenderModule.forRootAsync(next({ dev: IS_DEV }), {
       passthrough404: true,
       viewsDir: null,

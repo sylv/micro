@@ -1,28 +1,34 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
   PayloadTooLargeException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { File } from "@prisma/client";
 import contentRange from "content-range";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Multipart } from "fastify-multipart";
+import { DateTime } from "luxon";
 import mimeType from "mime-types";
 import { PassThrough } from "stream";
+import xbytes from "xbytes";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
 import { EMBEDDABLE_IMAGE_TYPES } from "../../constants";
-import { generateContentId, contentIdLength } from "../../helpers/generateContentId";
+import { contentIdLength, generateContentId } from "../../helpers/generateContentId";
 import { getStreamType } from "../../helpers/getStreamType";
 import { prisma } from "../../prisma";
 import { HostsService } from "../hosts/hosts.service";
 import { StorageService } from "../storage/storage.service";
 
 @Injectable()
-export class FileService {
+export class FileService implements OnApplicationBootstrap {
   private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${contentIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
+  private readonly logger = new Logger(FileService.name);
   constructor(private storageService: StorageService, private hostsService: HostsService) {}
 
   public cleanFileKey(key: string): { id: string; ext?: string } {
@@ -63,11 +69,7 @@ export class FileService {
     await prisma.$executeRaw`DELETE FROM files WHERE id = ${file.id}`;
   }
 
-  public async createFile(
-    multipart: Multipart,
-    request: FastifyRequest,
-    owner: { id: string; tags?: string[] }
-  ): Promise<File> {
+  public async createFile(multipart: Multipart, request: FastifyRequest, owner: { id: string; tags?: string[] }): Promise<File> {
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     if (+request.headers["content-length"] >= config.uploadLimit) {
       throw new PayloadTooLargeException();
@@ -130,5 +132,36 @@ export class FileService {
     const metadata = `/api/file/${file.id}`;
     const thumbnail = supportsThumbnail ? `/t/${file.id}` : null;
     return { view, direct, metadata, thumbnail };
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  protected async purgeFiles() {
+    if (!config.purge) return;
+    const createdBefore = new Date(Date.now() - config.purge.afterTime);
+    const files = await prisma.file.findMany({
+      where: {
+        size: { gte: config.purge.overLimit },
+        createdAt: {
+          lte: createdBefore,
+        },
+      },
+    });
+
+    for (const file of files) {
+      const size = xbytes(file.size, { space: false });
+      const age = DateTime.fromJSDate(file.createdAt).toRelative();
+      await this.deleteFile(file.id, undefined);
+      this.logger.log(`Purging ${file.id} (${size}, ${age})`);
+    }
+
+    if (files[0]) this.logger.log(`Purged ${files.length} files`);
+  }
+
+  public onApplicationBootstrap() {
+    if (config.purge) {
+      const size = xbytes(config.purge.overLimit, { space: false });
+      const age = DateTime.local().minus(config.purge.afterTime).toRelative();
+      this.logger.warn(`Purging files is enabled for files over ${size} uploaded more than ${age}.`);
+    }
   }
 }

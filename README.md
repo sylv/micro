@@ -25,6 +25,7 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 - [x] URL Shortening
 - [X] Mobile support
 - [X] EXIF metadata removal
+- [X] Purging of old, large files (`config.purge`).
 
 ## screenshots
 
@@ -67,13 +68,13 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 
 - [ ] Ratelimiting
 - [ ] Image width+height should be stored so the image preview doesn't flash while loading.
-- [ ] FileEmbed.tsx has trouble scaling down on mobile. May be due to the file name not truncating properly, also an issue with text previews that are long and wide.
 - [ ] Domain dropdown should be a multi-select like the pre-tailwind design.
-- [ ] Cleanup that deletes files larger then X bytes after Y days (of no views?)
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Paste support
 - [ ] Syntax highlighting for Atlas actions
+- [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
+- [ ] GIFs should probably be converted to mp4 videos to save space
 
 ## discord
 

@@ -20,6 +20,7 @@
     "@nestjs/jwt": "^7.2.0",
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-fastify": "^7.6.15",
+    "@nestjs/schedule": "^0.4.3",
     "@prisma/client": "^2.21.2",
     "autoprefixer": "^10.2.5",
     "bcrypt": "^5.0.1",
@@ -67,6 +68,7 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.1",
     "@types/classnames": "^2.3.1",
+    "@types/cron": "^1.7.2",
     "@types/luxon": "^1.26.5",
     "@types/mime-types": "^2.1.0",
     "@types/ms": "^0.7.31",
