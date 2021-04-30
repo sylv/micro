@@ -95,29 +95,9 @@ export default function Dashboard() {
             <div className="col-span-full md:col-span-6">
               <HostList
                 prefix="Hosts"
-                // hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.key)}
+                hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.key)}
                 username={user.data!.username}
                 onChange={(hosts) => setSelectedHosts(hosts)}
-                hosts={[
-                  "aawd",
-                  "aoiud",
-                  "axpoiuawd",
-                  "aad09p8b",
-                  "a908awd",
-                  "aoxiujawd",
-                  "aiopu",
-                  "abiouawd",
-                  "abiuawd",
-                  "aawdoiuawd",
-                  "aawdpiouawd",
-                  "aawdopuawd",
-                  "awd",
-                  "62345",
-                  "has",
-                  "423",
-                  "1234734573456745674567",
-                  "2347456",
-                ]}
               />
             </div>
             <div className="col-span-full md:col-span-2">
