@@ -68,7 +68,6 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 
 - [ ] Ratelimiting
 - [ ] Image width+height should be stored so the image preview doesn't flash while loading.
-- [ ] Domain dropdown should be a multi-select like the pre-tailwind design.
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Paste support

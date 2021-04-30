@@ -8,14 +8,14 @@ export interface InputContainerProps extends Omit<HTMLAttributes<HTMLDivElement>
   suffix?: React.ReactNode;
 }
 
-export const InputContainer: FunctionComponent<InputContainerProps> = (props) => {
-  const classes = classNames(style.container, props.className);
+export const InputContainer: FunctionComponent<InputContainerProps> = ({ className, prefix, suffix, children, ...rest }) => {
+  const classes = classNames(style.container, className);
 
   return (
-    <div className={classes} style={{ height: "2.5rem" }}>
-      {props.prefix && <span className={style.prefix}>{props.prefix}</span>}
-      {props.children}
-      {props.suffix && <span className={style.suffix}>{props.suffix}</span>}
+    <div className={classes} style={{ height: "2.5rem" }} {...rest}>
+      {prefix && <span className={style.prefix}>{prefix}</span>}
+      {children}
+      {suffix && <span className={style.suffix}>{suffix}</span>}
     </div>
   );
 };

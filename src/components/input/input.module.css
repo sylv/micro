@@ -1,6 +1,6 @@
 /* input */
 .input {
-  @apply w-full h-full px-4 py-2 text-sm placeholder-gray-600 transition ease-in-out bg-dark-300 focus:outline-none focus:ring-gray-100 focus:bg-dark-600;
+  @apply w-full h-full px-4 py-2 text-sm text-left placeholder-gray-600 transition ease-in-out bg-dark-300 focus:outline-none focus:ring-gray-100 focus:bg-dark-600;
   height: 2.5rem;
 }
 
@@ -11,7 +11,7 @@
 /* prefix + suffix */
 .prefix,
 .suffix {
-  @apply flex items-center justify-center flex-shrink-0 h-full px-3 text-sm text-gray-600 bg-dark-300 border-dark-900 select-none;
+  @apply flex items-center justify-center flex-shrink-0 h-full px-3 text-sm text-gray-600 select-none bg-dark-300 border-dark-900;
 }
 
 .prefix {
@@ -29,5 +29,5 @@
 
 /* container */
 .container {
-  @apply flex items-center w-full overflow-hidden rounded border border-dark-600;
+  @apply flex items-center w-full overflow-hidden border rounded border-dark-600;
 }

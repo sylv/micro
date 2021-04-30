@@ -14,6 +14,11 @@
   @apply px-3 py-2 my-1 text-gray-400 transition ease-in-out border-none cursor-pointer;
 }
 
+.dropdownItem:hover,
 .dropdownItemActive {
-  @apply text-white bg-dark-700;
+  @apply text-white bg-dark-800;
+}
+
+.dropdownItemSelected {
+  @apply text-white bg-dark-600;
 }

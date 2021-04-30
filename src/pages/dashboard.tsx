@@ -1,11 +1,11 @@
 import Router from "next/router";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR, { mutate } from "swr";
 import { Button } from "../components/button/button";
 import { Container } from "../components/container";
 import { FileList } from "../components/file-list/file-list";
+import { HostList } from "../components/host-list";
 import { Input } from "../components/input/input";
-import { Select } from "../components/input/select";
 import { PageLoader } from "../components/page-loader";
 import { Section } from "../components/section";
 import { ShareXButton } from "../components/sharex-button";
@@ -46,10 +46,6 @@ export default function Dashboard() {
   useEffect(() => {
     Router.prefetch("/file/[fileId]");
   }, []);
-
-  const onDomainChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    setSelectedHosts([event.target.value]);
-  };
 
   /**
    * Regenerate the users token and mutate the global user object.
@@ -97,13 +93,32 @@ export default function Dashboard() {
               </Button>
             </div>
             <div className="col-span-full md:col-span-6">
-              <Select prefix="Host" placeholder="Hosts" onChange={onDomainChange}>
-                {hosts.data.map((host) => (
-                  <option key={host.data.key} value={host.data.key} disabled={!host.authorised}>
-                    {host.data.key.replace("{{username}}", user.data!.username)}
-                  </option>
-                ))}
-              </Select>
+              <HostList
+                prefix="Hosts"
+                // hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.key)}
+                username={user.data!.username}
+                onChange={(hosts) => setSelectedHosts(hosts)}
+                hosts={[
+                  "aawd",
+                  "aoiud",
+                  "axpoiuawd",
+                  "aad09p8b",
+                  "a908awd",
+                  "aoxiujawd",
+                  "aiopu",
+                  "abiouawd",
+                  "abiuawd",
+                  "aawdoiuawd",
+                  "aawdpiouawd",
+                  "aawdopuawd",
+                  "awd",
+                  "62345",
+                  "has",
+                  "423",
+                  "1234734573456745674567",
+                  "2347456",
+                ]}
+              />
             </div>
             <div className="col-span-full md:col-span-2">
               <ShareXButton hosts={selectedHosts} token={token.data.token} />
