@@ -69,14 +69,19 @@ export class FileService implements OnApplicationBootstrap {
     await prisma.$executeRaw`DELETE FROM files WHERE id = ${file.id}`;
   }
 
-  public async createFile(multipart: Multipart, request: FastifyRequest, owner: { id: string; tags?: string[] }): Promise<File> {
+  public async createFile(
+    multipart: Multipart,
+    request: FastifyRequest,
+    owner: { id: string; tags?: string[] },
+    host: MicroHost | undefined
+  ): Promise<File> {
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     if (+request.headers["content-length"] >= config.uploadLimit) {
+      const size = xbytes(+request.headers["content-length"]);
+      this.logger.warn(`User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`);
       throw new PayloadTooLargeException();
     }
 
-    const header = request.headers["x-micro-host"] as string | undefined;
-    const host = await this.hostsService.resolveHost(header, owner.tags, true);
     const stream = multipart.file;
     const typeStream = stream.pipe(new PassThrough());
     const uploadStream = stream.pipe(new PassThrough());
@@ -93,7 +98,7 @@ export class FileService implements OnApplicationBootstrap {
         type: type,
         name: multipart.filename,
         ownerId: owner.id,
-        host: host.key,
+        host: host?.key,
         hash: hash,
         size: size,
       },
@@ -135,7 +140,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   @Cron(CronExpression.EVERY_HOUR)
-  protected async purgeFiles() {
+  public async purgeFiles() {
     if (!config.purge) return;
     const createdBefore = new Date(Date.now() - config.purge.afterTime);
     const files = await prisma.file.findMany({
@@ -154,7 +159,9 @@ export class FileService implements OnApplicationBootstrap {
       this.logger.log(`Purging ${file.id} (${size}, ${age})`);
     }
 
-    if (files[0]) this.logger.log(`Purged ${files.length} files`);
+    if (files[0]) {
+      this.logger.log(`Purged ${files.length} files`);
+    }
   }
 
   public onApplicationBootstrap() {

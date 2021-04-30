@@ -75,6 +75,7 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Syntax highlighting for Atlas actions
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space
+- [ ] Random hosts is broken. Should probably set `file.host` to null for misc hosts
 
 ## discord
 

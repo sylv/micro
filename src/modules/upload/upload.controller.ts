@@ -45,7 +45,7 @@ export class UploadController {
 
     const upload = await request.file();
     if (!upload) throw new BadRequestException("Missing upload.");
-    const file = await this.fileService.createFile(upload, request, user);
+    const file = await this.fileService.createFile(upload, request, user, host);
     const deletion = await this.deletionService.createToken(ContentType.FILE, file.id);
     const urls = this.fileService.getFileUrls(file);
     return {

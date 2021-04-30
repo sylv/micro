@@ -29,7 +29,7 @@ export class HostsService {
       return host.data;
     }
 
-    throw new BadRequestException(`Invalid host URL.`);
+    throw new BadRequestException(`Invalid host URL "${raw}".`);
   }
 
   getHosts(tags: string[] | undefined): Array<{ authorised: boolean; root: boolean; data: MicroHost }> {
