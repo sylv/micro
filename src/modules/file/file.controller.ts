@@ -1,5 +1,19 @@
-import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, Post, Req, Request, Res, UseGuards } from "@nestjs/common";
+import {
+  BadRequestException,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+  Request,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
 import { FastifyRequest } from "fastify";
+import { config } from "../../config";
 import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { isImageScraper } from "../../helpers/isImageScraper";
 import { RenderableReply } from "../../types";
@@ -53,11 +67,12 @@ export class FileController {
 
   @Post("api/file")
   @UseGuards(JWTAuthGuard)
-  async createFile(@UserId() userId: string, @Req() request: FastifyRequest) {
+  async createFile(@UserId() userId: string, @Req() request: FastifyRequest, @Headers("x-micro-host") hosts = config.rootHost.url) {
     const upload = await request.file();
     const user = await this.userService.getUser(userId);
     if (!upload) throw new BadRequestException("Missing upload.");
-    const file = await this.fileService.createFile(upload, request, user);
+    const host = await this.hostsService.resolveHost(hosts, user.tags, true);
+    const file = await this.fileService.createFile(upload, request, user, host);
     const deletionUrl = this.deletionService.createToken(ContentType.FILE, file.id);
     return Object.assign(this.fileService.getFileUrls(file), {
       delete: deletionUrl,
