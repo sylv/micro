@@ -7,17 +7,17 @@ import { Spinner } from "../components/spinner";
 import { Title } from "../components/title";
 import { Endpoints } from "../constants";
 import { http } from "../helpers/http";
+import { useToasts } from "../hooks/useToasts";
 import { useUser } from "../hooks/useUser";
-import Error from "./_error";
 
 export default function Upload() {
   const user = useUser();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<any | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [hover, setHover] = useState(false);
+  const setToast = useToasts();
 
   useEffect(() => {
     if (user.error) router.replace("/");
@@ -65,7 +65,7 @@ export default function Upload() {
       const body = await response.json();
       router.push(`/file/${body.id}`);
     } catch (err) {
-      setError(err);
+      setToast({ error: true, text: err.message });
     } finally {
       setFile(null);
       setUploading(false);
@@ -84,10 +84,6 @@ export default function Upload() {
         <PageLoader />
       </>
     );
-  }
-
-  if (error) {
-    return <Error status={error.status} message={error.message} />;
   }
 
   return (

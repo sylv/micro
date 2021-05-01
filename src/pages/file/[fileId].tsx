@@ -1,14 +1,17 @@
 import copyToClipboard from "copy-to-clipboard";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { Download as DownloadIcon, Share2 as ShareIcon } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";
 import { FileEmbed } from "../../components/file-embed/file-embed";
 import { PageLoader } from "../../components/page-loader";
+import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
 import { Endpoints } from "../../constants";
 import { downloadUrl } from "../../helpers/download";
 import { useToasts } from "../../hooks/useToasts";
+import { useUser } from "../../hooks/useUser";
 import { GetFileData } from "../../types";
 import Error from "../_error";
 
@@ -17,6 +20,9 @@ export default function File() {
   const fileId = router.query.fileId as string;
   const initialData = router.query.file && JSON.parse(router.query.file as string);
   const file = useSWR<GetFileData>(Endpoints.FILE(fileId), { initialData });
+  const user = useUser();
+  const [confirm, setConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const setToast = useToasts();
 
   if (file.error) {
@@ -27,7 +33,14 @@ export default function File() {
     return <PageLoader />;
   }
 
-  const download = async () => {
+  const copyLink = () => {
+    copyToClipboard(window.location.href);
+    setToast({
+      text: `Copied link to clipboard`,
+    });
+  };
+
+  const downloadFile = async () => {
     try {
       await downloadUrl(file.data!.urls.direct, file.data!.displayName);
     } catch (err) {
@@ -35,11 +48,27 @@ export default function File() {
     }
   };
 
-  const copy = () => {
-    copyToClipboard(window.location.href);
-    setToast({
-      text: `Copied link to clipboard`,
-    });
+  const deleteFile = async () => {
+    if (!file.data) return;
+    if (!confirm) {
+      setConfirm(true);
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      await fetch(Endpoints.FILE(file.data.id), {
+        method: "DELETE",
+      });
+
+      setDeleting(false);
+      setToast({ text: `Deleted "${file.data.displayName}"` });
+      router.replace("/dashboard");
+    } catch (err) {
+      setToast({ error: true, text: err.message });
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -52,15 +81,26 @@ export default function File() {
         <FileEmbed file={file.data} />
         <div className="flex md:flex-col">
           <div className="flex text-sm text-gray-500 cursor-pointer md:flex-col">
-            <span className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300" onClick={copy}>
+            <span
+              className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
+              onClick={copyLink}
+            >
               <ShareIcon className="h-4 mr-1" /> Copy link
             </span>
             <span
               className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
-              onClick={download}
+              onClick={downloadFile}
             >
               <DownloadIcon className="h-4 mr-1" /> Download
             </span>
+            {user.data?.id === file.data.ownerId && (
+              <span
+                className="flex items-center flex-shrink-0 mb-2 mr-2 text-red-500 transition-colors duration-100 hover:text-red-600"
+                onClick={deleteFile}
+              >
+                <DownloadIcon className="h-4 mr-1" /> {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
+              </span>
+            )}
           </div>
         </div>
       </div>
