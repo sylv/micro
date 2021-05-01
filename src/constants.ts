@@ -6,6 +6,7 @@ export const Endpoints = {
   CONFIG: "/api/config",
   HOSTS: "/api/hosts",
   USER: "/api/user",
+  UPLOAD: "/api/upload",
   USER_FILES: "/api/user/files",
   USER_TOKEN: "/api/user/token",
   FILE: (fileId: string) => `/api/file/${fileId}`,

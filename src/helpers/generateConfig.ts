@@ -12,9 +12,9 @@ export function generateConfig(token: string, hosts: string[], direct: boolean) 
     RequestURL: upload,
     Body: "MultipartFormData",
     FileFormName: "file",
-    URL: direct ? "$json:direct$" : "$json:view$",
-    ThumbnailURL: "$json:thumbnail$",
-    DeletionURL: "$json:delete$",
+    URL: direct ? "$json:links.direct$" : "$json:links.view$",
+    ThumbnailURL: "$json:links.thumbnail$",
+    DeletionURL: "$json:links.delete$",
     Parameters: {
       input: "$input$",
     },

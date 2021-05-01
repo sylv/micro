@@ -36,10 +36,14 @@ export class UploadController {
       const deletion = await this.deletionService.createToken(ContentType.LINK, link.id);
       return {
         // "view" aliases to "direct" for compatibility with the image uploader
-        view: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
-        direct: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
-        metadata: this.hostsService.formatHostUrl(host.url, user.username, urls.metadata),
-        delete: this.hostsService.formatHostUrl(host.url, user.username, deletion.url),
+        id: link.id,
+        host: link.host,
+        links: {
+          view: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
+          direct: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
+          metadata: this.hostsService.formatHostUrl(host.url, user.username, urls.metadata),
+          delete: this.hostsService.formatHostUrl(host.url, user.username, deletion.url),
+        },
       };
     }
 
@@ -49,11 +53,15 @@ export class UploadController {
     const deletion = await this.deletionService.createToken(ContentType.FILE, file.id);
     const urls = this.fileService.getFileUrls(file);
     return {
-      metadata: this.hostsService.formatHostUrl(host.url, user.username, urls.metadata),
-      thumbnail: this.hostsService.formatHostUrl(host.url, user.username, urls.thumbnail),
-      direct: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
-      view: this.hostsService.formatHostUrl(host.url, user.username, urls.view),
-      delete: this.hostsService.formatHostUrl(host.url, user.username, deletion.url),
+      id: file.id,
+      host: file.host,
+      links: {
+        metadata: this.hostsService.formatHostUrl(host.url, user.username, urls.metadata),
+        thumbnail: this.hostsService.formatHostUrl(host.url, user.username, urls.thumbnail),
+        direct: this.hostsService.formatHostUrl(host.url, user.username, urls.direct),
+        view: this.hostsService.formatHostUrl(host.url, user.username, urls.view),
+        delete: this.hostsService.formatHostUrl(host.url, user.username, deletion.url),
+      },
     };
   }
 }

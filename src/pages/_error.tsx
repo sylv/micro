@@ -8,7 +8,7 @@ import { usePaths } from "../hooks/usePaths";
 
 const ERROR_LENNIES = ["ಠ_ಠ", "(ಥ﹏ಥ)", "ʕ•ᴥ•ʔ", "≧☉_☉≦", "ლ,ᔑ•ﺪ͟͠•ᔐ.ლ", "( ͡ಠ ʖ̯ ͡ಠ)", "(◉͜ʖ◉)", "¯\\_(⊙_ʖ⊙)_/¯"];
 
-export default function Error(props: { status?: StatusCodes; message?: string }) {
+export default function Error(props: { status?: StatusCodes; message?: string; error?: Error }) {
   const router = useRouter();
   const status = props.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
   const lenny = ERROR_LENNIES[status % ERROR_LENNIES.length];
