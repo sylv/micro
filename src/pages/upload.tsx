@@ -11,6 +11,7 @@ import { Spinner } from "../components/spinner";
 import { Title } from "../components/title";
 import { Endpoints } from "../constants";
 import { http } from "../helpers/http";
+import { useHost } from "../hooks/useHost";
 import { useToasts } from "../hooks/useToasts";
 import { useUser } from "../hooks/useUser";
 import { GetHostsData } from "../types";
@@ -23,7 +24,9 @@ export default function Upload() {
   const [file, setFile] = useState<File | null>(null);
   const [hover, setHover] = useState(false);
   const setToast = useToasts();
+  const [selectedHost, setSelectedHost] = useState<string | undefined>();
   const hosts = useSWR<GetHostsData>(Endpoints.HOSTS);
+  const currentHost = useHost();
 
   useEffect(() => {
     if (user.error) router.replace("/");
@@ -62,13 +65,22 @@ export default function Upload() {
       setUploading(true);
       const form = new FormData();
       form.append(file.name, file);
+      const headers: HeadersInit = {};
+      if (selectedHost) headers["X-Micro-Host"] = selectedHost;
       const response = await http(Endpoints.UPLOAD, {
         method: "POST",
         body: form,
+        headers: headers,
       });
 
       const body = await response.json();
-      router.push(`/file/${body.id}`);
+      const route = `/file/${body.id}`;
+      const host = hosts.data?.find((host) => host.data.key === selectedHost);
+      if (host && currentHost?.data.key !== host.data.key) {
+        location.href = `${host.data.url}${route}`;
+      } else {
+        router.push(route);
+      }
     } catch (err) {
       setToast({ error: true, text: err.message });
     } finally {
@@ -110,11 +122,16 @@ export default function Upload() {
         <Card className="flex flex-col items-center justify-center w-full h-2/4">
           <h1 className="mb-4 text-2xl">{file.name}</h1>
           <div className="flex items-center justify-center">
-            <Select prefix="Host" onClick={(e) => e.stopPropagation()} className="flex-shrink-0 w-40 mr-2">
+            <Select
+              prefix="Host"
+              className="flex-shrink-0 w-40 mr-2"
+              value={selectedHost}
+              onChange={(event) => setSelectedHost(event.target.value)}
+            >
               {hosts.data
                 .filter((host) => host.authorised)
                 .map((host) => (
-                  <option key={host.data.key} value={host.data.key}>
+                  <option key={host.data.key} value={host.data.key} selected={host.data.key === selectedHost}>
                     {host.data.key.replace("{{username}}", user.data!.username)}
                   </option>
                 ))}

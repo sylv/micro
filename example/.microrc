@@ -8,7 +8,7 @@
   "inquiries": "admin@example.com",
   // leave as default for docker.
   // set to a postgres connection URI for your database.
-  "database": "postgresql://micro:youshallnotpass@localhost:5433/micro",
+  "database": "postgresql://micro:youshallnotpass@postgres/micro",
   // can be relative to thw cwd or absolute.
   // for docker you'll want this to be absolute.
   "storagePath": "/data",

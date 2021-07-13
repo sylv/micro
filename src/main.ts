@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Logger, ValidationPipe } from "@nestjs/comm
 import { NestFactory, Reflector } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import cookie from "fastify-cookie";
-import multipart from "fastify-multipart";
+import multipart, { FastifyMultipartOptions } from "fastify-multipart";
 import { RenderService } from "nest-next";
 import { config } from "./config";
 import { errorHandler } from "./helpers/errorHandler";
@@ -16,8 +16,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector(), {}));
   app.useGlobalInterceptors(new RedirectInterceptor());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, forbidUnknownValues: true }));
-  app.register(cookie);
-  app.register(multipart, {
+  app.register(cookie as any);
+  app.register(multipart as any, <FastifyMultipartOptions>{
     limits: {
       fieldNameSize: 100,
       fieldSize: 100,
@@ -29,8 +29,9 @@ async function bootstrap() {
 
   const service = app.get(RenderService);
   service.setErrorHandler(errorHandler);
-  await app.listen(8080, "0.0.0.0");
-  logger.log(`Ready at ${config.rootHost.url}`);
+  await app.listen(8080, "0.0.0.0", (err, address) => {
+    logger.log(`Listing on ${address} (${config.rootHost.url})`);
+  });
 }
 
 bootstrap();

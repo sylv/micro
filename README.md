@@ -23,9 +23,9 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 - [x] Permissions
 - [x] Invite links
 - [x] URL Shortening
-- [X] Mobile support
-- [X] EXIF metadata removal
-- [X] Purging of old, large files (`config.purge`).
+- [x] Mobile support
+- [x] EXIF metadata removal
+- [x] Purging of old, large files (`config.purge`).
 
 ## screenshots
 
@@ -44,14 +44,14 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 
 ## installation
 
-Before you get started, please keep in mind micro isn't really intended to be self-hosted; setting it up can be tricky and managing it isn't particularly fun. This is a *very* rough guide to help people that already know what they're doing. If you can't follow along, you should hold off on hosting your own instance until there are better instructions. I'd also recommend you read through the files in [/example](/example) first to see if you can follow along, because if you can't you're just gonna waste time trying to follow the instructions below.
+Before you get started, please keep in mind micro isn't really intended to be self-hosted; setting it up can be tricky and managing it isn't particularly fun. This is a _very_ rough guide to help people that already know what they're doing. If you can't follow along, you should hold off on hosting your own instance until there are better instructions. I'd also recommend you read through the files in [/example](/example) first to see if you can follow along, because if you can't you're just gonna waste time trying to follow the instructions below.
 
 1. Install `git`, `docker` and `docker-compose`
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
 3. Copy the example configs to the current directory, `cp ./micro/example/* ./`
 4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **You need to read through each file carefully or you'll risk fucking up your entire micro instance.** The comments are important and include information on initial startup and security. Caddy is optional but it will handle encrypting traffic and redirecting insecure requests, so for anything but a test environment you should use it or something similar.
 5. Run `docker-compose up -d postgres` to start the database.
-6. Run `docker-compose run -e DATABASE_URL=postgresql://micro:youshallnotpass@postgres/micro micro prisma db push --preview-feature` to create database tables.
+6. Run `docker-compose run -e DATABASE_URL=postgresql://micro:youshallnotpass@postgres/micro micro prisma db push` to create database tables.
 7. Run `docker-compose up -d micro` to start micro.
 8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
@@ -62,7 +62,7 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - To create an invite, go to `/api/invite` and copy the link. Invites are valid for an hour and cannot be revoked once generated.
 - To add a tag to a user, go to `/api/user/:id/tags/add/:tag`, where `:id` is the **id** of the user you want to add the tag to, and `:tag` is the name of the tag to add.
 - To remove a tag, go to `/api/user/:id/tags/remove/:tag`. See above for parameters.
-- To delete a user, go to `/api/user/:id/delete`. **This will only delete the user, files they have uploaded will not be removed from disk.** 
+- To delete a user, go to `/api/user/:id/delete`. **This will only delete the user, files they have uploaded will not be removed from disk.**
 
 ## todo
 
