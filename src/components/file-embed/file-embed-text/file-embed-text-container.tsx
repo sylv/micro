@@ -1,5 +1,3 @@
-import { Listbox } from "@headlessui/react";
-import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { Language } from "prism-react-renderer";
 import React, { FunctionComponent, useEffect, useState } from "react";
@@ -11,11 +9,12 @@ import { http } from "../../../helpers/http";
 import { useToasts } from "../../../hooks/useToasts";
 import { GetFileData } from "../../../types";
 import { Button } from "../../button/button";
-import dropdown from "../../dropdown/dropdown.module.css";
+import { Dropdown } from "../../dropdown/dropdown";
+import { DropdownTab } from "../../dropdown/dropdown-tab";
 import { PageLoader } from "../../page-loader";
 import { FileEmbedDefault } from "../file-embed-default";
 
-const DEFAULT_LANGUAGE = getLanguage("markdown")!;
+const DEFAULT_LANGUAGE = getLanguage("diff")!;
 const fetcher = async (url: string) => {
   const response = await http(url);
   return response.text();
@@ -50,25 +49,24 @@ export const FileEmbedTextContainer: FunctionComponent<FileEmbedTextContainerPro
   }
 
   return (
-    <div className="relative w-full h-full overflow-auto">
+    <div className="relative w-full h-full">
       <div className="absolute flex p-2 transition opacity-30 right-2 top-2 hover:opacity-100">
         <Button onClick={copyContent} className="mr-2" small>
           Copy
         </Button>
-        <Listbox as="div" value={language} onChange={setLanguage} className={dropdown.dropdown}>
-          <Listbox.Button as={Button} suffix={<ChevronDown />} small>
-            {language.name}
-          </Listbox.Button>
-          <Listbox.Options className={classNames(dropdown.dropdownItems, "overflow-y-scroll max-h-56")}>
-            {languages.map((item) => (
-              <Listbox.Option key={item.key} value={item}>
-                {({ active }) => (
-                  <div className={classNames(dropdown.dropdownItem, active && dropdown.dropdownItemActive)}>{item.name}</div>
-                )}
-              </Listbox.Option>
-            ))}
-          </Listbox.Options>
-        </Listbox>
+        <Dropdown
+          trigger={
+            <Button suffix={<ChevronDown />} small>
+              {language.name}
+            </Button>
+          }
+        >
+          {languages.map((item) => (
+            <DropdownTab key={item.key} onClick={() => setLanguage(item)} className="text-xs">
+              {item.name}
+            </DropdownTab>
+          ))}
+        </Dropdown>
       </div>
       {children({ language: language.key as Language, content: content.data })}
     </div>

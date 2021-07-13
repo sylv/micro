@@ -1,7 +1,7 @@
 import copyToClipboard from "copy-to-clipboard";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Download as DownloadIcon, Share2 as ShareIcon } from "react-feather";
+import { Download, Share, Trash } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";
 import { FileEmbed } from "../../components/file-embed/file-embed";
@@ -85,20 +85,20 @@ export default function File() {
               className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
               onClick={copyLink}
             >
-              <ShareIcon className="h-4 mr-1" /> Copy link
+              <Share className="h-4 mr-1" /> Copy link
             </span>
             <span
               className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
               onClick={downloadFile}
             >
-              <DownloadIcon className="h-4 mr-1" /> Download
+              <Download className="h-4 mr-1" /> Download
             </span>
             {user.data?.id === file.data.ownerId && (
               <span
-                className="flex items-center flex-shrink-0 mb-2 mr-2 text-red-500 transition-colors duration-100 hover:text-red-600"
+                className="flex items-center flex-shrink-0 mb-2 mr-2 text-red-400 transition-colors duration-100 hover:text-red-600"
                 onClick={deleteFile}
               >
-                <DownloadIcon className="h-4 mr-1" /> {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
+                <Trash className="h-4 mr-1" /> {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
               </span>
             )}
           </div>

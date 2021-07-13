@@ -10,4 +10,6 @@ export function getLanguage(fileName: string) {
       if (language.key === ext) return language;
     }
   }
+
+  return languages.find((language) => language.key === fileName);
 }

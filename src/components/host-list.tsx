@@ -49,7 +49,7 @@ export const HostList: FunctionComponent<HostListProps> = (props) => {
           </div>
         </InputContainer>
         {open && (
-          <Listbox.Options className={classNames(dropdownStyle.dropdownItems, "w-full max-h-56 overflow-y-auto")} static>
+          <Listbox.Options className={classNames(dropdownStyle.dropdownItems, "w-full overflow-y-auto")} static>
             {props.hosts.map((host) => (
               <Listbox.Option as={Fragment} key={host} value={host}>
                 {({ active }) => {

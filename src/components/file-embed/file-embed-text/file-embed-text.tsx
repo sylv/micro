@@ -14,7 +14,7 @@ export const FileEmbedText = ({ file }: { file: GetFileData }) => {
       {({ language, content }) => (
         <Highlight {...defaultProps} theme={theme} code={content} language={language}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre className={classNames(className, "text-left overflow-x-auto")} style={style}>
+            <pre className={classNames(className, "text-left overflow-x-auto h-full")} style={style}>
               {tokens.map((line, i) => {
                 const props = getLineProps({ line, key: i });
                 return (

@@ -7,7 +7,7 @@
 }
 
 .dropdownItems {
-  @apply absolute right-0 mt-2 rounded-md shadow-lg bg-dark-300 focus:outline-none;
+  @apply absolute right-0 mt-2 overflow-y-scroll rounded-md shadow-2xl bg-dark-300 focus:outline-none max-h-56;
 }
 
 .dropdownItem {
