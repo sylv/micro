@@ -8,14 +8,12 @@ import ms from "ms";
 
 @Controller()
 export class AuthController {
-  private static readonly DOMAIN = config.rootHost.key.split(":").shift()!;
-  private static readonly SECURE = config.rootHost.url.startsWith("https");
   private static readonly ONE_YEAR = ms("1y");
   private static readonly COOKIE_OPTIONS = {
     path: "/",
     httpOnly: true,
-    domain: AuthController.DOMAIN,
-    secure: AuthController.SECURE,
+    domain: config.rootHost.key.split(":").shift(),
+    secure: config.rootHost.url.startsWith("https"),
   };
 
   constructor(private authService: AuthService) {}

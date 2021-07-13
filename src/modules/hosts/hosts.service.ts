@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException } from "@nestjs/common";
 import normalizeUrl from "normalize-url";
-import randomItem from "random-item";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
+import { randomItem } from "../../helpers/randomItem";
 
 export class HostsService {
   static normaliseHostUrl(url: string) {
