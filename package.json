@@ -68,6 +68,8 @@
     "xbytes": "^1.7.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@types/bcrypt": "^5.0.0",
     "@types/classnames": "^2.3.1",
     "@types/luxon": "^1.27.1",
@@ -79,6 +81,7 @@
     "@types/rc": "^1.1.0",
     "@types/react": "^17.0.14",
     "@types/sharp": "^0.28.4",
+    "husky": "^7.0.1",
     "prettier": "^2.3.2",
     "prisma": "^2.26.0",
     "rimraf": "^3.0.0",
