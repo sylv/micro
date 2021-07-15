@@ -2,18 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "watch:api",
-      "command": "yarn",
-      "args": ["watch"]
-    },
-    {
       "label": "watch",
-      "dependsOn": ["watch:api"],
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "command": "pnpm",
+      "args": ["watch"]
     }
   ]
 }

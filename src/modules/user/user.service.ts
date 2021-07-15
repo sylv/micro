@@ -1,4 +1,3 @@
-import { User } from ".prisma/client";
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
@@ -11,8 +10,6 @@ import { UserFilesQueryDto } from "./dto/user-files-query.dto";
 
 @Injectable()
 export class UserService {
-  async getUser(id: string, secret: true): Promise<Omit<User, "password">>;
-  async getUser(id: string, secret?: false): Promise<Omit<User, "password" | "secret">>;
   async getUser(id: string, secret = false) {
     const user = await prisma.user.findFirst({
       where: { id },

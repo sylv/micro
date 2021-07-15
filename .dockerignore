@@ -14,4 +14,4 @@
 !next-env.d.ts
 !next.config.js
 !postcss.config.js
-!yarn.lock
+!pnpm-lock.yaml

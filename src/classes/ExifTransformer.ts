@@ -1,7 +1,7 @@
 import { Transform, TransformOptions, TransformCallback } from "stream";
 
 // note: this is pretty much just a copy/paste of https://github.com/joshbuddy/exif-be-gone
-// for some reason typescript refuses to load this module during `yarn build` and will
+// for some reason typescript refuses to load this module during `pnpm build` and will
 // complain about `export = ExifTransformer` and i'm honestly not gonna spend another however
 // long it takes to fix it on this. i'm fairly sure the only way to fix it is change how
 // exif-be-gone is published and i'm not gonna bother when i can just copy/paste it and call it

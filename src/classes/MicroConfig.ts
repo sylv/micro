@@ -22,7 +22,7 @@ export class MicroConfig {
   uploadLimit!: number;
 
   @IsString({ each: true })
-  @IsIn(fileType.mimeTypes)
+  @IsIn(Array.from(fileType.mimeTypes.values()))
   @IsOptional()
   allowTypes?: string[];
 

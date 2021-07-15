@@ -1,15 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from "@nestjs/common";
+import { BadRequestException, Body, Controller, ForbiddenException, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { nanoid } from "nanoid";
 import { Permission } from "../../constants";
 import { JWTAuthGuard } from "../../guards/jwt.guard";

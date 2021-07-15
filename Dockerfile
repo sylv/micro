@@ -1,16 +1,17 @@
-FROM node:15-alpine
+FROM node:14-alpine
 ENV NODE_ENV development
+
+RUN npm i -g pnpm
 
 # install build dependencies
 WORKDIR /usr/src/micro
-COPY package.json yarn.lock ./
-RUN yarn install
-RUN npm i -g prisma
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
 
 # copy src and build
 COPY . .
-RUN prisma generate
-RUN yarn build
+RUN pnpm prisma generate
+RUN pnpm build
 
 CMD ["npm", "run", "start"]
 

@@ -6,14 +6,14 @@
   "license": "GPL-3.0",
   "private": true,
   "engine": {
-    "node": ">=14"
+    "node": ">=14 <15"
   },
   "scripts": {
     "watch": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child --ignore-watch '/\\.next/.*' --project tsconfig.server.json src/main.ts",
     "build:clean": "rimraf .next",
     "build:web": "next build",
     "build:api": "tsc --project tsconfig.server.json",
-    "build": "yarn build:clean && yarn build:api && yarn build:web",
+    "build": "pnpm build:clean && pnpm build:api && pnpm build:web",
     "start": "cross-env NODE_ENV=production node .next/api/main.js"
   },
   "dependencies": {
