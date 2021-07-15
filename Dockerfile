@@ -1,19 +1,32 @@
-FROM node:14-alpine
-ENV NODE_ENV development
-
+FROM node:14-alpine AS builder
 RUN npm i -g pnpm
+ENV NODE_ENV=development
 
-# install build dependencies
+# install development dependencies
 WORKDIR /usr/src/micro
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
-# copy src and build
+# build with development dependencies
 COPY . .
 RUN pnpm prisma generate
 RUN pnpm build
 
-CMD ["npm", "run", "start"]
+FROM node:14-alpine
+RUN npm i -g pnpm
+ENV NODE_ENV=production
 
-# todo: this should be a multistage build that yeets dev dependencies once
-# the app is built. that would probably cut the image size in half.
+# install production dependencies
+WORKDIR /usr/src/micro 
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod --no-optional
+
+# copy built app from the previous stage
+COPY --from=builder /usr/src/micro/.next /usr/src/micro/.next
+
+# run as the "node" user https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
+USER node
+
+# define how we want to start the app
+CMD ["node", ".next/api/main.js"]
+# CMD ["ls"]

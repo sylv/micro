@@ -35,3 +35,6 @@ dist
 /.microrc
 /.env
 /data
+
+# nektos/act secrets file
+.secrets
