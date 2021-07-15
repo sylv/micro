@@ -32,12 +32,14 @@ export default function Upload() {
     if (user.error) router.replace("/");
   }, [user.data]);
 
-  const onDragEvent = (entering?: boolean): DragEventHandler => (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (entering === true) setHover(true);
-    else if (entering === false) setHover(false);
-  };
+  const onDragEvent =
+    (entering?: boolean): DragEventHandler =>
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (entering === true) setHover(true);
+      else if (entering === false) setHover(false);
+    };
 
   const onDrop: DragEventHandler = (event) => {
     event.preventDefault();

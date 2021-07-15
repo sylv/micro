@@ -15,8 +15,8 @@ export default function Home() {
       <div className="pt-16">
         <h1 className="text-4xl mb-2 font-bold">Micro</h1>
         <p className="mb-2 text-gray-400">
-          An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint. Sign in to
-          download a generated ShareX configuration. You can view the source code{" "}
+          An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint. Sign in to download a
+          generated ShareX configuration. You can view the source code{" "}
           <a className="text-brand" href="https://github.com/sylv/micro" target="_blank">
             here.
           </a>

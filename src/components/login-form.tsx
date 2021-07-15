@@ -66,14 +66,7 @@ export const LoginForm: FunctionComponent<LoginProps> = (props) => {
   return (
     <>
       <Input placeholder="Username" onKeyDown={onKeyDown} onChange={onUsernameChange} autoFocus ref={usernameRef} />
-      <Input
-        className="mt-2"
-        type="password"
-        placeholder="Password"
-        ref={passwordRef}
-        onKeyDown={onKeyDown}
-        onChange={onPasswordChange}
-      />
+      <Input className="mt-2" type="password" placeholder="Password" ref={passwordRef} onKeyDown={onKeyDown} onChange={onPasswordChange} />
       <Button className="mt-4" onClick={onContinue} onKeyDown={onKeyDown} disabled={disabled} primary>
         {props.buttonText}
       </Button>

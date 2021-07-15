@@ -65,8 +65,8 @@ export default function Invite() {
         <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
           <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>
           <p>
-            You've been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an
-            account, then download the ShareX config and start uploading with your favourite vanity domain.
+            You've been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an account, then
+            download the ShareX config and start uploading with your favourite vanity domain.
           </p>
           <p className="mt-2 text-xs text-gray-600">
             This invite will expire <Time date={expiry} />.

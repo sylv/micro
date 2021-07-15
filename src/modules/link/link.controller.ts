@@ -1,15 +1,4 @@
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Query,
-  Request,
-  Res,
-} from "@nestjs/common";
+import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, Post, Query, Request, Res } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../../prisma";
 import { UserId } from "../auth/auth.decorators";

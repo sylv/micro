@@ -1,1182 +1,663 @@
 [
-    {
-        "name": "ABAP",
-        "key": "abap",
-        "extensions": [
-            "abap"
-        ]
-    },
-    {
-        "name": "ActionScript",
-        "key": "actionscript",
-        "extensions": [
-            "as"
-        ]
-    },
-    {
-        "name": "Ada",
-        "key": "ada",
-        "extensions": [
-            "adb",
-            "ada",
-            "ads"
-        ]
-    },
-    {
-        "name": "Apache Configuration",
-        "key": "apacheconf",
-        "extensions": [
-            "apacheconf",
-            "vhost"
-        ]
-    },
-    {
-        "name": "APL",
-        "key": "apl",
-        "extensions": [
-            "apl",
-            "dyalog"
-        ]
-    },
-    {
-        "name": "AppleScript",
-        "key": "applescript",
-        "extensions": [
-            "applescript",
-            "scpt"
-        ]
-    },
-    {
-        "name": "Arduino",
-        "key": "arduino",
-        "extensions": [
-            "ino"
-        ]
-    },
-    {
-        "name": "AsciiDoc",
-        "key": "asciidoc",
-        "extensions": [
-            "asciidoc",
-            "adoc",
-            "asc"
-        ]
-    },
-    {
-        "name": "ASP.NET (C#)",
-        "key": "aspnet",
-        "extensions": [
-            "asp",
-            "asax",
-            "ascx",
-            "ashx",
-            "asmx",
-            "aspx",
-            "axd"
-        ]
-    },
-    {
-        "name": "Assembly",
-        "key": "nasm",
-        "extensions": [
-            "asm",
-            "a51",
-            "inc",
-            "nasm"
-        ]
-    },
-    {
-        "name": "AutoHotkey",
-        "key": "autohotkey",
-        "extensions": [
-            "ahk",
-            "ahkl"
-        ]
-    },
-    {
-        "name": "AutoIt",
-        "key": "autoit",
-        "extensions": [
-            "au3"
-        ]
-    },
-    {
-        "name": "Batchfile",
-        "key": "batch",
-        "extensions": [
-            "bat",
-            "cmd"
-        ]
-    },
-    {
-        "name": "Bison",
-        "key": "bison",
-        "extensions": [
-            "bison"
-        ]
-    },
-    {
-        "name": "Brainfuck",
-        "key": "brainfuck",
-        "extensions": [
-            "b",
-            "bf"
-        ]
-    },
-    {
-        "name": "Bro",
-        "key": "bro",
-        "extensions": [
-            "bro"
-        ]
-    },
-    {
-        "name": "C",
-        "key": "c",
-        "extensions": [
-            "c",
-            "cats",
-            "h",
-            "idc",
-            "w"
-        ]
-    },
-    {
-        "name": "C#",
-        "key": "csharp",
-        "extensions": [
-            "cs",
-            "cake",
-            "cshtml",
-            "csx"
-        ]
-    },
-    {
-        "name": "C++",
-        "key": "cpp",
-        "extensions": [
-            "cpp",
-            "c++",
-            "cc",
-            "cp",
-            "cxx",
-            "h",
-            "h++",
-            "hh",
-            "hpp",
-            "hxx",
-            "inc",
-            "inl",
-            "ipp",
-            "tcc",
-            "tpp"
-        ]
-    },
-    {
-        "name": "Clojure",
-        "key": "clojure",
-        "extensions": [
-            "clj",
-            "boot",
-            "cl2",
-            "cljc",
-            "cljs",
-            "cljs.hl",
-            "cljscm",
-            "cljx",
-            "hic"
-        ],
-        "filenames": [
-            "riemann.config"
-        ]
-    },
-    {
-        "name": "CoffeeScript",
-        "key": "coffeescript",
-        "extensions": [
-            "coffee",
-            "_coffee",
-            "cake",
-            "cjsx",
-            "cson",
-            "iced"
-        ],
-        "filenames": [
-            "Cakefile"
-        ]
-    },
-    {
-        "name": "Common Lisp",
-        "key": "lisp",
-        "extensions": [
-            "lisp",
-            "asd",
-            "cl",
-            "l",
-            "lsp",
-            "ny",
-            "podsl",
-            "sexp"
-        ]
-    },
-    {
-        "name": "Crystal",
-        "key": "crystal",
-        "extensions": [
-            "cr"
-        ]
-    },
-    {
-        "name": "CSS",
-        "key": "css",
-        "extensions": [
-            "css"
-        ]
-    },
-    {
-        "name": "Cucumber",
-        "key": "gherkin",
-        "extensions": [
-            "feature"
-        ]
-    },
-    {
-        "name": "D",
-        "key": "d",
-        "extensions": [
-            "d",
-            "di"
-        ]
-    },
-    {
-        "name": "Dart",
-        "key": "dart",
-        "extensions": [
-            "dart"
-        ]
-    },
-    {
-        "name": "Diff",
-        "key": "diff",
-        "extensions": [
-            "diff",
-            "patch"
-        ]
-    },
-    {
-        "name": "Django/Jinja2",
-        "key": "django",
-        "extensions": [
-            "mustache",
-            "jinja"
-        ]
-    },
-    {
-        "name": "Dockerfile",
-        "key": "docker",
-        "extensions": [
-            "dockerfile"
-        ],
-        "filenames": [
-            "Dockerfile"
-        ]
-    },
-    {
-        "name": "Eiffel",
-        "key": "eiffel",
-        "extensions": [
-            "e"
-        ]
-    },
-    {
-        "name": "Elixir",
-        "key": "elixir",
-        "extensions": [
-            "ex",
-            "exs"
-        ],
-        "filenames": [
-            "mix.lock"
-        ]
-    },
-    {
-        "name": "Elm",
-        "key": "elm",
-        "extensions": [
-            "elm"
-        ]
-    },
-    {
-        "name": "Erlang",
-        "key": "erlang",
-        "extensions": [
-            "erl",
-            "es",
-            "escript",
-            "hrl"
-        ],
-        "filenames": [
-            "rebar.config",
-            "rebar.config.lock",
-            "rebar.lock"
-        ]
-    },
-    {
-        "name": "F#",
-        "key": "fsharp",
-        "extensions": [
-            "fs",
-            "fsi",
-            "fsx"
-        ]
-    },
-    {
-        "name": "FORTRAN",
-        "key": "fortran",
-        "extensions": [
-            "f90",
-            "f",
-            "f03",
-            "f08",
-            "f77",
-            "f95",
-            "for",
-            "fpp"
-        ]
-    },
-    {
-        "name": "Game Maker Language",
-        "key": "gml",
-        "extensions": [
-            "gml"
-        ]
-    },
-    {
-        "name": "GLSL",
-        "key": "glsl",
-        "extensions": [
-            "glsl",
-            "fp",
-            "frag",
-            "frg",
-            "fs",
-            "fshader",
-            "geo",
-            "geom",
-            "glslv",
-            "gshader",
-            "shader",
-            "vert",
-            "vrx",
-            "vshader"
-        ]
-    },
-    {
-        "name": "Go",
-        "key": "go",
-        "extensions": [
-            "go"
-        ]
-    },
-    {
-        "name": "Groovy",
-        "key": "groovy",
-        "extensions": [
-            "groovy",
-            "grt",
-            "gtpl",
-            "gvy"
-        ]
-    },
-    {
-        "name": "Hack",
-        "key": "php",
-        "extensions": [
-            "hh",
-            "php"
-        ]
-    },
-    {
-        "name": "Haml",
-        "key": "haml",
-        "extensions": [
-            "haml",
-            "haml.deface"
-        ]
-    },
-    {
-        "name": "Handlebars",
-        "key": "handlebars",
-        "extensions": [
-            "handlebars",
-            "hbs"
-        ]
-    },
-    {
-        "name": "Haskell",
-        "key": "haskell",
-        "extensions": [
-            "hs",
-            "hsc"
-        ]
-    },
-    {
-        "name": "Haxe",
-        "key": "haxe",
-        "extensions": [
-            "hx",
-            "hxsl"
-        ]
-    },
-    {
-        "name": "Pug",
-        "key": "pug",
-        "extensions": [
-            "pug"
-        ]
-    },
-    {
-        "name": "HTML+ERB",
-        "key": "erb",
-        "extensions": [
-            "erb",
-            "erb.deface"
-        ]
-    },
-    {
-        "name": "HTTP",
-        "key": "http",
-        "extensions": [
-            "http"
-        ]
-    },
-    {
-        "name": "Inform 7",
-        "key": "inform7",
-        "extensions": [
-            "ni",
-            "i7x"
-        ]
-    },
-    {
-        "name": "INI",
-        "key": "ini",
-        "extensions": [
-            "ini",
-            "cfg",
-            "prefs",
-            "pro",
-            "properties"
-        ]
-    },
-    {
-        "name": "Io",
-        "key": "io",
-        "extensions": [
-            "io"
-        ]
-    },
-    {
-        "name": "J",
-        "key": "j",
-        "extensions": [
-            "ijs"
-        ]
-    },
-    {
-        "name": "Java",
-        "key": "java",
-        "extensions": [
-            "java"
-        ]
-    },
-    {
-        "name": "JavaScript",
-        "key": "javascript",
-        "extensions": [
-            "js",
-            "_js",
-            "bones",
-            "es6",
-            "frag",
-            "gs",
-            "jake",
-            "jsb",
-            "jscad",
-            "jsfl",
-            "jsm",
-            "jss",
-            "njs",
-            "pac",
-            "sjs",
-            "ssjs",
-            "sublime-build",
-            "sublime-commands",
-            "sublime-completions",
-            "sublime-keymap",
-            "sublime-macro",
-            "sublime-menu",
-            "sublime-mousemap",
-            "sublime-project",
-            "sublime-settings",
-            "sublime-theme",
-            "sublime-workspace",
-            "sublime_metrics",
-            "sublime_session",
-            "xsjs",
-            "xsjslib"
-        ],
-        "filenames": [
-            "Jakefile"
-        ]
-    },
-    {
-        "name": "JSON",
-        "key": "json",
-        "extensions": [
-            "json",
-            "geojson",
-            "lock",
-            "topojson"
-        ],
-        "filenames": [
-            ".jshintrc",
-            "composer.lock"
-        ]
-    },
-    {
-        "name": "Julia",
-        "key": "julia",
-        "extensions": [
-            "jl"
-        ]
-    },
-    {
-        "name": "Kotlin",
-        "key": "kotlin",
-        "extensions": [
-            "kt",
-            "ktm",
-            "kts"
-        ]
-    },
-    {
-        "name": "LaTeX",
-        "key": "latex",
-        "extensions": [
-            "tex",
-            "aux",
-            "bbx",
-            "bib",
-            "cbx",
-            "cls",
-            "dtx",
-            "ins",
-            "lbx",
-            "ltx",
-            "mkii",
-            "mkiv",
-            "mkvi",
-            "sty",
-            "toc"
-        ]
-    },
-    {
-        "name": "Less",
-        "key": "less",
-        "extensions": [
-            "less"
-        ]
-    },
-    {
-        "name": "Liquid",
-        "key": "liquid",
-        "extensions": [
-            "liquid"
-        ]
-    },
-    {
-        "name": "LiveScript",
-        "key": "livescript",
-        "extensions": [
-            "ls",
-            "_ls"
-        ],
-        "filenames": [
-            "Slakefile"
-        ]
-    },
-    {
-        "name": "LOLCODE",
-        "key": "lolcode",
-        "extensions": [
-            "lol"
-        ]
-    },
-    {
-        "name": "Lua",
-        "key": "lua",
-        "extensions": [
-            "lua",
-            "fcgi",
-            "nse",
-            "pd_lua",
-            "rbxs",
-            "wlua"
-        ]
-    },
-    {
-        "name": "Makefile",
-        "key": "makefile",
-        "extensions": [
-            "mak",
-            "d",
-            "mk"
-        ],
-        "filenames": [
-            "GNUmakefile",
-            "Kbuild",
-            "Makefile",
-            "Makefile.inc",
-            "makefile"
-        ]
-    },
-    {
-        "name": "Markdown",
-        "key": "markdown",
-        "extensions": [
-            "md",
-            "markdown",
-            "mkd",
-            "mkdn",
-            "mkdown",
-            "ron"
-        ]
-    },
-    {
-        "name": "Matlab",
-        "key": "matlab",
-        "extensions": [
-            "matlab",
-            "m"
-        ]
-    },
-    {
-        "name": "Monkey",
-        "key": "monkey",
-        "extensions": [
-            "monkey"
-        ]
-    },
-    {
-        "name": "Nginx",
-        "key": "nginx",
-        "extensions": [
-            "nginxconf",
-            "vhost"
-        ],
-        "filenames": [
-            "nginx.conf"
-        ]
-    },
-    {
-        "name": "Nimrod",
-        "key": "nim",
-        "extensions": [
-            "nim",
-            "nimrod"
-        ]
-    },
-    {
-        "name": "Nix",
-        "key": "nix",
-        "extensions": [
-            "nix"
-        ]
-    },
-    {
-        "name": "NSIS",
-        "key": "nsis",
-        "extensions": [
-            "nsi",
-            "nsh"
-        ]
-    },
-    {
-        "name": "Objective-C",
-        "key": "objectivec",
-        "extensions": [
-            "m",
-            "h"
-        ]
-    },
-    {
-        "name": "OCaml",
-        "key": "ocaml",
-        "extensions": [
-            "ml",
-            "eliom",
-            "eliomi",
-            "ml4",
-            "mli",
-            "mll",
-            "mly"
-        ]
-    },
-    {
-        "name": "OpenCL",
-        "key": "opencl",
-        "extensions": [
-            "cl",
-            "opencl"
-        ]
-    },
-    {
-        "name": "Oz",
-        "key": "oz",
-        "extensions": [
-            "oz"
-        ]
-    },
-    {
-        "name": "Pascal",
-        "key": "pascal",
-        "extensions": [
-            "pas",
-            "dfm",
-            "dpr",
-            "inc",
-            "lpr",
-            "pp"
-        ]
-    },
-    {
-        "name": "Perl",
-        "key": "perl",
-        "extensions": [
-            "pl",
-            "al",
-            "cgi",
-            "fcgi",
-            "perl",
-            "ph",
-            "plx",
-            "pm",
-            "pod",
-            "psgi",
-            "t"
-        ]
-    },
-    {
-        "name": "PL/SQL",
-        "key": "plsql",
-        "extensions": [
-            "pls",
-            "pck",
-            "pkb",
-            "pks",
-            "plb",
-            "plsql",
-            "sql"
-        ]
-    },
-    {
-        "name": "PLSQL",
-        "key": "sql",
-        "extensions": [
-            "pls",
-            "pck",
-            "pkb",
-            "pks",
-            "plb",
-            "plsql",
-            "sql"
-        ]
-    },
-    {
-        "name": "PowerShell",
-        "key": "powershell",
-        "extensions": [
-            "ps1",
-            "psd1",
-            "psm1"
-        ]
-    },
-    {
-        "name": "Processing",
-        "key": "processing",
-        "extensions": [
-            "pde"
-        ]
-    },
-    {
-        "name": "Prolog",
-        "key": "prolog",
-        "extensions": [
-            "pl",
-            "pro",
-            "prolog"
-        ]
-    },
-    {
-        "name": "Protocol Buffers",
-        "key": "protobuf",
-        "extensions": [
-            "proto"
-        ]
-    },
-    {
-        "name": "Puppet",
-        "key": "puppet",
-        "extensions": [
-            "pp"
-        ],
-        "filenames": [
-            "Modulefile"
-        ]
-    },
-    {
-        "name": "Python",
-        "key": "python",
-        "extensions": [
-            "py",
-            "cgi",
-            "fcgi",
-            "gyp",
-            "lmi",
-            "pyde",
-            "pyp",
-            "pyt",
-            "pyw",
-            "tac",
-            "wsgi",
-            "xpy"
-        ],
-        "filenames": [
-            "BUILD",
-            "SConscript",
-            "SConstruct",
-            "Snakefile",
-            "wscript"
-        ]
-    },
-    {
-        "name": "R",
-        "key": "r",
-        "extensions": [
-            "r",
-            "rd",
-            "rsx"
-        ],
-        "filenames": [
-            ".Rprofile"
-        ]
-    },
-    {
-        "name": "React JSX",
-        "key": "jsx",
-        "extensions": [
-            "jsx"
-        ]
-    },
-    {
-        "name": "React TSX",
-        "key": "tsx",
-        "extensions": [
-            "tsx"
-        ]
-    },
-    {
-        "name": "Ren'Py",
-        "key": "renpy",
-        "extensions": [
-            "rpy"
-        ]
-    },
-    {
-        "name": "reST (reStructuredText)",
-        "key": "rest",
-        "extensions": [
-            "rst",
-            "rest",
-            "rest.txt",
-            "rst.txt"
-        ]
-    },
-    {
-        "name": "Ruby",
-        "key": "ruby",
-        "extensions": [
-            "rb",
-            "builder",
-            "fcgi",
-            "gemspec",
-            "god",
-            "irbrc",
-            "jbuilder",
-            "mspec",
-            "pluginspec",
-            "podspec",
-            "rabl",
-            "rake",
-            "rbuild",
-            "rbw",
-            "rbx",
-            "ru",
-            "ruby",
-            "thor",
-            "watchr"
-        ],
-        "filenames": [
-            ".pryrc",
-            "Appraisals",
-            "Berksfile",
-            "Brewfile",
-            "Buildfile",
-            "Deliverfile",
-            "Fastfile",
-            "Gemfile",
-            "Gemfile.lock",
-            "Guardfile",
-            "Jarfile",
-            "Mavenfile",
-            "Podfile",
-            "Puppetfile",
-            "Snapfile",
-            "Thorfile",
-            "Vagrantfile",
-            "buildfile"
-        ]
-    },
-    {
-        "name": "Rust",
-        "key": "rust",
-        "extensions": [
-            "rs"
-        ]
-    },
-    {
-        "name": "SAS",
-        "key": "sas",
-        "extensions": [
-            "sas"
-        ]
-    },
-    {
-        "name": "Sass (Sass)",
-        "key": "sass",
-        "extensions": [
-            "sass"
-        ]
-    },
-    {
-        "name": "Sass (Scss)",
-        "key": "scss",
-        "extensions": [
-            "scss"
-        ]
-    },
-    {
-        "name": "Scala",
-        "key": "scala",
-        "extensions": [
-            "scala",
-            "sbt",
-            "sc"
-        ]
-    },
-    {
-        "name": "Scheme",
-        "key": "scheme",
-        "extensions": [
-            "scm",
-            "sld",
-            "sls",
-            "sps",
-            "ss"
-        ]
-    },
-    {
-        "name": "Shell",
-        "key": "bash",
-        "extensions": [
-            "sh",
-            "bash",
-            "bats",
-            "cgi",
-            "command",
-            "fcgi",
-            "ksh",
-            "tmux",
-            "tool",
-            "zsh"
-        ]
-    },
-    {
-        "name": "Smalltalk",
-        "key": "smalltalk",
-        "extensions": [
-            "st",
-            "cs"
-        ]
-    },
-    {
-        "name": "Smarty",
-        "key": "smarty",
-        "extensions": [
-            "tpl"
-        ]
-    },
-    {
-        "name": "Stylus",
-        "key": "stylus",
-        "extensions": [
-            "styl"
-        ]
-    },
-    {
-        "name": "Swift",
-        "key": "swift",
-        "extensions": [
-            "swift"
-        ]
-    },
-    {
-        "name": "Tcl",
-        "key": "tcl",
-        "extensions": [
-            "tcl",
-            "adp",
-            "tm"
-        ]
-    },
-    {
-        "name": "Textile",
-        "key": "textile",
-        "extensions": [
-            "textile"
-        ]
-    },
-    {
-        "name": "Twig",
-        "key": "twig",
-        "extensions": [
-            "twig"
-        ]
-    },
-    {
-        "name": "TypeScript",
-        "key": "typescript",
-        "extensions": [
-            "ts"
-        ]
-    },
-    {
-        "name": "Verilog",
-        "key": "verilog",
-        "extensions": [
-            "v",
-            "veo"
-        ]
-    },
-    {
-        "name": "VHDL",
-        "key": "vhdl",
-        "extensions": [
-            "vhdl",
-            "vhd",
-            "vhf",
-            "vhi",
-            "vho",
-            "vhs",
-            "vht",
-            "vhw"
-        ]
-    },
-    {
-        "name": "VimL",
-        "key": "vim",
-        "extensions": [
-            "vim"
-        ],
-        "filenames": [
-            ".nvimrc",
-            ".vimrc",
-            "_vimrc",
-            "gvimrc",
-            "nvimrc",
-            "vimrc"
-        ]
-    },
-    {
-        "name": "Visual Basic",
-        "key": "visual-basic",
-        "extensions": [
-            "vb",
-            "bas",
-            "cls",
-            "frm",
-            "frx",
-            "vba",
-            "vbhtml",
-            "vbs"
-        ]
-    },
-    {
-        "name": "Visual Basic",
-        "key": "vbnet",
-        "extensions": [
-            "vb",
-            "bas",
-            "cls",
-            "frm",
-            "frx",
-            "vba",
-            "vbhtml",
-            "vbs"
-        ]
-    },
-    {
-        "name": "Wiki markup",
-        "key": "wiki",
-        "extensions": [
-            "mediawiki",
-            "wiki"
-        ]
-    },
-    {
-        "name": "Xojo (REALbasic)",
-        "key": "xojo",
-        "extensions": [
-            "xojo_code",
-            "xojo_menu",
-            "xojo_report",
-            "xojo_script",
-            "xojo_toolbar",
-            "xojo_window"
-        ]
-    },
-    {
-        "name": "XQuery",
-        "key": "xquery",
-        "extensions": [
-            "xquery",
-            "xq",
-            "xql",
-            "xqm",
-            "xqy"
-        ]
-    },
-    {
-        "name": "YAML",
-        "key": "yaml",
-        "extensions": [
-            "yml",
-            "reek",
-            "rviz",
-            "syntax",
-            "yaml",
-            "yaml-tmlanguage"
-        ]
-    }
+  {
+    "name": "ABAP",
+    "key": "abap",
+    "extensions": ["abap"]
+  },
+  {
+    "name": "ActionScript",
+    "key": "actionscript",
+    "extensions": ["as"]
+  },
+  {
+    "name": "Ada",
+    "key": "ada",
+    "extensions": ["adb", "ada", "ads"]
+  },
+  {
+    "name": "Apache Configuration",
+    "key": "apacheconf",
+    "extensions": ["apacheconf", "vhost"]
+  },
+  {
+    "name": "APL",
+    "key": "apl",
+    "extensions": ["apl", "dyalog"]
+  },
+  {
+    "name": "AppleScript",
+    "key": "applescript",
+    "extensions": ["applescript", "scpt"]
+  },
+  {
+    "name": "Arduino",
+    "key": "arduino",
+    "extensions": ["ino"]
+  },
+  {
+    "name": "AsciiDoc",
+    "key": "asciidoc",
+    "extensions": ["asciidoc", "adoc", "asc"]
+  },
+  {
+    "name": "ASP.NET (C#)",
+    "key": "aspnet",
+    "extensions": ["asp", "asax", "ascx", "ashx", "asmx", "aspx", "axd"]
+  },
+  {
+    "name": "Assembly",
+    "key": "nasm",
+    "extensions": ["asm", "a51", "inc", "nasm"]
+  },
+  {
+    "name": "AutoHotkey",
+    "key": "autohotkey",
+    "extensions": ["ahk", "ahkl"]
+  },
+  {
+    "name": "AutoIt",
+    "key": "autoit",
+    "extensions": ["au3"]
+  },
+  {
+    "name": "Batchfile",
+    "key": "batch",
+    "extensions": ["bat", "cmd"]
+  },
+  {
+    "name": "Bison",
+    "key": "bison",
+    "extensions": ["bison"]
+  },
+  {
+    "name": "Brainfuck",
+    "key": "brainfuck",
+    "extensions": ["b", "bf"]
+  },
+  {
+    "name": "Bro",
+    "key": "bro",
+    "extensions": ["bro"]
+  },
+  {
+    "name": "C",
+    "key": "c",
+    "extensions": ["c", "cats", "h", "idc", "w"]
+  },
+  {
+    "name": "C#",
+    "key": "csharp",
+    "extensions": ["cs", "cake", "cshtml", "csx"]
+  },
+  {
+    "name": "C++",
+    "key": "cpp",
+    "extensions": ["cpp", "c++", "cc", "cp", "cxx", "h", "h++", "hh", "hpp", "hxx", "inc", "inl", "ipp", "tcc", "tpp"]
+  },
+  {
+    "name": "Clojure",
+    "key": "clojure",
+    "extensions": ["clj", "boot", "cl2", "cljc", "cljs", "cljs.hl", "cljscm", "cljx", "hic"],
+    "filenames": ["riemann.config"]
+  },
+  {
+    "name": "CoffeeScript",
+    "key": "coffeescript",
+    "extensions": ["coffee", "_coffee", "cake", "cjsx", "cson", "iced"],
+    "filenames": ["Cakefile"]
+  },
+  {
+    "name": "Common Lisp",
+    "key": "lisp",
+    "extensions": ["lisp", "asd", "cl", "l", "lsp", "ny", "podsl", "sexp"]
+  },
+  {
+    "name": "Crystal",
+    "key": "crystal",
+    "extensions": ["cr"]
+  },
+  {
+    "name": "CSS",
+    "key": "css",
+    "extensions": ["css"]
+  },
+  {
+    "name": "Cucumber",
+    "key": "gherkin",
+    "extensions": ["feature"]
+  },
+  {
+    "name": "D",
+    "key": "d",
+    "extensions": ["d", "di"]
+  },
+  {
+    "name": "Dart",
+    "key": "dart",
+    "extensions": ["dart"]
+  },
+  {
+    "name": "Diff",
+    "key": "diff",
+    "extensions": ["diff", "patch"]
+  },
+  {
+    "name": "Django/Jinja2",
+    "key": "django",
+    "extensions": ["mustache", "jinja"]
+  },
+  {
+    "name": "Dockerfile",
+    "key": "docker",
+    "extensions": ["dockerfile"],
+    "filenames": ["Dockerfile"]
+  },
+  {
+    "name": "Eiffel",
+    "key": "eiffel",
+    "extensions": ["e"]
+  },
+  {
+    "name": "Elixir",
+    "key": "elixir",
+    "extensions": ["ex", "exs"],
+    "filenames": ["mix.lock"]
+  },
+  {
+    "name": "Elm",
+    "key": "elm",
+    "extensions": ["elm"]
+  },
+  {
+    "name": "Erlang",
+    "key": "erlang",
+    "extensions": ["erl", "es", "escript", "hrl"],
+    "filenames": ["rebar.config", "rebar.config.lock", "rebar.lock"]
+  },
+  {
+    "name": "F#",
+    "key": "fsharp",
+    "extensions": ["fs", "fsi", "fsx"]
+  },
+  {
+    "name": "FORTRAN",
+    "key": "fortran",
+    "extensions": ["f90", "f", "f03", "f08", "f77", "f95", "for", "fpp"]
+  },
+  {
+    "name": "Game Maker Language",
+    "key": "gml",
+    "extensions": ["gml"]
+  },
+  {
+    "name": "GLSL",
+    "key": "glsl",
+    "extensions": ["glsl", "fp", "frag", "frg", "fs", "fshader", "geo", "geom", "glslv", "gshader", "shader", "vert", "vrx", "vshader"]
+  },
+  {
+    "name": "Go",
+    "key": "go",
+    "extensions": ["go"]
+  },
+  {
+    "name": "Groovy",
+    "key": "groovy",
+    "extensions": ["groovy", "grt", "gtpl", "gvy"]
+  },
+  {
+    "name": "Hack",
+    "key": "php",
+    "extensions": ["hh", "php"]
+  },
+  {
+    "name": "Haml",
+    "key": "haml",
+    "extensions": ["haml", "haml.deface"]
+  },
+  {
+    "name": "Handlebars",
+    "key": "handlebars",
+    "extensions": ["handlebars", "hbs"]
+  },
+  {
+    "name": "Haskell",
+    "key": "haskell",
+    "extensions": ["hs", "hsc"]
+  },
+  {
+    "name": "Haxe",
+    "key": "haxe",
+    "extensions": ["hx", "hxsl"]
+  },
+  {
+    "name": "Pug",
+    "key": "pug",
+    "extensions": ["pug"]
+  },
+  {
+    "name": "HTML+ERB",
+    "key": "erb",
+    "extensions": ["erb", "erb.deface"]
+  },
+  {
+    "name": "HTTP",
+    "key": "http",
+    "extensions": ["http"]
+  },
+  {
+    "name": "Inform 7",
+    "key": "inform7",
+    "extensions": ["ni", "i7x"]
+  },
+  {
+    "name": "INI",
+    "key": "ini",
+    "extensions": ["ini", "cfg", "prefs", "pro", "properties"]
+  },
+  {
+    "name": "Io",
+    "key": "io",
+    "extensions": ["io"]
+  },
+  {
+    "name": "J",
+    "key": "j",
+    "extensions": ["ijs"]
+  },
+  {
+    "name": "Java",
+    "key": "java",
+    "extensions": ["java"]
+  },
+  {
+    "name": "JavaScript",
+    "key": "javascript",
+    "extensions": [
+      "js",
+      "_js",
+      "bones",
+      "es6",
+      "frag",
+      "gs",
+      "jake",
+      "jsb",
+      "jscad",
+      "jsfl",
+      "jsm",
+      "jss",
+      "njs",
+      "pac",
+      "sjs",
+      "ssjs",
+      "sublime-build",
+      "sublime-commands",
+      "sublime-completions",
+      "sublime-keymap",
+      "sublime-macro",
+      "sublime-menu",
+      "sublime-mousemap",
+      "sublime-project",
+      "sublime-settings",
+      "sublime-theme",
+      "sublime-workspace",
+      "sublime_metrics",
+      "sublime_session",
+      "xsjs",
+      "xsjslib"
+    ],
+    "filenames": ["Jakefile"]
+  },
+  {
+    "name": "JSON",
+    "key": "json",
+    "extensions": ["json", "geojson", "lock", "topojson"],
+    "filenames": [".jshintrc", "composer.lock"]
+  },
+  {
+    "name": "Julia",
+    "key": "julia",
+    "extensions": ["jl"]
+  },
+  {
+    "name": "Kotlin",
+    "key": "kotlin",
+    "extensions": ["kt", "ktm", "kts"]
+  },
+  {
+    "name": "LaTeX",
+    "key": "latex",
+    "extensions": ["tex", "aux", "bbx", "bib", "cbx", "cls", "dtx", "ins", "lbx", "ltx", "mkii", "mkiv", "mkvi", "sty", "toc"]
+  },
+  {
+    "name": "Less",
+    "key": "less",
+    "extensions": ["less"]
+  },
+  {
+    "name": "Liquid",
+    "key": "liquid",
+    "extensions": ["liquid"]
+  },
+  {
+    "name": "LiveScript",
+    "key": "livescript",
+    "extensions": ["ls", "_ls"],
+    "filenames": ["Slakefile"]
+  },
+  {
+    "name": "LOLCODE",
+    "key": "lolcode",
+    "extensions": ["lol"]
+  },
+  {
+    "name": "Lua",
+    "key": "lua",
+    "extensions": ["lua", "fcgi", "nse", "pd_lua", "rbxs", "wlua"]
+  },
+  {
+    "name": "Makefile",
+    "key": "makefile",
+    "extensions": ["mak", "d", "mk"],
+    "filenames": ["GNUmakefile", "Kbuild", "Makefile", "Makefile.inc", "makefile"]
+  },
+  {
+    "name": "Markdown",
+    "key": "markdown",
+    "extensions": ["md", "markdown", "mkd", "mkdn", "mkdown", "ron"]
+  },
+  {
+    "name": "Matlab",
+    "key": "matlab",
+    "extensions": ["matlab", "m"]
+  },
+  {
+    "name": "Monkey",
+    "key": "monkey",
+    "extensions": ["monkey"]
+  },
+  {
+    "name": "Nginx",
+    "key": "nginx",
+    "extensions": ["nginxconf", "vhost"],
+    "filenames": ["nginx.conf"]
+  },
+  {
+    "name": "Nimrod",
+    "key": "nim",
+    "extensions": ["nim", "nimrod"]
+  },
+  {
+    "name": "Nix",
+    "key": "nix",
+    "extensions": ["nix"]
+  },
+  {
+    "name": "NSIS",
+    "key": "nsis",
+    "extensions": ["nsi", "nsh"]
+  },
+  {
+    "name": "Objective-C",
+    "key": "objectivec",
+    "extensions": ["m", "h"]
+  },
+  {
+    "name": "OCaml",
+    "key": "ocaml",
+    "extensions": ["ml", "eliom", "eliomi", "ml4", "mli", "mll", "mly"]
+  },
+  {
+    "name": "OpenCL",
+    "key": "opencl",
+    "extensions": ["cl", "opencl"]
+  },
+  {
+    "name": "Oz",
+    "key": "oz",
+    "extensions": ["oz"]
+  },
+  {
+    "name": "Pascal",
+    "key": "pascal",
+    "extensions": ["pas", "dfm", "dpr", "inc", "lpr", "pp"]
+  },
+  {
+    "name": "Perl",
+    "key": "perl",
+    "extensions": ["pl", "al", "cgi", "fcgi", "perl", "ph", "plx", "pm", "pod", "psgi", "t"]
+  },
+  {
+    "name": "PL/SQL",
+    "key": "plsql",
+    "extensions": ["pls", "pck", "pkb", "pks", "plb", "plsql", "sql"]
+  },
+  {
+    "name": "PLSQL",
+    "key": "sql",
+    "extensions": ["pls", "pck", "pkb", "pks", "plb", "plsql", "sql"]
+  },
+  {
+    "name": "PowerShell",
+    "key": "powershell",
+    "extensions": ["ps1", "psd1", "psm1"]
+  },
+  {
+    "name": "Processing",
+    "key": "processing",
+    "extensions": ["pde"]
+  },
+  {
+    "name": "Prolog",
+    "key": "prolog",
+    "extensions": ["pl", "pro", "prolog"]
+  },
+  {
+    "name": "Protocol Buffers",
+    "key": "protobuf",
+    "extensions": ["proto"]
+  },
+  {
+    "name": "Puppet",
+    "key": "puppet",
+    "extensions": ["pp"],
+    "filenames": ["Modulefile"]
+  },
+  {
+    "name": "Python",
+    "key": "python",
+    "extensions": ["py", "cgi", "fcgi", "gyp", "lmi", "pyde", "pyp", "pyt", "pyw", "tac", "wsgi", "xpy"],
+    "filenames": ["BUILD", "SConscript", "SConstruct", "Snakefile", "wscript"]
+  },
+  {
+    "name": "R",
+    "key": "r",
+    "extensions": ["r", "rd", "rsx"],
+    "filenames": [".Rprofile"]
+  },
+  {
+    "name": "React JSX",
+    "key": "jsx",
+    "extensions": ["jsx"]
+  },
+  {
+    "name": "React TSX",
+    "key": "tsx",
+    "extensions": ["tsx"]
+  },
+  {
+    "name": "Ren'Py",
+    "key": "renpy",
+    "extensions": ["rpy"]
+  },
+  {
+    "name": "reST (reStructuredText)",
+    "key": "rest",
+    "extensions": ["rst", "rest", "rest.txt", "rst.txt"]
+  },
+  {
+    "name": "Ruby",
+    "key": "ruby",
+    "extensions": [
+      "rb",
+      "builder",
+      "fcgi",
+      "gemspec",
+      "god",
+      "irbrc",
+      "jbuilder",
+      "mspec",
+      "pluginspec",
+      "podspec",
+      "rabl",
+      "rake",
+      "rbuild",
+      "rbw",
+      "rbx",
+      "ru",
+      "ruby",
+      "thor",
+      "watchr"
+    ],
+    "filenames": [
+      ".pryrc",
+      "Appraisals",
+      "Berksfile",
+      "Brewfile",
+      "Buildfile",
+      "Deliverfile",
+      "Fastfile",
+      "Gemfile",
+      "Gemfile.lock",
+      "Guardfile",
+      "Jarfile",
+      "Mavenfile",
+      "Podfile",
+      "Puppetfile",
+      "Snapfile",
+      "Thorfile",
+      "Vagrantfile",
+      "buildfile"
+    ]
+  },
+  {
+    "name": "Rust",
+    "key": "rust",
+    "extensions": ["rs"]
+  },
+  {
+    "name": "SAS",
+    "key": "sas",
+    "extensions": ["sas"]
+  },
+  {
+    "name": "Sass (Sass)",
+    "key": "sass",
+    "extensions": ["sass"]
+  },
+  {
+    "name": "Sass (Scss)",
+    "key": "scss",
+    "extensions": ["scss"]
+  },
+  {
+    "name": "Scala",
+    "key": "scala",
+    "extensions": ["scala", "sbt", "sc"]
+  },
+  {
+    "name": "Scheme",
+    "key": "scheme",
+    "extensions": ["scm", "sld", "sls", "sps", "ss"]
+  },
+  {
+    "name": "Shell",
+    "key": "bash",
+    "extensions": ["sh", "bash", "bats", "cgi", "command", "fcgi", "ksh", "tmux", "tool", "zsh"]
+  },
+  {
+    "name": "Smalltalk",
+    "key": "smalltalk",
+    "extensions": ["st", "cs"]
+  },
+  {
+    "name": "Smarty",
+    "key": "smarty",
+    "extensions": ["tpl"]
+  },
+  {
+    "name": "Stylus",
+    "key": "stylus",
+    "extensions": ["styl"]
+  },
+  {
+    "name": "Swift",
+    "key": "swift",
+    "extensions": ["swift"]
+  },
+  {
+    "name": "Tcl",
+    "key": "tcl",
+    "extensions": ["tcl", "adp", "tm"]
+  },
+  {
+    "name": "Textile",
+    "key": "textile",
+    "extensions": ["textile"]
+  },
+  {
+    "name": "Twig",
+    "key": "twig",
+    "extensions": ["twig"]
+  },
+  {
+    "name": "TypeScript",
+    "key": "typescript",
+    "extensions": ["ts"]
+  },
+  {
+    "name": "Verilog",
+    "key": "verilog",
+    "extensions": ["v", "veo"]
+  },
+  {
+    "name": "VHDL",
+    "key": "vhdl",
+    "extensions": ["vhdl", "vhd", "vhf", "vhi", "vho", "vhs", "vht", "vhw"]
+  },
+  {
+    "name": "VimL",
+    "key": "vim",
+    "extensions": ["vim"],
+    "filenames": [".nvimrc", ".vimrc", "_vimrc", "gvimrc", "nvimrc", "vimrc"]
+  },
+  {
+    "name": "Visual Basic",
+    "key": "visual-basic",
+    "extensions": ["vb", "bas", "cls", "frm", "frx", "vba", "vbhtml", "vbs"]
+  },
+  {
+    "name": "Visual Basic",
+    "key": "vbnet",
+    "extensions": ["vb", "bas", "cls", "frm", "frx", "vba", "vbhtml", "vbs"]
+  },
+  {
+    "name": "Wiki markup",
+    "key": "wiki",
+    "extensions": ["mediawiki", "wiki"]
+  },
+  {
+    "name": "Xojo (REALbasic)",
+    "key": "xojo",
+    "extensions": ["xojo_code", "xojo_menu", "xojo_report", "xojo_script", "xojo_toolbar", "xojo_window"]
+  },
+  {
+    "name": "XQuery",
+    "key": "xquery",
+    "extensions": ["xquery", "xq", "xql", "xqm", "xqy"]
+  },
+  {
+    "name": "YAML",
+    "key": "yaml",
+    "extensions": ["yml", "reek", "rviz", "syntax", "yaml", "yaml-tmlanguage"]
+  }
 ]
