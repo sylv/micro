@@ -31,13 +31,13 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 
 <table>
   <tr>
-    <td><img src="https://i.imgur.com/DDVsnci.png" title="Preview" alt="Preview"></td>
-    <td><img src="https://i.imgur.com/21rYxiu.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/YN5WXpz.png" title="Sign In Page" alt="Sign In Page"></td>
+    <td><img src="https://i.imgur.com/lw0FlYR.png" title="Dashboard" alt="Dashboard"></td>
    </tr> 
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/WJ72q4q.png" title="Preview" alt="Preview"></td>
-    <td><img src="https://i.imgur.com/8gjY8FK.png" title="Preview" alt="Preview"></td>
+    <td><img src="https://i.imgur.com/ybu4B8I.png" title="Upload Page" alt="Upload Page"></td>
+    <td><img src="https://i.imgur.com/Ij7PElj.png" title="Text Preview" alt="Text Preview"></td>
    </tr> 
   </tr>
 </table>
