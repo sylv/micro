@@ -7,4 +7,8 @@ const config = validateConfig(MicroConfig, data, {
   enableImplicitConversion: false,
 });
 
+if (config.rootHost.wildcard) {
+  throw new Error(`Root host cannot be a wildcard domain.`);
+}
+
 export { config };
