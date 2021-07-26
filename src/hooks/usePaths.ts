@@ -8,6 +8,7 @@ export const usePaths = () => {
     return {
       home: "/",
       dashboard: "/dashboard",
+      login: "/login",
       loading: !config.data && !config.error,
     };
   }
