@@ -5,7 +5,7 @@ import xbytes from "xbytes";
 
 export class MicroConfigPurge {
   @IsNumber()
-  @Transform(({ value }) => xbytes.parse(value).bytes)
+  @Transform(({ value }) => xbytes.parseSize(value))
   overLimit!: number;
 
   @IsNumber()

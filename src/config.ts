@@ -1,15 +1,10 @@
-import { plainToClass } from "class-transformer";
-import { validateSync } from "class-validator";
-import rc from "rc";
+import { loadConfig, validateConfig } from "@ryanke/venera";
 import { MicroConfig } from "./classes/MicroConfig";
 
-const raw = rc("micro", { uploadLimit: "50MB", ssl: true });
-const config = plainToClass(MicroConfig, raw);
-const errors = validateSync(config, { whitelist: true });
-if (errors.length) {
-  console.dir(config, { depth: null });
-  throw errors.toString();
-}
+const data = loadConfig("micro");
+const config = validateConfig(MicroConfig, data, {
+  // breaks with some of the whacky transforms we do
+  enableImplicitConversion: false,
+});
 
-if (config.rootHost.wildcard) throw new Error(`First host cannot be a wildcard domain.`);
 export { config };

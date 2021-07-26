@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsEmail, IsIn, IsNumber, IsOptional, IsString, IsUrl, NotEquals, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString, IsUrl, NotEquals, ValidateNested } from "class-validator";
 import fileType from "file-type";
 import path from "path";
 import xbytes from "xbytes";
@@ -18,8 +18,8 @@ export class MicroConfig {
   inquiries!: string;
 
   @IsNumber()
-  @Transform(({ value }) => xbytes.parse(value).bytes)
-  uploadLimit!: number;
+  @Transform(({ value }) => xbytes.parseSize(value))
+  uploadLimit = xbytes.parseSize("50MB");
 
   @IsString({ each: true })
   @IsIn(Array.from(fileType.mimeTypes.values()))
@@ -34,11 +34,12 @@ export class MicroConfig {
   restrictFilesToHost!: boolean;
 
   @ValidateNested()
-  @Type(() => MicroConfigPurge)
   @IsOptional()
+  @Type(() => MicroConfigPurge)
   purge?: MicroConfigPurge;
 
   @ValidateNested({ each: true })
+  @IsDefined()
   @Type(() => MicroHost)
   hosts!: MicroHost[];
 
