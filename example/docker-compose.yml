@@ -1,7 +1,7 @@
 version: "3"
 services:
   micro:
-    image: sylver/micro
+    image: sylver/micro:master
     restart: unless-stopped
     volumes:
       - $PWD/.microrc:/usr/src/micro/.microrc
