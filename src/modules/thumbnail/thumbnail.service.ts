@@ -13,13 +13,13 @@ export class ThumbnailService {
   private static readonly THUMBNAIL_TYPE = "image/webp";
   constructor(private storageService: StorageService, private fileService: FileService) {}
 
-  public async getThumbnail(fileId: string) {
+  async getThumbnail(fileId: string) {
     const thumbnail = await prisma.thumbnail.findFirst({ where: { id: fileId } });
     if (!thumbnail) throw new NotFoundException();
     return thumbnail;
   }
 
-  public async createThumbnail(file: File) {
+  async createThumbnail(file: File) {
     const start = Date.now();
     const supported = this.checkThumbnailSupport(file.type);
     if (!supported) {
@@ -47,7 +47,7 @@ export class ThumbnailService {
     return thumbnail;
   }
 
-  public async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
+  async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const existing = await prisma.thumbnail.findFirst({ where: { id: fileId } });
     if (existing) {
       return reply.header("X-Micro-Generated", "false").header("Content-Type", ThumbnailService.THUMBNAIL_TYPE).send(existing.data);
@@ -64,7 +64,7 @@ export class ThumbnailService {
       .send(thumbnail.data);
   }
 
-  public checkThumbnailSupport(type: string) {
+  checkThumbnailSupport(type: string) {
     return EMBEDDABLE_IMAGE_TYPES.includes(type);
   }
 }

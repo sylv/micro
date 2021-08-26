@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Container } from "../components/container";
 import { Spinner } from "../components/spinner";
-import { useConfig } from "../hooks/useConfig";
+import { useConfig } from "../hooks/use-config.hook";
 
 export default function Home() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function Home() {
         <p className="mb-2 text-gray-400">
           An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint. Sign in to download a
           generated ShareX configuration. You can view the source code{" "}
-          <a className="text-brand" href="https://github.com/sylv/micro" target="_blank">
+          <a className="text-brand" href="https://github.com/sylv/micro" target="_blank" rel="noreferrer">
             here.
           </a>
         </p>

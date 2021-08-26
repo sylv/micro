@@ -8,6 +8,7 @@ import getSizeTransform from "stream-size";
 import { promisify } from "util";
 import { ExifTransformer } from "../../classes/ExifTransformer";
 import { config } from "../../config";
+import { isObject } from "../../helpers/is-object.helper";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -15,8 +16,11 @@ const pipeline = promisify(stream.pipeline);
 export class StorageService {
   private readonly createdPaths = new Set();
 
-  public async create(stream: NodeJS.ReadableStream) {
+  async create(stream: NodeJS.ReadableStream) {
     // using .tmp in the upload dir solves cross-device link issues
+    // todo: using .tmp instead of the actual temp folder means if the process exits half way through an upload,
+    // that file will be left behind. we could just use `fs-extra` and `/tmp` but that isn't great either since it means
+    // we're copying the file which is slow, especially for large files.
     const uploadId = nanoid(6);
     const uploadPath = path.join(config.storagePath, ".tmp", `.micro${uploadId}`);
     await this.ensureDirectoryExists(uploadPath);
@@ -40,27 +44,26 @@ export class StorageService {
         hash: digest,
         size: sizeTransform.sizeInBytes,
       };
-    } catch (err) {
+    } catch (error: unknown) {
       await fs.promises.unlink(uploadPath).catch(() => false);
-      throw err;
+      throw error;
     }
   }
 
-  public async delete(hash: string) {
+  async delete(hash: string) {
     try {
       const filePath = this.getPathFromHash(hash);
       await fs.promises.unlink(filePath);
-    } catch (err) {
-      switch (err.code) {
-        case "ENOENT":
-          return;
-        default:
-          throw err;
+    } catch (error: unknown) {
+      if (isObject(error) && error.code === "ENOENT") {
+        return;
       }
+
+      throw error;
     }
   }
 
-  public createReadStream(hash: string, range?: { start?: number | null; end?: number | null } | null) {
+  createReadStream(hash: string, range?: { start?: number | null; end?: number | null } | null) {
     // todo: we should throw an error if the file doesn't exist, at the moment
     // the entire app will crash.
     const filePath = this.getPathFromHash(hash);

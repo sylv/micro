@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent, KeyboardEvent, useRef, useState } from "react";
-import { useToasts } from "../hooks/useToasts";
+import { useToasts } from "../hooks/use-toasts.helper";
 import { Button } from "./button/button";
 import { Input } from "./input/input";
 
@@ -21,8 +21,8 @@ export const LoginForm: FunctionComponent<LoginProps> = (props) => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const disabled = !username || !password || props.loading;
-  const onUsernameChange = (evt: ChangeEvent<HTMLInputElement>) => setUsername(evt.target.value.toLowerCase());
-  const onPasswordChange = (evt: ChangeEvent<HTMLInputElement>) => setPassword(evt.target.value);
+  const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => setUsername(event.target.value.toLowerCase());
+  const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
   const onContinue = () => {
     if (props.loading) return;
     if (!username) {
@@ -58,7 +58,7 @@ export const LoginForm: FunctionComponent<LoginProps> = (props) => {
     return props.onContinue({ username, password });
   };
 
-  const onKeyDown = (event: KeyboardEvent<any>) => {
+  const onKeyDown = (event: KeyboardEvent<unknown>) => {
     if (event.key !== "Enter") return;
     onContinue();
   };

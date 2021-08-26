@@ -20,8 +20,8 @@ export class AuthController {
 
   @Post("api/auth/login")
   @UseGuards(PasswordAuthGuard)
-  async login(@Req() req: FastifyRequest, @Res() reply: FastifyReply) {
-    const payload: JWTPayloadUser = { name: req.user.username, id: req.user.id, secret: req.user.secret };
+  async login(@Req() request: FastifyRequest, @Res() reply: FastifyReply) {
+    const payload: JWTPayloadUser = { name: request.user.username, id: request.user.id, secret: request.user.secret };
     const expiresAt = Date.now() + AuthController.ONE_YEAR;
     const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, payload, "1y");
     return reply

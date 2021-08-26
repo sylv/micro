@@ -22,20 +22,20 @@ export class DeletionService {
       const payload = await this.verifyToken(token);
       switch (payload.type) {
         case ContentType.FILE:
-          await this.fileService.deleteFile(payload.sub, undefined);
+          await this.fileService.deleteFile(payload.sub, null);
           break;
         case ContentType.LINK:
-          await this.linkService.deleteLink(payload.sub, undefined);
+          await this.linkService.deleteLink(payload.sub, null);
           break;
         default:
           throw new BadRequestException("Unknown deletion type.");
       }
-    } catch (e) {
-      if (e instanceof NotFoundException) {
+    } catch (error: unknown) {
+      if (error instanceof NotFoundException) {
         throw new BadRequestException("That content has already been deleted.");
       }
 
-      throw e;
+      throw error;
     }
   }
 

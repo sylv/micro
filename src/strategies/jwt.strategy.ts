@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { FastifyRequest } from "fastify";
@@ -19,8 +20,8 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       audience: TokenType.USER,
       ignoreExpiration: false,
       secretOrKey: config.secret,
-      jwtFromRequest: (req: FastifyRequest<{ Querystring: { token?: string } }>) =>
-        req.cookies.token ?? req.query.token ?? req.headers["authorization"],
+      jwtFromRequest: (request: FastifyRequest<{ Querystring: { token?: string } }>) =>
+        request.cookies.token ?? request.query.token ?? request.headers["authorization"],
     });
   }
 

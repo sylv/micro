@@ -15,7 +15,9 @@
     "build:api": "tsup",
     "build": "pnpm build:clean && pnpm build:web && pnpm build:api",
     "start": "cross-env NODE_ENV=production node .next/api/main.js",
-    "lint": "prettier --write src"
+    "lint": "eslint --fix ./src/**/*.{ts,tsx,js}",
+    "generate": "prisma generate",
+    "postinstall": "pnpm run generate"
   },
   "dependencies": {
     "@anatine/esbuild-decorators": "^0.2.12",
@@ -71,6 +73,7 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "@ryanke/eslint-config": "^1.0.1",
     "@types/bcrypt": "^5.0.0",
     "@types/luxon": "^1.27.1",
     "@types/mime-types": "^2.1.0",
@@ -81,6 +84,11 @@
     "@types/rc": "^1.1.0",
     "@types/react": "^17.0.15",
     "@types/sharp": "^0.28.4",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-unicorn": "^35.0.0",
     "husky": "^7.0.1",
     "prettier": "^2.3.2",
     "prisma": "^2.27.0",

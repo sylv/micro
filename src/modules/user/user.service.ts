@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
 import { Permission } from "../../constants";
-import { generateContentId } from "../../helpers/generateContentId";
+import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { prisma } from "../../prisma";
 import { JWTPayloadInvite } from "../invite/invite.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -10,8 +10,8 @@ import { UserFilesQueryDto } from "./dto/user-files-query.dto";
 
 @Injectable()
 export class UserService {
-  async getUser(id: string, secret = false) {
-    const user = await prisma.user.findFirst({
+  getUser(id: string, secret = false) {
+    return prisma.user.findFirst({
       where: { id },
       select: {
         id: true,
@@ -22,16 +22,13 @@ export class UserService {
         tags: true,
       },
     });
-
-    if (!user) throw new NotFoundException(`Invalid user ID`);
-    return user;
   }
 
   getUserFiles(userId: string, dto?: UserFilesQueryDto) {
     return prisma.file.findMany({
       take: dto?.take ?? 24,
       skip: dto?.cursor ? 1 : 0,
-      cursor: dto?.cursor ? { id: dto?.cursor } : undefined,
+      cursor: dto?.cursor ? { id: dto.cursor } : undefined,
       orderBy: { createdAt: "desc" },
       where: {
         ownerId: userId,
@@ -63,15 +60,15 @@ export class UserService {
     return user;
   }
 
-  public checkPermissions(permissions: Permission | number, permission: Permission | number) {
+  checkPermissions(permissions: Permission | number, permission: Permission | number) {
     return (permissions & permission) === permission;
   }
 
-  public addPermissions(permissions: Permission | number, permission: Permission | number) {
+  addPermissions(permissions: Permission | number, permission: Permission | number) {
     permissions |= permission;
   }
 
-  public clearPermissions(permissions: Permission | number, permission: Permission | number) {
+  clearPermissions(permissions: Permission | number, permission: Permission | number) {
     permissions &= ~permission;
   }
 }

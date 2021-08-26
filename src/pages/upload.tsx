@@ -10,10 +10,11 @@ import { PageLoader } from "../components/page-loader";
 import { Spinner } from "../components/spinner";
 import { Title } from "../components/title";
 import { Endpoints } from "../constants";
-import { http } from "../helpers/http";
-import { useHost } from "../hooks/useHost";
-import { useToasts } from "../hooks/useToasts";
-import { useUser } from "../hooks/useUser";
+import { getErrorMessage } from "../helpers/get-error-message.helper";
+import { http } from "../helpers/http.helper";
+import { useHost } from "../hooks/use-host.hook";
+import { useToasts } from "../hooks/use-toasts.helper";
+import { useUser } from "../hooks/use-user.helper";
 import { GetHostsData } from "../types";
 
 export default function Upload() {
@@ -30,7 +31,7 @@ export default function Upload() {
 
   useEffect(() => {
     if (user.error) router.replace("/");
-  }, [user.data]);
+  }, [user.error, router]);
 
   const onDragEvent =
     (entering?: boolean): DragEventHandler =>
@@ -83,8 +84,9 @@ export default function Upload() {
       } else {
         router.push(route);
       }
-    } catch (err) {
-      setToast({ error: true, text: err.message });
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) ?? "An unknown error occured.";
+      setToast({ error: true, text: message });
     } finally {
       setFile(null);
       setUploading(false);

@@ -7,8 +7,9 @@ import { PageLoader } from "../../components/page-loader";
 import { Time } from "../../components/time";
 import { Title } from "../../components/title";
 import { Endpoints } from "../../constants";
-import { http } from "../../helpers/http";
-import { useToasts } from "../../hooks/useToasts";
+import { getErrorMessage } from "../../helpers/get-error-message.helper";
+import { http } from "../../helpers/http.helper";
+import { useToasts } from "../../hooks/use-toasts.helper";
 import { GetInviteData } from "../../types";
 import Error from "../_error";
 
@@ -44,8 +45,9 @@ export default function Invite() {
 
       Router.push("/login");
       setToast({ text: "Account created successfully. Please sign in." });
-    } catch (err) {
-      setToast({ error: true, text: err.message });
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) ?? "An unknown error occured.";
+      setToast({ error: true, text: message });
     } finally {
       setLoading(false);
     }
@@ -53,7 +55,7 @@ export default function Invite() {
 
   return (
     <Container centerY>
-      <Title>You're Invited</Title>
+      <Title>You&apos;re Invited</Title>
       <h1 className="text-4xl font-bold text-center md:hidden">Sign Up</h1>
       <p className="mt-2 mb-2 text-xs text-center text-gray-600 md:hidden">
         This invite will expire <Time date={expiry} />.
@@ -65,7 +67,7 @@ export default function Invite() {
         <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
           <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>
           <p>
-            You've been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an account, then
+            You have been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an account, then
             download the ShareX config and start uploading with your favourite vanity domain.
           </p>
           <p className="mt-2 text-xs text-gray-600">

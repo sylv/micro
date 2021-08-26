@@ -15,7 +15,7 @@ export const Time: FunctionComponent<TimeProps> = (props) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setRelative(time.toRelative());
-    }, 60000);
+    }, 60_000);
 
     return () => {
       clearInterval(timer);

@@ -19,8 +19,8 @@ import xbytes from "xbytes";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
 import { EMBEDDABLE_IMAGE_TYPES } from "../../constants";
-import { contentIdLength, generateContentId } from "../../helpers/generateContentId";
-import { getStreamType } from "../../helpers/getStreamType";
+import { contentIdLength, generateContentId } from "../../helpers/generate-content-id.helper";
+import { getStreamType } from "../../helpers/get-stream-type.helper";
 import { prisma } from "../../prisma";
 import { HostsService } from "../hosts/hosts.service";
 import { StorageService } from "../storage/storage.service";
@@ -31,15 +31,15 @@ export class FileService implements OnApplicationBootstrap {
   private readonly logger = new Logger(FileService.name);
   constructor(private storageService: StorageService, private hostsService: HostsService) {}
 
-  public cleanFileKey(key: string): { id: string; ext?: string } {
+  cleanFileKey(key: string): { id: string; ext?: string } {
     const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
     if (!groups) throw new BadRequestException("Invalid file key");
     return groups as any;
   }
 
-  public async getFile(id: string, host: MicroHost) {
+  async getFile(id: string, host: MicroHost) {
     const file = await prisma.file.findFirst({ where: { id } });
-    if (!file) throw new NotFoundException();
+    if (!file) throw new NotFoundException("Unknown file.");
     if (!this.hostsService.checkHostCanSendFile(file, host)) {
       throw new NotFoundException("Your file is in another castle.");
     }
@@ -50,7 +50,7 @@ export class FileService implements OnApplicationBootstrap {
     });
   }
 
-  public async deleteFile(id: string, ownerId: string | undefined) {
+  async deleteFile(id: string, ownerId: string | null) {
     const file = await prisma.file.findFirst({ where: { id } });
     if (!file) throw new NotFoundException();
     if (ownerId && file.ownerId !== ownerId) {
@@ -69,7 +69,7 @@ export class FileService implements OnApplicationBootstrap {
     await prisma.$executeRaw`DELETE FROM files WHERE id = ${file.id}`;
   }
 
-  public async createFile(
+  async createFile(
     multipart: Multipart,
     request: FastifyRequest,
     owner: { id: string; tags?: string[] },
@@ -107,7 +107,7 @@ export class FileService implements OnApplicationBootstrap {
     return file;
   }
 
-  public async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
+  async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const file = await this.getFile(fileId, request.host);
     const range = request.headers["content-range"] ? contentRange.parse(request.headers["content-range"]) : null;
     const displayName = this.getFileDisplayName(file);
@@ -123,13 +123,13 @@ export class FileService implements OnApplicationBootstrap {
       .send(stream);
   }
 
-  public getFileDisplayName(file: Pick<File, "type" | "id" | "name">) {
+  getFileDisplayName(file: Pick<File, "type" | "id" | "name">) {
     if (!file.id) throw new Error("Missing file ID");
     const extension = mimeType.extension(file.type);
     return file.name ? file.name : extension ? `${file.id}.${extension}` : file.id;
   }
 
-  public getFileUrls(file: Pick<File, "id" | "type">) {
+  getFileUrls(file: Pick<File, "id" | "type">) {
     const extension = mimeType.extension(file.type);
     const supportsThumbnail = EMBEDDABLE_IMAGE_TYPES.includes(file.type);
     const view = `/f/${file.id}`;
@@ -140,7 +140,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   @Cron(CronExpression.EVERY_HOUR)
-  public async purgeFiles() {
+  async purgeFiles() {
     if (!config.purge) return;
     const createdBefore = new Date(Date.now() - config.purge.afterTime);
     const files = await prisma.file.findMany({
@@ -155,7 +155,7 @@ export class FileService implements OnApplicationBootstrap {
     for (const file of files) {
       const size = xbytes(file.size, { space: false });
       const age = DateTime.fromJSDate(file.createdAt).toRelative();
-      await this.deleteFile(file.id, undefined);
+      await this.deleteFile(file.id, null);
       this.logger.log(`Purging ${file.id} (${size}, ${age})`);
     }
 
@@ -164,7 +164,7 @@ export class FileService implements OnApplicationBootstrap {
     }
   }
 
-  public onApplicationBootstrap() {
+  onApplicationBootstrap() {
     if (config.purge) {
       const size = xbytes(config.purge.overLimit, { space: false });
       const age = DateTime.local().minus(config.purge.afterTime).toRelative();

@@ -17,19 +17,19 @@ export interface TokenPayload {
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  signToken<PayloadType extends {}>(type: TokenType, payload: PayloadType, expiresIn: string = "1y") {
+  signToken<PayloadType extends Record<string, any>>(type: TokenType, payload: PayloadType, expiresIn = "1y") {
     return this.jwtService.signAsync(payload, {
       audience: type,
       expiresIn: expiresIn,
     });
   }
 
-  async verifyToken<Payload extends {}>(type: TokenType, token: string): Promise<Payload & TokenPayload> {
+  async verifyToken<Payload extends Record<string, any>>(type: TokenType, token: string): Promise<Payload & TokenPayload> {
     try {
       return await this.jwtService.verifyAsync<Payload & TokenPayload>(token, {
         audience: type,
       });
-    } catch (e) {
+    } catch {
       throw new BadRequestException("Token validation failed.");
     }
   }

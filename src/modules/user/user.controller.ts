@@ -24,7 +24,9 @@ export class UserController {
   @Get("api/user")
   @UseGuards(JWTAuthGuard)
   async getUser(@UserId() userId: string) {
-    return this.userService.getUser(userId);
+    const user = await this.userService.getUser(userId);
+    if (!user) throw new ForbiddenException("Unknown user.");
+    return user;
   }
 
   @Post("/api/user")
@@ -49,6 +51,7 @@ export class UserController {
   @UseGuards(JWTAuthGuard)
   async getUserToken(@UserId() userId: string) {
     const user = await this.userService.getUser(userId, true);
+    if (!user) throw new ForbiddenException("Unknown user.");
     const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
       name: user.username,
       secret: user.secret,
@@ -72,6 +75,7 @@ export class UserController {
   @UseGuards(JWTAuthGuard)
   async deleteUser(@Param("id") targetId: string) {
     const target = await this.userService.getUser(targetId);
+    if (!target) throw new BadRequestException("Unknown target.");
     if (this.userService.checkPermissions(target.permissions, Permission.ADMINISTRATOR)) {
       throw new ForbiddenException("You can't do that to that user.");
     }
@@ -86,6 +90,7 @@ export class UserController {
   @UseGuards(JWTAuthGuard)
   async addTagToUser(@Param("id") targetId: string, @Param("tag") tag: string) {
     const target = await this.userService.getUser(targetId);
+    if (!target) throw new BadRequestException("Unknown target.");
     if (target.tags.includes(tag.toLowerCase())) {
       throw new BadRequestException("User already has that tag.");
     }
@@ -93,7 +98,7 @@ export class UserController {
     await prisma.user.update({
       where: { id: target.id },
       data: {
-        tags: target.tags.concat(tag.toLowerCase()),
+        tags: [...target.tags, tag.toLowerCase()],
       },
     });
 
@@ -106,6 +111,7 @@ export class UserController {
   @UseGuards(JWTAuthGuard)
   async removeTagFromUser(@Param("id") targetId: string, @Param("tag") tag: string) {
     const target = await this.userService.getUser(targetId);
+    if (!target) throw new BadRequestException("Unknown target.");
     if (!target.tags.includes(tag)) {
       throw new BadRequestException("User does not have that tag.");
     }

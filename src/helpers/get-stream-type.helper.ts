@@ -14,7 +14,7 @@ const EXT_TEXT_TYPE = "text/plain";
 
 async function readFirstBytes(stream: PassThrough) {
   let count = 0;
-  let chunks: any[] = [];
+  const chunks: any[] = [];
   for await (const chunk of stream) {
     count += chunk.length;
     chunks.push(chunk);
@@ -33,9 +33,9 @@ export async function getStreamType(fileName: string, stream: PassThrough): Prom
     return result?.mime ?? DEFAULT_TYPE;
   }
 
-  const ext = path.extname(fileName).slice(1);
-  if (ext) {
-    const type = EXT_TEXT_MAP.has(ext) ? EXT_TEXT_TYPE : mimeType.lookup(ext) || undefined;
+  const extension = path.extname(fileName).slice(1);
+  if (extension) {
+    const type = EXT_TEXT_MAP.has(extension) ? EXT_TEXT_TYPE : mimeType.lookup(extension) || undefined;
     return type;
   }
 }

@@ -7,7 +7,7 @@ import { FileEmbedImage } from "./file-embed-image";
 import { FileEmbedVideo } from "./file-embed-video";
 
 export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
-  const isText = useMemo(() => FileEmbedText.embeddable(props.file), [props.file.id]);
+  const isText = useMemo(() => FileEmbedText.embeddable(props.file), [props.file]);
   const isImage = useMemo(() => FileEmbedImage.embeddable(props.file.type), [props.file.type]);
   const isVideo = useMemo(() => FileEmbedVideo.embeddable(props.file.type), [props.file.type]);
 

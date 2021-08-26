@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Endpoints } from "../../constants";
-import { http } from "../../helpers/http";
+import { http } from "../../helpers/http.helper";
 import { GetUserFilesData } from "../../types";
 import { Card } from "../card";
 import { Spinner } from "../spinner";
@@ -24,7 +24,7 @@ export const FileList: FunctionComponent = () => {
       const body = (await response.json()) as GetUserFilesData;
       const isFullPage = body.length === PER_PAGE;
       setCursor(body[0] && isFullPage ? body[body.length - 1].id : null);
-      setFiles((files) => files.concat(body));
+      setFiles((files) => [...files, ...body]);
     } finally {
       setLoading(false);
     }
@@ -32,10 +32,10 @@ export const FileList: FunctionComponent = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   if (!files[0] && !loading) {
-    return <Card>You haven't uploaded anything yet. Once you do, files will appear here.</Card>;
+    return <Card>You have not uploaded anything yet. Once you do, files will appear here.</Card>;
   }
 
   return (

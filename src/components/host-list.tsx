@@ -2,7 +2,7 @@ import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
 import { Fragment, FunctionComponent, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "react-feather";
-import { useOnClickOutside } from "../hooks/useOnClickOutside";
+import { useOnClickOutside } from "../hooks/use-on-click-outside.helper";
 import dropdownStyle from "./dropdown/dropdown.module.css";
 import { InputContainer } from "./input/input-container";
 import inputStyle from "./input/input.module.css";
@@ -17,14 +17,14 @@ export interface HostListProps {
 }
 
 // todo: this is kind of hacked together until
-// https://github.com/tailwindlabs/headlessui/issues/181 is implemented
+// https://github.com/tailwindlabs/headlessui/pull/648 is merged
 export const HostList: FunctionComponent<HostListProps> = (props) => {
   const [open, setOpen] = useState(false);
   const [selectedHosts, setSelectedHosts] = useState<string[]>([props.hosts[0]]);
-  const ref = useRef<HTMLDivElement>(null);
+  const reference = useRef<HTMLDivElement>(null);
   const Icon = open ? ChevronUp : ChevronDown;
 
-  useOnClickOutside(ref, () => setOpen(false));
+  useOnClickOutside(reference, () => setOpen(false));
 
   const isSelected = (value: string) => selectedHosts.includes(value);
   const onChange = (value: string) => {
@@ -40,8 +40,8 @@ export const HostList: FunctionComponent<HostListProps> = (props) => {
   };
 
   return (
-    <div ref={ref} className={classNames(dropdownStyle.dropdown)}>
-      <Listbox as={Fragment} value={selectedHosts as any} onChange={onChange}>
+    <div ref={reference} className={classNames(dropdownStyle.dropdown)}>
+      <Listbox as={Fragment} value={selectedHosts as unknown as string} onChange={onChange}>
         <InputContainer className="cursor-pointer" onClick={() => setOpen(!open)} prefix={props.prefix} suffix={props.suffix}>
           <div className={classNames(inputStyle.input, "flex items-center justify-between select-none overflow-hidden")}>
             <span className="truncate">{selectedHosts.join(", ")}</span>

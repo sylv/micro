@@ -1,4 +1,4 @@
-import { useConfig } from "./useConfig";
+import { useConfig } from "./use-config.hook";
 
 export const useHost = () => {
   const config = useConfig(false);

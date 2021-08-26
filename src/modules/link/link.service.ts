@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Link } from "@prisma/client";
 import { MicroHost } from "../../classes/MicroHost";
-import { generateContentId } from "../../helpers/generateContentId";
+import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { prisma } from "../../prisma";
 import { HostsService } from "../hosts/hosts.service";
 
@@ -31,7 +31,7 @@ export class LinkService {
     return link;
   }
 
-  async deleteLink(id: string, ownerId: string | undefined) {
+  async deleteLink(id: string, ownerId: string | null) {
     const link = await prisma.link.findFirst({ where: { id } });
     if (!link) throw new NotFoundException();
     if (ownerId && link.ownerId !== ownerId) {
@@ -41,7 +41,7 @@ export class LinkService {
     await prisma.link.delete({ where: { id: link.id } });
   }
 
-  public getLinkUrls(link: Pick<Link, "id">) {
+  getLinkUrls(link: Pick<Link, "id">) {
     const direct = `/s/${link.id}`;
     const metadata = `/api/link/${link.id}`;
     return { direct, metadata };

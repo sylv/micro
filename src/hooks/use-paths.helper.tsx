@@ -1,5 +1,5 @@
-import { useConfig } from "./useConfig";
-import { useHost } from "./useHost";
+import { useConfig } from "./use-config.hook";
+import { useHost } from "./use-host.hook";
 
 export const usePaths = () => {
   const config = useConfig(false);
@@ -13,7 +13,8 @@ export const usePaths = () => {
     };
   }
 
-  const rootHost = config.data.hosts.find((host) => host.root)!;
+  const rootHost = config.data.hosts.find((host) => host.root);
+  if (!rootHost) throw new Error(`Expected root host was missing.`);
   const rootIsCurrent = currentHost.data.key === rootHost.data.key;
   return {
     home: currentHost.data.redirect ?? rootIsCurrent ? "/" : rootHost.data.url,

@@ -4,7 +4,7 @@ import React from "react";
 import { SWRConfig } from "swr";
 import { Header } from "../components/header/header";
 import { Title } from "../components/title";
-import { fetcher } from "../helpers/fetcher";
+import { fetcher } from "../helpers/fetcher.helper";
 import { ToastWrapper } from "../components/toast/toast-wrapper";
 import "../styles/globals.css";
 

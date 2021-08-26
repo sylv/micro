@@ -10,7 +10,7 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   suffix?: React.ReactNode;
 }
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>((props, ref) => {
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
   return (
     <InputContainer prefix={props.prefix} suffix={props.suffix} className={props.className}>
       <div className="relative inline-flex w-full select-none">

@@ -2,13 +2,9 @@ import { BadRequestException, ForbiddenException } from "@nestjs/common";
 import normalizeUrl from "normalize-url";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
-import { randomItem } from "../../helpers/randomItem";
+import { randomItem } from "../../helpers/random-item.helper";
 
 export class HostsService {
-  static normaliseHostUrl(url: string) {
-    return normalizeUrl(url, { stripProtocol: true, stripWWW: true }).toLowerCase();
-  }
-
   formatHostUrl(url: string, username: string, path?: string | null) {
     const formatted = url.replace("{{username}}", username);
     if (path) return formatted + path;
@@ -34,9 +30,9 @@ export class HostsService {
 
   getHosts(tags: string[] | undefined): Array<{ authorised: boolean; root: boolean; data: MicroHost }> {
     const parsed = [];
-    for (let i = 0; i < config.hosts.length; i++) {
-      const data = config.hosts[i];
-      const root = i === 0;
+    for (let index = 0; index < config.hosts.length; index++) {
+      const data = config.hosts[index];
+      const root = index === 0;
       const authorised = data.tags.every((tag) => tags?.includes(tag));
       parsed.push({ root, authorised, data });
     }
@@ -44,7 +40,7 @@ export class HostsService {
     return parsed;
   }
 
-  public checkHostCanSendFile(file: { host: string | null }, host: MicroHost) {
+  checkHostCanSendFile(file: { host: string | null }, host: MicroHost) {
     // todo: if host.wildcard, we should check to make sure the file owner
     // matches the given username in the request url. so uploads to
     // sylver.is-fucking.gay can't be accessed on cyk.is-fucking.gay and vice versa
@@ -56,5 +52,9 @@ export class HostsService {
     // root host can serve all files.
     if (host.key === config.rootHost.key) return true;
     return false;
+  }
+
+  static normaliseHostUrl(url: string) {
+    return normalizeUrl(url, { stripProtocol: true, stripWWW: true }).toLowerCase();
   }
 }

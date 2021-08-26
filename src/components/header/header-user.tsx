@@ -1,7 +1,8 @@
 import { FunctionComponent } from "react";
-import { usePaths } from "../../hooks/usePaths";
-import { useToasts } from "../../hooks/useToasts";
-import { logout } from "../../hooks/useUser";
+import { getErrorMessage } from "../../helpers/get-error-message.helper";
+import { usePaths } from "../../hooks/use-paths.helper";
+import { useToasts } from "../../hooks/use-toasts.helper";
+import { logout } from "../../hooks/use-user.helper";
 import { Dropdown } from "../dropdown/dropdown";
 import { DropdownDivider } from "../dropdown/dropdown-divider";
 import { DropdownTab } from "../dropdown/dropdown-tab";
@@ -29,9 +30,10 @@ export const HeaderUser: FunctionComponent<HeaderUserProps> = (props) => {
           onClick={async () => {
             try {
               await logout();
-            } catch (e) {
+            } catch (error: unknown) {
+              const message = getErrorMessage(error) ?? "Failed to sign-out.";
               setToast({
-                text: e.message,
+                text: message,
                 error: true,
               });
             }

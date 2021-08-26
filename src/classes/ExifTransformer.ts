@@ -18,7 +18,7 @@ export class ExifTransformer extends Transform {
   );
 
   private remainingBytes?: number;
-  private pending: Array<Buffer>;
+  private pending: Buffer[];
 
   constructor(options?: TransformOptions) {
     super(options);
@@ -38,11 +38,11 @@ export class ExifTransformer extends Transform {
     callback();
   }
 
-  _scrub(atEnd: Boolean, chunk?: Buffer) {
+  _scrub(atEnd: boolean, chunk?: Buffer) {
     let pendingChunk = chunk ? Buffer.concat([...this.pending, chunk]) : Buffer.concat(this.pending);
     // currently haven't detected an app1 marker
     if (this.remainingBytes === undefined) {
-      var app1Start = pendingChunk.indexOf(ExifTransformer.app1Marker);
+      const app1Start = pendingChunk.indexOf(ExifTransformer.app1Marker);
       // no app1 in the current pendingChunk
       if (app1Start === -1) {
         // if last byte is ff, wait for more

@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { FunctionComponent } from "react";
 import { Crop } from "react-feather";
-import { usePaths } from "../../hooks/usePaths";
-import { useUser } from "../../hooks/useUser";
+import { usePaths } from "../../hooks/use-paths.helper";
+import { useUser } from "../../hooks/use-user.helper";
 import { Button } from "../button/button";
 import { Container } from "../container";
 import { Link } from "../link";
@@ -20,7 +20,7 @@ export const Header: FunctionComponent = () => {
     <Container>
       <nav className={classes}>
         <div className="flex items-center">
-          <Link href={paths?.home} className="flex">
+          <Link href={paths.home} className="flex">
             <Crop className="mr-2 text-brand" /> micro
           </Link>
         </div>

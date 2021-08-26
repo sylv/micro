@@ -1,9 +1,9 @@
-import { http } from "./http";
+import { http } from "./http.helper";
 
-export async function downloadUrl(url: string, name: string = ""): Promise<void> {
+export async function downloadUrl(url: string, name = ""): Promise<void> {
   if (url.startsWith("blob") || url.includes(window.location.hostname) || url.startsWith("/")) {
     // this only works on same-origin urls
-    var link = document.createElement("a");
+    const link = document.createElement("a");
     link.href = url;
     link.download = name;
     link.click();
@@ -16,7 +16,7 @@ export async function downloadUrl(url: string, name: string = ""): Promise<void>
   return downloadUrl(URL.createObjectURL(blob), name);
 }
 
-export function downloadFile(name: string, content: string) {
+export function downloadFile(name: string, content: string): Promise<void> {
   const file = new Blob([content], { type: "text/plain" });
   return downloadUrl(URL.createObjectURL(file), name);
 }

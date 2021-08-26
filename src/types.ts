@@ -11,7 +11,7 @@ import type { UserController } from "./modules/user/user.controller";
 export type { File, User, Link };
 export type RenderableReply = RenderableResponse & FastifyReply;
 export type Await<T> = T extends {
-  then(onfulfilled?: (value: infer U) => unknown): unknown;
+  then: (onfulfilled?: (value: infer U) => unknown) => unknown;
 }
   ? U
   : T;

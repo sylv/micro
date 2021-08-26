@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
 import { Download as DownloadIcon } from "react-feather";
-import { downloadFile } from "../helpers/download";
-import { generateConfig } from "../helpers/generateConfig";
-import { useUser } from "../hooks/useUser";
+import { downloadFile } from "../helpers/download.helper";
+import { generateConfig } from "../helpers/generate-config.helper";
+import { useUser } from "../hooks/use-user.helper";
 import { Button } from "./button/button";
 import { Dropdown } from "./dropdown/dropdown";
 import { DropdownTab } from "./dropdown/dropdown-tab";
@@ -24,7 +24,7 @@ export const ShareXButton: FunctionComponent<ShareXButtonProps> = (props) => {
 
   return (
     <Dropdown
-      className="right-0 left-0 w-auto"
+      className="left-0 right-0 w-auto"
       trigger={
         <Button prefix={<DownloadIcon />} disabled={disabled}>
           ShareX Config

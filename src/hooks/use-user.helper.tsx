@@ -2,7 +2,7 @@ import Router from "next/router";
 import useSWR, { mutate } from "swr";
 import { LoginData } from "../components/login-form";
 import { Endpoints } from "../constants";
-import { http } from "../helpers/http";
+import { http } from "../helpers/http.helper";
 import { GetUserData } from "../types";
 
 /**
@@ -32,7 +32,7 @@ export async function logout() {
 }
 
 export const useUser = () => {
-  const user = useSWR<GetUserData>(Endpoints.USER, { refreshInterval: 60000 });
+  const user = useSWR<GetUserData>(Endpoints.USER, { refreshInterval: 60_000 });
   const loading = (!user.data && !user.error) || user.isValidating;
 
   return {

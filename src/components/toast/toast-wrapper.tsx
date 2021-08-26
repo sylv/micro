@@ -12,7 +12,7 @@ export const ToastWrapper: FunctionComponent = (props) => {
   // https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
   const [toasts, setToasts] = useState<Array<ToastProps & { id: string; timer: NodeJS.Timeout }>>([]);
   const setToast = (toast: ToastProps) => {
-    if (toasts.find((existing) => existing.text === toast.text)) {
+    if (toasts.some((existing) => existing.text === toast.text)) {
       // skip duplicate cards
       return;
     }

@@ -22,7 +22,7 @@ export class MicroConfig {
   uploadLimit = xbytes.parseSize("50MB");
 
   @IsString({ each: true })
-  @IsIn(Array.from(fileType.mimeTypes.values()))
+  @IsIn([...fileType.mimeTypes.values()])
   @IsOptional()
   allowTypes?: string[];
 

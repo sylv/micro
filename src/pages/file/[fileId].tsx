@@ -9,9 +9,10 @@ import { PageLoader } from "../../components/page-loader";
 import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
 import { Endpoints } from "../../constants";
-import { downloadUrl } from "../../helpers/download";
-import { useToasts } from "../../hooks/useToasts";
-import { useUser } from "../../hooks/useUser";
+import { downloadUrl } from "../../helpers/download.helper";
+import { getErrorMessage } from "../../helpers/get-error-message.helper";
+import { useToasts } from "../../hooks/use-toasts.helper";
+import { useUser } from "../../hooks/use-user.helper";
 import { GetFileData } from "../../types";
 import Error from "../_error";
 
@@ -43,8 +44,9 @@ export default function File() {
   const downloadFile = async () => {
     try {
       await downloadUrl(file.data!.urls.direct, file.data!.displayName);
-    } catch (err) {
-      setToast({ error: true, text: err.message });
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) ?? "An unknown error occurred";
+      setToast({ error: true, text: message });
     }
   };
 
@@ -64,8 +66,9 @@ export default function File() {
       setDeleting(false);
       setToast({ text: `Deleted "${file.data.displayName}"` });
       router.replace("/dashboard");
-    } catch (err) {
-      setToast({ error: true, text: err.message });
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) ?? "An unknown error occurred";
+      setToast({ error: true, text: message });
     } finally {
       setDeleting(false);
     }

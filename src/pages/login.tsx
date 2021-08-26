@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import { LoginData, LoginForm } from "../components/login-form";
 import { Title } from "../components/title";
-import { useToasts } from "../hooks/useToasts";
-import { login, useUser } from "../hooks/useUser";
+import { getErrorMessage } from "../helpers/get-error-message.helper";
+import { HTTPError } from "../helpers/http.helper";
+import { useToasts } from "../hooks/use-toasts.helper";
+import { login, useUser } from "../hooks/use-user.helper";
 
 export default function Login() {
   const setToast = useToasts();
@@ -23,9 +25,13 @@ export default function Login() {
     try {
       setLoading(true);
       await login(data);
-    } catch (err) {
-      if (err.status === 401) setToast({ error: true, text: "Your username or password was incorrect." });
-      else setToast({ error: true, text: err.message });
+    } catch (error: unknown) {
+      if (error instanceof HTTPError && error.status === 401) {
+        setToast({ error: true, text: "Your username or password was incorrect." });
+      } else {
+        const message = getErrorMessage(error) ?? "An unknown error occured.";
+        setToast({ error: true, text: message });
+      }
     } finally {
       setLoading(false);
     }

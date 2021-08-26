@@ -1,4 +1,9 @@
-export function generateConfig(token: string, hosts: string[], direct: boolean) {
+export interface GeneratedConfig {
+  name: string;
+  content: string;
+}
+
+export function generateConfig(token: string, hosts: string[], direct: boolean): GeneratedConfig {
   const host = window.location.host;
   const protocol = window.location.protocol;
   const upload = `${protocol}//${host}/api/sharex`;

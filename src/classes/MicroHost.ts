@@ -4,8 +4,8 @@ import { HostsService } from "../modules/hosts/hosts.service";
 import escapeString from "escape-string-regexp";
 
 export class MicroHost {
-  // https://regex101.com/r/F14kPM/1
-  @Matches(/^https?:\/\/[0-9A-z-.:{}]+$/)
+  // https://regex101.com/r/ZR9rpp/1
+  @Matches(/^https?:\/\/[\d.:A-z{}-]+$/)
   url!: string;
 
   @IsString({ each: true })

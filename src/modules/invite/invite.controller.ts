@@ -28,6 +28,6 @@ export class InviteController {
   @RequirePermissions(Permission.CREATE_INVITE)
   @UseGuards(JWTAuthGuard)
   async createInvite(@UserId() userId: string) {
-    return this.inviteService.create(userId, undefined);
+    return this.inviteService.create(userId, null);
   }
 }

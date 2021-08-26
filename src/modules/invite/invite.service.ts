@@ -16,8 +16,13 @@ export class InviteService implements OnApplicationBootstrap {
   private readonly logger = new Logger(InviteService.name);
   constructor(private authService: AuthService) {}
 
-  public async create(inviterId: string | undefined, permissions: Permission | undefined) {
-    const payload: JWTPayloadInvite = { id: nanoid(16), inviter: inviterId, permissions };
+  async create(inviterId: string | null, permissions: Permission | null) {
+    const payload: JWTPayloadInvite = {
+      id: nanoid(16),
+      inviter: inviterId ?? undefined,
+      permissions: permissions ?? undefined,
+    };
+
     const token = await this.authService.signToken(TokenType.INVITE, payload, "1h");
     const url = config.rootHost.url + `/invite/${token}`;
     return {
@@ -26,17 +31,17 @@ export class InviteService implements OnApplicationBootstrap {
     };
   }
 
-  public async verifyToken(token: string) {
+  async verifyToken(token: string) {
     const payload = await this.authService.verifyToken<JWTPayloadInvite>(TokenType.INVITE, token);
     const existing = await prisma.user.findFirst({ where: { invite: payload.id } });
     if (existing) throw new BadRequestException("That invite has already been used.");
     return payload;
   }
 
-  public async onApplicationBootstrap() {
+  async onApplicationBootstrap() {
     const users = await prisma.user.count({ take: 1 });
     if (users >= 1) return;
-    const invite = await this.create(undefined, Permission.ADMINISTRATOR);
+    const invite = await this.create(null, Permission.ADMINISTRATOR);
     this.logger.log(`Go to ${invite.url} to create the first account.`);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 import classNames from "classnames";
 import { FunctionComponent, HTMLAttributes } from "react";
 import { Link } from "../link";
@@ -10,6 +11,7 @@ export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTM
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   small?: boolean;
+  type?: "submit" | "reset" | "button";
 }
 
 export const Button: FunctionComponent<ButtonProps> = ({
@@ -22,6 +24,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   small,
   onClick,
   onKeyDown,
+  type,
   children,
   ...rest
 }) => {
@@ -44,7 +47,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   }
 
   return (
-    <button className={classes} disabled={disabled} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest}>
+    <button type={type} className={classes} disabled={disabled} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest}>
       {prefix && <span className={style.prefix}>{prefix}</span>}
       <span className={style.content}>{children}</span>
       {suffix && <span className={style.suffix}>{suffix}</span>}

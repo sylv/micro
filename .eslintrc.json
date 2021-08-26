@@ -1,0 +1,14 @@
+{
+  "extends": "@ryanke",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off", // nextjs doesn't require react in scope.
+    "unicorn/explicit-length-check": "off", // "props.size" which is a string triggers this without type information.
+    "react/function-component-definition": "off", // annoying with nextjs default exports
+    "unicorn/filename-case": "off", // annoying with nextjs filesystem routing,
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  }
+}

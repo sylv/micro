@@ -1,5 +1,6 @@
-import { BadRequestException, Controller, Headers, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Controller, Headers, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
+import { MultipartFile } from "fastify-multipart";
 import { config } from "../../config";
 import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { UserId } from "../auth/auth.decorators";
@@ -28,6 +29,7 @@ export class UploadController {
     @Headers("x-micro-host") hosts = config.rootHost.url
   ) {
     const user = await this.userService.getUser(userId);
+    if (!user) throw new ForbiddenException("Unknown user.");
     const host = await this.hostsService.resolveHost(hosts, user.tags, true);
     // todo: this is a shitty way to detect urls
     if (input?.startsWith("http")) {
@@ -47,7 +49,11 @@ export class UploadController {
       };
     }
 
-    const upload = await request.file();
+    // todo: IIRC the type is invalid and it can be undefined, but some dumbass
+    // didn't leave a comment so this should be double-checked and likely handled
+    // better (overriding the type in a definition file/submitting a PR to fix it at
+    // the source)
+    const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) throw new BadRequestException("Missing upload.");
     const file = await this.fileService.createFile(upload, request, user, host);
     const deletion = await this.deletionService.createToken(ContentType.FILE, file.id);

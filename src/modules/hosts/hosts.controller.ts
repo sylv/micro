@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, UseGuards } from "@nestjs/common";
 import { classToPlain } from "class-transformer";
 import { JWTAuthGuard } from "../../guards/jwt.guard";
 import { UserId } from "../auth/auth.decorators";
@@ -13,6 +13,7 @@ export class HostsController {
   @UseGuards(JWTAuthGuard)
   async getHosts(@UserId() userId: string) {
     const user = await this.userService.getUser(userId);
+    if (!user) throw new ForbiddenException("Unknown user.");
     const hosts = this.hostsService.getHosts(user.tags);
     return classToPlain(hosts) as typeof hosts;
   }

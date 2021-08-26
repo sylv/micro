@@ -4,9 +4,9 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { ChevronDown } from "react-feather";
 import useSWR from "swr";
 import languages from "../../../data/languages.json";
-import { getLanguage } from "../../../helpers/getLanguage";
-import { http } from "../../../helpers/http";
-import { useToasts } from "../../../hooks/useToasts";
+import { getFileLanguage } from "../../../helpers/get-file-language.helper";
+import { http } from "../../../helpers/http.helper";
+import { useToasts } from "../../../hooks/use-toasts.helper";
 import { GetFileData } from "../../../types";
 import { Button } from "../../button/button";
 import { Dropdown } from "../../dropdown/dropdown";
@@ -14,7 +14,7 @@ import { DropdownTab } from "../../dropdown/dropdown-tab";
 import { PageLoader } from "../../page-loader";
 import { FileEmbedDefault } from "../file-embed-default";
 
-const DEFAULT_LANGUAGE = getLanguage("diff")!;
+const DEFAULT_LANGUAGE = getFileLanguage("diff")!;
 const fetcher = async (url: string) => {
   const response = await http(url);
   return response.text();
@@ -26,14 +26,14 @@ export interface FileEmbedTextContainerProps {
 }
 
 export const FileEmbedTextContainer: FunctionComponent<FileEmbedTextContainerProps> = ({ file, children }) => {
-  const [language, setLanguage] = useState(getLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
+  const [language, setLanguage] = useState(getFileLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
   const content = useSWR<string>(file.urls.direct, { fetcher });
   const setToast = useToasts();
 
   useEffect(() => {
-    // recalc language on fileName change
-    setLanguage(getLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
-  }, [file.id]);
+    // re-calculate language on fileName change
+    setLanguage(getFileLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
+  }, [file.displayName]);
 
   const copyContent = () => {
     copyToClipboard(content.data!);

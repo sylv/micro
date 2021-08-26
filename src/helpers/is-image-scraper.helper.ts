@@ -29,17 +29,17 @@ export const scrapers: ScraperDefinition[] = [
   },
   {
     name: "curl",
-    userAgents: [/^curl\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/],
+    userAgents: [/.*curl.*/],
   },
   {
     name: "Wget",
-    userAgents: [/^Wget\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(?: \(.*?\))?$/],
+    userAgents: [/.*Wget.*/],
   },
   {
     name: "Camo (GitHub)",
-    userAgents: [/^Camo Asset Proxy [A-z0-9._]{5,}$/],
-    // https://github.com/atmos/camo/blob/e59df56a01c023850962fac16905269d264fba50/mime-types.json
+    userAgents: [/^Camo Asset Proxy [\d.A-z]{5,}$/],
     types: [
+      // https://github.com/atmos/camo/blob/e59df56a01c023850962fac16905269d264fba50/mime-types.json
       "image/bmp",
       "image/cgm",
       "image/g3fax",

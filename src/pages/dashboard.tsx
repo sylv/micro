@@ -11,9 +11,10 @@ import { Section } from "../components/section";
 import { ShareXButton } from "../components/sharex-button";
 import { Title } from "../components/title";
 import { Endpoints } from "../constants";
-import { http } from "../helpers/http";
-import { useToasts } from "../hooks/useToasts";
-import { useUser } from "../hooks/useUser";
+import { getErrorMessage } from "../helpers/get-error-message.helper";
+import { http } from "../helpers/http.helper";
+import { useToasts } from "../hooks/use-toasts.helper";
+import { useUser } from "../hooks/use-user.helper";
 import { GetHostsData, GetUploadTokenData, PutUploadTokenData } from "../types";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
@@ -39,9 +40,9 @@ export default function Dashboard() {
     // set the default domain once they're loaded
     if (hosts.data && !selectedHosts[0]) {
       const root = hosts.data.find((host) => host.root);
-      if (root) setSelectedHosts([root?.data.key]);
+      if (root) setSelectedHosts([root.data.key]);
     }
-  }, [hosts]);
+  }, [hosts, selectedHosts]);
 
   useEffect(() => {
     Router.prefetch("/file/[fileId]");
@@ -63,9 +64,10 @@ export default function Dashboard() {
       mutate(Endpoints.USER_TOKEN, body, false);
       setRegenerating(false);
       setToast({ text: "Your token has been regenerated." });
-    } catch (e) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error) ?? "An unknown error occured.";
       setRegenerating(false);
-      setToast({ error: true, text: e.message });
+      setToast({ error: true, text: message });
     }
   };
 
@@ -85,7 +87,7 @@ export default function Dashboard() {
         <Container>
           <div className="grid grid-cols-8 gap-2">
             <div className="col-span-full md:col-span-6">
-              <Input prefix="Upload Token" onFocus={(evt) => evt.target.select()} value={token.data.token} readOnly />
+              <Input prefix="Upload Token" onFocus={(event) => event.target.select()} value={token.data.token} readOnly />
             </div>
             <div className="col-span-full md:col-span-2">
               <Button disabled={regenerating} onClick={regenerateToken}>
