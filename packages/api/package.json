@@ -1,0 +1,74 @@
+{
+    "name": "@micro/api",
+    "version": "0.0.1",
+    "repository": "https://github.com/sylv/micro.git",
+    "author": "Ryan <ryan@sylver.me>",
+    "license": "GPL-3.0",
+    "private": true,
+    "main": "./src/types.ts",
+    "engine": {
+        "node": ">=16"
+    },
+    "scripts": {
+        "watch": "nodemon --exec \"ts-eager\" ./src/main.ts"
+    },
+    "dependencies": {
+        "@micro/common": "workspace:^0.0.1",
+        "@mikro-orm/core": "^4.5.9",
+        "@mikro-orm/nestjs": "^4.3.0",
+        "@mikro-orm/postgresql": "^4.5.9",
+        "@nestjs/common": "^8.0.7",
+        "@nestjs/core": "^8.0.7",
+        "@nestjs/jwt": "^8.0.0",
+        "@nestjs/passport": "^8.0.1",
+        "@nestjs/platform-fastify": "^8.0.7",
+        "@nestjs/schedule": "^1.0.1",
+        "@ryanke/venera": "^0.0.2",
+        "bcrypt": "^5.0.1",
+        "class-transformer": "^0.4.0",
+        "class-validator": "^0.13.1",
+        "content-range": "^2.0.2",
+        "escape-string-regexp": "^4",
+        "fastify": "^3.21.6",
+        "fastify-cookie": "^5.3.1",
+        "fastify-multipart": "^5.0.0",
+        "file-type": "^16.5.3",
+        "http-status-codes": "^2.1.4",
+        "istextorbinary": "^6.0.0",
+        "luxon": "^2.0.2",
+        "mime-types": "^2.1.32",
+        "ms": "^3.0.0-canary.1",
+        "nanoid": "^3.1.25",
+        "next": "^11.1.2",
+        "normalize-url": "^6",
+        "passport": "^0.5.0",
+        "passport-jwt": "^4.0.0",
+        "passport-local": "^1.0.0",
+        "rxjs": "^7.3.0",
+        "sharp": "^0.29.1",
+        "stream-size": "^0.0.6",
+        "xbytes": "^1.7.0"
+    },
+    "devDependencies": {
+        "@mikro-orm/cli": "^4.5.9",
+        "@mikro-orm/migrations": "^4.5.9",
+        "@tsconfig/node16": "^1.0.2",
+        "@types/bcrypt": "^5.0.0",
+        "@types/luxon": "^2.0.4",
+        "@types/mime-types": "^2.1.1",
+        "@types/node": "^16.10.1",
+        "@types/passport-jwt": "^3.0.6",
+        "@types/passport-local": "^1.0.34",
+        "@types/sharp": "^0.29.2",
+        "nodemon": "^2.0.13",
+        "ts-eager": "^2.0.2",
+        "ts-node": "^10.2.1"
+    },
+    "mikro-orm": {
+        "useTsNode": true,
+        "configPaths": [
+            "./src/mikro-orm.config.ts",
+            "./dist/mikro-orm.config.js"
+        ]
+    }
+}

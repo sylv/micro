@@ -1,5 +1,0 @@
-{
-  // tsup requires tsconfig.build.json, so this is basically just an alias.
-  // https://github.com/egoist/tsup/blob/405e165ef7412adf54b9a83248144daa4c13be04/src/load.ts#L34
-  "extends": "./tsconfig.server.json"
-}

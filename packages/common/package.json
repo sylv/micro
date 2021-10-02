@@ -1,0 +1,12 @@
+{
+    "name": "@micro/common",
+    "version": "0.0.1",
+    "repository": "https://github.com/sylv/micro.git",
+    "author": "Ryan <ryan@sylver.me>",
+    "license": "GPL-3.0",
+    "private": true,
+    "main": "./src/index.ts",
+    "engine": {
+        "node": ">=16"
+    }
+}

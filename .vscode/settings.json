@@ -10,5 +10,6 @@
   },
   "headwind.classRegex": {
     "typescriptreact": "className(?:s\\((?:\\s+?)?|=)[\"'`]([A-z0-9-:/ ]+)[\"'`]"
-  }
+  },
+  "cSpell.words": ["xbytes"]
 }

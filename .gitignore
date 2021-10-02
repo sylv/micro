@@ -38,3 +38,6 @@ dist
 
 # nektos/act secrets file
 .secrets
+
+packages/web/.next
+packages/api/data
