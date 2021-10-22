@@ -1,5 +1,7 @@
 # micro
 
+> I'm in the middle of rewriting a large amount of micro to be easier to setup and improve some major issues. At the moment you should avoid using micro. 
+
 An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** You can see a preview at https://micro.sylo.digital
 
 - [micro](#micro)
