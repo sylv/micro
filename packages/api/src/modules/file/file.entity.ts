@@ -39,8 +39,13 @@ export class File {
   createdAt = new Date();
 
   @Property({ persist: false })
+  get extension() {
+    return mimeType.extension(this.type) || "bin";
+  }
+
+  @Property({ persist: false })
   get displayName() {
-    const extension = mimeType.extension(this.type);
+    const extension = this.extension;
     return this.name ? this.name : extension ? `${this.id}.${extension}` : this.id;
   }
 

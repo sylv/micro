@@ -13,7 +13,7 @@ export class HostsGuard implements CanActivate {
     }
 
     const host = config.hosts.find((host) => host.pattern.test(referer));
-    if (!host) throw new BadRequestException('Invalid "referer" header.');
+    if (!host) throw new BadRequestException("Invalid host.");
     request.host = host;
     return true;
   }

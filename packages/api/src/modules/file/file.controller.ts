@@ -15,9 +15,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
-import mime from "mime-types";
 import { config } from "../../config";
-import { isImageScraper } from "../../helpers/is-image-scraper.helper";
 import { parseKey } from "../../helpers/parse-key.helper";
 import { UserId } from "../auth/auth.decorators";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard";
@@ -38,17 +36,7 @@ export class FileController {
       throw new ForbiddenException("That file is not available on this host.");
     }
 
-    if (parsedKey.ext) {
-      const mimeType = mime.lookup(parsedKey.ext);
-      if (!mimeType) throw new BadRequestException("Unknown file extension.");
-      if (file.type !== mimeType) {
-        throw new BadRequestException("File extension does not match file type.");
-      }
-    }
-
-    const scraper = isImageScraper(request.headers["user-agent"]);
-    const isDirect = (scraper && (!scraper.types || scraper.types.includes(file.type))) || !!parsedKey.ext;
-    if (isDirect) {
+    if (parsedKey.ext && parsedKey.ext !== "json") {
       return this.fileService.sendFile(parsedKey.id, request, reply);
     }
 
