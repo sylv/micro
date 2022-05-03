@@ -1,4 +1,4 @@
-import fileType from "file-type";
+import * as fileType from "file-type";
 import { isBinary } from "istextorbinary";
 import * as mimeType from "mime-types";
 import path from "path";

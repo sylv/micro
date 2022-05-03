@@ -1,10 +1,13 @@
 import { ClassSerializerInterceptor, Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import cookie from "fastify-cookie";
-import multipart, { FastifyMultipartOptions } from "fastify-multipart";
+import createApp from "fastify";
+import multipart, { FastifyMultipartOptions } from "@fastify/multipart";
+import { config } from "./config";
 import { AppModule } from "./modules/app.module";
 import { HostsGuard } from "./modules/hosts/hosts.guard";
+import cookie from "@fastify/cookie";
+import helmet from "@fastify/helmet";
 
 const limits: FastifyMultipartOptions = {
   limits: {
@@ -17,7 +20,13 @@ const limits: FastifyMultipartOptions = {
 };
 
 async function bootstrap(): Promise<void> {
-  const adapter = new FastifyAdapter({ maxParamLength: 500 });
+  const fastify = createApp({
+    trustProxy: process.env.TRUST_PROXY === "true",
+    maxParamLength: 500,
+    bodyLimit: config.uploadLimit,
+  });
+
+  const adapter = new FastifyAdapter(fastify as any);
   const logger = new Logger("bootstrap");
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector(), {}));
@@ -34,6 +43,7 @@ async function bootstrap(): Promise<void> {
   );
 
   app.register(cookie as any);
+  app.register(helmet as any);
   app.register(multipart as any, limits);
 
   await app.listen(8080, "0.0.0.0", (error, address) => {

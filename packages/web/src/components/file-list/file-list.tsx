@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { http } from "../../helpers/http.helper";
 import { GetUserFilesData } from "@micro/api";
@@ -9,7 +9,7 @@ import Error from "../../pages/_error";
 
 const PER_PAGE = 24;
 
-export const FileList: FunctionComponent = () => {
+export const FileList: FC = () => {
   const [files, setFiles] = useState<GetUserFilesData>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);

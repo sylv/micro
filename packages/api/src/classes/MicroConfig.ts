@@ -1,5 +1,16 @@
 import { Transform, Type } from "class-transformer";
-import { IsBoolean, IsDefined, IsEmail, IsIn, IsNumber, IsOptional, IsString, IsUrl, NotEquals, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsDefined,
+  IsEmail,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  NotEquals,
+  ValidateNested,
+} from "class-validator";
 import fileType from "file-type";
 import path from "path";
 import xbytes from "xbytes";

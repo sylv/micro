@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FunctionComponent } from "react";
+import { FC } from "react";
 import { Crop } from "react-feather";
 import { usePaths } from "../../hooks/use-paths.helper";
 import { useUser } from "../../hooks/use-user.helper";
@@ -8,7 +8,7 @@ import { Container } from "../container";
 import { Link } from "../link";
 import { HeaderUser } from "./header-user";
 
-export const Header: FunctionComponent = () => {
+export const Header: FC = () => {
   const user = useUser();
   const paths = usePaths();
   const classes = classNames("relative z-10 flex items-center justify-between h-16 my-auto transition", {

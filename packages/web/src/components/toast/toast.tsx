@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 export interface ToastProps {
   text: string;
@@ -9,12 +9,12 @@ export interface ToastProps {
 }
 
 export const TRANSITION_DURATION = 300;
-export const Toast: FunctionComponent<ToastProps> = (props) => {
-  const initialClasses = "opacity-0 transform scale-90";
-  const animateClasses = "opacity-100 transform translate-x-0";
+export const Toast: FC<ToastProps> = (props) => {
+  const initialClasses = "opacity-0 scale-90";
+  const animateClasses = "opacity-100 translate-x-0";
   const [transition, setTransition] = useState(initialClasses);
   const classes = classNames("p-4 transition duration-300 rounded shadow-xl select-none w-96", transition, {
-    "bg-purple-500": !props.error,
+    "bg-violet-500": !props.error,
     "bg-red-600": props.error,
   });
 

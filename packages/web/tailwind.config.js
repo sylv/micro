@@ -1,6 +1,5 @@
 module.exports = {
-  mode: "jit",
-  purge: ["./src/**/*.tsx"],
+  content: ["./src/**/*.tsx"],
   theme: {
     extend: {
       colors: {
@@ -29,13 +28,6 @@ module.exports = {
           999: "#373737",
         },
       },
-    },
-  },
-  plugins: [],
-  variants: {
-    extend: {
-      backgroundColor: ["disabled"],
-      cursor: ["disabled"],
     },
   },
 };

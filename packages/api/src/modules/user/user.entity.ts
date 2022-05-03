@@ -1,4 +1,4 @@
-import { Collection, Entity, OneToMany, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, OneToMany, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { File } from "../file/file.entity";
 import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { Invite } from "../invite/invite.entity";
@@ -31,4 +31,6 @@ export class User {
   @OneToMany(() => File, (file) => file.owner, { orphanRemoval: true })
   @Exclude()
   files = new Collection<File>(this);
+
+  [OptionalProps]: "permissions" | "tags";
 }

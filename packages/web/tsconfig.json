@@ -1,6 +1,11 @@
 {
-  "include": ["./src/**/*", "next-env.d.ts"],
-  "exclude": ["node_modules/*"],
+  "include": [
+    "./src/**/*",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    "node_modules/*"
+  ],
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
@@ -19,12 +24,19 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "baseUrl": ".",
-    "typeRoots": ["node_modules/@types", "./types"],
+    "typeRoots": [
+      "node_modules/@types",
+      "./types"
+    ],
     "noEmit": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowJs": true
+    "allowJs": true,
+    "incremental": true
   }
 }

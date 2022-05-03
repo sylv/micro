@@ -8,8 +8,19 @@
     ".microrc.example": "jsonc",
     ".microrc.development": "jsonc"
   },
-  "headwind.classRegex": {
-    "typescriptreact": "className(?:s\\((?:\\s+?)?|=)[\"'`]([A-z0-9-:/ ]+)[\"'`]"
-  },
+  "tailwindCSS.experimental.classRegex": [
+    ["classNames\\(([^)]*)\\)", "'([^']*)'", "\"([^']*)\""],
+    [":\\s*?[\"'`]([^\"'`]*).*?,"],
+    ["baseStyle.=.[\"'`]([^\"'`]*)"],
+    // Enum = 'value'
+    ["[A-Z][a-z]+ = ['\"]([^\"'`]*)"],
+    // const style = 'value'
+    // const someStyle = 'value'
+    ["const [a-zA-Z]+tyle = ['\"`]([^\"`'`]*)"],
+    // const classes = 'value'
+    // const class = 'value'
+    // const selectedClass = 'value'
+    ["const [a-zA-Z]+s = ['\"`]([^\"`'`]*)"]
+  ],
   "cSpell.words": ["xbytes"]
 }

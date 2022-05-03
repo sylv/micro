@@ -1,8 +1,8 @@
-import { FunctionComponent, useState } from "react";
+import { FC, useState } from "react";
 import { FileMinus } from "react-feather";
 import { FileCardProps } from "./file-list-card";
 
-export const FileListCardContent: FunctionComponent<FileCardProps> = (props) => {
+export const FileListCardContent: FC<FileCardProps> = (props) => {
   const [errored, setErrored] = useState(false);
   if (!props.file.urls.thumbnail || errored) {
     return (

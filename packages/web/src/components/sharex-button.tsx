@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FC } from "react";
 import { Download as DownloadIcon } from "react-feather";
 import { downloadFile } from "../helpers/download.helper";
 import { generateConfig } from "../helpers/generate-config.helper";
@@ -12,7 +12,7 @@ export interface ShareXButtonProps {
   hosts: string[];
 }
 
-export const ShareXButton: FunctionComponent<ShareXButtonProps> = (props) => {
+export const ShareXButton: FC<ShareXButtonProps> = (props) => {
   const user = useUser();
   const disabled = !user.data || !props.hosts[0];
 

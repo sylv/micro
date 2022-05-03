@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FC } from "react";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
 import { usePaths } from "../../hooks/use-paths.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
@@ -14,7 +14,7 @@ export interface HeaderUserProps {
   userId: string;
 }
 
-export const HeaderUser: FunctionComponent<HeaderUserProps> = (props) => {
+export const HeaderUser: FC<HeaderUserProps> = (props) => {
   const paths = usePaths();
   const setToast = useToasts();
   return (

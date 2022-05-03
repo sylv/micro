@@ -1,8 +1,8 @@
-import { FunctionComponent, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { Container } from "./container";
 import { Spinner } from "./spinner";
 
-export const PageLoader: FunctionComponent = () => {
+export const PageLoader: FC = () => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {

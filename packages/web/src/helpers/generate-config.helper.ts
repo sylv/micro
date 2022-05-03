@@ -6,7 +6,7 @@ export interface GeneratedConfig {
 export function generateConfig(token: string, hosts: string[], direct: boolean): GeneratedConfig {
   const host = window.location.host;
   const protocol = window.location.protocol;
-  const upload = `${protocol}//${host}/api/sharex`;
+  const upload = `${protocol}//${host}/api/file`;
   const joined = hosts.join(", ");
   const name = `micro - ${joined}.sxcu`;
   const content = {

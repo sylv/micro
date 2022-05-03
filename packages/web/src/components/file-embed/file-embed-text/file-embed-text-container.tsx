@@ -1,6 +1,6 @@
 import copyToClipboard from "copy-to-clipboard";
 import { Language } from "prism-react-renderer";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { ChevronDown } from "react-feather";
 import useSWR from "swr";
 import languages from "../../../data/languages.json";
@@ -25,7 +25,7 @@ export interface FileEmbedTextContainerProps {
   children: (options: { language: Language; content: string }) => React.ReactChild;
 }
 
-export const FileEmbedTextContainer: FunctionComponent<FileEmbedTextContainerProps> = ({ file, children }) => {
+export const FileEmbedTextContainer: FC<FileEmbedTextContainerProps> = ({ file, children }) => {
   const [language, setLanguage] = useState(getFileLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
   const content = useSWR<string>(file.urls.direct, { fetcher });
   const setToast = useToasts();

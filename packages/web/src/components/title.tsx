@@ -1,12 +1,12 @@
 import Head from "next/head";
-import { FunctionComponent } from "react";
+import { FC } from "react";
 
-export const Title: FunctionComponent = (props) => {
-  const children = Array.isArray(props.children) ? props.children.join("") : `${props.children}`;
+export const Title: FC<{ children: string | string[] }> = ({ children }) => {
+  const title = Array.isArray(children) ? children.join(" ") : children;
   return (
     <Head>
       <title>{children} &mdash; micro</title>
-      <meta property="og:title" content={children} key="title" />
+      <meta property="og:title" content={title} key="title" />
     </Head>
   );
 };

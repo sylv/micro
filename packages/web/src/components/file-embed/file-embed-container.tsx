@@ -1,8 +1,8 @@
 import Head from "next/head";
-import { FunctionComponent } from "react";
+import { FC } from "react";
 import { GetFileData } from "@micro/api";
 
-export const FileEmbedContainer: FunctionComponent<{ file: GetFileData; children: React.ReactChild }> = (props) => {
+export const FileEmbedContainer: FC<{ file: GetFileData; children: React.ReactChild }> = (props) => {
   return (
     <div className="flex items-center justify-center col-span-5 rounded shadow-2xl bg-dark-200 max-h-[75vh] min-h-[3em]">
       <Head>

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import { Expose } from "class-transformer";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { TimestampType } from "../../timestamp.type";
@@ -35,4 +35,6 @@ export class Invite {
   get url() {
     return `/invite/${this.id}`;
   }
+
+  [OptionalProps]: "expiresAt" | "createdAt" | "invited" | "inviter" | "permissions" | "expired" | "url";
 }

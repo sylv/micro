@@ -1,11 +1,11 @@
 import classNames from "classnames";
-import { FunctionComponent, HTMLAttributes } from "react";
+import { FC, HTMLAttributes } from "react";
 
 export interface SpinnerProps extends HTMLAttributes<SVGElement> {
   size?: "small" | "medium" | "large";
 }
 
-export const Spinner: FunctionComponent<SpinnerProps> = ({ size, className, ...rest }) => {
+export const Spinner: FC<SpinnerProps> = ({ size, className, ...rest }) => {
   const classes = classNames("animate-spin", className, {
     "w-4": size === "small",
     "w-6": !size || size === "medium",

@@ -84,23 +84,24 @@ export default function File() {
         <div className="flex md:flex-col">
           <div className="flex text-sm text-gray-500 cursor-pointer md:flex-col">
             <span
-              className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
+              className="flex items-center shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
               onClick={copyLink}
             >
               <Share className="h-4 mr-1" /> Copy link
             </span>
             <span
-              className="flex items-center flex-shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
+              className="flex items-center shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
               onClick={downloadFile}
             >
               <Download className="h-4 mr-1" /> Download
             </span>
             {user.data?.id === file.data.owner?.id && (
               <span
-                className="flex items-center flex-shrink-0 mb-2 mr-2 text-red-400 transition-colors duration-100 hover:text-red-600"
+                className="flex items-center shrink-0 mb-2 mr-2 text-red-400 transition-colors duration-100 hover:text-red-600"
                 onClick={deleteFile}
               >
-                <Trash className="h-4 mr-1" /> {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
+                <Trash className="h-4 mr-1" />{" "}
+                {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
               </span>
             )}
           </div>

@@ -16,6 +16,6 @@ body {
 }
 
 ::selection {
-  @apply bg-purple-600;
+  @apply bg-violet-600;
   @apply text-white;
 }

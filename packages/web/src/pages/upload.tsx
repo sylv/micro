@@ -127,7 +127,7 @@ export default function Upload() {
           <div className="flex items-center justify-center">
             <Select
               prefix="Host"
-              className="flex-shrink-0 w-40 mr-2"
+              className="shrink-0 w-40 mr-2"
               value={selectedHost}
               onChange={(event) => setSelectedHost(event.target.value)}
             >

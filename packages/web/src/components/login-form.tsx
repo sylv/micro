@@ -1,4 +1,4 @@
-import { ChangeEvent, FunctionComponent, KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, useRef, useState } from "react";
 import { useToasts } from "../hooks/use-toasts.helper";
 import { Button } from "./button/button";
 import { Input } from "./input/input";
@@ -14,7 +14,7 @@ export interface LoginProps {
   onContinue: (user: LoginData) => void;
 }
 
-export const LoginForm: FunctionComponent<LoginProps> = (props) => {
+export const LoginForm: FC<LoginProps> = (props) => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const setToast = useToasts();
@@ -66,7 +66,14 @@ export const LoginForm: FunctionComponent<LoginProps> = (props) => {
   return (
     <>
       <Input placeholder="Username" onKeyDown={onKeyDown} onChange={onUsernameChange} autoFocus ref={usernameRef} />
-      <Input className="mt-2" type="password" placeholder="Password" ref={passwordRef} onKeyDown={onKeyDown} onChange={onPasswordChange} />
+      <Input
+        className="mt-2"
+        type="password"
+        placeholder="Password"
+        ref={passwordRef}
+        onKeyDown={onKeyDown}
+        onChange={onPasswordChange}
+      />
       <Button className="mt-4" onClick={onContinue} onKeyDown={onKeyDown} disabled={disabled} primary>
         {props.buttonText}
       </Button>

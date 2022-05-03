@@ -1,8 +1,0 @@
-.avatar {
-  @apply overflow-hidden rounded-full select-none;
-}
-
-.avatar svg {
-  height: inherit;
-  width: inherit;
-}

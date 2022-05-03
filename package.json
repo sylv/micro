@@ -12,14 +12,12 @@
     "lint": "eslint --fix ./packages/*/src/**/*.{ts,tsx,js}"
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
     "@tsconfig/node16": "^1.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.26.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "eslint-plugin-unicorn": "^35.0.0",
-    "prettier": "^2.4.1"
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "eslint-plugin-unicorn": "^42.0.0",
+    "prettier": "^2.6.2"
   }
 }

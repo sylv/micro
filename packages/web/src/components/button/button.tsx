@@ -2,7 +2,6 @@
 import classNames from "classnames";
 import { forwardRef, HTMLAttributes } from "react";
 import { Link } from "../link";
-import style from "./button.module.css";
 
 export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, "prefix"> {
   href?: string;
@@ -18,11 +17,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ href, disabled, prefix, suffix, className, primary, small, onClick, onKeyDown, type, children, ...rest }, ref) => {
     const onClickWrap = disabled ? undefined : onClick;
     const onKeyDownWrap = disabled ? undefined : onKeyDown;
-    const classes = classNames(className, style.button, {
-      [style.disabled]: disabled,
-      [style.primary]: primary,
-      [style.small]: small,
-    });
+    const classes = classNames(
+      "flex items-center justify-center w-full px-3 py-2 text-sm font-medium transition border rounded bg-dark-300 hover:bg-dark-600 border-dark-600 max-w-[15em]",
+      disabled && "!bg-dark-200 border border-dark-600 text-white cursor-not-allowed",
+      primary && "bg-brand hover:bg-brand hover:opacity-75",
+      small && "text-xs font-normal px-2 py-1",
+      className
+    );
 
     if (href) {
       if (ref) {
@@ -31,18 +32,27 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       return (
         <Link href={href} className={classes} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest}>
-          {prefix && <span className={style.prefix}>{prefix}</span>}
-          <span className={style.content}>{children}</span>
-          {suffix && <span className={style.suffix}>{suffix}</span>}
+          {prefix && <span className="mr-1">{prefix}</span>}
+          <span className="truncate">{children}</span>
+          {suffix && <span className={"ml-1"}>{suffix}</span>}
         </Link>
       );
     }
 
     return (
-      <button type={type} className={classes} disabled={disabled} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest} ref={ref}>
-        {prefix && <span className={style.prefix}>{prefix}</span>}
-        <span className={style.content}>{children}</span>
-        {suffix && <span className={style.suffix}>{suffix}</span>}
+      <button
+        type={type}
+        className={classes}
+        disabled={disabled}
+        onClick={onClickWrap}
+        onKeyDown={onKeyDownWrap}
+        style={{ height: "2.5rem" }}
+        {...rest}
+        ref={ref}
+      >
+        {prefix && <span className="mr-1">{prefix}</span>}
+        <span className="truncate">{children}</span>
+        {suffix && <span className={"ml-1"}>{suffix}</span>}
       </button>
     );
   }

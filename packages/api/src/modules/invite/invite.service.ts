@@ -1,4 +1,4 @@
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { config } from "../../config";
@@ -17,7 +17,8 @@ export class InviteService implements OnApplicationBootstrap {
   private readonly logger = new Logger(InviteService.name);
   constructor(
     @InjectRepository(User) private userRepo: EntityRepository<User>,
-    @InjectRepository(Invite) private inviteRepo: EntityRepository<Invite>
+    @InjectRepository(Invite) private inviteRepo: EntityRepository<Invite>,
+    protected orm: MikroORM
   ) {}
 
   async create(inviterId: string | null, permissions: Permission | null) {
@@ -39,6 +40,7 @@ export class InviteService implements OnApplicationBootstrap {
     await this.inviteRepo.flush();
   }
 
+  @UseRequestContext()
   async onApplicationBootstrap() {
     const users = await this.userRepo.count();
     if (users >= 1) return;

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FunctionComponent } from "react";
+import { FC, ReactNode } from "react";
 
 export interface ContainerProps {
   centerX?: boolean;
@@ -7,9 +7,10 @@ export interface ContainerProps {
   center?: boolean;
   small?: boolean;
   className?: string;
+  children: ReactNode;
 }
 
-export const Container: FunctionComponent<ContainerProps> = (props) => {
+export const Container: FC<ContainerProps> = (props) => {
   const centerX = props.centerX ?? props.center;
   const centerY = props.centerY ?? props.center;
   const center = centerX ?? centerY;
