@@ -10,7 +10,6 @@ import { PageLoader } from "../components/page-loader";
 import { Section } from "../components/section";
 import { ShareXButton } from "../components/sharex-button";
 import { Title } from "../components/title";
-import { Endpoints } from "@micro/common";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { http } from "../helpers/http.helper";
 import { useToasts } from "../hooks/use-toasts.helper";
@@ -20,8 +19,8 @@ import { GetHostsData, GetUploadTokenData, PutUploadTokenData } from "@micro/api
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
   const user = useUser();
-  const token = useSWR<GetUploadTokenData>(Endpoints.USER_TOKEN);
-  const hosts = useSWR<GetHostsData>(Endpoints.HOSTS);
+  const token = useSWR<GetUploadTokenData>(`user/token`);
+  const hosts = useSWR<GetHostsData>(`hosts`);
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const setToast = useToasts();
@@ -58,10 +57,10 @@ export default function Dashboard() {
     setRegenerating(true);
 
     try {
-      const response = await http(Endpoints.USER_TOKEN, { method: "PUT" });
+      const response = await http(`user/token`, { method: "PUT" });
       const body = (await response.json()) as PutUploadTokenData;
-      mutate(Endpoints.USER, null);
-      mutate(Endpoints.USER_TOKEN, body, false);
+      mutate(`user`, null);
+      mutate(`user/token`, body, false);
       setRegenerating(false);
       setToast({ text: "Your token has been regenerated." });
     } catch (error: unknown) {

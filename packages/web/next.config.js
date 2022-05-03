@@ -1,5 +1,4 @@
-const withTM = require("next-transpile-modules")(["@micro/common"]);
-module.exports = withTM({
+module.exports = {
   async rewrites() {
     return [
       {
@@ -16,4 +15,4 @@ module.exports = withTM({
       },
     ];
   },
-});
+};

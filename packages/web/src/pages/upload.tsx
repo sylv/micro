@@ -1,3 +1,4 @@
+import { GetHostsData } from "@micro/api";
 import { useRouter } from "next/router";
 import React, { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from "react";
 import { Upload as UploadIcon } from "react-feather";
@@ -9,13 +10,11 @@ import { Select } from "../components/input/select";
 import { PageLoader } from "../components/page-loader";
 import { Spinner } from "../components/spinner";
 import { Title } from "../components/title";
-import { Endpoints } from "@micro/common";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { http } from "../helpers/http.helper";
 import { useHost } from "../hooks/use-host.hook";
 import { useToasts } from "../hooks/use-toasts.helper";
 import { useUser } from "../hooks/use-user.helper";
-import { GetHostsData } from "@micro/api";
 
 export default function Upload() {
   const user = useUser();
@@ -26,7 +25,7 @@ export default function Upload() {
   const [hover, setHover] = useState(false);
   const setToast = useToasts();
   const [selectedHost, setSelectedHost] = useState<string | undefined>();
-  const hosts = useSWR<GetHostsData>(Endpoints.HOSTS);
+  const hosts = useSWR<GetHostsData>(`hosts`);
   const currentHost = useHost();
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export default function Upload() {
       form.append(file.name, file);
       const headers: HeadersInit = {};
       if (selectedHost) headers["X-Micro-Host"] = selectedHost;
-      const response = await http(Endpoints.UPLOAD, {
+      const response = await http(`file`, {
         method: "POST",
         body: form,
         headers: headers,

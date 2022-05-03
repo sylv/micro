@@ -3,11 +3,11 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
 import sharp from "sharp";
-import { EMBEDDABLE_IMAGE_TYPES } from "@micro/common";
+import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { File } from "../file/file.entity";
-import { Thumbnail } from "./thumbnail.entity";
 import { FileService } from "../file/file.service";
 import { StorageService } from "../storage/storage.service";
+import { Thumbnail } from "./thumbnail.entity";
 
 @Injectable()
 export class ThumbnailService {
@@ -27,7 +27,7 @@ export class ThumbnailService {
 
   async createThumbnail(file: File) {
     const start = Date.now();
-    const supported = this.checkThumbnailSupport(file.type);
+    const supported = ThumbnailService.checkThumbnailSupport(file.type);
     if (!supported) {
       throw new BadRequestException("That file type does not support thumbnails.");
     }
@@ -55,8 +55,6 @@ export class ThumbnailService {
     }
 
     const file = await this.fileService.getFile(fileId, request.host);
-    const supported = this.checkThumbnailSupport(file.type);
-    if (!supported) throw new NotFoundException("That file does not support thumbnails.");
     const thumbnail = await this.createThumbnail(file);
     return reply
       .header("X-Micro-Generated", "true")
@@ -65,7 +63,7 @@ export class ThumbnailService {
       .send(thumbnail.data);
   }
 
-  checkThumbnailSupport(type: string) {
-    return EMBEDDABLE_IMAGE_TYPES.includes(type);
+  static checkThumbnailSupport(type: string) {
+    return THUMBNAIL_SUPPORTED_TYPES.has(type);
   }
 }

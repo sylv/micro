@@ -1,4 +1,3 @@
-import { EMBEDDABLE_VIDEO_TYPES } from "@micro/common";
 import { GetFileData } from "@micro/api";
 
 export const FileEmbedVideo = ({ file }: { file: GetFileData }) => {
@@ -8,5 +7,3 @@ export const FileEmbedVideo = ({ file }: { file: GetFileData }) => {
     </video>
   );
 };
-
-FileEmbedVideo.embeddable = (type: string) => EMBEDDABLE_VIDEO_TYPES.includes(type);

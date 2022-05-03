@@ -8,5 +8,5 @@ import { User } from "./modules/user/user.entity";
 export default {
   type: "postgresql",
   entities: [File, Thumbnail, User, Invite],
-  clientUrl: config.database,
+  clientUrl: config.databaseUrl,
 } as MikroOrmModuleSyncOptions;

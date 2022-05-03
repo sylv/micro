@@ -14,16 +14,16 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { nanoid } from "nanoid";
-import { Permission } from "@micro/common";
-import { User } from "./user.entity";
+import { Permission } from "../../constants";
 import { RequirePermissions, UserId } from "../auth/auth.decorators";
 import { AuthService, TokenType } from "../auth/auth.service";
+import { JWTAuthGuard } from "../auth/guards/jwt.guard";
 import { JWTPayloadUser } from "../auth/strategies/jwt.strategy";
 import { InviteService } from "../invite/invite.service";
-import { UserService } from "./user.service";
-import { JWTAuthGuard } from "../auth/guards/jwt.guard";
-import { Pagination } from "./dto/pagination.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { Pagination } from "./dto/pagination.dto";
+import { User } from "./user.entity";
+import { UserService } from "./user.service";
 
 @Controller()
 export class UserController {

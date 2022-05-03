@@ -8,7 +8,6 @@ import getSizeTransform from "stream-size";
 import { promisify } from "util";
 import { ExifTransformer } from "../../classes/ExifTransformer";
 import { config } from "../../config";
-import { isObject } from "../../../../common/src/helpers/is-object.helper";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -54,8 +53,8 @@ export class StorageService {
     try {
       const filePath = this.getPathFromHash(hash);
       await fs.promises.unlink(filePath);
-    } catch (error: unknown) {
-      if (isObject(error) && error.code === "ENOENT") {
+    } catch (error: any) {
+      if (error.code === "ENOENT") {
         return;
       }
 

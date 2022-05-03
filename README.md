@@ -1,6 +1,6 @@
 # micro
 
-> I'm in the middle of rewriting a large amount of micro to be easier to setup and improve some major issues. At the moment you should avoid using micro. 
+> I'm in the middle of rewriting a large amount of micro to be easier to setup and improve some major issues. At the moment you should avoid using micro.
 
 An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** You can see a preview at https://micro.sylo.digital
 
@@ -46,6 +46,10 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 
 ## installation
 
+**Installation instructions have been removed as there is a lot of features still underway - installations created before they're done will likely have to be manually upgraded.**
+
+<!-- ## installation
+
 Before you get started, please keep in mind micro isn't really intended to be self-hosted; setting it up can be tricky and managing it isn't particularly fun. This is a _very_ rough guide to help people that already know what they're doing. If you can't follow along, you should hold off on hosting your own instance until there are better instructions. I'd also recommend you read through the files in [/example](/example) first to see if you can follow along, because if you can't you're just gonna waste time trying to follow the instructions below.
 
 1. Install `git`, `docker` and `docker-compose`
@@ -55,7 +59,7 @@ Before you get started, please keep in mind micro isn't really intended to be se
 5. Run `docker-compose up -d postgres` to start the database.
 6. Run `docker-compose run -e DATABASE_URL=postgresql://micro:youshallnotpass@postgres/micro micro prisma db push` to create database tables.
 7. Run `docker-compose up -d micro` to start micro.
-8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
+8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account. -->
 
 ## administration
 

@@ -5,15 +5,15 @@ export interface SpinnerProps extends HTMLAttributes<SVGElement> {
   size?: "small" | "medium" | "large";
 }
 
-export const Spinner: FunctionComponent<SpinnerProps> = (props) => {
-  const classes = classNames("animate-spin", props.className, {
-    "w-4": props.size === "small",
-    "w-6": !props.size || props.size === "medium",
-    "w-9": props.size === "large",
+export const Spinner: FunctionComponent<SpinnerProps> = ({ size, className, ...rest }) => {
+  const classes = classNames("animate-spin", className, {
+    "w-4": size === "small",
+    "w-6": !size || size === "medium",
+    "w-9": size === "large",
   });
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {...props} className={classes}>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {...rest} className={classes}>
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
       <path
         className="opacity-75"

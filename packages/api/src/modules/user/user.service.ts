@@ -1,9 +1,9 @@
-import { Permission } from "@micro/common";
 import { EntityRepository, QueryOrder } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { ConflictException, Injectable } from "@nestjs/common";
 import bcrypt from "bcrypt";
 import { nanoid } from "nanoid";
+import { Permission } from "../../constants";
 import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { File } from "../file/file.entity";
 import { Invite } from "../invite/invite.entity";
@@ -40,7 +40,7 @@ export class UserService {
 
   async deleteUser(id: string) {
     const user = this.userRepo.getReference(id);
-    this.userRepo.remove(user);
+    await this.userRepo.removeAndFlush(user);
   }
 
   async createUser(data: CreateUserDto, invite: Invite) {

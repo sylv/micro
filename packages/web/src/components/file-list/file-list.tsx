@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Endpoints } from "@micro/common";
 import { http } from "../../helpers/http.helper";
 import { GetUserFilesData } from "@micro/api";
 import { Card } from "../card";
@@ -20,7 +19,7 @@ export const FileList: FunctionComponent = () => {
     try {
       if (error || loading || !hasMore) return;
       setLoading(true);
-      let url = Endpoints.USER_FILES + `?offset=${offset}&limit=${PER_PAGE}`;
+      let url = `user/files?offset=${offset}&limit=${PER_PAGE}`;
       const response = await http(url.toString());
       const body = (await response.json()) as GetUserFilesData;
       const isFullPage = body.length === PER_PAGE;

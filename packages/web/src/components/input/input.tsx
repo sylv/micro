@@ -9,15 +9,15 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   suffix?: React.ReactNode;
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ prefix, suffix, className, ...rest }, ref) => {
   const classes = classNames(style.input, {
-    "rounded-l": !props.prefix,
-    "rounded-r": !props.suffix,
+    "rounded-l": !prefix,
+    "rounded-r": !suffix,
   });
 
   return (
-    <InputContainer prefix={props.prefix} suffix={props.suffix} className={props.className}>
-      <input {...props} prefix={undefined} className={classes} ref={ref} />
+    <InputContainer prefix={prefix} suffix={suffix} className={className}>
+      <input {...rest} className={classes} ref={ref} />
     </InputContainer>
   );
 });

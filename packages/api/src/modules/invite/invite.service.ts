@@ -1,8 +1,8 @@
-import { Permission } from "@micro/common";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { config } from "../../config";
+import { Permission } from "../../constants";
 import { User } from "../user/user.entity";
 import { Invite } from "./invite.entity";
 

@@ -1,5 +1,4 @@
 import { GetFileData } from "@micro/api";
-import { Endpoints } from "@micro/common";
 import copyToClipboard from "copy-to-clipboard";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -12,14 +11,15 @@ import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
 import { downloadUrl } from "../../helpers/download.helper";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
+import { http } from "../../helpers/http.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
 import { useUser } from "../../hooks/use-user.helper";
 import Error from "../_error";
 
 export default function File() {
   const router = useRouter();
-  const fileId = router.query.fileId as string;
-  const file = useSWR<GetFileData>(Endpoints.FILE(fileId));
+  const fileId = router.query.fileId;
+  const file = useSWR<GetFileData>(router.query.fileId ? `file/${fileId}` : null);
   const user = useUser();
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -58,7 +58,7 @@ export default function File() {
 
     try {
       setDeleting(true);
-      await fetch(Endpoints.FILE(file.data.id), {
+      await http(`file/${file.data.id}`, {
         method: "DELETE",
       });
 

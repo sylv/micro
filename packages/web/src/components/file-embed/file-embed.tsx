@@ -1,15 +1,11 @@
-import { FunctionComponent, useMemo } from "react";
 import { GetFileData } from "@micro/api";
-import { FileEmbedDefault } from "./file-embed-default";
+import { FunctionComponent, useMemo } from "react";
 import { FileEmbedContainer } from "./file-embed-container";
+import { FileEmbedDefault } from "./file-embed-default";
 import { FileEmbedText } from "./file-embed-text/file-embed-text";
-import { FileEmbedImage } from "./file-embed-image";
-import { FileEmbedVideo } from "./file-embed-video";
 
 export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
   const isText = useMemo(() => FileEmbedText.embeddable(props.file), [props.file]);
-  const isImage = useMemo(() => FileEmbedImage.embeddable(props.file.type), [props.file.type]);
-  const isVideo = useMemo(() => FileEmbedVideo.embeddable(props.file.type), [props.file.type]);
 
   if (isText) {
     return (
@@ -19,21 +15,21 @@ export const FileEmbed: FunctionComponent<{ file: GetFileData }> = (props) => {
     );
   }
 
-  if (isImage) {
-    return (
-      <FileEmbedContainer file={props.file}>
-        <FileEmbedImage file={props.file} />
-      </FileEmbedContainer>
-    );
-  }
+  // if (isImage) {
+  //   return (
+  //     <FileEmbedContainer file={props.file}>
+  //       <FileEmbedImage file={props.file} />
+  //     </FileEmbedContainer>
+  //   );
+  // }
 
-  if (isVideo) {
-    return (
-      <FileEmbedContainer file={props.file}>
-        <FileEmbedVideo file={props.file} />
-      </FileEmbedContainer>
-    );
-  }
+  // if (isVideo) {
+  //   return (
+  //     <FileEmbedContainer file={props.file}>
+  //       <FileEmbedVideo file={props.file} />
+  //     </FileEmbedContainer>
+  //   );
+  // }
 
   return (
     <FileEmbedContainer file={props.file}>

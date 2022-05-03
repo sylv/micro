@@ -1,4 +1,4 @@
-import { isObject } from "@micro/common";
+import { isObject } from "./is-object.helper";
 
 export function getErrorMessage(error: unknown): string | undefined {
   if (typeof error === "string") return error;

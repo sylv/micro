@@ -15,8 +15,6 @@
     },
     "dependencies": {
         "@headlessui/react": "^1.4.1",
-        "@micro/api": "workspace:^0.0.1",
-        "@micro/common": "workspace:^0.0.1",
         "autoprefixer": "^10.3.5",
         "classnames": "^2.3.1",
         "copy-to-clipboard": "^3.3.1",
@@ -36,6 +34,7 @@
         "tailwindcss": "^2.2.15"
     },
     "devDependencies": {
+        "@micro/api": "workspace:^0.0.1",
         "@types/react": "^17.0.24",
         "typescript": "^4.4.3"
     }

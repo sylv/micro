@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { FastifyRequest } from "fastify";
-import { Permission } from "@micro/common";
+import { Permission } from "../../../constants";
 import { UserService } from "../../user/user.service";
 
 @Injectable()

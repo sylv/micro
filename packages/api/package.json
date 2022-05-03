@@ -10,10 +10,10 @@
         "node": ">=16"
     },
     "scripts": {
-        "watch": "nodemon --exec \"ts-eager\" ./src/main.ts"
+        "watch": "tsup src/main.ts --watch --onSuccess \"node dist/main.js\" --target node16",
+        "build": "tsup src/main.ts --sourcemap --target node16"
     },
     "dependencies": {
-        "@micro/common": "workspace:^0.0.1",
         "@mikro-orm/core": "^4.5.9",
         "@mikro-orm/nestjs": "^4.3.0",
         "@mikro-orm/postgresql": "^4.5.9",
@@ -52,6 +52,7 @@
     "devDependencies": {
         "@mikro-orm/cli": "^4.5.9",
         "@mikro-orm/migrations": "^4.5.9",
+        "@swc/core": "^1.2.172",
         "@tsconfig/node16": "^1.0.2",
         "@types/bcrypt": "^5.0.0",
         "@types/luxon": "^2.0.4",
@@ -61,8 +62,8 @@
         "@types/passport-local": "^1.0.34",
         "@types/sharp": "^0.29.2",
         "nodemon": "^2.0.13",
-        "ts-eager": "^2.0.2",
-        "ts-node": "^10.2.1"
+        "ts-node": "^10.2.1",
+        "tsup": "^5.12.6"
     },
     "mikro-orm": {
         "useTsNode": true,

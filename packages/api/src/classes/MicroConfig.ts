@@ -8,7 +8,7 @@ import { MicroHost } from "./MicroHost";
 
 export class MicroConfig {
   @IsUrl({ require_tld: false, require_protocol: true, protocols: ["postgresql", "postgres"] })
-  database!: string;
+  databaseUrl!: string;
 
   @IsString()
   @NotEquals("YOU_SHALL_NOT_PASS")

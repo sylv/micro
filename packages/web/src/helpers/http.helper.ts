@@ -14,8 +14,9 @@ export class HTTPError extends Error {
   }
 }
 
-export async function http(...args: Parameters<typeof fetch>): Promise<Response> {
-  const response = await fetch(...args);
+export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
+  const url = pathOrUrl.startsWith("http") || pathOrUrl.startsWith("/") ? pathOrUrl : `/api/${pathOrUrl}`;
+  const response = await fetch(url, options);
   if (!response.ok) {
     const clone = response.clone();
     const body = await clone.json().catch(() => null);

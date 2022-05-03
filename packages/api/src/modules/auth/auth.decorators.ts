@@ -1,6 +1,6 @@
 import { applyDecorators, createParamDecorator, ExecutionContext, SetMetadata, UseGuards } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
-import { Permission } from "@micro/common";
+import { Permission } from "../../constants";
 import { JWTAuthGuard } from "./guards/jwt.guard";
 import { PermissionGuard } from "./guards/permission.guard";
 

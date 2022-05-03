@@ -10,12 +10,15 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   suffix?: React.ReactNode;
 }
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(props, ref) {
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(
+  { prefix, suffix, className, children, ...rest },
+  ref
+) {
   return (
-    <InputContainer prefix={props.prefix} suffix={props.suffix} className={props.className}>
+    <InputContainer prefix={prefix} suffix={suffix} className={className}>
       <div className="relative inline-flex w-full select-none">
-        <select {...props} prefix={undefined} className={classNames(props.className, style.input, "appearance-none")} ref={ref}>
-          {props.children}
+        <select {...rest} prefix={undefined} className={classNames(className, style.input, "appearance-none")} ref={ref}>
+          {children}
         </select>
         <div className="absolute right-0 flex items-center justify-center w-10 h-full text-gray-500 pointer-events-none disabled:">
           <ChevronDown size="1em" className="stroke-current" />

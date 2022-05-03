@@ -1,10 +1,9 @@
-import type { File } from "./modules/file/file.entity";
-import type { User } from "./modules/user/user.entity";
 import type { AppController } from "./modules/app.controller";
-import type { FileController } from "./modules/file/file.controller";
+import type { File } from "./modules/file/file.entity";
 import type { HostsController } from "./modules/hosts/hosts.controller";
 import type { InviteController } from "./modules/invite/invite.controller";
 import type { UserController } from "./modules/user/user.controller";
+import type { User } from "./modules/user/user.entity";
 
 export type { File, User };
 export type Await<T> = T extends {

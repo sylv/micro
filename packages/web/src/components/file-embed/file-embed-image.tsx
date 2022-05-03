@@ -1,6 +1,5 @@
-import Head from "next/head";
-import { EMBEDDABLE_IMAGE_TYPES } from "@micro/common";
 import { GetFileData } from "@micro/api";
+import Head from "next/head";
 
 export const FileEmbedImage = ({ file }: { file: GetFileData }) => {
   return (
@@ -13,5 +12,3 @@ export const FileEmbedImage = ({ file }: { file: GetFileData }) => {
     </>
   );
 };
-
-FileEmbedImage.embeddable = (type: string) => EMBEDDABLE_IMAGE_TYPES.includes(type);

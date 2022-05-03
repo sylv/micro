@@ -1,9 +1,9 @@
-import { EMBEDDABLE_IMAGE_TYPES } from "@micro/common";
 import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Expose } from "class-transformer";
 import mimeType from "mime-types";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { TimestampType } from "../../timestamp.type";
+import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
 
@@ -25,7 +25,7 @@ export class File {
   host?: string;
 
   @Property({ type: String, lazy: true })
-  deleteKey = generateDeleteKey();
+  deleteKey?: string = generateDeleteKey();
 
   @Property({ nullable: true })
   name?: string;
@@ -50,11 +50,10 @@ export class File {
   @Expose()
   get urls() {
     const extension = mimeType.extension(this.type);
-    const supportsThumbnail = EMBEDDABLE_IMAGE_TYPES.includes(this.type);
     const viewUrl = `/f/${this.id}`;
     const directUrl = `/f/${this.id}.${extension}`;
     const metadataUrl = `/api/file/${this.id}`;
-    const thumbnailUrl = supportsThumbnail ? `/t/${this.id}` : null;
+    const thumbnailUrl = THUMBNAIL_SUPPORTED_TYPES.has(this.type) ? `/t/${this.id}` : null;
     // todo: this.deleteKey is lazy which means the only time it should be present
     // is when the file is created or its explicitly asked for. that said, we should
     // still make sure we aren't leaking delete keys by accident.

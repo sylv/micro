@@ -1,3 +1,4 @@
+import { GetInviteData } from "@micro/api";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -6,11 +7,9 @@ import { LoginData, LoginForm } from "../../components/login-form";
 import { PageLoader } from "../../components/page-loader";
 import { Time } from "../../components/time";
 import { Title } from "../../components/title";
-import { Endpoints } from "@micro/common";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
 import { http } from "../../helpers/http.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
-import { GetInviteData } from "@micro/api";
 import Error from "../_error";
 
 export default function Invite() {
@@ -18,7 +17,7 @@ export default function Invite() {
   const [loading, setLoading] = useState(false);
   const setToast = useToasts();
   const inviteToken = router.query.inviteToken;
-  const invite = useSWR<GetInviteData>(`/api/invite/${inviteToken}`);
+  const invite = useSWR<GetInviteData>(inviteToken ? `/api/invite/${inviteToken}` : null);
   const expiresAt = invite.data?.expiresAt;
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function Invite() {
   const onSubmit = async (data: LoginData) => {
     try {
       setLoading(true);
-      await http(Endpoints.USER, {
+      await http(`user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, invite: inviteToken }),
