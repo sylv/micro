@@ -1,6 +1,6 @@
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
 import sharp from "sharp";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
@@ -15,14 +15,13 @@ export class ThumbnailService {
   private static readonly THUMBNAIL_TYPE = "image/webp";
   constructor(
     @InjectRepository(Thumbnail) private thumbnailRepo: EntityRepository<Thumbnail>,
+    @InjectRepository(File) private fileRepo: EntityRepository<File>,
     private storageService: StorageService,
     private fileService: FileService
   ) {}
 
   async getThumbnail(fileId: string) {
-    const thumbnail = await this.thumbnailRepo.findOne(fileId);
-    if (!thumbnail) throw new NotFoundException();
-    return thumbnail;
+    return this.thumbnailRepo.findOneOrFail(fileId);
   }
 
   async createThumbnail(file: File) {
@@ -36,22 +35,24 @@ export class ThumbnailService {
     const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).webp({ quality: 40 });
     const data = await stream.pipe(transformer).toBuffer();
     const duration = Date.now() - start;
-    const thumbnail = this.thumbnailRepo.create({
-      id: file.id,
+    file.thumbnail = this.thumbnailRepo.create({
       data: data,
       duration: duration,
       size: data.length,
       file: file,
     });
 
-    await this.thumbnailRepo.persistAndFlush(thumbnail);
-    return thumbnail;
+    await this.fileRepo.persistAndFlush(file);
+    return file.thumbnail;
   }
 
   async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
-    const existing = await this.thumbnailRepo.findOne(fileId);
+    const existing = await this.thumbnailRepo.findOne(fileId, { populate: ["data"] });
     if (existing) {
-      return reply.header("X-Micro-Generated", "false").header("Content-Type", ThumbnailService.THUMBNAIL_TYPE).send(existing.data);
+      return reply
+        .header("X-Micro-Generated", "false")
+        .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
+        .send(existing.data);
     }
 
     const file = await this.fileService.getFile(fileId, request.host);

@@ -12,3 +12,18 @@ export const FileEmbedImage = ({ file }: { file: GetFileData }) => {
     </>
   );
 };
+
+FileEmbedImage.embeddable = (file: GetFileData) => {
+  switch (file.type) {
+    case "image/png":
+    case "image/jpeg":
+    case "image/gif":
+    case "image/svg+xml":
+    case "image/webp":
+    case "image/bmp":
+    case "image/tiff":
+      return true;
+    default:
+      return false;
+  }
+};

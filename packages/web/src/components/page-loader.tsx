@@ -8,7 +8,7 @@ export const PageLoader: FC = () => {
     return () => {
       document.body.style.overflow = "";
     };
-  });
+  }, []);
 
   return (
     <Container center>

@@ -7,3 +7,14 @@ export const FileEmbedVideo = ({ file }: { file: GetFileData }) => {
     </video>
   );
 };
+
+FileEmbedVideo.embeddable = (file: GetFileData) => {
+  switch (file.type) {
+    case "video/mp4":
+    case "video/webm":
+    case "video/ogg":
+      return true;
+    default:
+      return false;
+  }
+};

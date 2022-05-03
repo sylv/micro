@@ -31,7 +31,7 @@ export async function logout() {
 }
 
 export const useUser = () => {
-  const user = useSWR<GetUserData>(`user`, { refreshInterval: 60_000 });
+  const user = useSWR<GetUserData>(`user`);
   const loading = (!user.data && !user.error) || user.isValidating;
 
   return {

@@ -1,13 +1,14 @@
-import { ClassSerializerInterceptor, Logger, ValidationPipe } from "@nestjs/common";
-import { NestFactory, Reflector } from "@nestjs/core";
+import cookie from "@fastify/cookie";
+import helmet from "@fastify/helmet";
+import multipart, { FastifyMultipartOptions } from "@fastify/multipart";
+import { Logger, ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import createApp from "fastify";
-import multipart, { FastifyMultipartOptions } from "@fastify/multipart";
 import { config } from "./config";
 import { AppModule } from "./modules/app.module";
 import { HostsGuard } from "./modules/hosts/hosts.guard";
-import cookie from "@fastify/cookie";
-import helmet from "@fastify/helmet";
+import { SerializerInterceptor } from "./serializer.interceptor";
 
 const limits: FastifyMultipartOptions = {
   limits: {
@@ -29,7 +30,7 @@ async function bootstrap(): Promise<void> {
   const adapter = new FastifyAdapter(fastify as any);
   const logger = new Logger("bootstrap");
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(new Reflector(), {}));
+  app.useGlobalInterceptors(new SerializerInterceptor());
   app.useGlobalGuards(new HostsGuard());
   app.useGlobalPipes(
     new ValidationPipe({

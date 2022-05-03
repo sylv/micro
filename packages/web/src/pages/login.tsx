@@ -19,7 +19,7 @@ export default function Login() {
 
   useEffect(() => {
     Router.prefetch("/dashboard");
-  });
+  }, []);
 
   async function onContinue(data: LoginData) {
     try {

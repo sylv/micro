@@ -25,13 +25,11 @@ export class Invite {
   expiresAt?: Date;
 
   @Property({ persist: false })
-  @Expose()
   get expired() {
     return this.expiresAt && this.expiresAt.getTime() < Date.now();
   }
 
   @Property({ persist: false })
-  @Expose()
   get url() {
     return `/invite/${this.id}`;
   }

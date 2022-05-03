@@ -37,7 +37,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (hosts.data && !selectedHosts[0]) {
+    if (hosts.data && selectedHosts.length === 0) {
       const root = hosts.data.find((host) => host.root);
       if (root) setSelectedHosts([root.data.key]);
     }
@@ -86,7 +86,12 @@ export default function Dashboard() {
         <Container>
           <div className="grid grid-cols-8 gap-2">
             <div className="col-span-full md:col-span-6">
-              <Input prefix="Upload Token" onFocus={(event) => event.target.select()} value={token.data.token} readOnly />
+              <Input
+                prefix="Upload Token"
+                onFocus={(event) => event.target.select()}
+                value={token.data.token}
+                readOnly
+              />
             </div>
             <div className="col-span-full md:col-span-2">
               <Button disabled={regenerating} onClick={regenerateToken}>

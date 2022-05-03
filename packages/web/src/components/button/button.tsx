@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const onClickWrap = disabled ? undefined : onClick;
     const onKeyDownWrap = disabled ? undefined : onKeyDown;
     const classes = classNames(
-      "flex items-center justify-center w-full px-3 py-2 text-sm font-medium transition border rounded bg-dark-300 hover:bg-dark-600 border-dark-600 max-w-[15em]",
+      "flex items-center justify-center w-full px-3 py-2 text-sm font-medium transition border rounded bg-dark-300 hover:bg-dark-600 border-dark-600",
       disabled && "!bg-dark-200 border border-dark-600 text-white cursor-not-allowed",
       primary && "bg-brand hover:bg-brand hover:opacity-75",
       small && "text-xs font-normal px-2 py-1",

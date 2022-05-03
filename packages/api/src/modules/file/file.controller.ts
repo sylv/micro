@@ -1,3 +1,4 @@
+import { MultipartFile } from "@fastify/multipart";
 import {
   BadRequestException,
   Controller,
@@ -13,12 +14,11 @@ import {
   Res,
   UseGuards,
 } from "@nestjs/common";
-import { classToPlain } from "class-transformer";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { MultipartFile } from "fastify-multipart";
 import mime from "mime-types";
 import { config } from "../../config";
 import { isImageScraper } from "../../helpers/is-image-scraper.helper";
+import { parseKey } from "../../helpers/parse-key.helper";
 import { UserId } from "../auth/auth.decorators";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard";
 import { HostsService } from "../hosts/hosts.service";
@@ -31,15 +31,15 @@ export class FileController {
 
   @Get("file/:key")
   async getFile(@Res() reply: FastifyReply, @Param("key") key: string, @Request() request: FastifyRequest) {
-    const clean = this.fileService.cleanFileKey(key);
-    const file = await this.fileService.getFile(clean.id, request.host);
+    const parsedKey = parseKey(key);
+    const file = await this.fileService.getFile(parsedKey.id, request.host);
     if (!file) throw new NotFoundException("File not found.");
     if (!this.hostsService.checkHostCanSendFile(file, request.host)) {
       throw new ForbiddenException("That file is not available on this host.");
     }
 
-    if (clean.ext) {
-      const mimeType = mime.lookup(clean.ext);
+    if (parsedKey.ext) {
+      const mimeType = mime.lookup(parsedKey.ext);
       if (!mimeType) throw new BadRequestException("Unknown file extension.");
       if (file.type !== mimeType) {
         throw new BadRequestException("File extension does not match file type.");
@@ -47,12 +47,12 @@ export class FileController {
     }
 
     const scraper = isImageScraper(request.headers["user-agent"]);
-    const isDirect = (scraper && (!scraper.types || scraper.types.includes(file.type))) || !!clean.ext;
+    const isDirect = (scraper && (!scraper.types || scraper.types.includes(file.type))) || !!parsedKey.ext;
     if (isDirect) {
-      return this.fileService.sendFile(clean.id, request, reply);
+      return this.fileService.sendFile(parsedKey.id, request, reply);
     }
 
-    return reply.send(classToPlain(file));
+    return reply.send(file);
   }
 
   @Delete("file/:id")
@@ -64,7 +64,11 @@ export class FileController {
 
   @Post("file")
   @UseGuards(JWTAuthGuard)
-  async createFile(@UserId() userId: string, @Req() request: FastifyRequest, @Headers("x-micro-host") hosts = config.rootHost.url) {
+  async createFile(
+    @UserId() userId: string,
+    @Req() request: FastifyRequest,
+    @Headers("x-micro-host") hosts = config.rootHost.url
+  ) {
     const user = await this.userService.getUser(userId);
     if (!user) throw new ForbiddenException("Unknown user.");
     const upload = (await request.file()) as MultipartFile | undefined;

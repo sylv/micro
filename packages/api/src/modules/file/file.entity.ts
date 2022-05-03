@@ -1,9 +1,8 @@
-import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/core";
-import { Expose } from "class-transformer";
+import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import mimeType from "mime-types";
+import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { TimestampType } from "../../timestamp.type";
-import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
 
@@ -24,13 +23,13 @@ export class File {
   @Property({ nullable: true })
   host?: string;
 
-  @Property({ type: String, lazy: true })
+  @Property({ type: String, lazy: true, hidden: true })
   deleteKey?: string = generateDeleteKey();
 
   @Property({ nullable: true })
   name?: string;
 
-  @OneToOne({ entity: () => Thumbnail, inversedBy: "file", nullable: true, orphanRemoval: true })
+  @OneToOne({ entity: () => Thumbnail, nullable: true })
   thumbnail?: Thumbnail;
 
   @ManyToOne(() => User)
@@ -40,14 +39,12 @@ export class File {
   createdAt = new Date();
 
   @Property({ persist: false })
-  @Expose()
   get displayName() {
     const extension = mimeType.extension(this.type);
     return this.name ? this.name : extension ? `${this.id}.${extension}` : this.id;
   }
 
   @Property({ persist: false })
-  @Expose()
   get urls() {
     const extension = mimeType.extension(this.type);
     const viewUrl = `/f/${this.id}`;
@@ -66,4 +63,6 @@ export class File {
       delete: deleteUrl,
     };
   }
+
+  [OptionalProps]: "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "host";
 }

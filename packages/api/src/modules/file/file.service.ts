@@ -12,7 +12,7 @@ import {
 import { Cron, CronExpression } from "@nestjs/schedule";
 import contentRange from "content-range";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Multipart } from "fastify-multipart";
+import { Multipart } from "@fastify/multipart";
 import { DateTime } from "luxon";
 import { PassThrough } from "stream";
 import xbytes from "xbytes";
@@ -26,19 +26,12 @@ import { File } from "./file.entity";
 
 @Injectable()
 export class FileService implements OnApplicationBootstrap {
-  private static readonly FILE_KEY_REGEX = new RegExp(`^(?<id>.{${contentIdLength}})(?<ext>\\.[A-z0-9]{2,})?$`);
   private readonly logger = new Logger(FileService.name);
   constructor(
     @InjectRepository(File) private fileRepo: EntityRepository<File>,
     private storageService: StorageService,
     private hostsService: HostsService
   ) {}
-
-  cleanFileKey(key: string): { id: string; ext?: string } {
-    const groups = FileService.FILE_KEY_REGEX.exec(key)?.groups;
-    if (!groups) throw new BadRequestException("Invalid file key");
-    return groups as any;
-  }
 
   async getFile(id: string, host: MicroHost) {
     const file = await this.fileRepo.findOne(id);
@@ -76,7 +69,9 @@ export class FileService implements OnApplicationBootstrap {
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     if (+request.headers["content-length"] >= config.uploadLimit) {
       const size = xbytes(+request.headers["content-length"]);
-      this.logger.warn(`User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`);
+      this.logger.warn(
+        `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
+      );
       throw new PayloadTooLargeException();
     }
 
