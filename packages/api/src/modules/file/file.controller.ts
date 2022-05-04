@@ -17,22 +17,23 @@ import {
 import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../../config";
 import { parseKey } from "../../helpers/parse-key.helper";
+import { randomItem } from "../../helpers/random-item.helper";
 import { UserId } from "../auth/auth.decorators";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard";
-import { HostsService } from "../hosts/hosts.service";
+import { HostService } from "../host/host.service";
 import { UserService } from "../user/user.service";
 import { FileService } from "./file.service";
 
 @Controller()
 export class FileController {
-  constructor(private fileService: FileService, private userService: UserService, private hostsService: HostsService) {}
+  constructor(private fileService: FileService, private userService: UserService, private hostService: HostService) {}
 
   @Get("file/:key")
   async getFile(@Res() reply: FastifyReply, @Param("key") key: string, @Request() request: FastifyRequest) {
     const parsedKey = parseKey(key);
     const file = await this.fileService.getFile(parsedKey.id, request.host);
     if (!file) throw new NotFoundException("File not found.");
-    if (!this.hostsService.checkHostCanSendFile(file, request.host)) {
+    if (!this.hostService.canHostSendFile(request.host, file)) {
       throw new ForbiddenException("That file is not available on this host.");
     }
 
@@ -61,7 +62,9 @@ export class FileController {
     if (!user) throw new ForbiddenException("Unknown user.");
     const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) throw new BadRequestException("Missing upload.");
-    const host = await this.hostsService.resolveHost(hosts, user.tags, true);
+    const possibleHosts = hosts.split(/, ?/g);
+    const hostUrl = randomItem(possibleHosts);
+    const host = await this.hostService.getHostFrom(hostUrl, user.tags);
     const file = await this.fileService.createFile(upload, request, user, host);
     return file;
   }

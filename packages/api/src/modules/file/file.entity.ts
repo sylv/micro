@@ -1,5 +1,6 @@
 import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import mimeType from "mime-types";
+import { config } from "../../config";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { TimestampType } from "../../timestamp.type";
@@ -50,6 +51,22 @@ export class File {
   }
 
   @Property({ persist: false })
+  get url() {
+    if (!this.owner.username || !this.host) {
+      return {
+        view: config.rootHost.url + this.urls.view,
+        direct: config.rootHost.url + this.urls.direct,
+      };
+    }
+
+    const replacedHost = this.host.replace("{{username}}", this.owner.username);
+    return {
+      view: replacedHost + this.urls.view,
+      direct: replacedHost + this.urls.direct,
+    };
+  }
+
+  @Property({ persist: false })
   get urls() {
     const extension = mimeType.extension(this.type);
     const viewUrl = `/f/${this.id}`;
@@ -69,5 +86,5 @@ export class File {
     };
   }
 
-  [OptionalProps]: "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "host";
+  [OptionalProps]: "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "host" | "extension";
 }

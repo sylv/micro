@@ -12,5 +12,5 @@ export const RequirePermissions = (...permissions: Permission[]) => {
 
 export const UserId = createParamDecorator((_, context: ExecutionContext) => {
   const request = context.switchToHttp().getRequest<FastifyRequest>();
-  return request.user.id;
+  return request.user?.id;
 });

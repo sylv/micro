@@ -1,10 +1,8 @@
 import { useConfig } from "./use-config.hook";
-import { useHost } from "./use-host.hook";
 
 export const usePaths = () => {
-  const config = useConfig(false);
-  const currentHost = useHost();
-  if (!config.data?.hosts || !currentHost) {
+  const config = useConfig();
+  if (!config.data) {
     return {
       home: "/",
       dashboard: "/dashboard",
@@ -13,13 +11,14 @@ export const usePaths = () => {
     };
   }
 
-  const rootHost = config.data.hosts.find((host) => host.root);
-  if (!rootHost) throw new Error(`Expected root host was missing.`);
-  const rootIsCurrent = currentHost.data.key === rootHost.data.key;
+  const rootIsCurrent = config.data.rootHost === config.data.host.normalised;
+  const home = config.data.host.redirect ?? rootIsCurrent ? "/" : config.data.rootHost.url;
+  const dashboard = rootIsCurrent ? "/dashboard" : config.data.rootHost.url + "/dashboard";
+  const login = rootIsCurrent ? "/login" : config.data.rootHost.url + "/login";
   return {
-    home: currentHost.data.redirect ?? rootIsCurrent ? "/" : rootHost.data.url,
-    dashboard: rootIsCurrent ? "/dashboard" : rootHost.data.url + "/dashboard",
-    login: rootIsCurrent ? "/login" : rootHost.data.url + "/login",
+    home,
+    dashboard,
+    login,
     loading: false,
   };
 };

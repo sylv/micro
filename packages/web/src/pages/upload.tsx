@@ -1,8 +1,7 @@
-import { GetHostsData } from "@micro/api";
+import { GetFileData } from "@micro/api";
 import { useRouter } from "next/router";
 import React, { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from "react";
 import { Upload as UploadIcon } from "react-feather";
-import useSWR from "swr";
 import { Button } from "../components/button/button";
 import { Card } from "../components/card";
 import { Container } from "../components/container";
@@ -12,7 +11,8 @@ import { Spinner } from "../components/spinner";
 import { Title } from "../components/title";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { http } from "../helpers/http.helper";
-import { useHost } from "../hooks/use-host.hook";
+import { replaceUsername } from "../helpers/replace-username.helper";
+import { useConfig } from "../hooks/use-config.hook";
 import { useToasts } from "../hooks/use-toasts.helper";
 import { useUser } from "../hooks/use-user.helper";
 
@@ -25,8 +25,7 @@ export default function Upload() {
   const [hover, setHover] = useState(false);
   const setToast = useToasts();
   const [selectedHost, setSelectedHost] = useState<string | undefined>();
-  const hosts = useSWR<GetHostsData>(`hosts`);
-  const currentHost = useHost();
+  const config = useConfig();
 
   useEffect(() => {
     if (user.error) router.replace("/");
@@ -63,7 +62,7 @@ export default function Upload() {
 
   const handleUpload = async () => {
     try {
-      if (!file) return;
+      if (!file || !user.data || !config.data) return;
       setUploading(true);
       const form = new FormData();
       form.append(file.name, file);
@@ -75,11 +74,11 @@ export default function Upload() {
         headers: headers,
       });
 
-      const body = await response.json();
+      const body = (await response.json()) as GetFileData;
       const route = `/file/${body.id}`;
-      const host = hosts.data?.find((host) => host.data.key === selectedHost);
-      if (host && currentHost?.data.key !== host.data.key) {
-        location.href = `${host.data.url}${route}`;
+      const host = body.host && config.data.hosts.find((host) => host.normalised === body.host);
+      if (host && config.data.host.normalised !== host.normalised) {
+        location.href = `${host.url}${route}`;
       } else {
         router.push(route);
       }
@@ -97,7 +96,7 @@ export default function Upload() {
     inputRef.current?.click();
   };
 
-  if (!user.data || !hosts.data) {
+  if (!user.data || !config.data) {
     return (
       <>
         <Title>Upload</Title>
@@ -131,13 +130,11 @@ export default function Upload() {
               value={selectedHost}
               onChange={(event) => setSelectedHost(event.target.value)}
             >
-              {hosts.data
-                .filter((host) => host.authorised)
-                .map((host) => (
-                  <option key={host.data.key} value={host.data.key} selected={host.data.key === selectedHost}>
-                    {host.data.key.replace("{{username}}", user.data!.username)}
-                  </option>
-                ))}
+              {config.data.hosts.map((host) => (
+                <option key={host.normalised} value={host.normalised} selected={host.normalised === selectedHost}>
+                  {replaceUsername(host.normalised, user.data!.username)}
+                </option>
+              ))}
             </Select>
             <Button primary onClick={handleUpload}>
               Upload

@@ -6,7 +6,7 @@ import MikroOrmOptions from "../mikro-orm.config";
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth/auth.module";
 import { FileModule } from "./file/file.module";
-import { HostsModule } from "./hosts/hosts.module";
+import { HostModule } from "./host/host.module";
 import { InviteModule } from "./invite/invite.module";
 import { StorageModule } from "./storage/storage.module";
 import { ThumbnailModule } from "./thumbnail/thumbnail.module";
@@ -19,7 +19,7 @@ import { UserModule } from "./user/user.module";
     MikroOrmModule.forRoot(MikroOrmOptions),
     PassportModule,
     StorageModule,
-    HostsModule,
+    HostModule,
     AuthModule,
     FileModule,
     ThumbnailModule,

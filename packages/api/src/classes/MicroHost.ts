@@ -1,7 +1,6 @@
-import { Expose, Transform } from "class-transformer";
 import { IsOptional, IsString, IsUrl, Matches } from "class-validator";
-import { HostsService } from "../modules/hosts/hosts.service";
 import escapeString from "escape-string-regexp";
+import { HostService } from "../modules/host/host.service";
 
 export class MicroHost {
   // https://regex101.com/r/ZR9rpp/1
@@ -16,24 +15,20 @@ export class MicroHost {
   @IsOptional()
   redirect?: string;
 
-  @Expose()
-  get key() {
-    return HostsService.normaliseHostUrl(this.url);
+  get normalised() {
+    return HostService.normaliseHostUrl(this.url);
   }
 
-  @Expose()
-  get wildcard() {
+  get isWildcard() {
     return this.url.includes("{{username}}");
   }
 
-  @Expose()
-  @Transform(({ value }) => value.source, { toPlainOnly: true })
-  @Transform(({ value }) => new RegExp(value), { toClassOnly: true })
+  private _pattern?: RegExp;
   get pattern() {
-    // todo: this means we're compiling regex every time we check
-    // using pattern.test. we should cache this or create it once during the transform.
-    const escaped = escapeString(this.key);
+    if (this._pattern) return this._pattern;
+    const escaped = escapeString(this.normalised);
     const pattern = escaped.replace("\\{\\{username\\}\\}", "(?<username>[a-z0-9-{}]+?)");
-    return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`);
+    this._pattern = new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`);
+    return this._pattern;
   }
 }

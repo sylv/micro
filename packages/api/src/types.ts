@@ -1,6 +1,6 @@
 import type { AppController } from "./modules/app.controller";
 import type { File } from "./modules/file/file.entity";
-import type { HostsController } from "./modules/hosts/hosts.controller";
+import type { HostController } from "./modules/host/host.controller";
 import type { InviteController } from "./modules/invite/invite.controller";
 import type { UserController } from "./modules/user/user.controller";
 import type { User } from "./modules/user/user.entity";
@@ -28,4 +28,4 @@ export type GetFileData = File;
 export type GetServerConfigData = Await<ReturnType<AppController["getConfig"]>>;
 
 // hosts
-export type GetHostsData = Await<ReturnType<HostsController["getHosts"]>>;
+export type GetHostsData = Await<ReturnType<HostController["getHosts"]>>;

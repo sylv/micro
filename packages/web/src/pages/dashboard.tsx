@@ -39,7 +39,7 @@ export default function Dashboard() {
     // set the default domain once they're loaded
     if (hosts.data && selectedHosts.length === 0) {
       const root = hosts.data.find((host) => host.root);
-      if (root) setSelectedHosts([root.data.key]);
+      if (root) setSelectedHosts([root.data.normalised]);
     }
   }, [hosts, selectedHosts]);
 
@@ -100,8 +100,8 @@ export default function Dashboard() {
             </div>
             <div className="col-span-full md:col-span-6">
               <HostList
-                prefix="Hosts"
-                hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.key)}
+                prefix="ShareX config hosts"
+                hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.normalised)}
                 username={user.data!.username}
                 onChange={(hosts) => setSelectedHosts(hosts)}
               />

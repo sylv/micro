@@ -7,7 +7,7 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import createApp from "fastify";
 import { config } from "./config";
 import { AppModule } from "./modules/app.module";
-import { HostsGuard } from "./modules/hosts/hosts.guard";
+import { HostGuard } from "./modules/host/host.guard";
 import { SerializerInterceptor } from "./serializer.interceptor";
 
 const limits: FastifyMultipartOptions = {
@@ -31,7 +31,7 @@ async function bootstrap(): Promise<void> {
   const logger = new Logger("bootstrap");
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   app.useGlobalInterceptors(new SerializerInterceptor());
-  app.useGlobalGuards(new HostsGuard());
+  app.useGlobalGuards(new HostGuard());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

@@ -12,7 +12,7 @@ export class AuthController {
   private static readonly COOKIE_OPTIONS = {
     path: "/",
     httpOnly: true,
-    domain: config.rootHost.key.split(":").shift(),
+    domain: config.rootHost.normalised.split(":").shift(),
     secure: config.rootHost.url.startsWith("https"),
   };
 

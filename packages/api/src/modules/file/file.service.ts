@@ -1,3 +1,4 @@
+import { Multipart } from "@fastify/multipart";
 import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import {
@@ -12,15 +13,14 @@ import {
 import { Cron, CronExpression } from "@nestjs/schedule";
 import contentRange from "content-range";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Multipart } from "@fastify/multipart";
 import { DateTime } from "luxon";
 import { PassThrough } from "stream";
 import xbytes from "xbytes";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
-import { contentIdLength, generateContentId } from "../../helpers/generate-content-id.helper";
+import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { getStreamType } from "../../helpers/get-stream-type.helper";
-import { HostsService } from "../hosts/hosts.service";
+import { HostService } from "../host/host.service";
 import { StorageService } from "../storage/storage.service";
 import { File } from "./file.entity";
 
@@ -30,13 +30,13 @@ export class FileService implements OnApplicationBootstrap {
   constructor(
     @InjectRepository(File) private fileRepo: EntityRepository<File>,
     private storageService: StorageService,
-    private hostsService: HostsService
+    private hostService: HostService
   ) {}
 
   async getFile(id: string, host: MicroHost) {
     const file = await this.fileRepo.findOne(id);
     if (!file) throw new NotFoundException(`Unknown file "${id}"`);
-    if (!this.hostsService.checkHostCanSendFile(file, host)) {
+    if (!this.hostService.canHostSendFile(host, file)) {
       throw new NotFoundException("Your file is in another castle.");
     }
 
@@ -90,7 +90,7 @@ export class FileService implements OnApplicationBootstrap {
       type: type,
       name: multipart.filename,
       owner: owner.id,
-      host: host?.key,
+      host: host?.normalised,
       hash: hash,
       size: size,
     });

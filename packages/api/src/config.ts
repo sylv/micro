@@ -7,7 +7,7 @@ const data = loadConfig("micro");
 const config = plainToClass(MicroConfig, data, { exposeDefaultValues: true });
 const errors = validateSync(config);
 if (errors.length) throw errors;
-if (config.rootHost.wildcard) {
+if (config.rootHost.isWildcard) {
   throw new Error(`Root host cannot be a wildcard domain.`);
 }
 
