@@ -15,7 +15,15 @@ export class HTTPError extends Error {
 }
 
 export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
-  const url = pathOrUrl.startsWith("http") || pathOrUrl.startsWith("/") ? pathOrUrl : `/api/${pathOrUrl}`;
+  const isServer = typeof window === "undefined";
+  let url: string;
+  if (isServer && !pathOrUrl.startsWith("http")) {
+    const path = pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
+    url = `${process.env.API_URL}${path}`;
+  } else {
+    url = pathOrUrl.startsWith("http") || pathOrUrl.startsWith("/") ? pathOrUrl : `/api/${pathOrUrl}`;
+  }
+
   const response = await fetch(url, options);
   if (!response.ok) {
     const clone = response.clone();

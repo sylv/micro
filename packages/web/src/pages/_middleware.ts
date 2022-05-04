@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
         // todo: discord scrapes the url twice, once as discord and once with a generic
         // user-agent when it doesnt find opengraph data. this means we're fetching the file twice
         // every time someone sends a link in discord.
-        const file = await fetcher<GetFileData>(`${process.env.API_URL}/file/${fileId}`);
+        const file = await fetcher<GetFileData>(`file/${fileId}`);
         if (REDIRECT_TYPES.has(file.type)) {
           return new Response(null, {
             status: 302,

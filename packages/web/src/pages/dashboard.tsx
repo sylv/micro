@@ -1,3 +1,4 @@
+import { GetUploadTokenData, PutUploadTokenData } from "@micro/api";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import useSWR, { mutate } from "swr";
@@ -12,36 +13,35 @@ import { ShareXButton } from "../components/sharex-button";
 import { Title } from "../components/title";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { http } from "../helpers/http.helper";
+import { useConfig } from "../hooks/use-config.hook";
 import { useToasts } from "../hooks/use-toasts.helper";
 import { useUser } from "../hooks/use-user.helper";
-import { GetHostsData, GetUploadTokenData, PutUploadTokenData } from "@micro/api";
 
 // todo: subdomain validation (bad characters, too long, etc) with usernames and inputs
 export default function Dashboard() {
   const user = useUser();
   const token = useSWR<GetUploadTokenData>(`user/token`);
-  const hosts = useSWR<GetHostsData>(`hosts`);
+  const config = useConfig();
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [regenerating, setRegenerating] = useState(false);
   const setToast = useToasts();
 
   useEffect(() => {
-    if (hosts.error || token.error) Router.replace("/");
+    if (config.error || token.error) Router.replace("/");
     if (user.error) {
       // todo: for some reason making this /login results in
       // infinite loops of redirects between /login and /dashboard
       // but only sometimes. that shouldn't happen.
       Router.replace("/");
     }
-  }, [user, hosts, token]);
+  }, [user, config, token]);
 
   useEffect(() => {
     // set the default domain once they're loaded
-    if (hosts.data && selectedHosts.length === 0) {
-      const root = hosts.data.find((host) => host.root);
-      if (root) setSelectedHosts([root.data.normalised]);
+    if (config.data && selectedHosts.length === 0) {
+      setSelectedHosts([config.data.rootHost.normalised]);
     }
-  }, [hosts, selectedHosts]);
+  }, [config, selectedHosts]);
 
   useEffect(() => {
     Router.prefetch("/file/[fileId]");
@@ -70,7 +70,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!user.data || !hosts.data || !token.data) {
+  if (!user.data || !config.data || !token.data) {
     return (
       <>
         <Title>Dashboard</Title>
@@ -101,7 +101,7 @@ export default function Dashboard() {
             <div className="col-span-full md:col-span-6">
               <HostList
                 prefix="ShareX config hosts"
-                hosts={hosts.data.filter((host) => host.authorised).map((host) => host.data.normalised)}
+                hosts={config.data.hosts.map((host) => host.normalised)}
                 username={user.data!.username}
                 onChange={(hosts) => setSelectedHosts(hosts)}
               />

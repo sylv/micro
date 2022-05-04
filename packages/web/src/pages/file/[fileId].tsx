@@ -1,7 +1,9 @@
 import { GetFileData } from "@micro/api";
+import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { Download, Share, Trash } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";
@@ -10,16 +12,41 @@ import { PageLoader } from "../../components/page-loader";
 import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
 import { downloadUrl } from "../../helpers/download.helper";
+import { fetcher } from "../../helpers/fetcher.helper";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
-import { http } from "../../helpers/http.helper";
+import { http, HTTPError } from "../../helpers/http.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
 import { useUser } from "../../hooks/use-user.helper";
 import Error from "../_error";
 
-export default function File() {
+export interface FileProps {
+  fallbackData: GetFileData;
+}
+
+const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => void }> = ({
+  children,
+  className,
+  onClick,
+}) => {
+  const classes = classNames(
+    "flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300",
+    className
+  );
+  return (
+    <span className={classes} onClick={onClick}>
+      {children}
+    </span>
+  );
+};
+
+export default function File({ fallbackData }: FileProps) {
   const router = useRouter();
   const fileId = router.query.fileId;
-  const file = useSWR<GetFileData>(router.query.fileId ? `file/${fileId}` : null);
+  const file = useSWR<GetFileData>(router.query.fileId ? `file/${fileId}` : null, {
+    fallbackData: fallbackData,
+    revalidateOnMount: !fallbackData,
+  });
+
   const user = useUser();
   const [confirm, setConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -42,7 +69,7 @@ export default function File() {
 
   const downloadFile = async () => {
     try {
-      await downloadUrl(file.data!.urls.direct, file.data!.displayName);
+      await downloadUrl(file.data!.paths.direct, file.data!.displayName);
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? "An unknown error occurred";
       setToast({ error: true, text: message });
@@ -82,31 +109,43 @@ export default function File() {
         </div>
         <FileEmbed file={file.data} />
         <div className="flex md:flex-col">
-          <div className="flex text-sm text-gray-500 cursor-pointer md:flex-col">
-            <span
-              className="flex items-center shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
-              onClick={copyLink}
-            >
+          <div className="flex text-sm gap-3 text-gray-500 cursor-pointer md:flex-col">
+            <FileOption onClick={copyLink}>
               <Share className="h-4 mr-1" /> Copy link
-            </span>
-            <span
-              className="flex items-center shrink-0 mb-2 mr-2 transition-colors duration-100 hover:text-gray-300"
-              onClick={downloadFile}
-            >
+            </FileOption>
+            <FileOption onClick={downloadFile}>
               <Download className="h-4 mr-1" /> Download
-            </span>
+            </FileOption>
             {user.data?.id === file.data.owner?.id && (
-              <span
-                className="flex items-center shrink-0 mb-2 mr-2 text-red-400 transition-colors duration-100 hover:text-red-600"
-                onClick={deleteFile}
-              >
-                <Trash className="h-4 mr-1" />{" "}
+              <FileOption onClick={deleteFile} className="text-red-400 hover:text-red-500">
+                <Trash className="h-4 mr-1" />
                 {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
-              </span>
+              </FileOption>
             )}
           </div>
         </div>
       </div>
     </Container>
   );
+}
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<FileProps>> {
+  // why on earth does nextjs, where the entire point is ssr, not have
+  // an easy way to handle basic errors like 404 when server-side rendering? why cant it just catch the error
+  // and pass it to my custom error page where i can have custom error handling?
+  // why do i have to manually handle the error each time?
+  // yes, im salty about it.
+
+  try {
+    const fallbackData = await fetcher<GetFileData>(`file/${context.query.fileId}`);
+    return { props: { fallbackData } };
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      return { notFound: true };
+    }
+
+    throw error;
+  }
 }

@@ -8,7 +8,7 @@ export const FileEmbedContainer: FC<{ file: GetFileData; children: React.ReactCh
       <Head>
         <meta name="twitter:title" content={props.file.displayName} />
         <meta property="og:title" content={props.file.displayName} key="title" />
-        <meta property="og:url" content={props.file.urls.view} />
+        <meta property="og:url" content={props.file.paths.view} />
         <meta property="og:type" content="article" />
       </Head>
       {props.children}

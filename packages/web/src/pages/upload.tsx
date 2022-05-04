@@ -74,14 +74,14 @@ export default function Upload() {
         headers: headers,
       });
 
-      const body = (await response.json()) as GetFileData;
+      const body: GetFileData = await response.json();
       const route = `/file/${body.id}`;
-      const host = body.host && config.data.hosts.find((host) => host.normalised === body.host);
-      if (host && config.data.host.normalised !== host.normalised) {
-        location.href = `${host.url}${route}`;
-      } else {
+      const isSameHost = body.host === config.data.host.normalised;
+      if (isSameHost) {
         router.push(route);
       }
+
+      location.href = body.urls.direct;
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? "An unknown error occured.";
       setToast({ error: true, text: message });

@@ -4,7 +4,7 @@ import { FileCardProps } from "./file-list-card";
 
 export const FileListCardContent: FC<FileCardProps> = (props) => {
   const [errored, setErrored] = useState(false);
-  if (!props.file.urls.thumbnail || errored) {
+  if (!props.file.paths.thumbnail || errored) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full p-6 align-center">
         <FileMinus className="mb-2 text-gray-500" />
@@ -16,7 +16,7 @@ export const FileListCardContent: FC<FileCardProps> = (props) => {
 
   return (
     <img
-      src={props.file.urls.thumbnail}
+      src={props.file.paths.thumbnail}
       className="object-contain h-full"
       loading="lazy"
       decoding="async"

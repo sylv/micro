@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, IdentifiedReference, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
 import mimeType from "mime-types";
 import { config } from "../../config";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
@@ -33,8 +33,13 @@ export class File {
   @OneToOne({ entity: () => Thumbnail, nullable: true })
   thumbnail?: Thumbnail;
 
-  @ManyToOne(() => User)
-  owner!: User;
+  @ManyToOne(() => User, {
+    // todo: mikroorm should handle this for us, it should serialize the user to an { id }
+    // object. instead it serializes it to a string which breaks types client-side.
+    serializer: (value) => ({ id: value.id }),
+    wrappedReference: true,
+  })
+  owner!: IdentifiedReference<User>;
 
   @Property({ type: TimestampType })
   createdAt = new Date();
@@ -51,23 +56,21 @@ export class File {
   }
 
   @Property({ persist: false })
-  get url() {
-    if (!this.owner.username || !this.host) {
-      return {
-        view: config.rootHost.url + this.urls.view,
-        direct: config.rootHost.url + this.urls.direct,
-      };
-    }
-
-    const replacedHost = this.host.replace("{{username}}", this.owner.username);
+  get urls() {
+    const owner = this.owner.unwrap();
+    const host = this.host ? config.hosts.find((host) => host.normalised === this.host) : null;
+    const baseUrl = host ? host.url.replace("{{username}}", owner.username) : config.rootHost.url;
     return {
-      view: replacedHost + this.urls.view,
-      direct: replacedHost + this.urls.direct,
+      view: baseUrl + this.paths.view,
+      direct: baseUrl + this.paths.direct,
+      metadata: baseUrl + this.paths.metadata,
+      thumbnail: this.paths.thumbnail ? baseUrl + this.paths.thumbnail : null,
+      delete: this.paths.delete ? baseUrl + this.paths.delete : null,
     };
   }
 
   @Property({ persist: false })
-  get urls() {
+  get paths() {
     const extension = mimeType.extension(this.type);
     const viewUrl = `/f/${this.id}`;
     const directUrl = `/f/${this.id}.${extension}`;

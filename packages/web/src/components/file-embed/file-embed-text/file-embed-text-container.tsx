@@ -27,7 +27,7 @@ export interface FileEmbedTextContainerProps {
 
 export const FileEmbedTextContainer: FC<FileEmbedTextContainerProps> = ({ file, children }) => {
   const [language, setLanguage] = useState(getFileLanguage(file.displayName) ?? DEFAULT_LANGUAGE);
-  const content = useSWR<string>(file.urls.direct, { fetcher });
+  const content = useSWR<string>(file.paths.direct, { fetcher });
   const setToast = useToasts();
 
   useEffect(() => {

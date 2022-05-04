@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { Toast, ToastProps, TRANSITION_DURATION } from "./toast";
 
 export interface ToastContextData {
@@ -7,7 +7,7 @@ export interface ToastContextData {
 }
 
 export const ToastContext = React.createContext<ToastContextData>({});
-export const ToastWrapper: FC = (props) => {
+export const ToastWrapper: FC<{ children: ReactNode }> = (props) => {
   // spread operators on arrays are to fix this
   // https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
   const [toasts, setToasts] = useState<Array<ToastProps & { id: string; timer: NodeJS.Timeout }>>([]);
