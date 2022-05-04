@@ -1,5 +1,5 @@
 import { Multipart } from "@fastify/multipart";
-import { EntityRepository } from "@mikro-orm/core";
+import { EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import {
   BadRequestException,
@@ -30,7 +30,8 @@ export class FileService implements OnApplicationBootstrap {
   constructor(
     @InjectRepository(File) private fileRepo: EntityRepository<File>,
     private storageService: StorageService,
-    private hostService: HostService
+    private hostService: HostService,
+    private orm: MikroORM
   ) {}
 
   async getFile(id: string, host: MicroHost) {
@@ -116,6 +117,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   @Cron(CronExpression.EVERY_HOUR)
+  @UseRequestContext()
   async purgeFiles() {
     if (!config.purge) return;
     const createdBefore = new Date(Date.now() - config.purge.afterTime);

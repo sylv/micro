@@ -84,8 +84,6 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 
 ## discord
 
-it's pretty cool and my mum made cookies if you wanna come. might even give you an account on the official instance or help you setup your own 😳 that would be crazy haha 👉👈
-
 <a href="https://discord.gg/VDMX6VQRZm" target="__blank">
   <img src="https://discordapp.com/api/guilds/778444719553511425/widget.png?style=banner2" alt="sylo.digital"/>
 </a>

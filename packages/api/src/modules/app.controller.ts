@@ -1,9 +1,7 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
 import { Controller, Get, Req } from "@nestjs/common";
 import { FastifyRequest } from "fastify";
 import { config } from "../config";
 import { UserId } from "./auth/auth.decorators";
-import { HostService } from "./host/host.service";
 import { UserService } from "./user/user.service";
 
 @Controller()

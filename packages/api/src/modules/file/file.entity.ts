@@ -86,5 +86,14 @@ export class File {
     };
   }
 
-  [OptionalProps]: "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "host" | "extension";
+  [OptionalProps]:
+    | "urls"
+    | "displayName"
+    | "createdAt"
+    | "thumbnail"
+    | "name"
+    | "deleteKey"
+    | "host"
+    | "extension"
+    | "url";
 }
