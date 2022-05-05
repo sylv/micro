@@ -13,6 +13,7 @@ import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
 import { downloadUrl } from "../../helpers/download.helper";
 import { fetcher } from "../../helpers/fetcher.helper";
+import { formatBytes } from "../../helpers/format-bytes.helper";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
 import { http, HTTPError } from "../../helpers/http.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
@@ -106,6 +107,7 @@ export default function File({ fallbackData }: FileProps) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
         <div className="flex items-end col-span-5">
           <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all">{file.data.displayName}</h1>
+          <span className="text-xs text-gray-500">{formatBytes(file.data.size)}</span>
         </div>
         <FileEmbed file={file.data} />
         <div className="flex md:flex-col">

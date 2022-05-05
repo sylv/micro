@@ -1,81 +1,5 @@
 [
   {
-    "name": "ABAP",
-    "key": "abap",
-    "extensions": [
-      "abap"
-    ]
-  },
-  {
-    "name": "ActionScript",
-    "key": "actionscript",
-    "extensions": [
-      "as"
-    ]
-  },
-  {
-    "name": "Ada",
-    "key": "ada",
-    "extensions": [
-      "adb",
-      "ada",
-      "ads"
-    ]
-  },
-  {
-    "name": "Apache Configuration",
-    "key": "apacheconf",
-    "extensions": [
-      "apacheconf",
-      "vhost"
-    ]
-  },
-  {
-    "name": "APL",
-    "key": "apl",
-    "extensions": [
-      "apl",
-      "dyalog"
-    ]
-  },
-  {
-    "name": "AppleScript",
-    "key": "applescript",
-    "extensions": [
-      "applescript",
-      "scpt"
-    ]
-  },
-  {
-    "name": "Arduino",
-    "key": "arduino",
-    "extensions": [
-      "ino"
-    ]
-  },
-  {
-    "name": "AsciiDoc",
-    "key": "asciidoc",
-    "extensions": [
-      "asciidoc",
-      "adoc",
-      "asc"
-    ]
-  },
-  {
-    "name": "ASP.NET (C#)",
-    "key": "aspnet",
-    "extensions": [
-      "asp",
-      "asax",
-      "ascx",
-      "ashx",
-      "asmx",
-      "aspx",
-      "axd"
-    ]
-  },
-  {
     "name": "Assembly",
     "key": "nasm",
     "extensions": [
@@ -94,13 +18,6 @@
     ]
   },
   {
-    "name": "AutoIt",
-    "key": "autoit",
-    "extensions": [
-      "au3"
-    ]
-  },
-  {
     "name": "Batchfile",
     "key": "batch",
     "extensions": [
@@ -109,25 +26,11 @@
     ]
   },
   {
-    "name": "Bison",
-    "key": "bison",
-    "extensions": [
-      "bison"
-    ]
-  },
-  {
     "name": "Brainfuck",
     "key": "brainfuck",
     "extensions": [
       "b",
       "bf"
-    ]
-  },
-  {
-    "name": "Bro",
-    "key": "bro",
-    "extensions": [
-      "bro"
     ]
   },
   {
@@ -220,32 +123,10 @@
     ]
   },
   {
-    "name": "Crystal",
-    "key": "crystal",
-    "extensions": [
-      "cr"
-    ]
-  },
-  {
     "name": "CSS",
     "key": "css",
     "extensions": [
       "css"
-    ]
-  },
-  {
-    "name": "Cucumber",
-    "key": "gherkin",
-    "extensions": [
-      "feature"
-    ]
-  },
-  {
-    "name": "D",
-    "key": "d",
-    "extensions": [
-      "d",
-      "di"
     ]
   },
   {
@@ -264,14 +145,6 @@
     ]
   },
   {
-    "name": "Django/Jinja2",
-    "key": "django",
-    "extensions": [
-      "mustache",
-      "jinja"
-    ]
-  },
-  {
     "name": "Dockerfile",
     "key": "docker",
     "extensions": [
@@ -279,13 +152,6 @@
     ],
     "filenames": [
       "Dockerfile"
-    ]
-  },
-  {
-    "name": "Eiffel",
-    "key": "eiffel",
-    "extensions": [
-      "e"
     ]
   },
   {
@@ -297,13 +163,6 @@
     ],
     "filenames": [
       "mix.lock"
-    ]
-  },
-  {
-    "name": "Elm",
-    "key": "elm",
-    "extensions": [
-      "elm"
     ]
   },
   {
@@ -322,56 +181,6 @@
     ]
   },
   {
-    "name": "F#",
-    "key": "fsharp",
-    "extensions": [
-      "fs",
-      "fsi",
-      "fsx"
-    ]
-  },
-  {
-    "name": "FORTRAN",
-    "key": "fortran",
-    "extensions": [
-      "f90",
-      "f",
-      "f03",
-      "f08",
-      "f77",
-      "f95",
-      "for",
-      "fpp"
-    ]
-  },
-  {
-    "name": "Game Maker Language",
-    "key": "gml",
-    "extensions": [
-      "gml"
-    ]
-  },
-  {
-    "name": "GLSL",
-    "key": "glsl",
-    "extensions": [
-      "glsl",
-      "fp",
-      "frag",
-      "frg",
-      "fs",
-      "fshader",
-      "geo",
-      "geom",
-      "glslv",
-      "gshader",
-      "shader",
-      "vert",
-      "vrx",
-      "vshader"
-    ]
-  },
-  {
     "name": "Go",
     "key": "go",
     "extensions": [
@@ -379,29 +188,11 @@
     ]
   },
   {
-    "name": "Groovy",
-    "key": "groovy",
-    "extensions": [
-      "groovy",
-      "grt",
-      "gtpl",
-      "gvy"
-    ]
-  },
-  {
-    "name": "Hack",
+    "name": "PHP",
     "key": "php",
     "extensions": [
       "hh",
       "php"
-    ]
-  },
-  {
-    "name": "Haml",
-    "key": "haml",
-    "extensions": [
-      "haml",
-      "haml.deface"
     ]
   },
   {
@@ -421,44 +212,6 @@
     ]
   },
   {
-    "name": "Haxe",
-    "key": "haxe",
-    "extensions": [
-      "hx",
-      "hxsl"
-    ]
-  },
-  {
-    "name": "Pug",
-    "key": "pug",
-    "extensions": [
-      "pug"
-    ]
-  },
-  {
-    "name": "HTML+ERB",
-    "key": "erb",
-    "extensions": [
-      "erb",
-      "erb.deface"
-    ]
-  },
-  {
-    "name": "HTTP",
-    "key": "http",
-    "extensions": [
-      "http"
-    ]
-  },
-  {
-    "name": "Inform 7",
-    "key": "inform7",
-    "extensions": [
-      "ni",
-      "i7x"
-    ]
-  },
-  {
     "name": "INI",
     "key": "ini",
     "extensions": [
@@ -467,20 +220,6 @@
       "prefs",
       "pro",
       "properties"
-    ]
-  },
-  {
-    "name": "Io",
-    "key": "io",
-    "extensions": [
-      "io"
-    ]
-  },
-  {
-    "name": "J",
-    "key": "j",
-    "extensions": [
-      "ijs"
     ]
   },
   {
@@ -545,13 +284,6 @@
     ]
   },
   {
-    "name": "Julia",
-    "key": "julia",
-    "extensions": [
-      "jl"
-    ]
-  },
-  {
     "name": "Kotlin",
     "key": "kotlin",
     "extensions": [
@@ -586,31 +318,6 @@
     "key": "less",
     "extensions": [
       "less"
-    ]
-  },
-  {
-    "name": "Liquid",
-    "key": "liquid",
-    "extensions": [
-      "liquid"
-    ]
-  },
-  {
-    "name": "LiveScript",
-    "key": "livescript",
-    "extensions": [
-      "ls",
-      "_ls"
-    ],
-    "filenames": [
-      "Slakefile"
-    ]
-  },
-  {
-    "name": "LOLCODE",
-    "key": "lolcode",
-    "extensions": [
-      "lol"
     ]
   },
   {
@@ -654,21 +361,6 @@
     ]
   },
   {
-    "name": "Matlab",
-    "key": "matlab",
-    "extensions": [
-      "matlab",
-      "m"
-    ]
-  },
-  {
-    "name": "Monkey",
-    "key": "monkey",
-    "extensions": [
-      "monkey"
-    ]
-  },
-  {
     "name": "Nginx",
     "key": "nginx",
     "extensions": [
@@ -677,29 +369,6 @@
     ],
     "filenames": [
       "nginx.conf"
-    ]
-  },
-  {
-    "name": "Nimrod",
-    "key": "nim",
-    "extensions": [
-      "nim",
-      "nimrod"
-    ]
-  },
-  {
-    "name": "Nix",
-    "key": "nix",
-    "extensions": [
-      "nix"
-    ]
-  },
-  {
-    "name": "NSIS",
-    "key": "nsis",
-    "extensions": [
-      "nsi",
-      "nsh"
     ]
   },
   {
@@ -724,33 +393,6 @@
     ]
   },
   {
-    "name": "OpenCL",
-    "key": "opencl",
-    "extensions": [
-      "cl",
-      "opencl"
-    ]
-  },
-  {
-    "name": "Oz",
-    "key": "oz",
-    "extensions": [
-      "oz"
-    ]
-  },
-  {
-    "name": "Pascal",
-    "key": "pascal",
-    "extensions": [
-      "pas",
-      "dfm",
-      "dpr",
-      "inc",
-      "lpr",
-      "pp"
-    ]
-  },
-  {
     "name": "Perl",
     "key": "perl",
     "extensions": [
@@ -768,32 +410,6 @@
     ]
   },
   {
-    "name": "PL/SQL",
-    "key": "plsql",
-    "extensions": [
-      "pls",
-      "pck",
-      "pkb",
-      "pks",
-      "plb",
-      "plsql",
-      "sql"
-    ]
-  },
-  {
-    "name": "PLSQL",
-    "key": "sql",
-    "extensions": [
-      "pls",
-      "pck",
-      "pkb",
-      "pks",
-      "plb",
-      "plsql",
-      "sql"
-    ]
-  },
-  {
     "name": "PowerShell",
     "key": "powershell",
     "extensions": [
@@ -803,36 +419,10 @@
     ]
   },
   {
-    "name": "Processing",
-    "key": "processing",
-    "extensions": [
-      "pde"
-    ]
-  },
-  {
-    "name": "Prolog",
-    "key": "prolog",
-    "extensions": [
-      "pl",
-      "pro",
-      "prolog"
-    ]
-  },
-  {
-    "name": "Protocol Buffers",
+    "name": "Protobuf",
     "key": "protobuf",
     "extensions": [
       "proto"
-    ]
-  },
-  {
-    "name": "Puppet",
-    "key": "puppet",
-    "extensions": [
-      "pp"
-    ],
-    "filenames": [
-      "Modulefile"
     ]
   },
   {
@@ -861,18 +451,6 @@
     ]
   },
   {
-    "name": "R",
-    "key": "r",
-    "extensions": [
-      "r",
-      "rd",
-      "rsx"
-    ],
-    "filenames": [
-      ".Rprofile"
-    ]
-  },
-  {
     "name": "React JSX",
     "key": "jsx",
     "extensions": [
@@ -884,23 +462,6 @@
     "key": "tsx",
     "extensions": [
       "tsx"
-    ]
-  },
-  {
-    "name": "Ren'Py",
-    "key": "renpy",
-    "extensions": [
-      "rpy"
-    ]
-  },
-  {
-    "name": "reST (reStructuredText)",
-    "key": "rest",
-    "extensions": [
-      "rst",
-      "rest",
-      "rest.txt",
-      "rst.txt"
     ]
   },
   {
@@ -956,23 +517,10 @@
     ]
   },
   {
-    "name": "SAS",
-    "key": "sas",
-    "extensions": [
-      "sas"
-    ]
-  },
-  {
-    "name": "Sass (Sass)",
+    "name": "Sass",
     "key": "sass",
     "extensions": [
-      "sass"
-    ]
-  },
-  {
-    "name": "Sass (Scss)",
-    "key": "scss",
-    "extensions": [
+      "sass",
       "scss"
     ]
   },
@@ -983,17 +531,6 @@
       "scala",
       "sbt",
       "sc"
-    ]
-  },
-  {
-    "name": "Scheme",
-    "key": "scheme",
-    "extensions": [
-      "scm",
-      "sld",
-      "sls",
-      "sps",
-      "ss"
     ]
   },
   {
@@ -1013,55 +550,10 @@
     ]
   },
   {
-    "name": "Smalltalk",
-    "key": "smalltalk",
-    "extensions": [
-      "st",
-      "cs"
-    ]
-  },
-  {
-    "name": "Smarty",
-    "key": "smarty",
-    "extensions": [
-      "tpl"
-    ]
-  },
-  {
-    "name": "Stylus",
-    "key": "stylus",
-    "extensions": [
-      "styl"
-    ]
-  },
-  {
     "name": "Swift",
     "key": "swift",
     "extensions": [
       "swift"
-    ]
-  },
-  {
-    "name": "Tcl",
-    "key": "tcl",
-    "extensions": [
-      "tcl",
-      "adp",
-      "tm"
-    ]
-  },
-  {
-    "name": "Textile",
-    "key": "textile",
-    "extensions": [
-      "textile"
-    ]
-  },
-  {
-    "name": "Twig",
-    "key": "twig",
-    "extensions": [
-      "twig"
     ]
   },
   {
@@ -1072,99 +564,11 @@
     ]
   },
   {
-    "name": "Verilog",
-    "key": "verilog",
-    "extensions": [
-      "v",
-      "veo"
-    ]
-  },
-  {
-    "name": "VHDL",
-    "key": "vhdl",
-    "extensions": [
-      "vhdl",
-      "vhd",
-      "vhf",
-      "vhi",
-      "vho",
-      "vhs",
-      "vht",
-      "vhw"
-    ]
-  },
-  {
-    "name": "VimL",
-    "key": "vim",
-    "extensions": [
-      "vim"
-    ],
-    "filenames": [
-      ".nvimrc",
-      ".vimrc",
-      "_vimrc",
-      "gvimrc",
-      "nvimrc",
-      "vimrc"
-    ]
-  },
-  {
-    "name": "Visual Basic",
-    "key": "visual-basic",
-    "extensions": [
-      "vb",
-      "bas",
-      "cls",
-      "frm",
-      "frx",
-      "vba",
-      "vbhtml",
-      "vbs"
-    ]
-  },
-  {
-    "name": "Visual Basic",
-    "key": "vbnet",
-    "extensions": [
-      "vb",
-      "bas",
-      "cls",
-      "frm",
-      "frx",
-      "vba",
-      "vbhtml",
-      "vbs"
-    ]
-  },
-  {
     "name": "Wiki markup",
     "key": "wiki",
     "extensions": [
       "mediawiki",
       "wiki"
-    ]
-  },
-  {
-    "name": "Xojo (REALbasic)",
-    "key": "xojo",
-    "extensions": [
-      "xojo_code",
-      "xojo_menu",
-      "xojo_report",
-      "xojo_script",
-      "xojo_toolbar",
-      "xojo_window"
-    ]
-  },
-  {
-    "name": "XQuery",
-    "key": "xquery",
-    "extensions": [
-      "xquery",
-      "xq",
-      "xql",
-      "xqm",
-      "xqy"
     ]
   },
   {

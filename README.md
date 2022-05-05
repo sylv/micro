@@ -18,7 +18,7 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 - [x] Thumbnails
 - [x] Config generation
 - [x] File name preservation
-- [x] Video, image and text previews
+- [x] Video, image, text and markdown previews
 - [x] Syntax highlighting for supported files
 - [x] Deletion URLs
 - [x] Dashboard
@@ -27,7 +27,7 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 - [x] URL Shortening
 - [x] Mobile support
 - [x] EXIF metadata removal
-- [x] Purging of old, large files (`config.purge`).
+- [x] Purging of old and/or large files (`config.purge`).
 
 ## screenshots
 
@@ -75,7 +75,6 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Ratelimiting
 - [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] Video thumbnails
-- [ ] Markdown previews
 - [ ] Paste support
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space

@@ -19,3 +19,35 @@ body {
   @apply bg-violet-600;
   @apply text-white;
 }
+
+::-webkit-scrollbar {
+  background: inherit;
+  height: 14px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border-radius: 7px;
+  border-style: solid;
+  border-width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  border-width: initial;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #333033;
+  border-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+  border-color: transparent;
+}
+
+body {
+  overflow-y: overlay;
+}
