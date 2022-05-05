@@ -111,6 +111,9 @@ export class FileService implements OnApplicationBootstrap {
       .header("Content-Length", file.size)
       .header("Last-Modified", file.createdAt)
       .header("Content-Disposition", `inline; filename="${file.displayName}"`)
+      .header("Cache-Control", "public, max-age=31536000")
+      .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
+      .header("X-Content-Type-Options", "nosniff")
       .send(stream);
   }
 

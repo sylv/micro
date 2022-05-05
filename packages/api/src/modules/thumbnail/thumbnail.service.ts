@@ -2,6 +2,7 @@ import { EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { DateTime } from "luxon";
 import sharp from "sharp";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { File } from "../file/file.entity";
@@ -67,6 +68,9 @@ export class ThumbnailService {
       return reply
         .header("X-Micro-Generated", "false")
         .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
+        .header("Cache-Control", "public, max-age=31536000")
+        .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
+        .header("X-Content-Type-Options", "nosniff")
         .send(existing.data);
     }
 
