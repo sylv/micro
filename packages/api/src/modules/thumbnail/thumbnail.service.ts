@@ -31,14 +31,29 @@ export class ThumbnailService {
       throw new BadRequestException("That file type does not support thumbnails.");
     }
 
+    // todo: this is inefficient, we should be able to get the file metadata at the same time
+    // we generate the thumbnail and we should be able to get the thumbnail service better.
     const stream = this.storageService.createReadStream(file.hash);
     const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).webp({ quality: 40 });
-    const data = await stream.pipe(transformer).toBuffer();
+    const transformed = stream.pipe(transformer);
+    // not actually sure why this returns the file metadata and not the thumbnail metadata.
+    const fileMetadata = await transformed.metadata();
+    const data = await transformed.toBuffer();
+    const thumbnailMetadata = await sharp(data).metadata();
     const duration = Date.now() - start;
+    // todo: file metadata should be a separate task that is run for every image missing metadata.
+    file.metadata = {
+      height: fileMetadata.height,
+      width: fileMetadata.width,
+    };
+
     file.thumbnail = this.thumbnailRepo.create({
       data: data,
       duration: duration,
       size: data.length,
+      type: ThumbnailService.THUMBNAIL_TYPE,
+      width: thumbnailMetadata.width!,
+      height: thumbnailMetadata.height!,
       file: file,
     });
 

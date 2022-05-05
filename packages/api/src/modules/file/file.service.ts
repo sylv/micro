@@ -35,8 +35,7 @@ export class FileService implements OnApplicationBootstrap {
   ) {}
 
   async getFile(id: string, host: MicroHost) {
-    const file = await this.fileRepo.findOne(id);
-    if (!file) throw new NotFoundException(`Unknown file "${id}"`);
+    const file = await this.fileRepo.findOneOrFail(id);
     if (!this.hostService.canHostSendFile(host, file)) {
       throw new NotFoundException("Your file is in another castle.");
     }
@@ -45,8 +44,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   async deleteFile(id: string, ownerId: string | null) {
-    const file = await this.fileRepo.findOne(id);
-    if (!file) throw new NotFoundException();
+    const file = await this.fileRepo.findOneOrFail(id);
     if (ownerId && file.owner.id !== ownerId) {
       throw new UnauthorizedException("You cannot delete other users files.");
     }

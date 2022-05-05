@@ -6,7 +6,6 @@ import {
   ForbiddenException,
   Get,
   Headers,
-  NotFoundException,
   Param,
   Post,
   Req,
@@ -32,7 +31,6 @@ export class FileController {
   async getFile(@Res() reply: FastifyReply, @Param("key") key: string, @Request() request: FastifyRequest) {
     const parsedKey = parseKey(key);
     const file = await this.fileService.getFile(parsedKey.id, request.host);
-    if (!file) throw new NotFoundException("File not found.");
     if (!this.hostService.canHostSendFile(request.host, file)) {
       throw new ForbiddenException("That file is not available on this host.");
     }

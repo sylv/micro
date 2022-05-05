@@ -1,4 +1,14 @@
-import { Entity, IdentifiedReference, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Embedded,
+  Entity,
+  IdentifiedReference,
+  LoadStrategy,
+  ManyToOne,
+  OneToOne,
+  OptionalProps,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import mimeType from "mime-types";
 import { config } from "../../config";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
@@ -6,11 +16,15 @@ import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { TimestampType } from "../../timestamp.type";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
+import { FileMetadata } from "./file-metadata.embeddable";
 
 @Entity({ tableName: "files" })
 export class File {
   @PrimaryKey()
   id!: string;
+
+  @Property({ nullable: true })
+  host?: string;
 
   @Property()
   type!: string;
@@ -21,8 +35,8 @@ export class File {
   @Property()
   hash!: string;
 
-  @Property({ nullable: true })
-  host?: string;
+  @Embedded(() => FileMetadata, { nullable: true })
+  metadata?: FileMetadata;
 
   @Property({ type: String, lazy: true, hidden: true })
   deleteKey?: string = generateDeleteKey();
@@ -30,7 +44,7 @@ export class File {
   @Property({ nullable: true })
   name?: string;
 
-  @OneToOne({ entity: () => Thumbnail, nullable: true })
+  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, strategy: LoadStrategy.JOINED })
   thumbnail?: Thumbnail;
 
   @ManyToOne(() => User, {
@@ -90,6 +104,7 @@ export class File {
   }
 
   [OptionalProps]:
+    | "paths"
     | "urls"
     | "displayName"
     | "createdAt"
@@ -97,6 +112,5 @@ export class File {
     | "name"
     | "deleteKey"
     | "host"
-    | "extension"
-    | "url";
+    | "extension";
 }

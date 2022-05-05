@@ -73,11 +73,10 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 ## todo
 
 - [ ] Ratelimiting
-- [ ] Image width+height should be stored so the image preview doesn't flash while loading.
+- [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] Video thumbnails
 - [ ] Markdown previews
 - [ ] Paste support
-- [ ] Syntax highlighting for Atlas actions
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space
   - Discord is currently blocking this as they handle embedding videos (and gifs) extremely poorly. Unless the url has "mp4" in it it outright won't embed most of the time.

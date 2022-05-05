@@ -20,6 +20,8 @@ export const FileListCardContent: FC<FileCardProps> = (props) => {
       className="object-contain h-full"
       loading="lazy"
       decoding="async"
+      height={props.file.thumbnail?.height}
+      width={props.file.thumbnail?.width}
       onError={() => setErrored(true)}
     />
   );

@@ -10,6 +10,15 @@ export class Thumbnail {
   @Property()
   duration!: number;
 
+  @Property()
+  type!: string;
+
+  @Property()
+  width!: number;
+
+  @Property()
+  height!: number;
+
   @Property({ type: BlobType, lazy: true, hidden: true })
   data!: Buffer;
 

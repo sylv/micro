@@ -2,7 +2,14 @@ import { GetFileData } from "@micro/api";
 
 export const FileEmbedVideo = ({ file }: { file: GetFileData }) => {
   return (
-    <video controls loop playsInline className="h-full outline-none">
+    <video
+      controls
+      loop
+      playsInline
+      className="h-full outline-none"
+      height={file.metadata?.height}
+      width={file.metadata?.width}
+    >
       <source src={file.paths.direct} type={file.type} />
     </video>
   );

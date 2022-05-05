@@ -17,9 +17,9 @@ export function generateConfig(token: string, hosts: string[], direct: boolean):
     RequestURL: upload,
     Body: "MultipartFormData",
     FileFormName: "file",
-    URL: direct ? "$json:links.direct$" : "$json:links.view$",
-    ThumbnailURL: "$json:links.thumbnail$",
-    DeletionURL: "$json:links.delete$",
+    URL: direct ? "$json:urls.direct$" : "$json:urls.view$",
+    ThumbnailURL: "$json:urls.thumbnail$",
+    DeletionURL: "$json:urls.delete$",
     Headers: {
       Authorization: token,
       "X-Micro-Host": joined,

@@ -246,6 +246,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "host": {
+          "name": "host",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "type": {
           "name": "type",
           "type": "varchar(255)",
@@ -273,14 +282,23 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "host": {
-          "name": "host",
-          "type": "varchar(255)",
+        "metadata_height": {
+          "name": "metadata_height",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "string"
+          "mappedType": "integer"
+        },
+        "metadata_width": {
+          "name": "metadata_width",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         },
         "delete_key": {
           "name": "delete_key",
@@ -401,6 +419,33 @@
         },
         "duration": {
           "name": "duration",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "width": {
+          "name": "width",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "height": {
+          "name": "height",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
