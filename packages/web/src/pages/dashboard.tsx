@@ -81,7 +81,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Section className="mt-5">
+      <Section>
         <Title>Dashboard</Title>
         <Container>
           <div className="grid grid-cols-8 gap-2">

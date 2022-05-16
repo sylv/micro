@@ -8,6 +8,7 @@ import { AuthModule } from "./auth/auth.module";
 import { FileModule } from "./file/file.module";
 import { HostModule } from "./host/host.module";
 import { InviteModule } from "./invite/invite.module";
+import { PasteModule } from "./paste/paste.module";
 import { StorageModule } from "./storage/storage.module";
 import { ThumbnailModule } from "./thumbnail/thumbnail.module";
 import { UserModule } from "./user/user.module";
@@ -17,6 +18,7 @@ import { UserModule } from "./user/user.module";
   providers: [],
   imports: [
     MikroOrmModule.forRoot(MikroOrmOptions),
+    ScheduleModule.forRoot(),
     PassportModule,
     StorageModule,
     HostModule,
@@ -25,7 +27,7 @@ import { UserModule } from "./user/user.module";
     ThumbnailModule,
     InviteModule,
     UserModule,
-    ScheduleModule.forRoot(),
+    PasteModule,
   ],
 })
 export class AppModule {}

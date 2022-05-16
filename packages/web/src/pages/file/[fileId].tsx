@@ -18,7 +18,7 @@ import { getErrorMessage } from "../../helpers/get-error-message.helper";
 import { http, HTTPError } from "../../helpers/http.helper";
 import { useToasts } from "../../hooks/use-toasts.helper";
 import { useUser } from "../../hooks/use-user.helper";
-import Error from "../_error";
+import ErrorPage from "../_error";
 
 export interface FileProps {
   fallbackData: GetFileData;
@@ -54,7 +54,7 @@ export default function File({ fallbackData }: FileProps) {
   const setToast = useToasts();
 
   if (file.error) {
-    return <Error status={file.error.status} message={file.error.text} />;
+    return <ErrorPage status={file.error.status} message={file.error.text} />;
   }
 
   if (!file.data) {

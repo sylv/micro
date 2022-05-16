@@ -1,10 +1,12 @@
 import { customAlphabet } from "nanoid";
 import blocklist from "../blocklist.json";
 
-// note: changing this will require changes to the file.service.ts regex
-export const contentIdLength = 6;
-export const contentIdAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-export const contentIdGenerator = customAlphabet(contentIdAlphabet, contentIdLength);
+const contentIdLength = 6;
+const paranoidIdLength = 12;
+const contentIdAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const contentIdGenerator = customAlphabet(contentIdAlphabet, contentIdLength);
+
+export const generateParanoidId = customAlphabet(contentIdAlphabet, paranoidIdLength);
 
 export function generateContentId(): string {
   const id = contentIdGenerator();

@@ -25,6 +25,9 @@ export const Header: FC = () => {
           </Link>
         </div>
         <div className="flex items-center">
+          <Link href="/paste" className="mr-2 text-gray-500 transition hover:text-gray-400">
+            Paste
+          </Link>
           {user.data ? (
             <HeaderUser userId={user.data.id} username={user.data.username} />
           ) : (

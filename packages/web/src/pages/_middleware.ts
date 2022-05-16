@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
           return new Response(null, {
             status: 302,
             headers: {
-              location: `/api/file/${file.id}.${file.extension}`,
+              location: `/api/file/${file.id}/content`,
             },
           });
         }

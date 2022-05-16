@@ -1,0 +1,65 @@
+import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";
+import { config } from "../../config";
+import { generateContentId } from "../../helpers/generate-content-id.helper";
+import { TimestampType } from "../../timestamp.type";
+import { User } from "../user/user.entity";
+
+@Entity({ tableName: "pastes" })
+export class Paste {
+  @PrimaryKey({ type: String })
+  id = generateContentId();
+
+  @Property({ type: "varchar", length: 500000 })
+  content!: string;
+
+  @Property({ nullable: true })
+  extension?: string;
+
+  @Property()
+  encrypted!: boolean;
+
+  @Property()
+  burn!: boolean;
+
+  @Property({ type: "bigint", nullable: true })
+  expiresAt?: number;
+
+  @Property({ type: TimestampType })
+  createdAt = new Date();
+
+  @ManyToOne(() => User, {
+    hidden: true,
+    nullable: true,
+    wrappedReference: true,
+  })
+  owner?: IdentifiedReference<User>;
+
+  [OptionalProps]: "owner" | "createdAt" | "expiresAt" | "extension";
+}
+
+export class CreatePasteDto {
+  @IsString()
+  @Length(1, config.maxPasteLength)
+  content!: string;
+
+  @IsBoolean()
+  encrypted!: boolean;
+
+  @IsString()
+  @Length(1, 10)
+  @IsOptional()
+  extension?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  burn!: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  paranoid!: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  expiresAt?: number;
+}

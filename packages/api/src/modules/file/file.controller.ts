@@ -15,7 +15,6 @@ import {
 } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { config } from "../../config";
-import { parseKey } from "../../helpers/parse-key.helper";
 import { randomItem } from "../../helpers/random-item.helper";
 import { UserId } from "../auth/auth.decorators";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard";
@@ -27,18 +26,18 @@ import { FileService } from "./file.service";
 export class FileController {
   constructor(private fileService: FileService, private userService: UserService, private hostService: HostService) {}
 
-  @Get("file/:key")
-  async getFile(@Res() reply: FastifyReply, @Param("key") key: string, @Request() request: FastifyRequest) {
-    const parsedKey = parseKey(key);
-    const file = await this.fileService.getFile(parsedKey.id, request.host);
-    if (!this.hostService.canHostSendFile(request.host, file)) {
-      throw new ForbiddenException("That file is not available on this host.");
-    }
+  @Get("file/:fileId/content")
+  async getFileContent(
+    @Res() reply: FastifyReply,
+    @Param("fileId") fileId: string,
+    @Request() request: FastifyRequest
+  ) {
+    return this.fileService.sendFile(fileId, request, reply);
+  }
 
-    if (parsedKey.ext && parsedKey.ext !== "json") {
-      return this.fileService.sendFile(parsedKey.id, request, reply);
-    }
-
+  @Get("file/:fileId")
+  async getFile(@Res() reply: FastifyReply, @Param("fileId") fileId: string, @Request() request: FastifyRequest) {
+    const file = await this.fileService.getFile(fileId, request.host);
     return reply.send(file);
   }
 

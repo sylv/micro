@@ -2,16 +2,24 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/(f|file)/:fileId.:extension",
-        destination: "http://localhost:8080/file/:fileId.:extension*",
+        source: "/t/:thumbnailId",
+        destination: "http://localhost:8080/thumbnail/:thumbnailId/content",
       },
       {
-        source: "/(t|thumbnail)/:fileId",
-        destination: "http://localhost:8080/thumbnail/:fileId*",
+        source: "/(f|file)/:fileId.:extension",
+        destination: "http://localhost:8080/file/:fileId/content",
       },
       {
         source: "/f/:fileId",
         destination: "/file/:fileId",
+      },
+      {
+        source: "/(p|paste)/:pasteId.:extension",
+        destination: "http://localhost:8080/paste/:pasteId/content",
+      },
+      {
+        source: "/p/:pasteId",
+        destination: "/paste/:pasteId",
       },
       {
         source: "/api/:path*",

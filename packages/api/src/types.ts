@@ -1,7 +1,7 @@
 import type { AppController } from "./modules/app.controller";
 import type { File } from "./modules/file/file.entity";
-import type { HostController } from "./modules/host/host.controller";
 import type { InviteController } from "./modules/invite/invite.controller";
+import type { CreatePasteDto, Paste } from "./modules/paste/paste.entity";
 import type { UserController } from "./modules/user/user.controller";
 import type { User } from "./modules/user/user.entity";
 
@@ -27,5 +27,5 @@ export type GetFileData = File;
 // app
 export type GetServerConfigData = Await<ReturnType<AppController["getConfig"]>>;
 
-// hosts
-export type GetHostsData = Await<ReturnType<HostController["getHosts"]>>;
+export type GetPasteData = Paste;
+export type CreatePasteBody = CreatePasteDto;

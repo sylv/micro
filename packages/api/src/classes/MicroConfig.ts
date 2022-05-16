@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  Max,
   NotEquals,
   ValidateNested,
 } from "class-validator";
@@ -31,6 +32,14 @@ export class MicroConfig {
   @IsNumber()
   @Transform(({ value }) => xbytes.parseSize(value))
   uploadLimit = xbytes.parseSize("50MB");
+
+  @IsBoolean()
+  publicPastes!: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  @Max(500000)
+  maxPasteLength = 500000;
 
   @IsString({ each: true })
   @IsIn([...fileType.mimeTypes.values()])

@@ -42,6 +42,9 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
     <td><img src="https://i.imgur.com/Ij7PElj.png" title="Text Preview" alt="Text Preview"></td>
    </tr> 
   </tr>
+  <tr>
+    <td><img src="https://i.imgur.com/1KUrtVf.png" title="Paste Page" alt="Paste Page"></td>
+  </tr>
 </table>
 
 ## installation
@@ -75,7 +78,7 @@ There currently isn't an admin interface, only endpoints that let you do some ba
 - [ ] Ratelimiting
 - [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] Video thumbnails
-- [ ] Paste support
+- [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space
   - Discord is currently blocking this as they handle embedding videos (and gifs) extremely poorly. Unless the url has "mp4" in it it outright won't embed most of the time.
