@@ -18,6 +18,10 @@ module.exports = {
         destination: "http://localhost:8080/paste/:pasteId/content",
       },
       {
+        source: "/(l|s|link)/:linkId",
+        destination: "http://localhost:8080/link/:linkId/go",
+      },
+      {
         source: "/p/:pasteId",
         destination: "/paste/:pasteId",
       },
