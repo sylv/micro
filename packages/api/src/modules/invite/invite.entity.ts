@@ -1,10 +1,8 @@
 import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
-import { Expose } from "class-transformer";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
-import { TimestampType } from "../../timestamp.type";
 import { User } from "../user/user.entity";
 
-@Entity()
+@Entity({ tableName: "invites" })
 export class Invite {
   @PrimaryKey({ type: String })
   id = generateDeleteKey();
@@ -18,10 +16,10 @@ export class Invite {
   @OneToOne({ entity: () => User, nullable: true })
   invited?: User;
 
-  @Property({ type: TimestampType })
+  @Property({ type: Date })
   createdAt = new Date();
 
-  @Property({ type: TimestampType, nullable: true })
+  @Property({ nullable: true })
   expiresAt?: Date;
 
   @Property({ persist: false })

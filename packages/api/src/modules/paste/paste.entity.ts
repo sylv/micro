@@ -2,9 +2,7 @@ import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Prop
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";
 import { config } from "../../config";
 import { generateContentId } from "../../helpers/generate-content-id.helper";
-import { TimestampType } from "../../timestamp.type";
 import { User } from "../user/user.entity";
-import mimeType from "mime-types";
 
 @Entity({ tableName: "pastes" })
 export class Paste {
@@ -23,10 +21,10 @@ export class Paste {
   @Property()
   burn!: boolean;
 
-  @Property({ type: "bigint", nullable: true })
-  expiresAt?: number;
+  @Property({ nullable: true, type: Date })
+  expiresAt?: Date;
 
-  @Property({ type: TimestampType })
+  @Property({ type: Date })
   createdAt = new Date();
 
   @ManyToOne(() => User, {

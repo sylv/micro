@@ -1,5 +1,4 @@
 import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property } from "@mikro-orm/core";
-import { TimestampType } from "../../timestamp.type";
 import { File } from "../file/file.entity";
 
 @Entity({ tableName: "thumbnails" })
@@ -25,7 +24,7 @@ export class Thumbnail {
   @OneToOne({ entity: () => File, primary: true, onDelete: "CASCADE" })
   file!: File;
 
-  @Property({ type: TimestampType })
+  @Property({ type: Date })
   createdAt = new Date();
 
   [PrimaryKeyType]: string;

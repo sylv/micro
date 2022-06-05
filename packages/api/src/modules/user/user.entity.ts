@@ -22,8 +22,8 @@ export class User {
   @Property()
   secret!: string;
 
-  @OneToOne()
-  invite!: Invite;
+  @OneToOne({ nullable: true })
+  invite?: Invite;
 
   @Property()
   tags: string[] = [];

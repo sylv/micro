@@ -36,7 +36,7 @@ export class FileService implements OnApplicationBootstrap {
 
   async getFile(id: string, host: MicroHost) {
     const file = await this.fileRepo.findOneOrFail(id);
-    if (!this.hostService.canHostSendFile(host, file)) {
+    if (!this.hostService.canHostSendEntity(host, file)) {
       throw new NotFoundException("Your file is in another castle.");
     }
 

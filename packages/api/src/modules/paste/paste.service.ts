@@ -11,7 +11,7 @@ export class PasteService {
 
   async getPaste(pasteId: string) {
     const paste = await this.pasteRepo.findOneOrFail(pasteId);
-    if (paste.expiresAt && paste.expiresAt < Date.now()) {
+    if (paste.expiresAt && paste.expiresAt.getTime() < Date.now()) {
       await this.pasteRepo.removeAndFlush(paste);
       throw new NotFoundException();
     }
@@ -23,7 +23,7 @@ export class PasteService {
   async deleteExpiredPastes() {
     const deleted = await this.pasteRepo.nativeDelete({
       expiresAt: {
-        $lte: Date.now(),
+        $lte: new Date(),
       },
     });
 

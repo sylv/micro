@@ -36,15 +36,15 @@ export class HostService {
     throw new BadRequestException(`Invalid host URL "${url}".`);
   }
 
-  canHostSendFile(host: MicroHost, file: { host?: string }) {
+  canHostSendEntity(host: MicroHost, entity: { host?: string }) {
     // todo: if host.wildcard, we should check to make sure the file owner
     // matches the given username in the request url. so uploads to
     // sylver.is-fucking.gay can't be accessed on cyk.is-fucking.gay and vice versa
     if (!config.restrictFilesToHost) return true;
     // files without a host can be served on all hosts
-    if (!file.host) return true;
+    if (!entity.host) return true;
     // the host that the file was uploaded to can serve the file
-    if (file.host === host.normalised) return true;
+    if (entity.host === host.normalised) return true;
     // root host can serve all files.
     if (host.normalised === config.rootHost.normalised) return true;
     return false;

@@ -15,115 +15,6 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "permissions": {
-          "name": "permissions",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
-        },
-        "inviter_id": {
-          "name": "inviter_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
-        "invited_id": {
-          "name": "invited_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "bigint"
-        }
-      },
-      "name": "invite",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "invited_id"
-          ],
-          "composite": false,
-          "keyName": "invite_invited_id_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "invite_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "invite_inviter_id_foreign": {
-          "constraintName": "invite_inviter_id_foreign",
-          "columnNames": [
-            "inviter_id"
-          ],
-          "localTableName": "public.invite",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.users",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "invite_invited_id_foreign": {
-          "constraintName": "invite_invited_id_foreign",
-          "columnNames": [
-            "invited_id"
-          ],
-          "localTableName": "public.invite",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.users",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
         "username": {
           "name": "username",
           "type": "varchar(255)",
@@ -166,7 +57,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "tags": {
@@ -230,7 +121,119 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.invite",
+          "referencedTableName": "public.invites",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "inviter_id": {
+          "name": "inviter_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "invited_id": {
+          "name": "invited_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "invites",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "invited_id"
+          ],
+          "composite": false,
+          "keyName": "invites_invited_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "invites_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "invites_inviter_id_foreign": {
+          "constraintName": "invites_inviter_id_foreign",
+          "columnNames": [
+            "inviter_id"
+          ],
+          "localTableName": "public.invites",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "invites_invited_id_foreign": {
+          "constraintName": "invites_invited_id_foreign",
+          "columnNames": [
+            "invited_id"
+          ],
+          "localTableName": "public.invites",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }
@@ -285,21 +288,23 @@
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "bigint",
+          "type": "timestamptz(0)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "mappedType": "bigint"
+          "length": 6,
+          "mappedType": "datetime"
         },
         "created_at": {
           "name": "created_at",
-          "type": "bigint",
+          "type": "timestamptz(0)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "bigint"
+          "length": 6,
+          "mappedType": "datetime"
         },
         "owner_id": {
           "name": "owner_id",
@@ -337,6 +342,94 @@
           ],
           "referencedTableName": "public.users",
           "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "destination": {
+          "name": "destination",
+          "type": "varchar(1024)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 1024,
+          "mappedType": "string"
+        },
+        "host": {
+          "name": "host",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "clicks": {
+          "name": "clicks",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "links",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "links_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "links_owner_id_foreign": {
+          "constraintName": "links_owner_id_foreign",
+          "columnNames": [
+            "owner_id"
+          ],
+          "localTableName": "public.links",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
           "updateRule": "cascade"
         }
       }
@@ -412,7 +505,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "name": {
@@ -444,12 +537,13 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "bigint",
+          "type": "timestamptz(0)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "bigint"
+          "length": 6,
+          "mappedType": "datetime"
         }
       },
       "name": "files",
@@ -570,12 +664,13 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "bigint",
+          "type": "timestamptz(0)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "bigint"
+          "length": 6,
+          "mappedType": "datetime"
         }
       },
       "name": "thumbnails",

@@ -13,7 +13,6 @@ import mimeType from "mime-types";
 import { config } from "../../config";
 import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
-import { TimestampType } from "../../timestamp.type";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
 import { FileMetadata } from "./file-metadata.embeddable";
@@ -38,7 +37,7 @@ export class File {
   @Embedded(() => FileMetadata, { nullable: true })
   metadata?: FileMetadata;
 
-  @Property({ type: String, lazy: true, hidden: true })
+  @Property({ type: String, lazy: true, nullable: true, hidden: true })
   deleteKey?: string = generateDeleteKey();
 
   @Property({ nullable: true })
@@ -55,7 +54,7 @@ export class File {
   })
   owner!: IdentifiedReference<User>;
 
-  @Property({ type: TimestampType })
+  @Property({ type: Date })
   createdAt = new Date();
 
   @Property({ persist: false })

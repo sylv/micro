@@ -6,6 +6,7 @@ import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import createApp from "fastify";
 import { config } from "./config";
+import { migrate } from "./migrate";
 import { AppModule } from "./modules/app.module";
 import { HostGuard } from "./modules/host/host.guard";
 import { SerializerInterceptor } from "./serializer.interceptor";
@@ -21,6 +22,7 @@ const limits: FastifyMultipartOptions = {
 };
 
 async function bootstrap(): Promise<void> {
+  await migrate();
   const fastify = createApp({
     trustProxy: process.env.TRUST_PROXY === "true",
     maxParamLength: 500,
