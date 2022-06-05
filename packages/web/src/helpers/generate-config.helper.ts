@@ -23,6 +23,7 @@ export function generateConfig(token: string, hosts: string[], direct: boolean):
     Headers: {
       Authorization: token,
       "X-Micro-Host": joined,
+      "X-Micro-Paste-Shortcut": "true",
     },
   };
 

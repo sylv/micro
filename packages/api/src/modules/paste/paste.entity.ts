@@ -4,6 +4,7 @@ import { config } from "../../config";
 import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { TimestampType } from "../../timestamp.type";
 import { User } from "../user/user.entity";
+import mimeType from "mime-types";
 
 @Entity({ tableName: "pastes" })
 export class Paste {
@@ -35,7 +36,28 @@ export class Paste {
   })
   owner?: IdentifiedReference<User>;
 
-  [OptionalProps]: "owner" | "createdAt" | "expiresAt" | "extension";
+  @Property({ persist: false })
+  get urls() {
+    return {
+      view: config.rootHost.url + this.paths.view,
+      direct: config.rootHost.url + this.paths.direct,
+      metadata: config.rootHost.url + this.paths.metadata,
+    };
+  }
+
+  @Property({ persist: false })
+  get paths() {
+    const viewUrl = `/p/${this.id}`;
+    const directUrl = `/p/${this.id}${this.extension}`;
+    const metadataUrl = `/api/paste/${this.id}`;
+    return {
+      view: viewUrl,
+      direct: directUrl,
+      metadata: metadataUrl,
+    };
+  }
+
+  [OptionalProps]: "owner" | "createdAt" | "expiresAt" | "extension" | "urls" | "paths";
 }
 
 export class CreatePasteDto {

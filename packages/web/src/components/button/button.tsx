@@ -7,18 +7,16 @@ export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTM
   href?: string;
   disabled?: boolean;
   primary?: boolean;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
   small?: boolean;
   type?: "submit" | "reset" | "button";
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ href, disabled, prefix, suffix, className, primary, small, onClick, onKeyDown, type, children, ...rest }, ref) => {
+  ({ href, disabled, className, primary, small, onClick, onKeyDown, type, children, ...rest }, ref) => {
     const onClickWrap = disabled ? undefined : onClick;
     const onKeyDownWrap = disabled ? undefined : onKeyDown;
     const classes = classNames(
-      "flex items-center justify-center w-full px-3 py-2 text-sm font-medium transition border rounded bg-dark-300 hover:bg-dark-600 border-dark-600",
+      "flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium transition border rounded bg-dark-300 hover:bg-dark-600 border-dark-600 truncate",
       disabled && "!bg-dark-200 border border-dark-600 text-white cursor-not-allowed",
       primary && "bg-brand hover:bg-brand hover:opacity-75",
       small && "text-xs font-normal px-2 py-1",
@@ -32,9 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       return (
         <Link href={href} className={classes} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest}>
-          {prefix && <span className="mr-1">{prefix}</span>}
-          <span className="truncate">{children}</span>
-          {suffix && <span className={"ml-1"}>{suffix}</span>}
+          {children}
         </Link>
       );
     }
@@ -50,9 +46,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...rest}
         ref={ref}
       >
-        {prefix && <span className="mr-1">{prefix}</span>}
-        <span className="truncate">{children}</span>
-        {suffix && <span className={"ml-1"}>{suffix}</span>}
+        {children}
       </button>
     );
   }

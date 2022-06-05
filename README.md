@@ -17,6 +17,7 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 - [x] ShareX Support
 - [x] Thumbnails
 - [x] Config generation
+- [x] Encrypted pastes
 - [x] File name preservation
 - [x] Video, image, text and markdown previews
 - [x] Syntax highlighting for supported files

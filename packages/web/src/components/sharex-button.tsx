@@ -26,8 +26,8 @@ export const ShareXButton: FC<ShareXButtonProps> = (props) => {
     <Dropdown
       className="left-0 right-0 w-auto"
       trigger={
-        <Button prefix={<DownloadIcon />} disabled={disabled}>
-          ShareX Config
+        <Button disabled={disabled}>
+          <DownloadIcon className="h-4" /> ShareX Config
         </Button>
       }
     >

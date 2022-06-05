@@ -1,4 +1,6 @@
 import { MultipartFile } from "@fastify/multipart";
+import { EntityRepository } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import {
   BadRequestException,
   Controller,
@@ -19,12 +21,18 @@ import { randomItem } from "../../helpers/random-item.helper";
 import { UserId } from "../auth/auth.decorators";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard";
 import { HostService } from "../host/host.service";
+import { Paste } from "../paste/paste.entity";
 import { UserService } from "../user/user.service";
 import { FileService } from "./file.service";
 
 @Controller()
 export class FileController {
-  constructor(private fileService: FileService, private userService: UserService, private hostService: HostService) {}
+  constructor(
+    @InjectRepository(Paste) private pasteRepo: EntityRepository<Paste>,
+    private fileService: FileService,
+    private userService: UserService,
+    private hostService: HostService
+  ) {}
 
   @Get("file/:fileId/content")
   async getFileContent(
@@ -53,12 +61,27 @@ export class FileController {
   async createFile(
     @UserId() userId: string,
     @Req() request: FastifyRequest,
-    @Headers("x-micro-host") hosts = config.rootHost.url
+    @Headers("x-micro-host") hosts = config.rootHost.url,
+    @Headers("X-Micro-Paste-Shortcut") shortcut: string
   ) {
     const user = await this.userService.getUser(userId);
     if (!user) throw new ForbiddenException("Unknown user.");
     const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) throw new BadRequestException("Missing upload.");
+    if (shortcut === "true" && upload.mimetype === "text/plain") {
+      const content = await upload.toBuffer();
+      const paste = this.pasteRepo.create({
+        content: content.toString(),
+        burn: false,
+        encrypted: false,
+        owner: userId,
+        extension: "txt",
+      });
+
+      await this.pasteRepo.persistAndFlush(paste);
+      return paste;
+    }
+
     const possibleHosts = hosts.split(/, ?/g);
     const hostUrl = randomItem(possibleHosts);
     const host = await this.hostService.getHostFrom(hostUrl, user.tags);
