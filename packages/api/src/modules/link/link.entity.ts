@@ -8,7 +8,7 @@ export class Link {
   id = generateContentId();
 
   @Property({ length: 1024 })
-  destination!: string;
+  destination: string;
 
   @Property({ nullable: true })
   host?: string;
@@ -23,7 +23,7 @@ export class Link {
     hidden: true,
     wrappedReference: true,
   })
-  owner!: IdentifiedReference<User>;
+  owner: IdentifiedReference<User>;
 
   [OptionalProps]: "host" | "clicks" | "createdAt";
 }

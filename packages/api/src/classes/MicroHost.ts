@@ -5,7 +5,7 @@ import { HostService } from "../modules/host/host.service";
 export class MicroHost {
   // https://regex101.com/r/ZR9rpp/1
   @Matches(/^https?:\/\/[\d.:A-z{}-]+$/)
-  url!: string;
+  url: string;
 
   @IsString({ each: true })
   @IsOptional()

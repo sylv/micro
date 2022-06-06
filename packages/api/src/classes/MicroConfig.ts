@@ -20,21 +20,21 @@ import { MicroHost } from "./MicroHost";
 
 export class MicroConfig {
   @IsUrl({ require_tld: false, require_protocol: true, protocols: ["postgresql", "postgres"] })
-  databaseUrl!: string;
+  databaseUrl: string;
 
   @IsString()
   @NotEquals("YOU_SHALL_NOT_PASS")
-  secret!: string;
+  secret: string;
 
   @IsEmail()
-  inquiries!: string;
+  inquiries: string;
 
   @IsNumber()
   @Transform(({ value }) => xbytes.parseSize(value))
   uploadLimit = xbytes.parseSize("50MB");
 
   @IsBoolean()
-  publicPastes!: boolean;
+  publicPastes: boolean;
 
   @IsNumber()
   @IsOptional()
@@ -48,10 +48,10 @@ export class MicroConfig {
 
   @IsString()
   @Transform(({ value }) => path.resolve(value))
-  storagePath!: string;
+  storagePath: string;
 
   @IsBoolean()
-  restrictFilesToHost!: boolean;
+  restrictFilesToHost: boolean;
 
   @ValidateNested()
   @IsOptional()
@@ -61,7 +61,7 @@ export class MicroConfig {
   @ValidateNested({ each: true })
   @IsDefined()
   @Type(() => MicroHost)
-  hosts!: MicroHost[];
+  hosts: MicroHost[];
 
   get rootHost() {
     return this.hosts[0];

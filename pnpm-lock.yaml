@@ -43,7 +43,7 @@ importers:
       '@types/dedent': ^0.7.0
       '@types/luxon': ^2.3.2
       '@types/mime-types': ^2.1.1
-      '@types/node': ^16.10.1
+      '@types/node': '16'
       '@types/passport-jwt': ^3.0.6
       '@types/passport-local': ^1.0.34
       '@types/sharp': ^0.30.2
@@ -73,6 +73,7 @@ importers:
       stream-size: ^0.0.6
       ts-node: ^10.7.0
       tsup: ^5.12.6
+      typescript: ^4.6.4
       xbytes: ^1.7.0
     dependencies:
       '@fastify/cookie': 6.0.0
@@ -126,8 +127,9 @@ importers:
       '@types/passport-local': 1.0.34
       '@types/sharp': 0.30.2
       nodemon: 2.0.16
-      ts-node: 10.7.0_ok26h7wj6ubgej6llijfqtmf54
-      tsup: 5.12.6_ts-node@10.7.0
+      ts-node: 10.7.0_bvx74sey2cc4ezqwnfhit2yjju
+      tsup: 5.12.6_jzlwqgkjzt5mccsp6kc6j2iwe4
+      typescript: 4.7.3
 
   packages/web:
     specifiers:
@@ -142,6 +144,7 @@ importers:
       '@storybook/manager-webpack5': ^6.4.22
       '@storybook/react': ^6.4.22
       '@tailwindcss/typography': ^0.5.2
+      '@types/node': '16'
       '@types/react': ^18.0.8
       autoprefixer: ^10.4.7
       classnames: ^2.3.1
@@ -196,6 +199,7 @@ importers:
       '@storybook/cli': 6.5.6_wfhvqiprmys65wyvbjfgd3t6zi
       '@storybook/manager-webpack5': 6.5.6_wfhvqiprmys65wyvbjfgd3t6zi
       '@storybook/react': 6.5.6_z3ber7zaudtylqwm4uheryr3qq
+      '@types/node': 16.11.33
       '@types/react': 18.0.11
       storybook-dark-mode: 1.1.0
       typescript: 4.7.3
@@ -13324,7 +13328,7 @@ packages:
     dependencies:
       import-cwd: 3.0.0
       lilconfig: 2.0.3
-      ts-node: 10.7.0_ok26h7wj6ubgej6llijfqtmf54
+      ts-node: 10.7.0_bvx74sey2cc4ezqwnfhit2yjju
       yaml: 1.10.2
     dev: true
 
@@ -15636,7 +15640,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-node/10.7.0_ok26h7wj6ubgej6llijfqtmf54:
+  /ts-node/10.7.0_bvx74sey2cc4ezqwnfhit2yjju:
     resolution: {integrity: sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==}
     hasBin: true
     peerDependencies:
@@ -15663,6 +15667,7 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
+      typescript: 4.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: true
@@ -15699,7 +15704,7 @@ packages:
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
 
-  /tsup/5.12.6_ts-node@10.7.0:
+  /tsup/5.12.6_jzlwqgkjzt5mccsp6kc6j2iwe4:
     resolution: {integrity: sha512-tpePOgdMRKRgazF+ujq9k1Fo44PUFUJJjRLtxq87pQrYW/Ub/fu1GpFGLzdUF9qjJ4FX1ykhf2d9mWCNy+jAtg==}
     hasBin: true
     peerDependencies:
@@ -15722,6 +15727,7 @@ packages:
       source-map: 0.7.3
       sucrase: 3.21.0
       tree-kill: 1.2.2
+      typescript: 4.7.3
     transitivePeerDependencies:
       - supports-color
       - ts-node

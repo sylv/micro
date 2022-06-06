@@ -11,7 +11,7 @@ export const usePaths = () => {
     };
   }
 
-  const rootIsCurrent = config.data.rootHost === config.data.host.normalised;
+  const rootIsCurrent = config.data.rootHost.normalised === config.data.host.normalised;
   const home = config.data.host.redirect ?? rootIsCurrent ? "/" : config.data.rootHost.url;
   const dashboard = rootIsCurrent ? "/dashboard" : config.data.rootHost.url + "/dashboard";
   const login = rootIsCurrent ? "/login" : config.data.rootHost.url + "/login";

@@ -1,17 +1,18 @@
 {
     "name": "@micro/api",
-    "version": "0.0.1",
+    "version": "2.0.0",
     "repository": "https://github.com/sylv/micro.git",
     "author": "Ryan <ryan@sylver.me>",
     "license": "GPL-3.0",
     "private": true,
-    "main": "./src/types.ts",
+    "main": "./dist/types.d.js",
     "engine": {
         "node": ">=16"
     },
     "scripts": {
-        "watch": "tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
-        "build": "tsup src/main.ts src/migrations/* --sourcemap --target node16"
+        "watch": "pnpm tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
+        "build": "rm -rf ./dist && pnpm tsup src/main.ts src/types.ts src/migrations/* --dts --sourcemap --target node16",
+        "start": "node ./dist/main.js"
     },
     "dependencies": {
         "@fastify/cookie": "^6.0.0",
@@ -61,13 +62,14 @@
         "@types/dedent": "^0.7.0",
         "@types/luxon": "^2.3.2",
         "@types/mime-types": "^2.1.1",
-        "@types/node": "^16.10.1",
+        "@types/node": "16",
         "@types/passport-jwt": "^3.0.6",
         "@types/passport-local": "^1.0.34",
         "@types/sharp": "^0.30.2",
         "nodemon": "^2.0.16",
         "ts-node": "^10.7.0",
-        "tsup": "^5.12.6"
+        "tsup": "^5.12.6",
+        "typescript": "^4.6.4"
     },
     "mikro-orm": {
         "useTsNode": true,

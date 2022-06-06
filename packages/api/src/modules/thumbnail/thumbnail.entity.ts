@@ -4,25 +4,25 @@ import { File } from "../file/file.entity";
 @Entity({ tableName: "thumbnails" })
 export class Thumbnail {
   @Property()
-  size!: number;
+  size: number;
 
   @Property()
-  duration!: number;
+  duration: number;
 
   @Property()
-  type!: string;
+  type: string;
 
   @Property()
-  width!: number;
+  width: number;
 
   @Property()
-  height!: number;
+  height: number;
 
   @Property({ type: BlobType, lazy: true, hidden: true })
-  data!: Buffer;
+  data: Buffer;
 
   @OneToOne({ entity: () => File, primary: true, onDelete: "CASCADE" })
-  file!: File;
+  file: File;
 
   @Property({ type: Date })
   createdAt = new Date();

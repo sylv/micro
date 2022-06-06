@@ -20,19 +20,19 @@ import { FileMetadata } from "./file-metadata.embeddable";
 @Entity({ tableName: "files" })
 export class File {
   @PrimaryKey()
-  id!: string;
+  id: string;
 
   @Property({ nullable: true })
   host?: string;
 
   @Property()
-  type!: string;
+  type: string;
 
   @Property()
-  size!: number;
+  size: number;
 
   @Property()
-  hash!: string;
+  hash: string;
 
   @Embedded(() => FileMetadata, { nullable: true })
   metadata?: FileMetadata;
@@ -52,7 +52,7 @@ export class File {
     serializer: (value) => ({ id: value.id }),
     wrappedReference: true,
   })
-  owner!: IdentifiedReference<User>;
+  owner: IdentifiedReference<User>;
 
   @Property({ type: Date })
   createdAt = new Date();

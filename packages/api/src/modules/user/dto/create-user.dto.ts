@@ -7,13 +7,13 @@ export class CreateUserDto {
   @IsString()
   @IsLowercase()
   @IsNotIn(blocklist, { message: ({ value }) => `Restricted username "${value}"` })
-  username!: string;
+  username: string;
 
   @MaxLength(100)
   @MinLength(5)
   @IsString()
-  password!: string;
+  password: string;
 
   @IsString()
-  invite!: string;
+  invite: string;
 }

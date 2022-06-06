@@ -6,9 +6,9 @@ import xbytes from "xbytes";
 export class MicroConfigPurge {
   @IsNumber()
   @Transform(({ value }) => xbytes.parseSize(value))
-  overLimit!: number;
+  overLimit: number;
 
   @IsNumber()
   @Transform(({ value }) => ms(value))
-  afterTime!: number;
+  afterTime: number;
 }

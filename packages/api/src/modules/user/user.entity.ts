@@ -10,17 +10,17 @@ export class User {
   id = generateContentId();
 
   @Property({ unique: true, index: true })
-  username!: string;
+  username: string;
 
   @Property({ type: Number })
   permissions = 0;
 
   @Property()
   @Exclude()
-  password!: string;
+  password: string;
 
   @Property()
-  secret!: string;
+  secret: string;
 
   @OneToOne({ nullable: true })
   invite?: Invite;

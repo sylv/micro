@@ -1,9 +1,7 @@
 *
 
-!prisma
-!public
-!src
-!types
+!example
+!packages
 
 !LICENSE
 
@@ -15,4 +13,10 @@
 !next.config.js
 !postcss.config.js
 !pnpm-lock.yaml
+!pnpm-workspace.yaml
 !tsup.config.ts
+!wrapper.sh
+
+packages/api/data
+packages/api/dist
+packages/web/.next

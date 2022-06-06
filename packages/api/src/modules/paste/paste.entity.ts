@@ -10,16 +10,16 @@ export class Paste {
   id = generateContentId();
 
   @Property({ type: "varchar", length: 500000 })
-  content!: string;
+  content: string;
 
   @Property({ nullable: true })
   extension?: string;
 
   @Property()
-  encrypted!: boolean;
+  encrypted: boolean;
 
   @Property()
-  burn!: boolean;
+  burn: boolean;
 
   @Property({ nullable: true, type: Date })
   expiresAt?: Date;
@@ -61,10 +61,10 @@ export class Paste {
 export class CreatePasteDto {
   @IsString()
   @Length(1, config.maxPasteLength)
-  content!: string;
+  content: string;
 
   @IsBoolean()
-  encrypted!: boolean;
+  encrypted: boolean;
 
   @IsString()
   @Length(1, 10)
@@ -73,11 +73,11 @@ export class CreatePasteDto {
 
   @IsBoolean()
   @IsOptional()
-  burn!: boolean;
+  burn: boolean;
 
   @IsBoolean()
   @IsOptional()
-  paranoid!: boolean;
+  paranoid: boolean;
 
   @IsNumber()
   @IsOptional()
