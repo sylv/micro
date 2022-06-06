@@ -53,7 +53,7 @@ export class UserService {
       password: hashedPassword,
       username: data.username,
       invite: invite.id,
-      permissions: invite.permissions,
+      permissions: invite.permissions ?? 0,
     });
 
     await this.inviteService.consume(invite);

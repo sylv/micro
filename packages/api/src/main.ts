@@ -22,7 +22,10 @@ const limits: FastifyMultipartOptions = {
 };
 
 async function bootstrap(): Promise<void> {
+  const logger = new Logger("bootstrap");
+  logger.debug(`Checking for and running migrations`);
   await migrate();
+  logger.debug(`Migrations check complete`);
   const fastify = createApp({
     trustProxy: process.env.TRUST_PROXY === "true",
     maxParamLength: 500,
@@ -30,7 +33,6 @@ async function bootstrap(): Promise<void> {
   });
 
   const adapter = new FastifyAdapter(fastify as any);
-  const logger = new Logger("bootstrap");
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
   app.useGlobalInterceptors(new SerializerInterceptor());
   app.useGlobalGuards(new HostGuard());

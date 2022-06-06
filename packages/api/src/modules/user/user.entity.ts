@@ -15,11 +15,11 @@ export class User {
   @Property({ type: Number })
   permissions = 0;
 
-  @Property()
+  @Property({ hidden: true })
   @Exclude()
   password: string;
 
-  @Property()
+  @Property({ hidden: true })
   secret: string;
 
   @OneToOne({ nullable: true })
