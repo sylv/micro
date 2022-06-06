@@ -1,14 +1,12 @@
 # micro
 
-> I'm in the middle of rewriting a large amount of micro to be easier to setup and improve some major issues. At the moment you should avoid using micro.
-
-An invite-only file sharing service with support for ShareX. **At the moment, consider the current state of micro to be an alpha - there are no guarantees.** You can see a preview at https://micro.sylo.digital
+An invite-only file sharing service with support for ShareX. You can see a preview at https://micro.sylo.digital
 
 - [micro](#micro)
   - [features](#features)
   - [screenshots](#screenshots)
   - [installation](#installation)
-  - [administration](#administration)
+  - [migrating from 0.0.x to 1.0.0](#migrating-from-00x-to-100)
   - [todo](#todo)
   - [discord](#discord)
 
@@ -50,33 +48,34 @@ An invite-only file sharing service with support for ShareX. **At the moment, co
 
 ## installation
 
-**Installation instructions have been removed as there is a lot of features still underway - installations created before they're done will likely have to be manually upgraded.**
-
-<!-- ## installation
-
-Before you get started, please keep in mind micro isn't really intended to be self-hosted; setting it up can be tricky and managing it isn't particularly fun. This is a _very_ rough guide to help people that already know what they're doing. If you can't follow along, you should hold off on hosting your own instance until there are better instructions. I'd also recommend you read through the files in [/example](/example) first to see if you can follow along, because if you can't you're just gonna waste time trying to follow the instructions below.
+If you need help, join the [discord server](https://discord.gg/VDMX6VQRZm). This guide assumes you are on linux with a basic understanding of linux and docker.
 
 1. Install `git`, `docker` and `docker-compose`
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
 3. Copy the example configs to the current directory, `cp ./micro/example/* ./`
-4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **You need to read through each file carefully or you'll risk fucking up your entire micro instance.** The comments are important and include information on initial startup and security. Caddy is optional but it will handle encrypting traffic and redirecting insecure requests, so for anything but a test environment you should use it or something similar.
-5. Run `docker-compose up -d postgres` to start the database.
-6. Run `docker-compose run -e DATABASE_URL=postgresql://micro:youshallnotpass@postgres/micro micro prisma db push` to create database tables.
-7. Run `docker-compose up -d micro` to start micro.
-8. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account. -->
+4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **It is extremely important you read through each of the 3 files and make sure you understand what they do.** Specifically, `.microrc` contains a secret that handles authentication, if it is not a secure random string everyone can sign in as anyone they want without a password.
+5. Run `docker-compose up -d` to start the database and micro.
+6. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
-## administration
+Setup is now complete and your instance should be working. When updates come out, create a backup of the database then pull the latest image and restart the container. Unlike past versions migrations are applied automatically.
 
-There currently isn't an admin interface, only endpoints that let you do some basic tasks.
+## migrating from 0.0.x to 1.0.0
 
-- To create an invite, go to `/api/invite` and copy the link. Invites are valid for an hour and cannot be revoked once generated.
-- To add a tag to a user, go to `/api/user/:id/tags/add/:tag`, where `:id` is the **id** of the user you want to add the tag to, and `:tag` is the name of the tag to add.
-- To remove a tag, go to `/api/user/:id/tags/remove/:tag`. See above for parameters.
-- To delete a user, go to `/api/user/:id/delete`. **This will only delete the user, files they have uploaded will not be removed from disk.**
+I've made a best effort attempt to make migration as painless as possible, mostly for my own sanity. These steps are quite in-depth but in reality the migration should be fairly simple for most users. If you get stuck at any point, please join the [discord server](https://discord.gg/VDMX6VQRZm) and ask for help.
+
+1. Create a backup of the database and the data directory.
+2. Update your `.microrc` with the changes seen in [example config](example/.microrc), notable changes are `database` is now `databaseUrl` and `publicPastes` has been added.
+3. Change the docker image from `sylver/micro` or `sylver/micro:master` to `sylver/micro:main`
+4. Start the container. It should exit on startup with an error message saying that there is data that must be migrated. If it does not, you did not update the image tag correctly or it cannot detect data to be migrated.
+5. Read the error message, then stop the container and set the `MIGRATE_OLD_DATABASE` environment variable to `true`
+6. Start the container and it will migrate the database automatically.
+
+After that, you should be able to use it as normal. Thumbnails are the only data that is not migrated, as the format changed and it doesn't really matter because they can just be regenerated on demand. If you run into any issues during migration, join the [discord server](https://discord.gg/VDMX6VQRZm) or open an issue on [github](https://github.com/sylv/micro/issues/new).
 
 ## todo
 
 - [ ] Ratelimiting
+- [ ] Admin UI
 - [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] Video thumbnails
 - [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.

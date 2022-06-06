@@ -8,13 +8,16 @@
   "inquiries": "admin@example.com",
   // leave as default for docker.
   // set to a postgres connection URI for your database.
-  "database": "postgresql://micro:youshallnotpass@postgres/micro",
+  "databaseUrl": "postgresql://micro:youshallnotpass@postgres/micro",
   // can be relative to thw cwd or absolute.
   // for docker you'll want this to be absolute.
   "storagePath": "/data",
   // whether files should only be available on the root domain and the domain they were
   // uploaded to. if you intend to use tags, this should be enabled.
   "restrictFilesToHost": true,
+  // whether to allow anyone to create a paste. i would recommend leaving this enabled
+  // as pastes are cheap to store and the UI doesn't handle them being disabled well.
+  "publicPastes": true,
   // if enabled, this will check for old files on a schedule (at the time of writing this, every hour at the hour)
   // matching the details and permanently delete them permanently. to disable, remove this block entirely.
   "purge": {
