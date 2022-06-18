@@ -9,9 +9,9 @@ import {
   PrimaryKey,
   Property,
 } from "@mikro-orm/core";
+import { checkThumbnailSupport } from "@ryanke/thumbnail-generator";
 import mimeType from "mime-types";
 import { config } from "../../config";
-import { THUMBNAIL_SUPPORTED_TYPES } from "../../constants";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
@@ -88,7 +88,7 @@ export class File {
     const viewUrl = `/f/${this.id}`;
     const directUrl = `/f/${this.id}.${extension}`;
     const metadataUrl = `/api/file/${this.id}`;
-    const thumbnailUrl = THUMBNAIL_SUPPORTED_TYPES.has(this.type) ? `/t/${this.id}` : null;
+    const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : null;
     // todo: this.deleteKey is lazy which means the only time it should be present
     // is when the file is created or its explicitly asked for. that said, we should
     // still make sure we aren't leaking delete keys by accident.

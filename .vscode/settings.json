@@ -1,6 +1,7 @@
 {
   "css.validate": false,
   "less.validate": false,
+  "npm.scriptExplorerExclude": ["^((?!watch|generate:watch).)*$"],
   "scss.validate": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.associations": {

@@ -13,7 +13,7 @@ An invite-only file sharing service with support for ShareX. You can see a previ
 ## features
 
 - [x] ShareX Support
-- [x] Thumbnails
+- [x] Video and image thumbnails
 - [x] Config generation
 - [x] Encrypted pastes
 - [x] File name preservation
@@ -78,7 +78,6 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 - [ ] Ratelimiting
 - [ ] Admin UI
 - [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
-- [ ] Video thumbnails
 - [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space

@@ -72,7 +72,7 @@ export class StorageService {
     });
   }
 
-  private getPathFromHash(hash: string) {
+  getPathFromHash(hash: string) {
     return path.join(config.storagePath, hash[0], hash[1], hash);
   }
 
