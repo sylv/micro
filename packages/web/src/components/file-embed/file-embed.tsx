@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import { FC, useMemo } from "react";
 import { FileEmbedContainer } from "./file-embed-container";
 import { FileEmbedDefault } from "./file-embed-default";

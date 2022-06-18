@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { http } from "../../helpers/http.helper";
-import { GetUserFilesData } from "@micro/api";
+import { GetUserFilesData } from "@ryanke/micro-api";
 import { Card } from "../card";
 import { Spinner } from "../spinner";
-import { FileListCard } from "./file-list-card";
+import { FilePreviewCard } from "./file-preview-card";
 import Error from "../../pages/_error";
 
 const PER_PAGE = 24;
@@ -60,7 +60,7 @@ export const FileList: FC = () => {
       <div className="pb-5">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
           {files.map((file) => (
-            <FileListCard key={file.id} file={file} />
+            <FilePreviewCard key={file.id} file={file} />
           ))}
         </div>
       </div>

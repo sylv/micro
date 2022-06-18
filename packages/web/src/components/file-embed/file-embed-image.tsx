@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import Head from "next/head";
 
 export const FileEmbedImage = ({ file }: { file: GetFileData }) => {

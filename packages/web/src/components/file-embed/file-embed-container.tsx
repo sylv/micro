@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import classNames from "classnames";
 import Head from "next/head";
 import { FC, ReactNode } from "react";

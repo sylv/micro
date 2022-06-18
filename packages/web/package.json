@@ -1,5 +1,5 @@
 {
-    "name": "@micro/web",
+    "name": "@ryanke/micro-web",
     "version": "1.0.0",
     "repository": "https://github.com/sylv/micro.git",
     "author": "Ryan <ryan@sylver.me>",
@@ -39,7 +39,7 @@
         "tailwindcss": "^3.0.24"
     },
     "devDependencies": {
-        "@micro/api": "workspace:^0.0.1",
+        "@ryanke/micro-api": "workspace:*",
         "@storybook/addon-essentials": "^6.4.22",
         "@storybook/addon-interactions": "^6.4.22",
         "@storybook/addon-links": "^6.4.22",

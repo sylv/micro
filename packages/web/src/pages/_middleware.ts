@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import type { NextFetchEvent, NextRequest } from "next/server";
 import { fetcher } from "../helpers/fetcher.helper";
 

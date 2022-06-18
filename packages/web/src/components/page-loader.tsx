@@ -1,8 +1,9 @@
 import { FC, useEffect } from "react";
 import { Container } from "./container";
 import { Spinner } from "./spinner";
+import { Title } from "../components/title";
 
-export const PageLoader: FC = () => {
+export const PageLoader: FC<{ title?: string }> = ({ title }) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -12,6 +13,7 @@ export const PageLoader: FC = () => {
 
   return (
     <Container center>
+      {title && <Title>{title}</Title>}
       <Spinner size="large" />
     </Container>
   );

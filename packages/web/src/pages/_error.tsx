@@ -12,7 +12,6 @@ export interface ErrorProps {
 
 const ERROR_LENNIES = ["ಠ_ಠ", "(ಥ﹏ಥ)", "ʕ•ᴥ•ʔ", "≧☉_☉≦", "ლ,ᔑ•ﺪ͟͠•ᔐ.ლ", "( ͡ಠ ʖ̯ ͡ಠ)", "(◉͜ʖ◉)", "¯\\_(⊙_ʖ⊙)_/¯"];
 export default function Error(props: ErrorProps) {
-  console.log(props);
   const router = useRouter();
   const status = props.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
   const lenny = ERROR_LENNIES[status % ERROR_LENNIES.length];

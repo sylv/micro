@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import useSWR from "swr";
 import { Markdown } from "../markdown";
 import { PageLoader } from "../page-loader";

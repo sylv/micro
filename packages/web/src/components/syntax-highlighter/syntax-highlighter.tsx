@@ -8,10 +8,11 @@ export interface SyntaxHighlighterProps extends HTMLProps<HTMLPreElement> {
   children: string;
   language: Language;
   className?: string;
+  parentClassName?: string;
 }
 
 export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
-  ({ children, language: defaultLanguage, className: additionalClasses, ...rest }) => {
+  ({ children, language: defaultLanguage, className: additionalClasses, parentClassName, ...rest }) => {
     const [language, setLanguage] = useState(defaultLanguage);
     const trimmed = children.trim();
 
@@ -19,9 +20,10 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
       <Highlight {...defaultProps} theme={theme} code={trimmed} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
           const containerClasses = classNames(className, "text-left overflow-x-auto h-full", additionalClasses);
+          const parentClasses = classNames("relative", parentClassName);
 
           return (
-            <div className="relative">
+            <div className={parentClasses}>
               <SyntaxHighlighterControls language={language} onLanguageChange={setLanguage} content={children} />
               <pre className={containerClasses} style={style} {...rest}>
                 {tokens.map((line, index) => {

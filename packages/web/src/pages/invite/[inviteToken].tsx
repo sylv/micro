@@ -1,4 +1,4 @@
-import { GetInviteData } from "@micro/api";
+import { GetInviteData } from "@ryanke/micro-api";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -29,7 +29,7 @@ export default function Invite() {
   }
 
   if (!invite.data) {
-    return <PageLoader />;
+    return <PageLoader title="You're Invited" />;
   }
 
   const onSubmit = async (data: LoginData) => {
@@ -67,8 +67,8 @@ export default function Invite() {
         <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
           <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>
           <p>
-            You have been invited to try out micro, an invite-only file sharing service with support for ShareX. Create an account, then
-            download the ShareX config and start uploading with your favourite vanity domain.
+            You have been invited to try out micro, an invite-only file sharing service with support for ShareX. Create
+            an account, then download the ShareX config and start uploading with your favourite vanity domain.
           </p>
           {expiresAt && (
             <p className="mt-2 text-xs text-gray-600">

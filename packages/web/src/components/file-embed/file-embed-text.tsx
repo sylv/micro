@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import { Language } from "prism-react-renderer";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -29,9 +29,9 @@ export const FileEmbedText = ({ file }: { file: GetFileData }) => {
   }
 
   return (
-    <div className="relative w-full h-full">
-      <SyntaxHighlighter language={language.key as Language}>{content.data}</SyntaxHighlighter>
-    </div>
+    <SyntaxHighlighter language={language.key as Language} parentClassName="w-full h-full">
+      {content.data}
+    </SyntaxHighlighter>
   );
 };
 

@@ -1,4 +1,4 @@
-import { GetServerConfigData } from "@micro/api";
+import { GetServerConfigData } from "@ryanke/micro-api";
 import useSWR from "swr";
 
 export const useConfig = () => {

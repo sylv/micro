@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";

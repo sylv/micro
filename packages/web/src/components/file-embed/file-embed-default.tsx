@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 
 export const FileEmbedDefault = ({ file }: { file: GetFileData }) => {
   return (

@@ -1,8 +1,9 @@
-import { CreatePasteBody, GetPasteData } from "@micro/api";
+import { CreatePasteBody, GetPasteData } from "@ryanke/micro-api";
 import { useState } from "react";
 import { Button } from "../../components/button/button";
 import { Container } from "../../components/container";
 import { Select } from "../../components/input/select";
+import { Title } from "../../components/title";
 import { encryptContent } from "../../helpers/encrypt.helper";
 import { http } from "../../helpers/http.helper";
 import ErrorPage from "../_error";
@@ -117,6 +118,7 @@ export default function Paste() {
 
   return (
     <Container>
+      <Title>New Paste</Title>
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold mb-4">New Paste</h1>
         <div className="flex items-center gap-2"></div>

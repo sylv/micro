@@ -1,4 +1,4 @@
-import { GetUploadTokenData, PutUploadTokenData } from "@micro/api";
+import { GetUploadTokenData, PutUploadTokenData } from "@ryanke/micro-api";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import useSWR, { mutate } from "swr";
@@ -71,12 +71,7 @@ export default function Dashboard() {
   };
 
   if (!user.data || !config.data || !token.data) {
-    return (
-      <>
-        <Title>Dashboard</Title>
-        <PageLoader />
-      </>
-    );
+    return <PageLoader title="Dashboard" />;
   }
 
   return (

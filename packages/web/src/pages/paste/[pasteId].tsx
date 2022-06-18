@@ -1,4 +1,4 @@
-import { GetPasteData } from "@micro/api";
+import { GetPasteData } from "@ryanke/micro-api";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { useRouter } from "next/router";
 import { Language } from "prism-react-renderer";

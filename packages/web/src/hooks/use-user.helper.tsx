@@ -1,4 +1,4 @@
-import { GetUserData } from "@micro/api";
+import { GetUserData } from "@ryanke/micro-api";
 import Router from "next/router";
 import useSWR, { mutate } from "swr";
 import { LoginData } from "../components/login-form";

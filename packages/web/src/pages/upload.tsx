@@ -1,4 +1,4 @@
-import { GetFileData } from "@micro/api";
+import { GetFileData } from "@ryanke/micro-api";
 import { useRouter } from "next/router";
 import React, { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from "react";
 import { Upload as UploadIcon } from "react-feather";
@@ -97,12 +97,7 @@ export default function Upload() {
   };
 
   if (!user.data || !config.data) {
-    return (
-      <>
-        <Title>Upload</Title>
-        <PageLoader />
-      </>
-    );
+    return <PageLoader title="Upload" />;
   }
 
   if (uploading) {
