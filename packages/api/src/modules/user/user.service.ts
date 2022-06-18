@@ -31,6 +31,7 @@ export class UserService {
       },
       {
         limit: pagination.limit,
+        offset: pagination.offset,
         orderBy: {
           createdAt: QueryOrder.DESC,
         },

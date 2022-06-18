@@ -77,6 +77,7 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 
 - [ ] Ratelimiting
 - [ ] Admin UI
+- [ ] Pastes should use the same embeds that files use they get all the same benefits (markdown previews, better syntax highlighting, etc)
 - [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
