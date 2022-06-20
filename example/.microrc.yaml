@@ -1,0 +1,52 @@
+# you can pass in most config options through environment variables, 
+# for example `DATABASE_URL` will override the databaseUrl in this config file.
+# remove the .yaml extension or change it to .json to use JSON-with-comments
+# ref: https://github.com/sylv/venera#sources
+
+databaseUrl: postgresql://micro:youshallnotpass@postgres/micro
+
+# EXTREMELY IMPORTANT
+# this is the secret used to sign json web tokens. this *must* be a secure, random string that no one else has.
+# if you dont change this, any user will be able to act as any other user by creating a token for someone else.
+# 32+ characters is recommended.
+secret: YOU_SHALL_NOT_PASS
+
+# the email that will show on the home page. in the future the home page will be customisable,
+# until then change this to your own email.
+inquiries: admin@example.com
+
+# where to store files, can be relative to the cwd or absolute.
+storagePath: /data
+
+# whether files uploaded to one domain should be available on other domains.
+# you should leave this enabled as it stops users uploading to {{username}}
+# domains as other users, for example user "one" could upload to one.example.com
+# then replace "one" with "two" and it would look like user "two" uploaded it.
+restrictFilesToHost: true
+
+# whether to allow anyone to paste without an account.
+# pastes are cheap to store so i'd recommend leaving this enabled
+publicPastes: true
+
+# purging can be used to clean up old files, useful if you want to allow large files to be uploaded
+# but dont want to store them forever. this is commented by default to prevent accidental purging
+# uncomment the section below to enable it.
+# purge:
+#   overLimit: 1MB # files over this size will be purged
+#   afterTime: 1d # after this many days
+
+
+hosts:
+    # the first host in the list is the default host
+  - url: https://i.example.com
+
+    # {{username}} will become the users name when they use this host
+  - url: https://{{username}}.example.com
+
+  - url: https://i.example.net
+    # redirect when users go to this hosts url without a file
+    redirect: https://example.net 
+    # only allow users with the "admin" tag to use this host
+    tags: ["admin"]
+
+

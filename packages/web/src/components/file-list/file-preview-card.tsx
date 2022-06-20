@@ -23,7 +23,7 @@ export const FilePreviewCard: FC<FileCardProps> = ({ file }) => {
           {file.paths.thumbnail && !loadFailed && (
             <img
               src={file.paths.thumbnail}
-              className="object-contain h-full"
+              className="object-contain w-full h-full"
               loading="lazy"
               decoding="async"
               height={file.thumbnail?.height}

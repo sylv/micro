@@ -10,7 +10,7 @@
   },
   "scripts": {
     "lint": "eslint --fix ./packages/*/src/**/*.{ts,tsx,js}",
-    "build:api": "cd packages/api && npm run build",
+    "build:api": "cd packages/thumbnail-generator && npm run build && cd ../api && npm run build",
     "build:web": "cd packages/web && npm run build",
     "start:api": "cd packages/api && npm run start",
     "start:web": "cd packages/web && npm run start"

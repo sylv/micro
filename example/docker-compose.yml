@@ -4,7 +4,7 @@ services:
     image: sylver/micro:main
     restart: unless-stopped
     volumes:
-      - $PWD/.microrc:/usr/src/micro/.microrc
+      - $PWD/.microrc.yaml:/usr/src/micro/.microrc.yaml
       - $PWD/data:/data
     # uncomment this if you dont care about https, then comment out the proxy service
     # ports:
