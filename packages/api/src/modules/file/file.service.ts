@@ -1,6 +1,6 @@
-import { Multipart } from "@fastify/multipart";
-import { EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
+import { Multipart } from '@fastify/multipart';
+import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   Injectable,
@@ -9,21 +9,21 @@ import {
   OnApplicationBootstrap,
   PayloadTooLargeException,
   UnauthorizedException,
-} from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import contentRange from "content-range";
-import { FastifyReply, FastifyRequest } from "fastify";
-import { DateTime } from "luxon";
-import { PassThrough } from "stream";
-import xbytes from "xbytes";
-import { MicroHost } from "../../classes/MicroHost";
-import { config } from "../../config";
-import { generateContentId } from "../../helpers/generate-content-id.helper";
-import { getStreamType } from "../../helpers/get-stream-type.helper";
-import { HostService } from "../host/host.service";
-import { StorageService } from "../storage/storage.service";
-import { User } from "../user/user.entity";
-import { File } from "./file.entity";
+} from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import contentRange from 'content-range';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { DateTime } from 'luxon';
+import { PassThrough } from 'stream';
+import xbytes from 'xbytes';
+import { MicroHost } from '../../classes/MicroHost';
+import { config } from '../../config';
+import { generateContentId } from '../../helpers/generate-content-id.helper';
+import { getStreamType } from '../../helpers/get-stream-type.helper';
+import { HostService } from '../host/host.service';
+import { StorageService } from '../storage/storage.service';
+import { User } from '../user/user.entity';
+import { File } from './file.entity';
 
 @Injectable()
 export class FileService implements OnApplicationBootstrap {
@@ -38,7 +38,7 @@ export class FileService implements OnApplicationBootstrap {
   async getFile(id: string, request: FastifyRequest) {
     const file = await this.fileRepo.findOneOrFail(id);
     if (file.hostname && !file.canSendTo(request)) {
-      throw new NotFoundException("Your file is in another castle.");
+      throw new NotFoundException('Your file is in another castle.');
     }
 
     return file;
@@ -47,7 +47,7 @@ export class FileService implements OnApplicationBootstrap {
   async deleteFile(id: string, ownerId: string | null) {
     const file = await this.fileRepo.findOneOrFail(id);
     if (ownerId && file.owner.id !== ownerId) {
-      throw new UnauthorizedException("You cannot delete other users files.");
+      throw new UnauthorizedException('You cannot delete other users files.');
     }
 
     // todo: this should use a subscriber for file delete events, should also do
@@ -67,9 +67,9 @@ export class FileService implements OnApplicationBootstrap {
     host: MicroHost | undefined
   ): Promise<File> {
     if (host) this.hostService.checkUserCanUploadTo(host, owner);
-    if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
-    if (+request.headers["content-length"] >= config.uploadLimit) {
-      const size = xbytes(+request.headers["content-length"]);
+    if (!request.headers['content-length']) throw new BadRequestException('Missing "Content-Length" header.');
+    if (+request.headers['content-length'] >= config.uploadLimit) {
+      const size = xbytes(+request.headers['content-length']);
       this.logger.warn(
         `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
       );
@@ -80,7 +80,7 @@ export class FileService implements OnApplicationBootstrap {
     const typeStream = stream.pipe(new PassThrough());
     const uploadStream = stream.pipe(new PassThrough());
     const type = (await getStreamType(multipart.filename, typeStream)) ?? multipart.mimetype;
-    if (config.allowTypes?.includes(type) === false) {
+    if (config.allowTypes && !config.allowTypes.has(type) === false) {
       throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 
@@ -91,7 +91,7 @@ export class FileService implements OnApplicationBootstrap {
       type: type,
       name: multipart.filename,
       owner: owner.id,
-      hostname: host?.normalised.replace("{{username}}", owner.username),
+      hostname: host?.normalised.replace('{{username}}', owner.username),
       hash: hash,
       size: size,
     });
@@ -102,20 +102,20 @@ export class FileService implements OnApplicationBootstrap {
 
   async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
     const file = await this.getFile(fileId, request);
-    const range = request.headers["content-range"] ? contentRange.parse(request.headers["content-range"]) : null;
+    const range = request.headers['content-range'] ? contentRange.parse(request.headers['content-range']) : null;
     const stream = this.storageService.createReadStream(file.hash, range);
-    if (range) reply.header("Content-Range", contentRange.format(range));
-    const type = file.type.startsWith("text") ? `${file.type}; charset=UTF-8` : file.type;
+    if (range) reply.header('Content-Range', contentRange.format(range));
+    const type = file.type.startsWith('text') ? `${file.type}; charset=UTF-8` : file.type;
     return reply
-      .header("ETag", `"${file.hash}"`)
-      .header("Accept-Ranges", "bytes")
-      .header("Content-Type", type)
-      .header("Content-Length", file.size)
-      .header("Last-Modified", file.createdAt)
-      .header("Content-Disposition", `inline; filename="${file.displayName}"`)
-      .header("Cache-Control", "public, max-age=31536000")
-      .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
-      .header("X-Content-Type-Options", "nosniff")
+      .header('ETag', `"${file.hash}"`)
+      .header('Accept-Ranges', 'bytes')
+      .header('Content-Type', type)
+      .header('Content-Length', file.size)
+      .header('Last-Modified', file.createdAt)
+      .header('Content-Disposition', `inline; filename="${file.displayName}"`)
+      .header('Cache-Control', 'public, max-age=31536000')
+      .header('Expires', DateTime.local().plus({ years: 1 }).toHTTP())
+      .header('X-Content-Type-Options', 'nosniff')
       .send(stream);
   }
 

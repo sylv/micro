@@ -1,14 +1,14 @@
-import { Controller, Get, Req } from "@nestjs/common";
-import { FastifyRequest } from "fastify";
-import { config } from "../config";
-import { UserId } from "./auth/auth.decorators";
-import { UserService } from "./user/user.service";
+import { Controller, Get, Req } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
+import { config } from '../config';
+import { UserId } from './auth/auth.decorators';
+import { UserService } from './user/user.service';
 
 @Controller()
 export class AppController {
   constructor(private userService: UserService) {}
 
-  @Get("config")
+  @Get('config')
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {
     let tags: string[] = [];
     if (userId) {

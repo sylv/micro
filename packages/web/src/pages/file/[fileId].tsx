@@ -7,7 +7,7 @@ import { FC, ReactNode, useState } from "react";
 import { Download, Share, Trash } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";
-import { FileEmbed } from "../../components/file-embed/file-embed";
+import { Embed } from "../../components/embed/embed";
 import { PageLoader } from "../../components/page-loader";
 import { Spinner } from "../../components/spinner";
 import { Title } from "../../components/title";
@@ -33,6 +33,7 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
     "flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300",
     className
   );
+
   return (
     <span className={classes} onClick={onClick}>
       {children}
@@ -109,7 +110,16 @@ export default function File({ fallbackData }: FileProps) {
           <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all">{file.data.displayName}</h1>
           <span className="text-xs text-gray-500">{formatBytes(file.data.size)}</span>
         </div>
-        <FileEmbed file={file.data} />
+        <Embed
+          data={{
+            type: file.data.type,
+            paths: file.data.paths,
+            size: file.data.size,
+            displayName: file.data.displayName,
+            height: file.data.metadata?.height,
+            width: file.data.metadata?.width,
+          }}
+        />
         <div className="flex md:flex-col">
           <div className="flex text-sm gap-3 text-gray-500 cursor-pointer md:flex-col">
             <FileOption onClick={copyLink}>

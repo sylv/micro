@@ -64,6 +64,12 @@ export class PasteController {
     return this.pasteService.getPaste(pasteId, request);
   }
 
+  @Get(":pasteId/content")
+  async getContent(@Param("pasteId") pasteId: string, @Req() request: FastifyRequest) {
+    const file = await this.pasteService.getPaste(pasteId, request);
+    return file.content;
+  }
+
   @Post(":pasteId/burn")
   @HttpCode(204)
   async burn(@Param("pasteId") pasteId: string) {

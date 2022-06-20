@@ -8,6 +8,7 @@ export class SerializerInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         if (data === null || data === undefined) return data;
+        if (typeof data === "string") return data;
         if (typeof data === "object") {
           void response.header("Content-Type", "application/json");
           return JSON.stringify(data);

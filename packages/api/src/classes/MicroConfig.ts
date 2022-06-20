@@ -1,4 +1,4 @@
-import { Transform, Type } from "class-transformer";
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDefined,
@@ -11,19 +11,19 @@ import {
   Max,
   NotEquals,
   ValidateNested,
-} from "class-validator";
-import fileType from "file-type";
-import path from "path";
-import xbytes from "xbytes";
-import { MicroConfigPurge } from "./MicroConfigPurge";
-import { MicroHost } from "./MicroHost";
+} from 'class-validator';
+import fileType from 'file-type';
+import path from 'path';
+import xbytes from 'xbytes';
+import { MicroConfigPurge } from './MicroConfigPurge';
+import { MicroHost } from './MicroHost';
 
 export class MicroConfig {
-  @IsUrl({ require_tld: false, require_protocol: true, protocols: ["postgresql", "postgres"] })
+  @IsUrl({ require_tld: false, require_protocol: true, protocols: ['postgresql', 'postgres'] })
   databaseUrl: string;
 
   @IsString()
-  @NotEquals("YOU_SHALL_NOT_PASS")
+  @NotEquals('YOU_SHALL_NOT_PASS')
   secret: string;
 
   @IsEmail()
@@ -31,7 +31,7 @@ export class MicroConfig {
 
   @IsNumber()
   @Transform(({ value }) => xbytes.parseSize(value))
-  uploadLimit = xbytes.parseSize("50MB");
+  uploadLimit = xbytes.parseSize('50MB');
 
   @IsBoolean()
   publicPastes: boolean;
@@ -42,9 +42,29 @@ export class MicroConfig {
   maxPasteLength = 500000;
 
   @IsString({ each: true })
-  @IsIn([...fileType.mimeTypes.values()])
   @IsOptional()
-  allowTypes?: string[];
+  @Transform(({ value }) => {
+    if (!value) return value;
+    const clean: string[] = [];
+    for (const type of value) {
+      const stripped = type.replace(/\/\*$/, '');
+      if (stripped.includes('/')) {
+        if (!fileType.mimeTypes.has(type)) {
+          throw new Error(`Invalid mime type: ${type}`);
+        }
+
+        clean.push(type);
+        continue;
+      }
+
+      for (const knownType of fileType.mimeTypes.values()) {
+        if (knownType.startsWith(stripped)) clean.push(knownType);
+      }
+    }
+
+    return new Set(clean);
+  })
+  allowTypes?: Set<string>;
 
   @IsString()
   @Transform(({ value }) => path.resolve(value))

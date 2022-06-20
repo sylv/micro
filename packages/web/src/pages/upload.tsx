@@ -76,12 +76,12 @@ export default function Upload() {
 
       const body: GetFileData = await response.json();
       const route = `/file/${body.id}`;
-      const isSameHost = body.host === config.data.host.normalised;
+      const isSameHost = body.hostname === config.data.host.normalised;
       if (isSameHost) {
         router.push(route);
       }
 
-      location.href = body.urls.direct;
+      location.href = body.urls.view;
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? "An unknown error occured.";
       setToast({ error: true, text: message });

@@ -1,16 +1,20 @@
-import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
-import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";
-import { config } from "../../config";
-import { generateContentId } from "../../helpers/generate-content-id.helper";
-import { WithHostname } from "../host/host.entity";
-import { User } from "../user/user.entity";
+import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import { config } from '../../config';
+import { generateContentId } from '../../helpers/generate-content-id.helper';
+import { WithHostname } from '../host/host.entity';
+import { User } from '../user/user.entity';
+import mime from 'mime-types';
 
-@Entity({ tableName: "pastes" })
+@Entity({ tableName: 'pastes' })
 export class Paste extends WithHostname {
   @PrimaryKey({ type: String })
   id = generateContentId();
 
-  @Property({ type: "varchar", length: 500000 })
+  @Property({ type: 'varchar', length: 128, nullable: true })
+  title?: string;
+
+  @Property({ type: 'varchar', length: 500000 })
   content: string;
 
   @Property({ nullable: true })
@@ -56,10 +60,21 @@ export class Paste extends WithHostname {
     };
   }
 
-  [OptionalProps]: "owner" | "createdAt" | "expiresAt" | "extension" | "urls" | "paths";
+  @Property({ persist: false })
+  get type() {
+    if (!this.extension) return;
+    return mime.lookup(this.extension);
+  }
+
+  [OptionalProps]: 'owner' | 'createdAt' | 'expiresAt' | 'extension' | 'urls' | 'paths';
 }
 
 export class CreatePasteDto {
+  @IsString()
+  @IsOptional()
+  @Length(1, 100)
+  title?: string;
+
   @IsString()
   @Length(1, config.maxPasteLength)
   content: string;

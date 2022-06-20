@@ -1,8 +1,8 @@
-import classNames from "classnames";
-import Highlight, { defaultProps, Language } from "prism-react-renderer";
-import { HTMLProps, memo, useState } from "react";
-import { theme } from "./prism-theme";
-import { SyntaxHighlighterControls } from "./syntax-highlighter-controls";
+import classNames from 'classnames';
+import Highlight, { defaultProps, Language } from 'prism-react-renderer';
+import { HTMLProps, memo, useState } from 'react';
+import { theme } from './prism-theme';
+import { SyntaxHighlighterControls } from './syntax-highlighter-controls';
 
 export interface SyntaxHighlighterProps extends HTMLProps<HTMLPreElement> {
   children: string;
@@ -19,8 +19,8 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
     return (
       <Highlight {...defaultProps} theme={theme} code={trimmed} language={language}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
-          const containerClasses = classNames(className, "text-left overflow-x-auto h-full", additionalClasses);
-          const parentClasses = classNames("relative", parentClassName);
+          const containerClasses = classNames(className, 'text-left overflow-x-auto h-full', additionalClasses);
+          const parentClasses = classNames('relative', parentClassName);
 
           return (
             <div className={parentClasses}>
@@ -28,7 +28,7 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
               <pre className={containerClasses} style={style} {...rest}>
                 {tokens.map((line, index) => {
                   const props = getLineProps({ line, key: index });
-                  const classes = classNames(props.className, "table-row");
+                  const classes = classNames(props.className, 'table-row');
 
                   return (
                     // handled by getLineProps

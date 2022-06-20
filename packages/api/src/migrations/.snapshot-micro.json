@@ -258,6 +258,16 @@
           "nullable": true,
           "mappedType": "string"
         },
+        "title": {
+          "name": "title",
+          "type": "varchar(128)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 128,
+          "mappedType": "string"
+        },
         "content": {
           "name": "content",
           "type": "varchar(500000)",
@@ -366,6 +376,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "destination": {
           "name": "destination",
           "type": "varchar(1024)",
@@ -374,15 +393,6 @@
           "primary": false,
           "nullable": false,
           "length": 1024,
-          "mappedType": "string"
-        },
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
           "mappedType": "string"
         },
         "clicks": {

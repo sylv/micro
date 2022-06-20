@@ -35,6 +35,13 @@ publicPastes: true
 #   overLimit: 1MB # files over this size will be purged
 #   afterTime: 1d # after this many days
 
+# allowTypes is a list of file types that can be uploaded.
+# a prefix will be expanded into known types, so `video` becomes `video/mp4`, `video/webm`, etc.
+# omit entirely to allow all types to be uploaded.
+# allowTypes:
+#   - video
+#   - image
+#   - image/png
 
 hosts:
     # the first host in the list is the default host

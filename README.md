@@ -53,7 +53,7 @@ If you need help, join the [discord server](https://discord.gg/VDMX6VQRZm). This
 1. Install `git`, `docker` and `docker-compose`
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
 3. Copy the example configs to the current directory, `cp ./micro/example/* ./`
-4. Fill out `.microrc`, `Caddyfile` and `docker-compose.yml`. **It is extremely important you read through each of the 3 files and make sure you understand what they do.** Specifically, `.microrc` contains a secret that handles authentication, if it is not a secure random string everyone can sign in as anyone they want without a password.
+4. Fill out `.microrc.yaml`, `Caddyfile` and `docker-compose.yml`. **It is extremely important you read through each of the 3 files and make sure you understand what they do.** Specifically, `.microrc.yaml` contains a secret that handles authentication, if it is not a secure random string everyone can sign in as anyone they want without a password.
 5. Run `docker-compose up -d` to start the database and micro.
 6. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
@@ -64,7 +64,7 @@ Setup is now complete and your instance should be working. When updates come out
 I've made a best effort attempt to make migration as painless as possible, mostly for my own sanity. These steps are quite in-depth but in reality the migration should be fairly simple for most users. If you get stuck at any point, please join the [discord server](https://discord.gg/VDMX6VQRZm) and ask for help.
 
 1. Create a backup of the database and the data directory.
-2. Update your `.microrc` with the changes seen in [example config](example/.microrc), notable changes are `database` is now `databaseUrl` and `publicPastes` has been added.
+2. Update your `.microrc` with the changes seen in [example config](example/.microrc.yaml) (your config may be in json with the example now being yaml, but the keys are 1:1), notable changes are `database` is now `databaseUrl` and `publicPastes` has been added.
 3. Change the docker image from `sylver/micro` or `sylver/micro:master` to `sylver/micro:main`
 4. Change the port from `8080` to `3000`. If you are using the example config, do this in `Caddyfile` by changing `micro:8080` to `micro:3000`.
 5. Start the container. It should exit on startup with an error message saying that there is data that must be migrated. If it does not, you did not update the image tag correctly or it cannot detect data to be migrated.
@@ -77,8 +77,6 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 
 - [ ] Ratelimiting
 - [ ] Admin UI
-- [ ] Pastes should use the same embeds that files use they get all the same benefits (markdown previews, better syntax highlighting, etc)
-- [ ] Run migrations on start (requires migrations to be compiled and available at runtime)
 - [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] GIFs should probably be converted to mp4 videos to save space

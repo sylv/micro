@@ -1,20 +1,19 @@
-import { GetPasteData } from "@ryanke/micro-api";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { useRouter } from "next/router";
-import { Language } from "prism-react-renderer";
-import { useEffect, useState } from "react";
-import { BookOpen, Clock, Trash } from "react-feather";
-import useSWR from "swr";
-import { Container } from "../../components/container";
-import { PageLoader } from "../../components/page-loader";
-import { SyntaxHighlighter } from "../../components/syntax-highlighter/syntax-highlighter";
-import { Time } from "../../components/time";
-import { decryptContent } from "../../helpers/encrypt.helper";
-import { fetcher } from "../../helpers/fetcher.helper";
-import { hashToObject } from "../../helpers/hash-to-object";
-import { http, HTTPError } from "../../helpers/http.helper";
-import { Warning } from "../../warning";
-import ErrorPage from "../_error";
+import { GetPasteData } from '@ryanke/micro-api';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BookOpen, Clock, Trash } from 'react-feather';
+import useSWR from 'swr';
+import { Container } from '../../components/container';
+import { Embed } from '../../components/embed/embed';
+import { PageLoader } from '../../components/page-loader';
+import { Time } from '../../components/time';
+import { decryptContent } from '../../helpers/encrypt.helper';
+import { fetcher } from '../../helpers/fetcher.helper';
+import { hashToObject } from '../../helpers/hash-to-object';
+import { http, HTTPError } from '../../helpers/http.helper';
+import { Warning } from '../../warning';
+import ErrorPage from '../_error';
 
 export interface ViewPasteProps {
   fallbackData?: GetPasteData;
@@ -22,9 +21,9 @@ export interface ViewPasteProps {
 
 export default function ViewPaste({ fallbackData }: ViewPasteProps) {
   const router = useRouter();
-  const [burn] = useState(() => router.query.burn !== "false");
+  const [burn] = useState(() => router.query.burn !== 'false');
   const [burnt, setBurnt] = useState(false);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<any>(null);
   const [missingKey, setMissingKey] = useState(false);
   const pasteId = router.query.pasteId as string | undefined;
@@ -39,7 +38,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
   useEffect(() => {
     // handle decrypting encrypted pastes
     if (!paste.data?.content) {
-      if (content) setContent("");
+      if (content) setContent('');
       return;
     }
 
@@ -63,7 +62,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
         setContent(content);
       })
       .catch((error) => {
-        setContent("");
+        setContent('');
         setError(error);
       });
   }, [paste.data?.content, router]);
@@ -74,7 +73,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
     // scrapers (like when you paste it into discord) would burn the paste when discord checks for opengraph/an image/etc.
     if (!burn || !paste.data?.burn) return;
     http(`paste/${pasteId}/burn`, {
-      method: "POST",
+      method: 'POST',
     }).then((res) => {
       if (res.ok) {
         setBurnt(true);
@@ -85,9 +84,9 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
   useEffect(() => {
     // remove the burn query param
     const url = new URL(window.location.href);
-    if (url.searchParams.has("burn")) {
-      url.searchParams.delete("burn");
-      window.history.replaceState({}, "", url.toString());
+    if (url.searchParams.has('burn')) {
+      url.searchParams.delete('burn');
+      window.history.replaceState({}, '', url.toString());
     }
   }, []);
 
@@ -110,7 +109,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
   }
 
   return (
-    <Container className="mb-10">
+    <Container className="mb-10 mt-10">
       {paste.data.burn && !burn && !burnt && (
         <Warning className="mb-4">
           This paste will be burnt by the next person to view this page and will be unviewable.
@@ -122,24 +121,36 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
           This paste has been burnt and will be gone once you close or reload this page.
         </Warning>
       )}
-      <div className="rounded overflow-hidden">
-        <SyntaxHighlighter language={paste.data.extension as Language} className="min-h-[20em]">
-          {content}
-        </SyntaxHighlighter>
+      {paste.data.title && (
+        <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all mb-4">{paste.data.title}</h1>
+      )}
+      <div className="grid">
+        <Embed
+          data={{
+            type: paste.data.type,
+            size: paste.data.content.length,
+            displayName: `paste.${paste.data.extension}`,
+            content: { data: content, error: error },
+            paths: {
+              view: `/paste/${pasteId}`,
+              direct: `/paste/${pasteId}.txt`,
+            },
+          }}
+        />
       </div>
       <p className="text-gray-600 text-sm mt-2 flex items-center gap-2">
         <span className="flex items-center gap-2">
-          <BookOpen className="h-4 w-4" /> {content.length} characters
+          <BookOpen className="h-4 w-4" /> {content?.length ?? 0} characters
         </span>
         <span className="flex items-center gap-2">
-          <Clock className="h-4 w-4" />{" "}
+          <Clock className="h-4 w-4" />{' '}
           <span>
             Created <Time date={paste.data.createdAt} />
           </span>
         </span>
         {paste.data.expiresAt && !burnt && (
           <span className="flex items-center gap-2">
-            <Trash className="h-4 w-4" />{" "}
+            <Trash className="h-4 w-4" />{' '}
             <span>
               Expires <Time date={paste.data.expiresAt} />
             </span>
