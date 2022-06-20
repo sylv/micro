@@ -10,7 +10,7 @@ export class AppController {
 
   @Get("config")
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {
-    let tags: string[] | undefined;
+    let tags: string[] = [];
     if (userId) {
       const user = await this.userService.getUser(userId);
       if (user) {
@@ -28,9 +28,8 @@ export class AppController {
       },
       hosts: config.hosts
         .filter((host) => {
-          if (!host.tags) return false;
-          if (!tags) return true;
-          return host.tags.every((tag) => tags!.includes(tag));
+          if (!host.tags[0]) return true;
+          return host.tags.every((tag) => tags.includes(tag));
         })
         .map((host) => ({
           url: host.url,
