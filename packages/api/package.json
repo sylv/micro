@@ -12,7 +12,8 @@
     "scripts": {
         "watch": "pnpm tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
         "build": "rm -rf ./dist && pnpm tsup src/main.ts src/types.ts src/migrations/* --dts --sourcemap --target node16",
-        "start": "node ./dist/main.js"
+        "start": "node ./dist/main.js",
+        "test": "jest"
     },
     "dependencies": {
         "@fastify/cookie": "^6.0.0",
@@ -59,15 +60,18 @@
     "devDependencies": {
         "@mikro-orm/cli": "^5.2.0",
         "@swc/core": "^1.2.175",
+        "@sylo-digital/scripts": "^1.0.0",
         "@tsconfig/node16": "^1.0.2",
         "@types/bcrypt": "^5.0.0",
         "@types/dedent": "^0.7.0",
+        "@types/jest": "^27.4.1",
         "@types/luxon": "^2.3.2",
         "@types/mime-types": "^2.1.1",
         "@types/node": "16",
         "@types/passport-jwt": "^3.0.6",
         "@types/passport-local": "^1.0.34",
         "@types/sharp": "^0.30.2",
+        "jest": "^28.1.0",
         "nodemon": "^2.0.16",
         "ts-node": "^10.7.0",
         "tsup": "^5.12.6",
@@ -79,5 +83,8 @@
             "./src/mikro-orm.config.ts",
             "./dist/mikro-orm.config.js"
         ]
+    },
+    "jest": {
+        "preset": "@sylo-digital/scripts/jest/node"
     }
 }

@@ -45,7 +45,7 @@ export class FileController {
 
   @Get("file/:fileId")
   async getFile(@Res() reply: FastifyReply, @Param("fileId") fileId: string, @Request() request: FastifyRequest) {
-    const file = await this.fileService.getFile(fileId, request.host);
+    const file = await this.fileService.getFile(fileId, request);
     return reply.send(file);
   }
 
@@ -65,10 +65,16 @@ export class FileController {
     @Headers("X-Micro-Paste-Shortcut") shortcut: string
   ) {
     const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException("Unknown user.");
+    if (!user) throw new ForbiddenException("Unknown user");
     const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) throw new BadRequestException("Missing upload.");
+
+    const possibleHosts = hosts.split(/, ?/g);
+    const hostUrl = randomItem(possibleHosts);
+    const host = await this.hostService.getHostFrom(hostUrl, user.tags);
+
     if (shortcut === "true" && upload.mimetype === "text/plain") {
+      if (host) this.hostService.checkUserCanUploadTo(host, user);
       const content = await upload.toBuffer();
       const paste = this.pasteRepo.create({
         content: content.toString(),
@@ -76,15 +82,13 @@ export class FileController {
         encrypted: false,
         owner: userId,
         extension: "txt",
+        hostname: host?.normalised,
       });
 
       await this.pasteRepo.persistAndFlush(paste);
       return paste;
     }
 
-    const possibleHosts = hosts.split(/, ?/g);
-    const hostUrl = randomItem(possibleHosts);
-    const host = await this.hostService.getHostFrom(hostUrl, user.tags);
     const file = await this.fileService.createFile(upload, request, user, host);
     return file;
   }

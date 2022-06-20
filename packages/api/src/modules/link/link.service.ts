@@ -1,18 +1,17 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { MicroHost } from "../../classes/MicroHost";
-import { HostService } from "../host/host.service";
+import { FastifyRequest } from "fastify";
 import { Link } from "./link.entity";
 
 @Injectable()
 export class LinkService {
-  constructor(@InjectRepository(Link) private linkRepo: EntityRepository<Link>, private hostService: HostService) {}
+  constructor(@InjectRepository(Link) private linkRepo: EntityRepository<Link>) {}
 
-  async getLink(id: string, host: MicroHost | null) {
+  async getLink(id: string, request: FastifyRequest) {
     const link = await this.linkRepo.findOneOrFail(id);
-    if (host !== null && !this.hostService.canHostSendEntity(host, link)) {
-      throw new NotFoundException("Your redirect is in another castle.");
+    if (link.hostname && !link.canSendTo(request)) {
+      throw new NotFoundException("Your link is in another castle.");
     }
 
     return link;

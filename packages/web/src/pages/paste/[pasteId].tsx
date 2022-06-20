@@ -2,7 +2,7 @@ import { GetPasteData } from "@ryanke/micro-api";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { useRouter } from "next/router";
 import { Language } from "prism-react-renderer";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BookOpen, Clock, Trash } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";
@@ -154,7 +154,7 @@ export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ViewPasteProps>> {
   try {
-    const fallbackData = await fetcher<GetPasteData>(`paste/${context.query.pasteId}`);
+    const fallbackData = await fetcher<GetPasteData>(`paste/${context.query.pasteId}`, context);
     return { props: { fallbackData } };
   } catch (error) {
     if (error instanceof HTTPError) {

@@ -3,13 +3,19 @@ import escapeString from "escape-string-regexp";
 import { HostService } from "../modules/host/host.service";
 
 export class MicroHost {
+  constructor(url: string, tags?: string[], redirect?: string) {
+    this.url = url;
+    this.tags = tags;
+    this.redirect = redirect;
+  }
+
   // https://regex101.com/r/ZR9rpp/1
   @Matches(/^https?:\/\/[\d.:A-z{}-]+$/)
   url: string;
 
   @IsString({ each: true })
   @IsOptional()
-  tags: string[] = [];
+  tags?: string[];
 
   @IsUrl({ require_protocol: true })
   @IsOptional()
@@ -26,9 +32,14 @@ export class MicroHost {
   private _pattern?: RegExp;
   get pattern() {
     if (this._pattern) return this._pattern;
-    const escaped = escapeString(this.normalised);
-    const pattern = escaped.replace("\\{\\{username\\}\\}", "(?<username>[a-z0-9-{}]+?)");
-    this._pattern = new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`);
+    this._pattern = MicroHost.getWildcardPattern(this.url);
     return this._pattern;
+  }
+
+  static getWildcardPattern(url: string) {
+    const normalised = HostService.normaliseHostUrl(url);
+    const escaped = escapeString(normalised);
+    const pattern = escaped.replace("\\{\\{username\\}\\}", "(?<username>[a-z0-9-{}]+?)");
+    return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`);
   }
 }

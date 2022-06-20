@@ -13,17 +13,15 @@ import { checkThumbnailSupport } from "@ryanke/thumbnail-generator";
 import mimeType from "mime-types";
 import { config } from "../../config";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
+import { WithHostname } from "../host/host.entity";
 import { Thumbnail } from "../thumbnail/thumbnail.entity";
 import { User } from "../user/user.entity";
 import { FileMetadata } from "./file-metadata.embeddable";
 
 @Entity({ tableName: "files" })
-export class File {
+export class File extends WithHostname {
   @PrimaryKey()
   id: string;
-
-  @Property({ nullable: true })
-  host?: string;
 
   @Property()
   type: string;
@@ -71,7 +69,7 @@ export class File {
   @Property({ persist: false })
   get urls() {
     const owner = this.owner.unwrap();
-    const host = this.host ? config.hosts.find((host) => host.normalised === this.host) : null;
+    const host = this.hostname ? config.hosts.find((host) => host.normalised === this.hostname) : null;
     const baseUrl = host ? host.url.replace("{{username}}", owner.username) : config.rootHost.url;
     return {
       view: baseUrl + this.paths.view,
@@ -102,14 +100,5 @@ export class File {
     };
   }
 
-  [OptionalProps]:
-    | "paths"
-    | "urls"
-    | "displayName"
-    | "createdAt"
-    | "thumbnail"
-    | "name"
-    | "deleteKey"
-    | "host"
-    | "extension";
+  [OptionalProps]: "paths" | "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "extension";
 }

@@ -28,7 +28,7 @@ export class AppController {
       },
       hosts: config.hosts
         .filter((host) => {
-          if (!host.tags[0]) return true;
+          if (!host.tags || !host.tags[0]) return true;
           return host.tags.every((tag) => tags.includes(tag));
         })
         .map((host) => ({

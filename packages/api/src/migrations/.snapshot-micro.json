@@ -249,6 +249,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "content": {
           "name": "content",
           "type": "varchar(500000)",
@@ -367,8 +376,8 @@
           "length": 1024,
           "mappedType": "string"
         },
-        "host": {
-          "name": "host",
+        "hostname": {
+          "name": "hostname",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
@@ -445,8 +454,8 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "host": {
-          "name": "host",
+        "hostname": {
+          "name": "hostname",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

@@ -141,7 +141,7 @@ export async function getServerSideProps(
   // yes, im salty about it.
 
   try {
-    const fallbackData = await fetcher<GetFileData>(`file/${context.query.fileId}`);
+    const fallbackData = await fetcher<GetFileData>(`file/${context.query.fileId}`, context);
     return { props: { fallbackData } };
   } catch (error) {
     if (error instanceof HTTPError) {

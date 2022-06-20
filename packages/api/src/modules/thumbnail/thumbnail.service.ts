@@ -76,7 +76,7 @@ export class ThumbnailService {
         .send(existing.data);
     }
 
-    const file = await this.fileService.getFile(fileId, request.host);
+    const file = await this.fileService.getFile(fileId, request);
     const thumbnail = await this.createThumbnail(file);
     return reply
       .header("X-Micro-Generated", "true")

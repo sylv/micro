@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException } from "@nestjs/common";
 import normalizeUrl from "normalize-url";
 import { MicroHost } from "../../classes/MicroHost";
 import { config } from "../../config";
-import { randomItem } from "../../helpers/random-item.helper";
+import { User } from "../user/user.entity";
 
 export class HostService {
   formatHostUrl(url: string, username: string, path?: string | null) {
@@ -18,12 +18,11 @@ export class HostService {
    * @throws if the host could not be resolved.
    */
   async getHostFrom(url: string | undefined, tags: string[] | null): Promise<MicroHost> {
-    console.log({ url });
     if (!url) return config.rootHost;
     const normalised = HostService.normaliseHostUrl(url);
     for (const host of config.hosts) {
       if (!host.pattern.test(normalised)) continue;
-      if (tags) {
+      if (tags && host.tags) {
         const hasTags = host.tags.every((tag) => tags.includes(tag));
         if (!hasTags) {
           throw new ForbiddenException("Missing host authorisation.");
@@ -36,18 +35,12 @@ export class HostService {
     throw new BadRequestException(`Invalid host URL "${url}".`);
   }
 
-  canHostSendEntity(host: MicroHost, entity: { host?: string }) {
-    // todo: if host.wildcard, we should check to make sure the file owner
-    // matches the given username in the request url. so uploads to
-    // sylver.is-fucking.gay can't be accessed on cyk.is-fucking.gay and vice versa
-    if (!config.restrictFilesToHost) return true;
-    // files without a host can be served on all hosts
-    if (!entity.host) return true;
-    // the host that the file was uploaded to can serve the file
-    if (entity.host === host.normalised) return true;
-    // root host can serve all files.
-    if (host.normalised === config.rootHost.normalised) return true;
-    return false;
+  checkUserCanUploadTo(host: MicroHost, user: User) {
+    if (host.tags && !host.tags.every((tag) => user.tags.includes(tag))) {
+      throw new ForbiddenException("You are not allowed to upload to that host.");
+    }
+
+    return true;
   }
 
   static normaliseHostUrl(url: string) {

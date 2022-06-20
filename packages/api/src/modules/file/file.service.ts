@@ -22,6 +22,7 @@ import { generateContentId } from "../../helpers/generate-content-id.helper";
 import { getStreamType } from "../../helpers/get-stream-type.helper";
 import { HostService } from "../host/host.service";
 import { StorageService } from "../storage/storage.service";
+import { User } from "../user/user.entity";
 import { File } from "./file.entity";
 
 @Injectable()
@@ -34,9 +35,9 @@ export class FileService implements OnApplicationBootstrap {
     private orm: MikroORM
   ) {}
 
-  async getFile(id: string, host: MicroHost) {
+  async getFile(id: string, request: FastifyRequest) {
     const file = await this.fileRepo.findOneOrFail(id);
-    if (!this.hostService.canHostSendEntity(host, file)) {
+    if (file.hostname && !file.canSendTo(request)) {
       throw new NotFoundException("Your file is in another castle.");
     }
 
@@ -62,9 +63,10 @@ export class FileService implements OnApplicationBootstrap {
   async createFile(
     multipart: Multipart,
     request: FastifyRequest,
-    owner: { id: string; tags?: string[] },
+    owner: User,
     host: MicroHost | undefined
   ): Promise<File> {
+    if (host) this.hostService.checkUserCanUploadTo(host, owner);
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     if (+request.headers["content-length"] >= config.uploadLimit) {
       const size = xbytes(+request.headers["content-length"]);
@@ -89,7 +91,7 @@ export class FileService implements OnApplicationBootstrap {
       type: type,
       name: multipart.filename,
       owner: owner.id,
-      host: host?.normalised,
+      hostname: host?.normalised.replace("{{username}}", owner.username),
       hash: hash,
       size: size,
     });
@@ -99,7 +101,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   async sendFile(fileId: string, request: FastifyRequest, reply: FastifyReply) {
-    const file = await this.getFile(fileId, request.host);
+    const file = await this.getFile(fileId, request);
     const range = request.headers["content-range"] ? contentRange.parse(request.headers["content-range"]) : null;
     const stream = this.storageService.createReadStream(file.hash, range);
     if (range) reply.header("Content-Range", contentRange.format(range));

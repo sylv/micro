@@ -2,10 +2,11 @@ import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Prop
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";
 import { config } from "../../config";
 import { generateContentId } from "../../helpers/generate-content-id.helper";
+import { WithHostname } from "../host/host.entity";
 import { User } from "../user/user.entity";
 
 @Entity({ tableName: "pastes" })
-export class Paste {
+export class Paste extends WithHostname {
   @PrimaryKey({ type: String })
   id = generateContentId();
 

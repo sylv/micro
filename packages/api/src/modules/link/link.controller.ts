@@ -1,21 +1,9 @@
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import {
-  BadRequestException,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Query,
-  Request,
-  Res,
-} from "@nestjs/common";
+import { Controller, Get, Param, Request, Res } from "@nestjs/common";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { UserId } from "../auth/auth.decorators";
-import { LinkService } from "./link.service";
 import { Link } from "./link.entity";
+import { LinkService } from "./link.service";
 
 @Controller()
 export class LinkController {
@@ -23,7 +11,7 @@ export class LinkController {
 
   @Get("link/:id/go")
   async followLink(@Param("id") id: string, @Request() request: FastifyRequest, @Res() reply: FastifyReply) {
-    const link = await this.linkService.getLink(id, request.host);
+    const link = await this.linkService.getLink(id, request);
     link.clicks++;
     await this.linkRepo.persistAndFlush(link);
     reply.redirect(301, link.destination);
@@ -31,6 +19,6 @@ export class LinkController {
 
   @Get("link/:id")
   async getLink(@Request() request: FastifyRequest, @Param("id") id: string) {
-    return this.linkService.getLink(id, request.host);
+    return this.linkService.getLink(id, request);
   }
 }
