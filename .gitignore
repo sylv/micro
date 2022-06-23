@@ -42,3 +42,5 @@ dist
 
 packages/web/.next
 packages/api/data
+packages/*/.turbo
+packages/*/.eslintcache

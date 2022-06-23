@@ -1,9 +1,10 @@
-import { GetFileData } from "@ryanke/micro-api";
-import { FC, useEffect, useState } from "react";
-import { FileMinus, Trash } from "react-feather";
-import { formatBytes } from "../../helpers/format-bytes.helper";
-import { Link } from "../link";
-import { MissingPreview } from "./missing-preview";
+import type { GetFileData } from '@ryanke/micro-api';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { FileMinus, Trash } from 'react-feather';
+import { formatBytes } from '../../helpers/format-bytes.helper';
+import { Link } from '../link';
+import { MissingPreview } from './missing-preview';
 
 export interface FileCardProps {
   file: GetFileData;
@@ -28,7 +29,10 @@ export const FilePreviewCard: FC<FileCardProps> = ({ file }) => {
               decoding="async"
               height={file.thumbnail?.height}
               width={file.thumbnail?.width}
-              onError={() => setLoadFailed(true)}
+              alt={file.displayName}
+              onError={() => {
+                setLoadFailed(true);
+              }}
             />
           )}
           {loadFailed && <MissingPreview text="Load Failed" icon={Trash} type={file.type} />}

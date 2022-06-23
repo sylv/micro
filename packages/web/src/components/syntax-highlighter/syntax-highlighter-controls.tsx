@@ -1,9 +1,9 @@
-import { Menu } from "@headlessui/react";
-import { Language } from "prism-react-renderer";
-import { FC } from "react";
-import { ChevronDown } from "react-feather";
-import languages from "../../data/languages.json";
-import { useToasts } from "../../hooks/use-toasts.helper";
+import { Menu } from '@headlessui/react';
+import type { Language } from 'prism-react-renderer';
+import type { FC } from 'react';
+import { ChevronDown } from 'react-feather';
+import languages from '../../data/languages.json';
+import { useToasts } from '../../hooks/use-toasts.helper';
 
 export interface SyntaxHighlighterControls {
   onLanguageChange: (language: Language) => void;
@@ -15,7 +15,7 @@ export const SyntaxHighlighterControls: FC<SyntaxHighlighterControls> = ({ langu
   const setToast = useToasts();
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    setToast({ text: "Copied file content to clipboard." });
+    setToast({ text: 'Copied file content to clipboard.' });
   };
 
   return (
@@ -39,7 +39,11 @@ export const SyntaxHighlighterControls: FC<SyntaxHighlighterControls> = ({ langu
           ))}
         </Menu.Items>
       </Menu>
-      <button className="text-xs text-gray-500 hover:text-white transition pr-3 pt-2" onClick={copyContent}>
+      <button
+        type="button"
+        className="text-xs text-gray-500 hover:text-white transition pr-3 pt-2"
+        onClick={copyContent}
+      >
         Copy
       </button>
     </div>

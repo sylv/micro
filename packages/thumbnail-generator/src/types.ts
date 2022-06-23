@@ -9,5 +9,5 @@ export interface ThumbnailOptions {
    * The most important one is the video generator generating only one thumbnail instead of multiple and picking the one with the most detail.
    */
   fast?: boolean;
-  type?: "image/webp" | "image/jpeg";
+  type?: 'image/webp' | 'image/jpeg';
 }

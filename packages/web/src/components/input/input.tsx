@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes } from "react";
+import React from "react";
 import { inputClasses, InputContainer } from "./input-container";
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "prefix"> {

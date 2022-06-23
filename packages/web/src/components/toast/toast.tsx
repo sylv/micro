@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import { FC, useEffect, useState } from "react";
+import type { FC} from "react";
+import { useEffect, useState } from "react";
 
 export interface ToastProps {
   text: string;
@@ -23,7 +24,7 @@ export const Toast: FC<ToastProps> = (props) => {
     else {
       // breaks the browser trying to optimise the transition by skipping it because we add it so fast
       requestAnimationFrame(() => {
-        setTimeout(() => setTransition(animateClasses));
+        setTimeout(() => { setTransition(animateClasses); });
       });
     }
   }, [props.removing]);

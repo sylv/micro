@@ -1,11 +1,9 @@
-import type { AppController } from "./modules/app.controller";
-import type { File } from "./modules/file/file.entity";
-import type { InviteController } from "./modules/invite/invite.controller";
-import type { CreatePasteDto, Paste } from "./modules/paste/paste.entity";
-import type { UserController } from "./modules/user/user.controller";
-import type { User } from "./modules/user/user.entity";
+import type { AppController } from './modules/app.controller';
+import type { File } from './modules/file/file.entity';
+import type { InviteController } from './modules/invite/invite.controller';
+import type { CreatePasteDto, Paste } from './modules/paste/paste.entity';
+import type { UserController } from './modules/user/user.controller';
 
-export type { File, User };
 export type Await<T> = T extends {
   then: (onfulfilled?: (value: infer U) => unknown) => unknown;
 }
@@ -13,19 +11,22 @@ export type Await<T> = T extends {
   : T;
 
 // invite
-export type GetInviteData = Await<ReturnType<InviteController["getInvite"]>>;
+export type GetInviteData = Await<ReturnType<InviteController['getInvite']>>;
 
 // user
-export type GetUserData = Await<ReturnType<UserController["getUser"]>>;
-export type GetUserFilesData = Await<ReturnType<UserController["getUserFiles"]>>;
-export type GetUploadTokenData = Await<ReturnType<UserController["getUserToken"]>>;
-export type PutUploadTokenData = Await<ReturnType<UserController["resetUserToken"]>>;
+export type GetUserData = Await<ReturnType<UserController['getUser']>>;
+export type GetUserFilesData = Await<ReturnType<UserController['getUserFiles']>>;
+export type GetUploadTokenData = Await<ReturnType<UserController['getUserToken']>>;
+export type PutUploadTokenData = Await<ReturnType<UserController['resetUserToken']>>;
 
 // file
 export type GetFileData = File;
 
 // app
-export type GetServerConfigData = Await<ReturnType<AppController["getConfig"]>>;
+export type GetServerConfigData = Await<ReturnType<AppController['getConfig']>>;
 
 export type GetPasteData = Paste;
 export type CreatePasteBody = CreatePasteDto;
+
+export { User } from './modules/user/user.entity';
+export { File } from './modules/file/file.entity';

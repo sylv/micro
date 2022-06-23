@@ -7,23 +7,23 @@ export function generateConfig(token: string, hosts: string[], direct: boolean):
   const host = window.location.host;
   const protocol = window.location.protocol;
   const upload = `${protocol}//${host}/api/file`;
-  const joined = hosts.join(", ");
+  const joined = hosts.join(', ');
   const name = `micro - ${joined}.sxcu`;
   const content = {
-    Version: "13.2.1",
+    Version: '13.2.1',
     Name: `micro - ${joined}`,
-    DestinationType: "ImageUploader, TextUploader, FileUploader",
-    RequestMethod: "POST",
+    DestinationType: 'ImageUploader, TextUploader, FileUploader',
+    RequestMethod: 'POST',
     RequestURL: upload,
-    Body: "MultipartFormData",
-    FileFormName: "file",
-    URL: direct ? "$json:urls.direct$" : "$json:urls.view$",
-    ThumbnailURL: "$json:urls.thumbnail$",
-    DeletionURL: "$json:urls.delete$",
+    Body: 'MultipartFormData',
+    FileFormName: 'file',
+    URL: direct ? '$json:urls.direct$' : '$json:urls.view$',
+    ThumbnailURL: '$json:urls.thumbnail$',
+    DeletionURL: '$json:urls.delete$',
     Headers: {
       Authorization: token,
-      "X-Micro-Host": joined,
-      "X-Micro-Paste-Shortcut": "true",
+      'X-Micro-Host': joined,
+      'X-Micro-Paste-Shortcut': 'true',
     },
   };
 

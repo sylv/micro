@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import Head from 'next/head';
-import { FC, ReactNode } from 'react';
-import { Embeddable } from './embeddable';
+import type { FC, ReactNode } from 'react';
+import type { Embeddable } from './embeddable';
 
 export const EmbedContainer: FC<{ data: Embeddable; children: ReactNode; centre?: boolean; className?: string }> = ({
   data,

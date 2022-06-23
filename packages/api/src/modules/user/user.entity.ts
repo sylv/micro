@@ -1,19 +1,19 @@
-import { Collection, Entity, OneToMany, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
-import { File } from "../file/file.entity";
-import { generateContentId } from "../../helpers/generate-content-id.helper";
-import { Invite } from "../invite/invite.entity";
-import { Exclude } from "class-transformer";
+import { Collection, Entity, OneToMany, OneToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { File } from '../file/file.entity';
+import { generateContentId } from '../../helpers/generate-content-id.helper';
+import { Invite } from '../invite/invite.entity';
+import { Exclude } from 'class-transformer';
 
-@Entity({ tableName: "users" })
+@Entity({ tableName: 'users' })
 export class User {
-  @PrimaryKey({ type: String })
-  id = generateContentId();
+  @PrimaryKey()
+  id: string = generateContentId();
 
   @Property({ unique: true, index: true })
   username: string;
 
-  @Property({ type: Number })
-  permissions = 0;
+  @Property()
+  permissions: number = 0;
 
   @Property({ hidden: true })
   @Exclude()
@@ -32,5 +32,5 @@ export class User {
   @Exclude()
   files = new Collection<File>(this);
 
-  [OptionalProps]: "permissions" | "tags";
+  [OptionalProps]: 'permissions' | 'tags';
 }

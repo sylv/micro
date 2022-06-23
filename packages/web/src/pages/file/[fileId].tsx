@@ -1,9 +1,10 @@
-import { GetFileData } from "@ryanke/micro-api";
+import type { GetFileData } from "@ryanke/micro-api";
 import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { useRouter } from "next/router";
-import { FC, ReactNode, useState } from "react";
+import type { FC, ReactNode} from "react";
+import { useState } from "react";
 import { Download, Share, Trash } from "react-feather";
 import useSWR from "swr";
 import { Container } from "../../components/container";

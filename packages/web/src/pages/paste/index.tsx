@@ -1,4 +1,4 @@
-import { CreatePasteBody, GetPasteData } from '@ryanke/micro-api';
+import type { CreatePasteBody, GetPasteData } from '@ryanke/micro-api';
 import { useState } from 'react';
 import { Button } from '../../components/button/button';
 import { Container } from '../../components/container';
@@ -125,13 +125,13 @@ export default function Paste() {
       <Title>New Paste</Title>
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold mb-4">New Paste</h1>
-        <div className="flex items-center gap-2"></div>
+        <div className="flex items-center gap-2" />
       </div>
       <input
         className="w-full bg-dark-400 outline-none focus:outline-purple-400 focus:outline-1 mb-4 px-2 py-1"
         placeholder="Title"
         value={title}
-        onChange={(event) => setTitle(event.target.value || undefined)}
+        onChange={(event) => { setTitle(event.target.value || undefined); }}
       />
       <textarea
         className="w-full h-64 p-2 bg-dark-400 outline-none focus:outline-purple-400 focus:outline-1 rounded placeholder:text-gray-600"
@@ -146,22 +146,22 @@ export default function Paste() {
       />
       <div className="flex gap-2 justify-end">
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={burn} onChange={(event) => setBurn(event.target.checked)} />
+          <input type="checkbox" checked={burn} onChange={(event) => { setBurn(event.target.checked); }} />
           <span className="truncate">Destroy after viewing</span>
         </label>
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={paranoid} onChange={(event) => setParanoid(event.target.checked)} />
+          <input type="checkbox" checked={paranoid} onChange={(event) => { setParanoid(event.target.checked); }} />
           Paranoid
         </label>
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={encrypt} onChange={(event) => setEncrypt(event.target.checked)} />
+          <input type="checkbox" checked={encrypt} onChange={(event) => { setEncrypt(event.target.checked); }} />
           Encrypt
         </label>
         <Select
           value={expiryMinutes}
           className="w-auto"
           onChange={(event) => {
-            setExpiryMinutes(+event.target.value);
+            setExpiryMinutes(Number(event.target.value));
           }}
         >
           <option value={0}>No Expiry</option>

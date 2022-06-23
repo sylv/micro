@@ -1,4 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["./src/**/*.ts", "./src/data/blocklist.json"]
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"],
+  "extends": "@sylo-digital/scripts/tsconfig/base.json",
+  "include": ["src", "src/blocklist.json"]
 }

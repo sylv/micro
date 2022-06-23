@@ -1,38 +1,39 @@
-import { Multipart } from '@fastify/multipart';
+/* eslint-disable sonarjs/no-duplicate-string */
+import type { Multipart } from '@fastify/multipart';
 import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
+import type { OnApplicationBootstrap } from '@nestjs/common';
 import {
   BadRequestException,
   Injectable,
   Logger,
   NotFoundException,
-  OnApplicationBootstrap,
   PayloadTooLargeException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import contentRange from 'content-range';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { DateTime } from 'luxon';
 import { PassThrough } from 'stream';
 import xbytes from 'xbytes';
-import { MicroHost } from '../../classes/MicroHost';
+import type { MicroHost } from '../../classes/MicroHost';
 import { config } from '../../config';
 import { generateContentId } from '../../helpers/generate-content-id.helper';
 import { getStreamType } from '../../helpers/get-stream-type.helper';
 import { HostService } from '../host/host.service';
 import { StorageService } from '../storage/storage.service';
-import { User } from '../user/user.entity';
+import type { User } from '../user/user.entity';
 import { File } from './file.entity';
 
 @Injectable()
 export class FileService implements OnApplicationBootstrap {
   private readonly logger = new Logger(FileService.name);
   constructor(
-    @InjectRepository(File) private fileRepo: EntityRepository<File>,
-    private storageService: StorageService,
-    private hostService: HostService,
-    private orm: MikroORM
+    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    private readonly storageService: StorageService,
+    private readonly hostService: HostService,
+    private readonly orm: MikroORM
   ) {}
 
   async getFile(id: string, request: FastifyRequest) {
@@ -68,8 +69,8 @@ export class FileService implements OnApplicationBootstrap {
   ): Promise<File> {
     if (host) this.hostService.checkUserCanUploadTo(host, owner);
     if (!request.headers['content-length']) throw new BadRequestException('Missing "Content-Length" header.');
-    if (+request.headers['content-length'] >= config.uploadLimit) {
-      const size = xbytes(+request.headers['content-length']);
+    if (Number(request.headers['content-length']) >= config.uploadLimit) {
+      const size = xbytes(Number(request.headers['content-length']));
       this.logger.warn(
         `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
       );
@@ -104,7 +105,7 @@ export class FileService implements OnApplicationBootstrap {
     const file = await this.getFile(fileId, request);
     const range = request.headers['content-range'] ? contentRange.parse(request.headers['content-range']) : null;
     const stream = this.storageService.createReadStream(file.hash, range);
-    if (range) reply.header('Content-Range', contentRange.format(range));
+    if (range) await reply.header('Content-Range', contentRange.format(range));
     const type = file.type.startsWith('text') ? `${file.type}; charset=UTF-8` : file.type;
     return reply
       .header('ETag', `"${file.hash}"`)

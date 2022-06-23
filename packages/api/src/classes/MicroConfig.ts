@@ -3,7 +3,6 @@ import {
   IsBoolean,
   IsDefined,
   IsEmail,
-  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -47,7 +46,7 @@ export class MicroConfig {
     if (!value) return value;
     const clean: string[] = [];
     for (const type of value) {
-      const stripped = type.replace(/\/\*$/, '');
+      const stripped = type.replace(/\/\*$/u, '');
       if (stripped.includes('/')) {
         if (!fileType.mimeTypes.has(type)) {
           throw new Error(`Invalid mime type: ${type}`);

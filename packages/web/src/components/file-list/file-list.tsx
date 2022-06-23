@@ -1,11 +1,12 @@
-import { FC, useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { http } from "../../helpers/http.helper";
-import { GetUserFilesData } from "@ryanke/micro-api";
-import { Card } from "../card";
-import { Spinner } from "../spinner";
-import { FilePreviewCard } from "./file-preview-card";
-import Error from "../../pages/_error";
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { http } from '../../helpers/http.helper';
+import type { GetUserFilesData } from '@ryanke/micro-api';
+import { Card } from '../card';
+import { Spinner } from '../spinner';
+import { FilePreviewCard } from './file-preview-card';
+import Error from '../../pages/_error';
 
 const PER_PAGE = 24;
 
@@ -19,13 +20,13 @@ export const FileList: FC = () => {
     try {
       if (error || loading || !hasMore) return;
       setLoading(true);
-      let url = `user/files?offset=${offset}&limit=${PER_PAGE}`;
+      const url = `user/files?offset=${offset}&limit=${PER_PAGE}`;
       const response = await http(url.toString());
       const body = (await response.json()) as GetUserFilesData;
       const isFullPage = body.length === PER_PAGE;
       setHasMore(isFullPage);
       setOffset(offset + PER_PAGE);
-      setFiles(files.concat(body));
+      setFiles([...files, ...body]);
     } catch (error) {
       setError(error);
     } finally {
@@ -35,6 +36,7 @@ export const FileList: FC = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!files[0] && !loading) {

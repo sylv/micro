@@ -6,7 +6,7 @@ import { UserService } from './user/user.service';
 
 @Controller()
 export class AppController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('config')
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {

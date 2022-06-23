@@ -1,6 +1,7 @@
 /* eslint-disable react/button-has-type */
 import classNames from "classnames";
-import { forwardRef, HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { Link } from "../link";
 
 export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, "prefix"> {

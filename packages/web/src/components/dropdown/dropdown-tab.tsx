@@ -1,6 +1,7 @@
 import { Menu } from "@headlessui/react";
 import classNames from "classnames";
-import { FC, Fragment, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
+import { Fragment } from "react";
 import { Link } from "../link";
 
 export interface DropdownTabProps {

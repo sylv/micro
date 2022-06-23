@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import type { FC} from "react";
+import { useEffect } from "react";
 import { Container } from "./container";
 import { Spinner } from "./spinner";
 import { Title } from "../components/title";

@@ -1,4 +1,6 @@
-import { Transform, TransformOptions, TransformCallback } from "stream";
+/* eslint-disable sonarjs/cognitive-complexity */
+import type { TransformOptions, TransformCallback } from 'stream';
+import { Transform } from 'stream';
 
 // note: this is pretty much just a copy/paste of https://github.com/joshbuddy/exif-be-gone
 // for some reason typescript refuses to load this module during `pnpm build` and will
@@ -7,10 +9,10 @@ import { Transform, TransformOptions, TransformCallback } from "stream";
 // exif-be-gone is published and i'm not gonna bother when i can just copy/paste it and call it
 // a day.
 export class ExifTransformer extends Transform {
-  private static readonly app1Marker = Buffer.from("ffe1", "hex");
-  private static readonly exifMarker = Buffer.from("457869660000", "hex"); // Exif\0\0
-  private static readonly xmpMarker = Buffer.from("http://ns.adobe.com/xap", "utf-8");
-  private static readonly flirMarker = Buffer.from("FLIR", "utf-8");
+  private static readonly app1Marker = Buffer.from('ffe1', 'hex');
+  private static readonly exifMarker = Buffer.from('457869660000', 'hex'); // Exif\0\0
+  private static readonly xmpMarker = Buffer.from('http://ns.adobe.com/xap', 'utf-8');
+  private static readonly flirMarker = Buffer.from('FLIR', 'utf-8');
   private static readonly maxMarkerLength = Math.max(
     ExifTransformer.exifMarker.length,
     ExifTransformer.xmpMarker.length,
@@ -32,7 +34,7 @@ export class ExifTransformer extends Transform {
   }
 
   _final(callback: TransformCallback) {
-    while (this.pending.length !== 0) {
+    while (this.pending.length > 0) {
       this._scrub(true);
     }
     callback();
@@ -62,18 +64,17 @@ export class ExifTransformer extends Transform {
           }
           return;
           // we have enough, so lets read the length
-        } else {
-          const candidateMarker = pendingChunk.slice(app1Start + 4, app1Start + ExifTransformer.maxMarkerLength + 4);
-          if (
-            ExifTransformer.exifMarker.compare(candidateMarker, 0, ExifTransformer.exifMarker.length) === 0 ||
-            ExifTransformer.xmpMarker.compare(candidateMarker, 0, ExifTransformer.xmpMarker.length) === 0 ||
-            ExifTransformer.flirMarker.compare(candidateMarker, 0, ExifTransformer.flirMarker.length) === 0
-          ) {
-            // we add 2 to the remainingBytes to account for the app1 marker
-            this.remainingBytes = pendingChunk.readUInt16BE(app1Start + 2) + 2;
-            this.push(pendingChunk.slice(0, app1Start));
-            pendingChunk = pendingChunk.slice(app1Start);
-          }
+        }
+        const candidateMarker = pendingChunk.slice(app1Start + 4, app1Start + ExifTransformer.maxMarkerLength + 4);
+        if (
+          ExifTransformer.exifMarker.compare(candidateMarker, 0, ExifTransformer.exifMarker.length) === 0 ||
+          ExifTransformer.xmpMarker.compare(candidateMarker, 0, ExifTransformer.xmpMarker.length) === 0 ||
+          ExifTransformer.flirMarker.compare(candidateMarker, 0, ExifTransformer.flirMarker.length) === 0
+        ) {
+          // we add 2 to the remainingBytes to account for the app1 marker
+          this.remainingBytes = pendingChunk.readUInt16BE(app1Start + 2) + 2;
+          this.push(pendingChunk.slice(0, app1Start));
+          pendingChunk = pendingChunk.slice(app1Start);
         }
       }
     }
@@ -83,7 +84,7 @@ export class ExifTransformer extends Transform {
       // there is more data than we want to remove, so we only remove up to remainingBytes
       if (pendingChunk.length >= this.remainingBytes) {
         const remainingBuffer = pendingChunk.slice(this.remainingBytes);
-        this.pending = remainingBuffer.length !== 0 ? [remainingBuffer] : [];
+        this.pending = remainingBuffer.length > 0 ? [remainingBuffer] : [];
         this.remainingBytes = undefined;
         // this chunk is too large, remove everything
       } else {

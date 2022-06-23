@@ -1,7 +1,7 @@
-import { Transform } from "class-transformer";
-import { IsNumber } from "class-validator";
-import ms from "ms";
-import xbytes from "xbytes";
+import { Transform } from 'class-transformer';
+import { IsNumber } from 'class-validator';
+import ms from 'ms';
+import xbytes from 'xbytes';
 
 export class MicroConfigPurge {
   @IsNumber()

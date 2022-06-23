@@ -1,23 +1,23 @@
-import { EntityRepository, QueryOrder } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { ConflictException, Injectable } from "@nestjs/common";
-import bcrypt from "bcrypt";
-import { nanoid } from "nanoid";
-import { Permission } from "../../constants";
-import { generateContentId } from "../../helpers/generate-content-id.helper";
-import { File } from "../file/file.entity";
-import { Invite } from "../invite/invite.entity";
-import { InviteService } from "../invite/invite.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { Pagination } from "./dto/pagination.dto";
-import { User } from "./user.entity";
+import { EntityRepository, QueryOrder } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { ConflictException, Injectable } from '@nestjs/common';
+import bcrypt from 'bcrypt';
+import { nanoid } from 'nanoid';
+import type { Permission } from '../../constants';
+import { generateContentId } from '../../helpers/generate-content-id.helper';
+import { File } from '../file/file.entity';
+import type { Invite } from '../invite/invite.entity';
+import { InviteService } from '../invite/invite.service';
+import type { CreateUserDto } from './dto/create-user.dto';
+import type { Pagination } from './dto/pagination.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepo: EntityRepository<User>,
-    @InjectRepository(File) private fileRepo: EntityRepository<File>,
-    private inviteService: InviteService
+    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
+    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    private readonly inviteService: InviteService
   ) {}
 
   getUser(id: string) {
@@ -47,7 +47,7 @@ export class UserService {
   async createUser(data: CreateUserDto, invite: Invite) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const existing = await this.userRepo.findOne({ username: data.username });
-    if (existing) throw new ConflictException("A user with that username already exists.");
+    if (existing) throw new ConflictException('A user with that username already exists.');
     const user = this.userRepo.create({
       id: generateContentId(),
       secret: nanoid(),

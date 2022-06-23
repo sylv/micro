@@ -8,8 +8,8 @@ import mime from 'mime-types';
 
 @Entity({ tableName: 'pastes' })
 export class Paste extends WithHostname {
-  @PrimaryKey({ type: String })
-  id = generateContentId();
+  @PrimaryKey()
+  id: string = generateContentId();
 
   @Property({ type: 'varchar', length: 128, nullable: true })
   title?: string;
@@ -62,11 +62,10 @@ export class Paste extends WithHostname {
 
   @Property({ persist: false })
   get type() {
-    if (!this.extension) return;
-    return mime.lookup(this.extension);
+    return (this.extension && mime.lookup(this.extension)) || 'text/plain';
   }
 
-  [OptionalProps]: 'owner' | 'createdAt' | 'expiresAt' | 'extension' | 'urls' | 'paths';
+  [OptionalProps]: 'owner' | 'createdAt' | 'expiresAt' | 'extension' | 'urls' | 'paths' | 'type';
 }
 
 export class CreatePasteDto {

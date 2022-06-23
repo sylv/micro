@@ -1,5 +1,5 @@
-import { GetPasteData } from '@ryanke/micro-api';
-import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import type { GetPasteData } from '@ryanke/micro-api';
+import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BookOpen, Clock, Trash } from 'react-feather';
@@ -65,7 +65,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
         setContent('');
         setError(error);
       });
-  }, [paste.data?.content, router]);
+  }, [content, paste.data?.content, paste.data?.encrypted]);
 
   useEffect(() => {
     // burn the paste when its viewed
@@ -79,6 +79,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
         setBurnt(true);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paste.data]);
 
   useEffect(() => {

@@ -4,6 +4,11 @@
   "npm.scriptExplorerExclude": ["^((?!watch|generate:watch).)*$"],
   "scss.validate": false,
   "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./{packages,apps}/*"
+    }
+  ],
   "files.associations": {
     ".microrc": "jsonc",
     ".microrc.example": "jsonc",

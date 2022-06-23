@@ -1,24 +1,24 @@
-import classNames from "classnames";
-import { Language } from "prism-react-renderer";
-import React, { memo } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm";
-import { SyntaxHighlighter } from "./syntax-highlighter/syntax-highlighter";
+import classNames from 'classnames';
+import type { Language } from 'prism-react-renderer';
+import { Fragment, memo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
+import { SyntaxHighlighter } from './syntax-highlighter/syntax-highlighter';
 
-const LANGUAGE_REGEX = /(^| )language-(?<language>.+)$/;
+const LANGUAGE_REGEX = /(^| )language-(?<language>.+)$/u;
 
 export const Markdown = memo<{ children: string; className?: string }>(({ children, className }) => {
   const classes = classNames(
-    "prose prose-invert max-w-none",
+    'prose prose-invert max-w-none',
     // remove "" quotes from blockquotes
-    "prose-p:before:content-none prose-p:after:content-none",
+    'prose-p:before:content-none prose-p:after:content-none',
     // make links purple
-    "prose-a:text-brand hover:prose-a:underline prose-a:no-underline",
+    'prose-a:text-brand hover:prose-a:underline prose-a:no-underline',
     // remove italics from blockquotes
-    "prose-blockquote:font-normal prose-blockquote:not-italic",
+    'prose-blockquote:font-normal prose-blockquote:not-italic',
     // make inline `code` blocks purple
-    "prose-code:text-brand",
+    'prose-code:text-brand',
     className
   );
 
@@ -31,11 +31,11 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
           pre({ children }) {
             // the code block is wrapped in a pre tag, but we already do that in the
             // prism syntax highlighter. so this just doesnt render the pre tag.
-            return <React.Fragment>{children}</React.Fragment>;
+            return <Fragment>{children}</Fragment>;
           },
-          code({ node, inline, className, children, ...rest }) {
+          code({ inline, className, children, ...rest }) {
             const languageMatch = !inline && className && LANGUAGE_REGEX.exec(className);
-            const text = languageMatch ? children.filter((child) => typeof child === "string").join(" ") : null;
+            const text = languageMatch ? children.filter((child) => typeof child === 'string').join(' ') : null;
             if (inline || !languageMatch || !text) {
               return (
                 <code className={className} {...rest}>

@@ -1,5 +1,6 @@
-import { EntityRepository } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
+/* eslint-disable sonarjs/no-duplicate-string */
+import { EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   Body,
@@ -12,54 +13,54 @@ import {
   Query,
   UnauthorizedException,
   UseGuards,
-} from "@nestjs/common";
-import { nanoid } from "nanoid";
-import { Permission } from "../../constants";
-import { RequirePermissions, UserId } from "../auth/auth.decorators";
-import { AuthService, TokenType } from "../auth/auth.service";
-import { JWTAuthGuard } from "../auth/guards/jwt.guard";
-import { JWTPayloadUser } from "../auth/strategies/jwt.strategy";
-import { InviteService } from "../invite/invite.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { Pagination } from "./dto/pagination.dto";
-import { User } from "./user.entity";
-import { UserService } from "./user.service";
+} from '@nestjs/common';
+import { nanoid } from 'nanoid';
+import { Permission } from '../../constants';
+import { RequirePermissions, UserId } from '../auth/auth.decorators';
+import { AuthService, TokenType } from '../auth/auth.service';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard';
+import type { JWTPayloadUser } from '../auth/strategies/jwt.strategy';
+import { InviteService } from '../invite/invite.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { Pagination } from './dto/pagination.dto';
+import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
   constructor(
-    @InjectRepository(User) private userRepo: EntityRepository<User>,
-    private userService: UserService,
-    private inviteService: InviteService,
-    private authService: AuthService
+    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
+    private readonly userService: UserService,
+    private readonly inviteService: InviteService,
+    private readonly authService: AuthService
   ) {}
 
-  @Get("user")
+  @Get('user')
   @UseGuards(JWTAuthGuard)
   async getUser(@UserId() userId: string) {
     const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException("Unknown user.");
+    if (!user) throw new ForbiddenException('Unknown user.');
     return user;
   }
 
-  @Post("user")
+  @Post('user')
   async createUser(@Body() data: CreateUserDto) {
     const invite = await this.inviteService.get(data.invite);
-    if (!invite) throw new UnauthorizedException("Invalid invite.");
+    if (!invite) throw new UnauthorizedException('Invalid invite.');
     return this.userService.createUser(data, invite);
   }
 
-  @Get("user/files")
+  @Get('user/files')
   @UseGuards(JWTAuthGuard)
   async getUserFiles(@UserId() userId: string, @Query() pagination: Pagination) {
     return this.userService.getUserFiles(userId, pagination);
   }
 
-  @Get("user/token")
+  @Get('user/token')
   @UseGuards(JWTAuthGuard)
   async getUserToken(@UserId() userId: string) {
     const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException("Unknown user.");
+    if (!user) throw new ForbiddenException('Unknown user.');
     const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
       name: user.username,
       secret: user.secret,
@@ -69,7 +70,7 @@ export class UserController {
     return { token };
   }
 
-  @Put("user/token")
+  @Put('user/token')
   @UseGuards(JWTAuthGuard)
   async resetUserToken(@UserId() userId: string) {
     const secret = nanoid();
@@ -80,12 +81,12 @@ export class UserController {
   }
 
   // temporary until admin UI
-  @Get("user/:id/delete")
+  @Get('user/:id/delete')
   @RequirePermissions(Permission.DELETE_USERS)
   @UseGuards(JWTAuthGuard)
-  async deleteUser(@Param("id") targetId: string) {
+  async deleteUser(@Param('id') targetId: string) {
     const target = await this.userService.getUser(targetId);
-    if (!target) throw new BadRequestException("Unknown target.");
+    if (!target) throw new BadRequestException('Unknown target.');
     if (this.userService.checkPermissions(target.permissions, Permission.ADMINISTRATOR)) {
       throw new ForbiddenException("You can't do that to that user.");
     }
@@ -95,14 +96,14 @@ export class UserController {
   }
 
   // temporary until admin UI
-  @Get("user/:id/tags/add/:tag")
+  @Get('user/:id/tags/add/:tag')
   @RequirePermissions(Permission.ADD_USER_TAGS)
   @UseGuards(JWTAuthGuard)
-  async addTagToUser(@Param("id") targetId: string, @Param("tag") tag: string) {
+  async addTagToUser(@Param('id') targetId: string, @Param('tag') tag: string) {
     const target = await this.userService.getUser(targetId);
-    if (!target) throw new BadRequestException("Unknown target.");
+    if (!target) throw new BadRequestException('Unknown target.');
     if (target.tags.includes(tag.toLowerCase())) {
-      throw new BadRequestException("User already has that tag.");
+      throw new BadRequestException('User already has that tag.');
     }
 
     target.tags.push(tag.toLowerCase());
@@ -110,14 +111,14 @@ export class UserController {
   }
 
   // temporary until admin UI
-  @Get("user/:id/tags/remove/:tag")
+  @Get('user/:id/tags/remove/:tag')
   @RequirePermissions(Permission.ADD_USER_TAGS)
   @UseGuards(JWTAuthGuard)
-  async removeTagFromUser(@Param("id") targetId: string, @Param("tag") tag: string) {
+  async removeTagFromUser(@Param('id') targetId: string, @Param('tag') tag: string) {
     const target = await this.userService.getUser(targetId);
-    if (!target) throw new BadRequestException("Unknown target.");
+    if (!target) throw new BadRequestException('Unknown target.');
     if (!target.tags.includes(tag)) {
-      throw new BadRequestException("User does not have that tag.");
+      throw new BadRequestException('User does not have that tag.');
     }
 
     target.tags = target.tags.filter((existing) => existing !== tag);

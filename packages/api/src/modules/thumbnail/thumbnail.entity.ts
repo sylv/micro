@@ -1,7 +1,7 @@
-import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property } from "@mikro-orm/core";
-import { File } from "../file/file.entity";
+import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property } from '@mikro-orm/core';
+import { File } from '../file/file.entity';
 
-@Entity({ tableName: "thumbnails" })
+@Entity({ tableName: 'thumbnails' })
 export class Thumbnail {
   @Property()
   size: number;
@@ -21,12 +21,12 @@ export class Thumbnail {
   @Property({ type: BlobType, lazy: true, hidden: true })
   data: Buffer;
 
-  @OneToOne({ entity: () => File, primary: true, onDelete: "CASCADE" })
+  @OneToOne({ entity: () => File, primary: true, onDelete: 'CASCADE' })
   file: File;
 
   @Property({ type: Date })
   createdAt = new Date();
 
   [PrimaryKeyType]: string;
-  [OptionalProps]: "createdAt";
+  [OptionalProps]: 'createdAt';
 }

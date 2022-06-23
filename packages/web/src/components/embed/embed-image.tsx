@@ -1,9 +1,10 @@
-import Head from "next/head";
-import { Embeddable } from "./embeddable";
+import Head from 'next/head';
+import { Fragment } from 'react';
+import type { Embeddable } from './embeddable';
 
 export const EmbedImage = ({ data }: { data: Embeddable }) => {
   return (
-    <>
+    <Fragment>
       <Head>
         <meta name="twitter:image" content={data.paths.direct} />
         <meta property="og:image" content={data.paths.direct} />
@@ -15,19 +16,19 @@ export const EmbedImage = ({ data }: { data: Embeddable }) => {
         height={data.height}
         width={data.width}
       />
-    </>
+    </Fragment>
   );
 };
 
 EmbedImage.embeddable = (data: Embeddable) => {
   switch (data.type) {
-    case "image/png":
-    case "image/jpeg":
-    case "image/gif":
-    case "image/svg+xml":
-    case "image/webp":
-    case "image/bmp":
-    case "image/tiff":
+    case 'image/png':
+    case 'image/jpeg':
+    case 'image/gif':
+    case 'image/svg+xml':
+    case 'image/webp':
+    case 'image/bmp':
+    case 'image/tiff':
       return true;
     default:
       return false;

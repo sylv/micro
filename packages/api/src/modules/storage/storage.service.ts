@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import crypto from "crypto";
-import fs from "fs";
-import { nanoid } from "nanoid";
-import path from "path";
-import stream from "stream";
-import getSizeTransform from "stream-size";
-import { promisify } from "util";
-import { ExifTransformer } from "../../classes/ExifTransformer";
-import { config } from "../../config";
+import { Injectable } from '@nestjs/common';
+import crypto from 'crypto';
+import fs from 'fs';
+import { nanoid } from 'nanoid';
+import path from 'path';
+import stream from 'stream';
+import getSizeTransform from 'stream-size';
+import { promisify } from 'util';
+import { ExifTransformer } from '../../classes/ExifTransformer';
+import { config } from '../../config';
 
 const pipeline = promisify(stream.pipeline);
 
@@ -21,11 +21,11 @@ export class StorageService {
     // that file will be left behind. we could just use `fs-extra` and `/tmp` but that isn't great either since it means
     // we're copying the file which is slow, especially for large files.
     const uploadId = nanoid(6);
-    const uploadPath = path.join(config.storagePath, ".tmp", `.micro${uploadId}`);
+    const uploadPath = path.join(config.storagePath, '.tmp', `.micro${uploadId}`);
     await this.ensureDirectoryExists(uploadPath);
 
     try {
-      const hashStream = crypto.createHash("sha256");
+      const hashStream = crypto.createHash('sha256');
       const exifTransform = new ExifTransformer();
       const sizeTransform = getSizeTransform(config.uploadLimit);
       const writeStream = fs.createWriteStream(uploadPath);
@@ -35,7 +35,7 @@ export class StorageService {
         pipeline(stream, exifTransform, sizeTransform, writeStream),
       ]);
 
-      const digest = hashStream.digest("hex");
+      const digest = hashStream.digest('hex');
       const filePath = this.getPathFromHash(digest);
       await this.ensureDirectoryExists(filePath);
       await fs.promises.rename(uploadPath, filePath);
@@ -54,7 +54,7 @@ export class StorageService {
       const filePath = this.getPathFromHash(hash);
       await fs.promises.unlink(filePath);
     } catch (error: any) {
-      if (error.code === "ENOENT") {
+      if (error.code === 'ENOENT') {
         return;
       }
 

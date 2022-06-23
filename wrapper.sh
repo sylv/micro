@@ -1,7 +1,7 @@
 #!/bin/bash
 
-npm run start:api &
-npm run start:web &
+cd packages/api && npm run start &
+cd packages/web && npm run start &
 
 wait -n
 exit $?

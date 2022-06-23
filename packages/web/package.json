@@ -12,6 +12,7 @@
         "watch": "NODE_ENV=development next dev",
         "start": "NODE_ENV=production next start",
         "build": "NODE_ENV=production next build",
+        "lint": "NODE_ENV=production next lint",
         "storybook": "BROWSER=none start-storybook -p 6006",
         "storybook:build": "build-storybook -o ./dist/storybook"
     },
@@ -48,9 +49,10 @@
         "@storybook/cli": "^6.4.22",
         "@storybook/manager-webpack5": "^6.4.22",
         "@storybook/react": "^6.4.22",
+        "@sylo-digital/scripts": "^1.0.2",
         "@types/node": "16",
         "@types/react": "^18.0.8",
         "storybook-dark-mode": "^1.1.0",
-        "typescript": "^4.6.4"
+        "typescript": "^4.7.3"
     }
 }

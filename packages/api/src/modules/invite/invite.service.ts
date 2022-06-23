@@ -1,10 +1,11 @@
-import { EntityRepository, MikroORM, UseRequestContext } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { config } from "../../config";
-import { Permission } from "../../constants";
-import { User } from "../user/user.entity";
-import { Invite } from "./invite.entity";
+import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import type { OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { config } from '../../config';
+import { Permission } from '../../constants';
+import { User } from '../user/user.entity';
+import { Invite } from './invite.entity';
 
 export interface JWTPayloadInvite {
   id: string;
@@ -16,8 +17,8 @@ export interface JWTPayloadInvite {
 export class InviteService implements OnApplicationBootstrap {
   private readonly logger = new Logger(InviteService.name);
   constructor(
-    @InjectRepository(User) private userRepo: EntityRepository<User>,
-    @InjectRepository(Invite) private inviteRepo: EntityRepository<Invite>,
+    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
+    @InjectRepository(Invite) private readonly inviteRepo: EntityRepository<Invite>,
     protected orm: MikroORM
   ) {}
 

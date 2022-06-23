@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { FC } from "react";
+import type { FC } from "react";
 
 export const Title: FC<{ children: string | string[] }> = ({ children }) => {
   const title = Array.isArray(children) ? children.join(" ") : children;

@@ -1,9 +1,10 @@
-import { GetInviteData } from "@ryanke/micro-api";
+import type { GetInviteData } from "@ryanke/micro-api";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Container } from "../../components/container";
-import { LoginData, LoginForm } from "../../components/login-form";
+import type { LoginData} from "../../components/login-form";
+import { LoginForm } from "../../components/login-form";
 import { PageLoader } from "../../components/page-loader";
 import { Time } from "../../components/time";
 import { Title } from "../../components/title";

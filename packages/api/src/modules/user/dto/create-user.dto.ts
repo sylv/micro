@@ -1,5 +1,5 @@
-import { IsLowercase, IsNotIn, IsString, MaxLength, MinLength } from "class-validator";
-import blocklist from "../../../blocklist.json";
+import { IsLowercase, IsNotIn, IsString, MaxLength, MinLength } from 'class-validator';
+import blocklist from '../../../blocklist.json';
 
 export class CreateUserDto {
   @MaxLength(20)

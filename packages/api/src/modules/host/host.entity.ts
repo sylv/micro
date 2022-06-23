@@ -1,17 +1,18 @@
-import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from "@mikro-orm/core";
-import { FastifyRequest } from "fastify";
-import { config } from "../../config";
+/* eslint-disable sonarjs/no-duplicate-string */
+import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/core';
+import type { FastifyRequest } from 'fastify';
+import { config } from '../../config';
 
 function getHostFromRequest(request: FastifyRequest): string {
-  if (request.headers["x-forwarded-host"]) {
-    if (Array.isArray(request.headers["x-forwarded-host"])) {
-      return request.headers["x-forwarded-host"][0];
+  if (request.headers['x-forwarded-host']) {
+    if (Array.isArray(request.headers['x-forwarded-host'])) {
+      return request.headers['x-forwarded-host'][0];
     }
 
-    return request.headers["x-forwarded-host"];
+    return request.headers['x-forwarded-host'];
   }
 
-  if (request.headers["host"]) return request.headers["host"];
+  if (request.headers.host) return request.headers.host;
   return request.hostname;
 }
 
@@ -34,11 +35,11 @@ export abstract class WithHostname {
     // root host can send all files
     if (hostname === config.rootHost.normalised) return true;
     if (this.hostname === hostname) return true;
-    if (this.hostname?.includes("{{username}}")) {
+    if (this.hostname?.includes('{{username}}')) {
       // old files have {{username}} in the persisted hostname, migrating them
       // to the new format is too difficult so this does a dirty comparison
       // that should work for most use cases.
-      const withoutWildcard = this.hostname.replace("{{username}}", "");
+      const withoutWildcard = this.hostname.replace('{{username}}', '');
       return hostname.endsWith(withoutWildcard);
     }
 
@@ -48,9 +49,9 @@ export abstract class WithHostname {
   @BeforeCreate()
   @BeforeUpdate()
   async onBeforePersist(args: EventArgs<WithHostname>) {
-    console.log("Before persist");
-    if (args.entity.hostname?.includes("{{username}}")) {
-      throw new Error("Host placeholders should be replaced before insert");
+    console.log('Before persist');
+    if (args.entity.hostname?.includes('{{username}}')) {
+      throw new Error('Host placeholders should be replaced before insert');
     }
   }
 }

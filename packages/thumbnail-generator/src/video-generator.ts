@@ -1,31 +1,21 @@
-import { randomUUID } from "crypto";
-import { once } from "events";
-import ffmpeg from "fluent-ffmpeg";
-import { readdir, rm, stat } from "fs/promises";
-import { tmpdir } from "os";
-import { join } from "path";
-import { logger } from "./logger";
-import { ThumbnailOptions } from "./types";
+import { randomUUID } from 'crypto';
+import { once } from 'events';
+import ffmpeg from 'fluent-ffmpeg';
+import { readdir, rm, stat } from 'fs/promises';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import { logger } from './logger';
+import type { ThumbnailOptions } from './types';
 
 export const VIDEO_TYPES = new Set([
-  "video/mp4",
-  "video/webm",
-  "video/ogg",
-  "video/x-matroska",
-  "video/x-ms-wmv",
-  "video/x-m4v",
-  "video/x-flv",
+  'video/mp4',
+  'video/webm',
+  'video/ogg',
+  'video/x-matroska',
+  'video/x-ms-wmv',
+  'video/x-m4v',
+  'video/x-flv',
 ]);
-
-function getTimeMarks(fast: boolean | undefined, isPath: boolean) {
-  if (fast) {
-    if (isPath) return ["10%"];
-    return [5];
-  }
-
-  if (isPath) return ["5%", "10%", "20%", "40%"];
-  return [5, 30, 60, 300];
-}
 
 /**
  * Generate a thumbnail for a video.
@@ -38,9 +28,9 @@ export async function videoThumbnailGenerator(filePath: string, options?: Thumbn
 
   // i have no clue why but the internet told me that doing it in multiple invocations is faster
   // and it is so whatever. maybe there is a way to do this faster, but this is already pretty fast.
-  const positions = options?.fast ? ["5%"] : ["5%", "10%", "20%", "40%"];
-  const size = options?.size ? `${options.size.width ?? "?"}x${options.size.height ?? "?"}` : "200x?";
-  const ext = options?.type === "image/jpeg" ? "jpg" : "webp";
+  const positions = options?.fast ? ['5%'] : ['5%', '10%', '20%', '40%'];
+  const size = options?.size ? `${options.size.width ?? '?'}x${options.size.height ?? '?'}` : '200x?';
+  const ext = options?.type === 'image/jpeg' ? 'jpg' : 'webp';
   for (let positionIndex = 0; positionIndex < positions.length; positionIndex++) {
     const percent = positions[positionIndex];
     const stream = ffmpeg(filePath).screenshot({
@@ -52,7 +42,7 @@ export async function videoThumbnailGenerator(filePath: string, options?: Thumbn
       filename: `%b-${positionIndex + 1}.${ext}`,
     });
 
-    await once(stream, "end");
+    await once(stream, 'end');
   }
 
   const files = await readdir(tempDir);
@@ -67,13 +57,13 @@ export async function videoThumbnailGenerator(filePath: string, options?: Thumbn
 
   if (!largest) {
     await rm(tempDir, { recursive: true, force: true });
-    throw new Error("No thumbnails were generated");
+    throw new Error('No thumbnails were generated');
   }
 
   logger(`Largest thumbnail is at "${largest.path}", ${largest.size} bytes`);
 
   return {
-    path: largest!.path,
+    path: largest.path,
     cleanup: async () => {
       logger(`Cleaning up "${tempDir}"`);
       await rm(tempDir, { recursive: true, force: true });

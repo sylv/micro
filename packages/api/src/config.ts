@@ -6,7 +6,7 @@ import { MicroConfig } from './classes/MicroConfig';
 const data = loadConfig('micro');
 const config = plainToClass(MicroConfig, data, { exposeDefaultValues: true });
 const errors = validateSync(config, { forbidUnknownValues: true });
-if (errors.length) {
+if (errors.length > 0) {
   const clean = errors.map((error) => error.toString()).join('\n');
   console.dir(config, { depth: null });
   console.error(clean);

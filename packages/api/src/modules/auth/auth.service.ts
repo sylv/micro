@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 export enum TokenType {
-  USER = "USER",
-  DELETION = "DELETION",
-  INVITE = "INVITE",
+  USER = 'USER',
+  DELETION = 'DELETION',
+  INVITE = 'INVITE',
 }
 
 export interface TokenPayload {
@@ -15,22 +15,25 @@ export interface TokenPayload {
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  signToken<PayloadType extends Record<string, any>>(type: TokenType, payload: PayloadType, expiresIn = "1y") {
+  signToken<PayloadType extends Record<string, any>>(type: TokenType, payload: PayloadType, expiresIn = '1y') {
     return this.jwtService.signAsync(payload, {
       audience: type,
       expiresIn: expiresIn,
     });
   }
 
-  async verifyToken<Payload extends Record<string, any>>(type: TokenType, token: string): Promise<Payload & TokenPayload> {
+  async verifyToken<Payload extends Record<string, any>>(
+    type: TokenType,
+    token: string
+  ): Promise<Payload & TokenPayload> {
     try {
       return await this.jwtService.verifyAsync<Payload & TokenPayload>(token, {
         audience: type,
       });
     } catch {
-      throw new BadRequestException("Token validation failed.");
+      throw new BadRequestException('Token validation failed.');
     }
   }
 }

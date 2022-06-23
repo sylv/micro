@@ -1,16 +1,16 @@
-import * as fileType from "file-type";
-import { isBinary } from "istextorbinary";
-import * as mimeType from "mime-types";
-import path from "path";
-import { PassThrough } from "stream";
+import * as fileType from 'file-type';
+import { isBinary } from 'istextorbinary';
+import * as mimeType from 'mime-types';
+import path from 'path';
+import type { PassThrough } from 'stream';
 
-const DEFAULT_TYPE = "application/octet-stream";
+const DEFAULT_TYPE = 'application/octet-stream';
 // is-binary scans the first 1kb
 // file-type scans the first 4.2kb
 const SCAN_BYTE_COUNT = 4200;
 // overrides for types that are poorly mapped by sharex
-const EXT_TEXT_MAP = new Set(["ts", "tsx", "jsx", "ejs", "cjs", "mjs"]);
-const EXT_TEXT_TYPE = "text/plain";
+const EXT_TEXT_MAP = new Set(['ts', 'tsx', 'jsx', 'ejs', 'cjs', 'mjs']);
+const EXT_TEXT_TYPE = 'text/plain';
 
 async function readFirstBytes(stream: PassThrough) {
   let count = 0;
@@ -35,7 +35,6 @@ export async function getStreamType(fileName: string, stream: PassThrough): Prom
 
   const extension = path.extname(fileName).slice(1);
   if (extension) {
-    const type = EXT_TEXT_MAP.has(extension) ? EXT_TEXT_TYPE : mimeType.lookup(extension) || undefined;
-    return type;
+    return EXT_TEXT_MAP.has(extension) ? EXT_TEXT_TYPE : mimeType.lookup(extension) || undefined;
   }
 }

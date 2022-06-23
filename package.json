@@ -5,23 +5,18 @@
   "author": "Ryan <ryan@sylver.me>",
   "license": "GPL-3.0",
   "private": true,
-  "engine": {
-    "node": ">=16"
+  "packageManager": "pnpm@7.0.0",
+  "engines": {
+    "node": ">=16 <17",
+    "pnpm": ">=7"
   },
   "scripts": {
-    "lint": "eslint --fix ./packages/*/src/**/*.{ts,tsx,js}",
-    "build:api": "cd packages/thumbnail-generator && npm run build && cd ../api && npm run build",
-    "build:web": "cd packages/web && npm run build",
-    "start:api": "cd packages/api && npm run start",
-    "start:web": "cd packages/web && npm run start"
+    "lint": "turbo run lint",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.2",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "eslint": "^8.14.0",
-    "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.5.0",
-    "eslint-plugin-unicorn": "^42.0.0",
-    "prettier": "^2.6.2"
+    "turbo": "^1.3.0"
   }
 }

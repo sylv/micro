@@ -1,25 +1,25 @@
-import { EntityRepository } from "@mikro-orm/core";
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { checkThumbnailSupport, generateThumbnailToStream } from "@ryanke/thumbnail-generator";
-import { FastifyReply, FastifyRequest } from "fastify";
-import getStream from "get-stream";
-import { DateTime } from "luxon";
-import sharp from "sharp";
-import { File } from "../file/file.entity";
-import { FileService } from "../file/file.service";
-import { StorageService } from "../storage/storage.service";
-import { Thumbnail } from "./thumbnail.entity";
+import { EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { checkThumbnailSupport, generateThumbnailToStream } from '@ryanke/thumbnail-generator';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import getStream from 'get-stream';
+import { DateTime } from 'luxon';
+import sharp from 'sharp';
+import { File } from '../file/file.entity';
+import { FileService } from '../file/file.service';
+import { StorageService } from '../storage/storage.service';
+import { Thumbnail } from './thumbnail.entity';
 
 @Injectable()
 export class ThumbnailService {
   private static readonly THUMBNAIL_SIZE = 200;
-  private static readonly THUMBNAIL_TYPE = "image/webp";
+  private static readonly THUMBNAIL_TYPE = 'image/webp';
   constructor(
-    @InjectRepository(Thumbnail) private thumbnailRepo: EntityRepository<Thumbnail>,
-    @InjectRepository(File) private fileRepo: EntityRepository<File>,
-    private storageService: StorageService,
-    private fileService: FileService
+    @InjectRepository(Thumbnail) private readonly thumbnailRepo: EntityRepository<Thumbnail>,
+    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    private readonly storageService: StorageService,
+    private readonly fileService: FileService
   ) {}
 
   async getThumbnail(fileId: string) {
@@ -30,7 +30,7 @@ export class ThumbnailService {
     const start = Date.now();
     const supported = checkThumbnailSupport(file.type);
     if (!supported) {
-      throw new BadRequestException("That file type does not support thumbnails.");
+      throw new BadRequestException('That file type does not support thumbnails.');
     }
 
     const filePath = this.storageService.getPathFromHash(file.hash);
@@ -65,23 +65,23 @@ export class ThumbnailService {
   }
 
   async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {
-    const existing = await this.thumbnailRepo.findOne(fileId, { populate: ["data"] });
+    const existing = await this.thumbnailRepo.findOne(fileId, { populate: ['data'] });
     if (existing) {
       return reply
-        .header("X-Micro-Generated", "false")
-        .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
-        .header("Cache-Control", "public, max-age=31536000")
-        .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
-        .header("X-Content-Type-Options", "nosniff")
+        .header('X-Micro-Generated', 'false')
+        .header('Content-Type', ThumbnailService.THUMBNAIL_TYPE)
+        .header('Cache-Control', 'public, max-age=31536000')
+        .header('Expires', DateTime.local().plus({ years: 1 }).toHTTP())
+        .header('X-Content-Type-Options', 'nosniff')
         .send(existing.data);
     }
 
     const file = await this.fileService.getFile(fileId, request);
     const thumbnail = await this.createThumbnail(file);
     return reply
-      .header("X-Micro-Generated", "true")
-      .header("X-Micro-Duration", thumbnail.duration)
-      .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
+      .header('X-Micro-Generated', 'true')
+      .header('X-Micro-Duration', thumbnail.duration)
+      .header('Content-Type', ThumbnailService.THUMBNAIL_TYPE)
       .send(thumbnail.data);
   }
 }

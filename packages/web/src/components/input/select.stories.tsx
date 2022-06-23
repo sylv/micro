@@ -1,5 +1,6 @@
-import { Meta, Story } from "@storybook/react";
-import { Select, SelectProps } from "./select";
+import type { Meta, Story } from "@storybook/react";
+import type { SelectProps } from "./select";
+import { Select } from "./select";
 
 export default {
   component: Select,

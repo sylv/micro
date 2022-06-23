@@ -1,7 +1,8 @@
-import { ChangeEvent, FC, KeyboardEvent, useRef, useState } from "react";
-import { useToasts } from "../hooks/use-toasts.helper";
-import { Button } from "./button/button";
-import { Input } from "./input/input";
+import type { ChangeEvent, FC, KeyboardEvent } from 'react';
+import { Fragment, useRef, useState } from 'react';
+import { useToasts } from '../hooks/use-toasts.helper';
+import { Button } from './button/button';
+import { Input } from './input/input';
 
 export interface LoginData {
   username: string;
@@ -15,14 +16,18 @@ export interface LoginProps {
 }
 
 export const LoginForm: FC<LoginProps> = (props) => {
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const setToast = useToasts();
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const disabled = !username || !password || props.loading;
-  const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => setUsername(event.target.value.toLowerCase());
-  const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
+  const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value.toLowerCase());
+  };
+  const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
   const onContinue = () => {
     if (props.loading) return;
     if (!username) {
@@ -30,7 +35,7 @@ export const LoginForm: FC<LoginProps> = (props) => {
       // only show toast if username is already focused
       if (document.activeElement === usernameRef.current) {
         setToast({
-          text: "Username is required.",
+          text: 'Username is required.',
           error: true,
         });
       } else {
@@ -44,7 +49,7 @@ export const LoginForm: FC<LoginProps> = (props) => {
       // same as username above
       if (document.activeElement === passwordRef.current) {
         setToast({
-          text: "Password is required.",
+          text: 'Password is required.',
           error: true,
         });
       } else {
@@ -55,16 +60,16 @@ export const LoginForm: FC<LoginProps> = (props) => {
     }
 
     if (disabled) return;
-    return props.onContinue({ username, password });
+    props.onContinue({ username, password });
   };
 
   const onKeyDown = (event: KeyboardEvent<unknown>) => {
-    if (event.key !== "Enter") return;
+    if (event.key !== 'Enter') return;
     onContinue();
   };
 
   return (
-    <>
+    <Fragment>
       <Input placeholder="Username" onKeyDown={onKeyDown} onChange={onUsernameChange} autoFocus ref={usernameRef} />
       <Input
         className="mt-2"
@@ -77,6 +82,6 @@ export const LoginForm: FC<LoginProps> = (props) => {
       <Button className="mt-4" onClick={onContinue} onKeyDown={onKeyDown} disabled={disabled} primary>
         {props.buttonText}
       </Button>
-    </>
+    </Fragment>
   );
 };

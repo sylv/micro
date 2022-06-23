@@ -1,12 +1,13 @@
-import { createReadStream, createWriteStream } from "fs";
-import { copyFile, rename } from "fs/promises";
-import { Readable } from "stream";
-import { pipeline } from "stream/promises";
-import { imageThumbnailGenerator, IMAGE_TYPES } from "./image-generator";
-import { logger } from "./logger";
-import { ThumbnailOptions } from "./types";
-import { videoThumbnailGenerator, VIDEO_TYPES } from "./video-generator";
-export * from "./types";
+import { createReadStream, createWriteStream } from 'fs';
+import { copyFile, rename } from 'fs/promises';
+import type { Readable } from 'stream';
+import { pipeline } from 'stream/promises';
+import { imageThumbnailGenerator, IMAGE_TYPES } from './image-generator';
+import { logger } from './logger';
+import type { ThumbnailOptions } from './types';
+import { videoThumbnailGenerator, VIDEO_TYPES } from './video-generator';
+
+export * from './types';
 
 /**
  * Check if the given type is supported.
@@ -23,7 +24,7 @@ export function checkThumbnailSupport(type: string) {
 export async function generateVideoThumbnailToStream(input: string, options?: ThumbnailOptions): Promise<Readable> {
   const output = await videoThumbnailGenerator(input, options);
   const stream = createReadStream(output.path);
-  stream.on("end", () => {
+  stream.on('end', () => {
     output.cleanup().catch((error) => {
       logger(`Failed cleaning up "${output.path}"`, error);
     });
@@ -49,7 +50,7 @@ export async function generateVideoThumbnailToPath(
     await rename(output.path, dest);
   } catch (error: any) {
     // cross-device errors
-    if (error.code === "EXDEV") {
+    if (error.code === 'EXDEV') {
       logger(`Cross-device error moving "${output.path}" to "${dest}", falling back to copy`);
       await copyFile(output.path, dest);
       return;
@@ -107,9 +108,8 @@ export async function generateThumbnailToPath(
     return generateImageThumbnailToPath(input, dest, options);
   } else if (VIDEO_TYPES.has(inputType)) {
     return generateVideoThumbnailToPath(input, dest, options);
-  } else {
-    throw new Error(`Unsupported input type "${inputType}"`);
   }
+  throw new Error(`Unsupported input type "${inputType}"`);
 }
 
 /**
@@ -125,12 +125,11 @@ export async function generateThumbnailToStream(
   if (IMAGE_TYPES.has(inputType)) {
     return generateImageThumbnailToStream(input, options);
   } else if (VIDEO_TYPES.has(inputType)) {
-    if (typeof input !== "string") {
-      throw new Error("Video thumbnails can only be generated given a path.");
+    if (typeof input !== 'string') {
+      throw new TypeError('Video thumbnails can only be generated given a path.');
     }
 
     return generateVideoThumbnailToStream(input, options);
-  } else {
-    throw new Error(`Unsupported input type "${inputType}"`);
   }
+  throw new Error(`Unsupported input type "${inputType}"`);
 }

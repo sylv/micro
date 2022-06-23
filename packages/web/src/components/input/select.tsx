@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { SelectHTMLAttributes } from "react";
+import type { SelectHTMLAttributes } from "react";
+import React from "react";
 import { ChevronDown } from "react-feather";
 import { inputClasses, InputContainer } from "./input-container";
 
@@ -9,10 +10,10 @@ export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement
   suffix?: React.ReactNode;
 }
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>((
   { prefix, suffix, className, children, ...rest },
   ref
-) {
+) => {
   const classes = classNames(className, inputClasses, "appearance-none pr-8");
 
   return (

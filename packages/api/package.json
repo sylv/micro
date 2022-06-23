@@ -10,8 +10,9 @@
         "node": ">=16"
     },
     "scripts": {
-        "watch": "pnpm tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
-        "build": "rm -rf ./dist && pnpm tsup src/main.ts src/types.ts src/migrations/* --dts --sourcemap --target node16",
+        "watch": "tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
+        "build": "rm -rf ./dist && tsup src/main.ts src/types.ts src/migrations/* --dts --sourcemap --target node16",
+        "lint": "eslint src --fix --cache",
         "start": "node ./dist/main.js",
         "test": "jest"
     },
@@ -40,13 +41,11 @@
         "fastify": "^3.29.0",
         "file-type": "^16",
         "get-stream": "^6.0.1",
-        "http-status-codes": "^2.2.0",
         "istextorbinary": "^6.0.0",
         "luxon": "^2.3.2",
         "mime-types": "^2.1.35",
         "ms": "^3.0.0-canary.1",
         "nanoid": "^3.3.4",
-        "next": "^12.1.6",
         "normalize-url": "^6",
         "passport": "^0.5.2",
         "passport-jwt": "^4.0.0",
@@ -59,9 +58,8 @@
     },
     "devDependencies": {
         "@mikro-orm/cli": "^5.2.0",
-        "@swc/core": "^1.2.175",
-        "@sylo-digital/scripts": "^1.0.0",
-        "@tsconfig/node16": "^1.0.2",
+        "@swc/core": "^1.2.204",
+        "@sylo-digital/scripts": "^1.0.2",
         "@types/bcrypt": "^5.0.0",
         "@types/dedent": "^0.7.0",
         "@types/jest": "^27.4.1",
@@ -72,7 +70,6 @@
         "@types/passport-local": "^1.0.34",
         "@types/sharp": "^0.30.2",
         "jest": "^28.1.0",
-        "nodemon": "^2.0.16",
         "ts-node": "^10.7.0",
         "tsup": "^5.12.6",
         "typescript": "^4.6.4"
@@ -80,8 +77,8 @@
     "mikro-orm": {
         "useTsNode": true,
         "configPaths": [
-            "./src/mikro-orm.config.ts",
-            "./dist/mikro-orm.config.js"
+            "./src/orm.ts",
+            "./dist/orm.js"
         ]
     },
     "jest": {

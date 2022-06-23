@@ -1,3 +1,3 @@
-import { debuglog } from "util";
+import { debuglog } from 'util';
 
-export const logger = debuglog("thumbnail-generator");
+export const logger = debuglog('thumbnail-generator');

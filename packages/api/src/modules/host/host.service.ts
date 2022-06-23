@@ -1,12 +1,12 @@
-import { BadRequestException, ForbiddenException } from "@nestjs/common";
-import normalizeUrl from "normalize-url";
-import { MicroHost } from "../../classes/MicroHost";
-import { config } from "../../config";
-import { User } from "../user/user.entity";
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
+import normalizeUrl from 'normalize-url';
+import type { MicroHost } from '../../classes/MicroHost';
+import { config } from '../../config';
+import type { User } from '../user/user.entity';
 
 export class HostService {
   formatHostUrl(url: string, username: string, path?: string | null) {
-    const formatted = url.replace("{{username}}", username);
+    const formatted = url.replace('{{username}}', username);
     if (path) return formatted + path;
     return formatted;
   }
@@ -25,7 +25,7 @@ export class HostService {
       if (tags && host.tags) {
         const hasTags = host.tags.every((tag) => tags.includes(tag));
         if (!hasTags) {
-          throw new ForbiddenException("Missing host authorisation.");
+          throw new ForbiddenException('Missing host authorisation.');
         }
       }
 
@@ -37,7 +37,7 @@ export class HostService {
 
   checkUserCanUploadTo(host: MicroHost, user: User) {
     if (host.tags && !host.tags.every((tag) => user.tags.includes(tag))) {
-      throw new ForbiddenException("You are not allowed to upload to that host.");
+      throw new ForbiddenException('You are not allowed to upload to that host.');
     }
 
     return true;

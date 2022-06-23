@@ -1,4 +1,4 @@
-import { Migration } from "@mikro-orm/migrations";
+import { Migration } from '@mikro-orm/migrations';
 
 export class Migration20220620182830 extends Migration {
   async up(): Promise<void> {

@@ -1,11 +1,11 @@
-import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
-import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
-import { User } from "../user/user.entity";
+import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
+import { User } from '../user/user.entity';
 
-@Entity({ tableName: "invites" })
+@Entity({ tableName: 'invites' })
 export class Invite {
-  @PrimaryKey({ type: String })
-  id = generateDeleteKey();
+  @PrimaryKey()
+  id: string = generateDeleteKey();
 
   @Property({ nullable: true })
   permissions?: number;
@@ -32,5 +32,5 @@ export class Invite {
     return `/invite/${this.id}`;
   }
 
-  [OptionalProps]: "expiresAt" | "createdAt" | "invited" | "inviter" | "permissions" | "expired" | "url";
+  [OptionalProps]: 'expiresAt' | 'createdAt' | 'invited' | 'inviter' | 'permissions' | 'expired' | 'url';
 }

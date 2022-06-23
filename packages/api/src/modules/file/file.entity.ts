@@ -8,17 +8,17 @@ import {
   OptionalProps,
   PrimaryKey,
   Property,
-} from "@mikro-orm/core";
-import { checkThumbnailSupport } from "@ryanke/thumbnail-generator";
-import mimeType from "mime-types";
-import { config } from "../../config";
-import { generateDeleteKey } from "../../helpers/generate-delete-key.helper";
-import { WithHostname } from "../host/host.entity";
-import { Thumbnail } from "../thumbnail/thumbnail.entity";
-import { User } from "../user/user.entity";
-import { FileMetadata } from "./file-metadata.embeddable";
+} from '@mikro-orm/core';
+import { checkThumbnailSupport } from '@ryanke/thumbnail-generator';
+import mimeType from 'mime-types';
+import { config } from '../../config';
+import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
+import { WithHostname } from '../host/host.entity';
+import { Thumbnail } from '../thumbnail/thumbnail.entity';
+import { User } from '../user/user.entity';
+import { FileMetadata } from './file-metadata.embeddable';
 
-@Entity({ tableName: "files" })
+@Entity({ tableName: 'files' })
 export class File extends WithHostname {
   @PrimaryKey()
   id: string;
@@ -35,7 +35,7 @@ export class File extends WithHostname {
   @Embedded(() => FileMetadata, { nullable: true })
   metadata?: FileMetadata;
 
-  @Property({ type: String, lazy: true, nullable: true, hidden: true })
+  @Property({ lazy: true, nullable: true, hidden: true })
   deleteKey?: string = generateDeleteKey();
 
   @Property({ nullable: true })
@@ -57,7 +57,7 @@ export class File extends WithHostname {
 
   @Property({ persist: false })
   get extension() {
-    return mimeType.extension(this.type) || "bin";
+    return mimeType.extension(this.type) || 'bin';
   }
 
   @Property({ persist: false })
@@ -70,7 +70,7 @@ export class File extends WithHostname {
   get urls() {
     const owner = this.owner.unwrap();
     const host = this.hostname ? config.hosts.find((host) => host.normalised === this.hostname) : null;
-    const baseUrl = host ? host.url.replace("{{username}}", owner.username) : config.rootHost.url;
+    const baseUrl = host ? host.url.replace('{{username}}', owner.username) : config.rootHost.url;
     return {
       view: baseUrl + this.paths.view,
       direct: baseUrl + this.paths.direct,
@@ -100,5 +100,5 @@ export class File extends WithHostname {
     };
   }
 
-  [OptionalProps]: "paths" | "urls" | "displayName" | "createdAt" | "thumbnail" | "name" | "deleteKey" | "extension";
+  [OptionalProps]: 'paths' | 'urls' | 'displayName' | 'createdAt' | 'thumbnail' | 'name' | 'deleteKey' | 'extension';
 }

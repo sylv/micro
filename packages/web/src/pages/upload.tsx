@@ -1,6 +1,7 @@
-import { GetFileData } from "@ryanke/micro-api";
+import type { GetFileData } from "@ryanke/micro-api";
 import { useRouter } from "next/router";
-import React, { ChangeEventHandler, DragEventHandler, useEffect, useRef, useState } from "react";
+import type { ChangeEventHandler, DragEventHandler} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Upload as UploadIcon } from "react-feather";
 import { Button } from "../components/button/button";
 import { Card } from "../components/card";
@@ -123,7 +124,7 @@ export default function Upload() {
               prefix="Host"
               className="shrink-0 w-40 mr-2"
               value={selectedHost}
-              onChange={(event) => setSelectedHost(event.target.value)}
+              onChange={(event) => { setSelectedHost(event.target.value); }}
             >
               {config.data.hosts.map((host) => (
                 <option key={host.normalised} value={host.normalised} selected={host.normalised === selectedHost}>
@@ -135,7 +136,7 @@ export default function Upload() {
               Upload
             </Button>
           </div>
-          <span className="mt-4 cursor-pointer text-brand" onClick={() => setFile(null)}>
+          <span className="mt-4 cursor-pointer text-brand" onClick={() => { setFile(null); }}>
             Cancel
           </span>
         </Card>

@@ -1,6 +1,7 @@
 import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
-import { FC, Fragment, useRef, useState } from "react";
+import type { FC} from "react";
+import { Fragment, useRef, useState } from "react";
 import { Check, ChevronDown } from "react-feather";
 import { inputClasses, InputContainer } from "./input/input-container";
 

@@ -16,6 +16,7 @@
 !pnpm-workspace.yaml
 !tsup.config.ts
 !wrapper.sh
+!turbo.json
 
 packages/api/data
 packages/api/dist

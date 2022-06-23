@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { Download as DownloadIcon } from "react-feather";
 import { downloadFile } from "../helpers/download.helper";
 import { generateConfig } from "../helpers/generate-config.helper";
@@ -31,11 +31,11 @@ export const ShareXButton: FC<ShareXButtonProps> = (props) => {
         </Button>
       }
     >
-      <DropdownTab onClick={() => onDownloadClick(false)}>
+      <DropdownTab onClick={() => { onDownloadClick(false); }}>
         <p className="text-xs text-gray-600">Recommended</p>
         Embedded
       </DropdownTab>
-      <DropdownTab onClick={() => onDownloadClick(true)}>Direct</DropdownTab>
+      <DropdownTab onClick={() => { onDownloadClick(true); }}>Direct</DropdownTab>
     </Dropdown>
   );
 };

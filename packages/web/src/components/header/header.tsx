@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FC } from "react";
+import type { FC } from "react";
 import { Crop } from "react-feather";
 import { usePaths } from "../../hooks/use-paths.helper";
 import { useUser } from "../../hooks/use-user.helper";

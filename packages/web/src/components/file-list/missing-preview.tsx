@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Icon } from "react-feather";
+import type { FC } from "react";
+import type { Icon } from "react-feather";
 
 export const MissingPreview: FC<{ icon: Icon; text: string; type: string }> = ({ icon: Icon, type, text }) => {
   return (

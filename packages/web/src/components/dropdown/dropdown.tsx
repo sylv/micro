@@ -1,6 +1,7 @@
-import { Menu, Transition } from "@headlessui/react";
-import classNames from "classnames";
-import React, { FC, Fragment, ReactNode } from "react";
+import { Menu, Transition } from '@headlessui/react';
+import classNames from 'classnames';
+import type { FC, ReactNode } from 'react';
+import React, { Fragment } from 'react';
 
 export interface DropdownProps {
   trigger: ReactNode;
@@ -10,14 +11,14 @@ export interface DropdownProps {
 
 export const Dropdown: FC<DropdownProps> = ({ trigger, children, className }) => {
   const itemsClasses = classNames(
-    "absolute right-0 mt-2 overflow-y-auto rounded-md shadow-2xl bg-dark-300 focus:outline-none max-h-56 min-w-[10em]",
+    'absolute right-0 mt-2 overflow-y-auto rounded-md shadow-2xl bg-dark-300 focus:outline-none max-h-56 min-w-[10em]',
     className
   );
 
   return (
     <Menu as="div" className="relative z-10">
       {({ open }) => (
-        <>
+        <Fragment>
           <Menu.Button as={Fragment}>{trigger}</Menu.Button>
           <Transition
             show={open}
@@ -32,7 +33,7 @@ export const Dropdown: FC<DropdownProps> = ({ trigger, children, className }) =>
               {children}
             </Menu.Items>
           </Transition>
-        </>
+        </Fragment>
       )}
     </Menu>
   );

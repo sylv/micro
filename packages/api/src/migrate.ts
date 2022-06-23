@@ -1,12 +1,12 @@
-import type { Options } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
-import { checkForOldDatabase, migrateOldDatabase } from "./helpers/migrate-old-database";
-import mikroOrmConfig, { migrationsTableName, ormLogger } from "./mikro-orm.config";
+import type { Options } from '@mikro-orm/core';
+import { MikroORM } from '@mikro-orm/core';
+import type { EntityManager } from '@mikro-orm/postgresql';
+import { checkForOldDatabase, migrateOldDatabase } from './helpers/migrate-old-database';
+import mikroOrmConfig, { migrationsTableName, ormLogger } from './orm';
 
 export const migrate = async (
   config: Options = mikroOrmConfig,
-  skipLock = process.env.SKIP_MIGRATION_LOCK === "true"
+  skipLock = process.env.SKIP_MIGRATION_LOCK === 'true'
 ) => {
   const orm = await MikroORM.init(config);
   const em = orm.em.fork({ clear: true }) as EntityManager;

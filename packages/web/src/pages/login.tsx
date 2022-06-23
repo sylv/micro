@@ -1,7 +1,8 @@
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import { Container } from "../components/container";
-import { LoginData, LoginForm } from "../components/login-form";
+import type { LoginData} from "../components/login-form";
+import { LoginForm } from "../components/login-form";
 import { Title } from "../components/title";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { HTTPError } from "../helpers/http.helper";

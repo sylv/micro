@@ -1,6 +1,6 @@
-import { IsOptional, IsString, IsUrl, Matches } from "class-validator";
-import escapeString from "escape-string-regexp";
-import { HostService } from "../modules/host/host.service";
+import { IsOptional, IsString, IsUrl, Matches } from 'class-validator';
+import escapeString from 'escape-string-regexp';
+import { HostService } from '../modules/host/host.service';
 
 export class MicroHost {
   constructor(url: string, tags?: string[], redirect?: string) {
@@ -10,7 +10,7 @@ export class MicroHost {
   }
 
   // https://regex101.com/r/ZR9rpp/1
-  @Matches(/^https?:\/\/[\d.:A-z{}-]+$/)
+  @Matches(/^https?:\/\/[\d.:A-z{}-]+$/u)
   url: string;
 
   @IsString({ each: true })
@@ -26,7 +26,7 @@ export class MicroHost {
   }
 
   get isWildcard() {
-    return this.url.includes("{{username}}");
+    return this.url.includes('{{username}}');
   }
 
   private _pattern?: RegExp;
@@ -39,7 +39,7 @@ export class MicroHost {
   static getWildcardPattern(url: string) {
     const normalised = HostService.normaliseHostUrl(url);
     const escaped = escapeString(normalised);
-    const pattern = escaped.replace("\\{\\{username\\}\\}", "(?<username>[a-z0-9-{}]+?)");
-    return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`);
+    const pattern = escaped.replace('\\{\\{username\\}\\}', '(?<username>[a-z0-9-{}]+?)');
+    return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`, 'u');
   }
 }

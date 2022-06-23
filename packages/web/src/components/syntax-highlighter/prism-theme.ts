@@ -1,95 +1,96 @@
-import { PrismTheme } from "prism-react-renderer";
+import type { PrismTheme } from 'prism-react-renderer';
+
 export const theme: PrismTheme = {
   plain: {
-    backgroundColor: "black",
-    color: "white",
+    backgroundColor: 'black',
+    color: 'white',
   },
   styles: [
     {
-      types: ["comment", "prolog", "doctype", "cdata", "punctuation"],
+      types: ['comment', 'prolog', 'doctype', 'cdata', 'punctuation'],
       style: {
-        color: "#6c6783",
+        color: '#6c6783',
       },
     },
     {
-      types: ["namespace"],
+      types: ['namespace'],
       style: {
         opacity: 0.7,
       },
     },
     {
-      types: ["tag", "operator", "number"],
+      types: ['tag', 'operator', 'number'],
       style: {
-        color: "#ff0080",
+        color: '#ff0080',
       },
     },
     {
-      types: ["function", "parameter", "string"],
+      types: ['function', 'parameter', 'string'],
       style: {
-        color: "var(--atlas-foreground)",
+        color: 'var(--atlas-foreground)',
       },
     },
     {
-      types: ["tag-id", "selector", "atrule-id"],
+      types: ['tag-id', 'selector', 'atrule-id'],
       style: {
-        color: "#eeebff",
+        color: '#eeebff',
       },
     },
     {
-      types: ["attr-name"],
+      types: ['attr-name'],
       style: {
-        color: "#c4b9fe",
+        color: '#c4b9fe',
       },
     },
     {
       types: [
-        "boolean",
-        "entity",
-        "url",
-        "attr-value",
-        "keyword",
-        "control",
-        "directive",
-        "unit",
-        "statement",
-        "regex",
-        "at-rule",
-        "placeholder",
-        "variable",
-        "property",
+        'boolean',
+        'entity',
+        'url',
+        'attr-value',
+        'keyword',
+        'control',
+        'directive',
+        'unit',
+        'statement',
+        'regex',
+        'at-rule',
+        'placeholder',
+        'variable',
+        'property',
       ],
       style: {
-        color: "#f079e6",
+        color: '#f079e6',
       },
     },
     {
-      types: ["deleted"],
+      types: ['deleted'],
       style: {
-        textDecorationLine: "line-through",
+        textDecorationLine: 'line-through',
       },
     },
     {
-      types: ["inserted"],
+      types: ['inserted'],
       style: {
-        textDecorationLine: "underline",
+        textDecorationLine: 'underline',
       },
     },
     {
-      types: ["italic"],
+      types: ['italic'],
       style: {
-        fontStyle: "italic",
+        fontStyle: 'italic',
       },
     },
     {
-      types: ["important", "bold"],
+      types: ['important', 'bold'],
       style: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
       },
     },
     {
-      types: ["important"],
+      types: ['important'],
       style: {
-        color: "#c4b9fe",
+        color: '#c4b9fe',
       },
     },
   ],
