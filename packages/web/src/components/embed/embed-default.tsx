@@ -1,4 +1,4 @@
-import type { Embeddable } from "./embeddable";
+import type { Embeddable } from './embeddable';
 
 export const EmbedDefault = ({ data }: { data: Embeddable }) => {
   return (

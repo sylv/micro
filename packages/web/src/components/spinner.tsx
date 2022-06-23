@@ -1,15 +1,15 @@
-import classNames from "classnames";
-import type { FC, HTMLAttributes } from "react";
+import classNames from 'classnames';
+import type { FC, HTMLAttributes } from 'react';
 
 export interface SpinnerProps extends HTMLAttributes<SVGElement> {
-  size?: "small" | "medium" | "large";
+  size?: 'small' | 'medium' | 'large';
 }
 
 export const Spinner: FC<SpinnerProps> = ({ size, className, ...rest }) => {
-  const classes = classNames("animate-spin", className, {
-    "w-4": size === "small",
-    "w-6": !size || size === "medium",
-    "w-9": size === "large",
+  const classes = classNames('animate-spin', className, {
+    'w-4': size === 'small',
+    'w-6': !size || size === 'medium',
+    'w-9': size === 'large',
   });
 
   return (
@@ -19,7 +19,7 @@ export const Spinner: FC<SpinnerProps> = ({ size, className, ...rest }) => {
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-       />
+      />
     </svg>
   );
 };

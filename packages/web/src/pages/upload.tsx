@@ -1,21 +1,21 @@
-import type { GetFileData } from "@ryanke/micro-api";
-import { useRouter } from "next/router";
-import type { ChangeEventHandler, DragEventHandler} from "react";
-import React, { useEffect, useRef, useState } from "react";
-import { Upload as UploadIcon } from "react-feather";
-import { Button } from "../components/button/button";
-import { Card } from "../components/card";
-import { Container } from "../components/container";
-import { Select } from "../components/input/select";
-import { PageLoader } from "../components/page-loader";
-import { Spinner } from "../components/spinner";
-import { Title } from "../components/title";
-import { getErrorMessage } from "../helpers/get-error-message.helper";
-import { http } from "../helpers/http.helper";
-import { replaceUsername } from "../helpers/replace-username.helper";
-import { useConfig } from "../hooks/use-config.hook";
-import { useToasts } from "../hooks/use-toasts.helper";
-import { useUser } from "../hooks/use-user.helper";
+import type { GetFileData } from '@ryanke/micro-api';
+import { useRouter } from 'next/router';
+import type { ChangeEventHandler, DragEventHandler } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Upload as UploadIcon } from 'react-feather';
+import { Button } from '../components/button/button';
+import { Card } from '../components/card';
+import { Container } from '../components/container';
+import { Select } from '../components/input/select';
+import { PageLoader } from '../components/page-loader';
+import { Spinner } from '../components/spinner';
+import { Title } from '../components/title';
+import { getErrorMessage } from '../helpers/get-error-message.helper';
+import { http } from '../helpers/http.helper';
+import { replaceUsername } from '../helpers/replace-username.helper';
+import { useConfig } from '../hooks/use-config.hook';
+import { useToasts } from '../hooks/use-toasts.helper';
+import { useUser } from '../hooks/use-user.helper';
 
 export default function Upload() {
   const user = useUser();
@@ -29,7 +29,7 @@ export default function Upload() {
   const config = useConfig();
 
   useEffect(() => {
-    if (user.error) router.replace("/");
+    if (user.error) router.replace('/');
   }, [user.error, router]);
 
   const onDragEvent =
@@ -68,9 +68,9 @@ export default function Upload() {
       const form = new FormData();
       form.append(file.name, file);
       const headers: HeadersInit = {};
-      if (selectedHost) headers["X-Micro-Host"] = selectedHost;
+      if (selectedHost) headers['X-Micro-Host'] = selectedHost;
       const response = await http(`file`, {
-        method: "POST",
+        method: 'POST',
         body: form,
         headers: headers,
       });
@@ -84,7 +84,7 @@ export default function Upload() {
 
       location.href = body.urls.view;
     } catch (error: unknown) {
-      const message = getErrorMessage(error) ?? "An unknown error occured.";
+      const message = getErrorMessage(error) ?? 'An unknown error occured.';
       setToast({ error: true, text: message });
     } finally {
       setFile(null);
@@ -124,7 +124,7 @@ export default function Upload() {
               prefix="Host"
               className="shrink-0 w-40 mr-2"
               value={selectedHost}
-              onChange={(event) => { setSelectedHost(event.target.value); }}
+              onChange={(event) => setSelectedHost(event.target.value)}
             >
               {config.data.hosts.map((host) => (
                 <option key={host.normalised} value={host.normalised} selected={host.normalised === selectedHost}>
@@ -136,7 +136,12 @@ export default function Upload() {
               Upload
             </Button>
           </div>
-          <span className="mt-4 cursor-pointer text-brand" onClick={() => { setFile(null); }}>
+          <span
+            className="mt-4 cursor-pointer text-brand"
+            onClick={() => {
+              setFile(null);
+            }}
+          >
             Cancel
           </span>
         </Card>

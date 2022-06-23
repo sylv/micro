@@ -1,8 +1,8 @@
-import { GetUserData } from "@ryanke/micro-api";
-import Router from "next/router";
-import useSWR, { mutate } from "swr";
-import { LoginData } from "../components/login-form";
-import { http } from "../helpers/http.helper";
+import { GetUserData } from '@ryanke/micro-api';
+import Router from 'next/router';
+import useSWR, { mutate } from 'swr';
+import { LoginData } from '../components/login-form';
+import { http } from '../helpers/http.helper';
 
 /**
  * Sign the user in with a username/password combo.
@@ -10,14 +10,14 @@ import { http } from "../helpers/http.helper";
  */
 export async function login(data: LoginData) {
   await http(`auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
 
   mutate(`user`, null, true);
   process.nextTick(() => {
-    Router.push("/dashboard");
+    Router.push('/dashboard');
   });
 }
 
@@ -25,9 +25,9 @@ export async function login(data: LoginData) {
  * Sign the user out.
  */
 export async function logout() {
-  await http(`auth/logout`, { method: "POST" });
+  await http(`auth/logout`, { method: 'POST' });
   mutate(`user`, null, false);
-  Router.push("/");
+  Router.push('/');
 }
 
 export const useUser = () => {

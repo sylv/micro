@@ -1,25 +1,25 @@
-import type { GetFileData } from "@ryanke/micro-api";
-import classNames from "classnames";
-import copyToClipboard from "copy-to-clipboard";
-import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { useRouter } from "next/router";
-import type { FC, ReactNode} from "react";
-import { useState } from "react";
-import { Download, Share, Trash } from "react-feather";
-import useSWR from "swr";
-import { Container } from "../../components/container";
-import { Embed } from "../../components/embed/embed";
-import { PageLoader } from "../../components/page-loader";
-import { Spinner } from "../../components/spinner";
-import { Title } from "../../components/title";
-import { downloadUrl } from "../../helpers/download.helper";
-import { fetcher } from "../../helpers/fetcher.helper";
-import { formatBytes } from "../../helpers/format-bytes.helper";
-import { getErrorMessage } from "../../helpers/get-error-message.helper";
-import { http, HTTPError } from "../../helpers/http.helper";
-import { useToasts } from "../../hooks/use-toasts.helper";
-import { useUser } from "../../hooks/use-user.helper";
-import ErrorPage from "../_error";
+import type { GetFileData } from '@ryanke/micro-api';
+import classNames from 'classnames';
+import copyToClipboard from 'copy-to-clipboard';
+import type { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { useRouter } from 'next/router';
+import type { FC, ReactNode } from 'react';
+import { useState } from 'react';
+import { Download, Share, Trash } from 'react-feather';
+import useSWR from 'swr';
+import { Container } from '../../components/container';
+import { Embed } from '../../components/embed/embed';
+import { PageLoader } from '../../components/page-loader';
+import { Spinner } from '../../components/spinner';
+import { Title } from '../../components/title';
+import { downloadUrl } from '../../helpers/download.helper';
+import { fetcher } from '../../helpers/fetcher.helper';
+import { formatBytes } from '../../helpers/format-bytes.helper';
+import { getErrorMessage } from '../../helpers/get-error-message.helper';
+import { http, HTTPError } from '../../helpers/http.helper';
+import { useToasts } from '../../hooks/use-toasts.helper';
+import { useUser } from '../../hooks/use-user.helper';
+import ErrorPage from '../_error';
 
 export interface FileProps {
   fallbackData: GetFileData;
@@ -31,7 +31,7 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
   onClick,
 }) => {
   const classes = classNames(
-    "flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300",
+    'flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300',
     className
   );
 
@@ -74,7 +74,7 @@ export default function File({ fallbackData }: FileProps) {
     try {
       await downloadUrl(file.data!.paths.direct, file.data!.displayName);
     } catch (error: unknown) {
-      const message = getErrorMessage(error) ?? "An unknown error occurred";
+      const message = getErrorMessage(error) ?? 'An unknown error occurred';
       setToast({ error: true, text: message });
     }
   };
@@ -89,14 +89,14 @@ export default function File({ fallbackData }: FileProps) {
     try {
       setDeleting(true);
       await http(`file/${file.data.id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       setDeleting(false);
       setToast({ text: `Deleted "${file.data.displayName}"` });
-      router.replace("/dashboard");
+      router.replace('/dashboard');
     } catch (error: unknown) {
-      const message = getErrorMessage(error) ?? "An unknown error occurred";
+      const message = getErrorMessage(error) ?? 'An unknown error occurred';
       setToast({ error: true, text: message });
     } finally {
       setDeleting(false);
@@ -132,7 +132,7 @@ export default function File({ fallbackData }: FileProps) {
             {user.data?.id === file.data.owner?.id && (
               <FileOption onClick={deleteFile} className="text-red-400 hover:text-red-500">
                 <Trash className="h-4 mr-1" />
-                {deleting ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
+                {deleting ? <Spinner size="small" /> : confirm ? 'Are you sure?' : 'Delete'}
               </FileOption>
             )}
           </div>

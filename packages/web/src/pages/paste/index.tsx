@@ -70,7 +70,6 @@ export default function Paste() {
   const [error, setError] = useState<any>(null);
   const [title, setTitle] = useState<string | undefined>();
   const inferredExtension = extension || (content.includes('# ') ? 'md' : 'txt');
-  console.log({ extension, inferredExtension });
   const submitDisabled = !content || pasting;
 
   const submit = async () => {
@@ -131,7 +130,9 @@ export default function Paste() {
         className="w-full bg-dark-400 outline-none focus:outline-purple-400 focus:outline-1 mb-4 px-2 py-1"
         placeholder="Title"
         value={title}
-        onChange={(event) => { setTitle(event.target.value || undefined); }}
+        onChange={(event) => {
+          setTitle(event.target.value || undefined);
+        }}
       />
       <textarea
         className="w-full h-64 p-2 bg-dark-400 outline-none focus:outline-purple-400 focus:outline-1 rounded placeholder:text-gray-600"
@@ -146,15 +147,33 @@ export default function Paste() {
       />
       <div className="flex gap-2 justify-end">
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={burn} onChange={(event) => { setBurn(event.target.checked); }} />
+          <input
+            type="checkbox"
+            checked={burn}
+            onChange={(event) => {
+              setBurn(event.target.checked);
+            }}
+          />
           <span className="truncate">Destroy after viewing</span>
         </label>
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={paranoid} onChange={(event) => { setParanoid(event.target.checked); }} />
+          <input
+            type="checkbox"
+            checked={paranoid}
+            onChange={(event) => {
+              setParanoid(event.target.checked);
+            }}
+          />
           Paranoid
         </label>
         <label className="flex gap-2 items-center">
-          <input type="checkbox" checked={encrypt} onChange={(event) => { setEncrypt(event.target.checked); }} />
+          <input
+            type="checkbox"
+            checked={encrypt}
+            onChange={(event) => {
+              setEncrypt(event.target.checked);
+            }}
+          />
           Encrypt
         </label>
         <Select

@@ -107,6 +107,7 @@ export class UserController {
     }
 
     target.tags.push(tag.toLowerCase());
+    await this.userRepo.persistAndFlush(target);
     return { added: true, tag };
   }
 
@@ -122,6 +123,7 @@ export class UserController {
     }
 
     target.tags = target.tags.filter((existing) => existing !== tag);
+    await this.userRepo.persistAndFlush(target);
     return { removed: true, tag };
   }
 }

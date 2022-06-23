@@ -1,14 +1,16 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { FastifyRequest } from 'fastify';
 import { config } from '../config';
 import { UserId } from './auth/auth.decorators';
 import { UserService } from './user/user.service';
+import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard';
 
 @Controller()
 export class AppController {
   constructor(private readonly userService: UserService) {}
 
   @Get('config')
+  @UseGuards(OptionalJWTAuthGuard)
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {
     let tags: string[] = [];
     if (userId) {

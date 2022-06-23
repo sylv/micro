@@ -1,13 +1,13 @@
-import Router from "next/router";
-import { useEffect, useState } from "react";
-import { Container } from "../components/container";
-import type { LoginData} from "../components/login-form";
-import { LoginForm } from "../components/login-form";
-import { Title } from "../components/title";
-import { getErrorMessage } from "../helpers/get-error-message.helper";
-import { HTTPError } from "../helpers/http.helper";
-import { useToasts } from "../hooks/use-toasts.helper";
-import { login, useUser } from "../hooks/use-user.helper";
+import Router from 'next/router';
+import { useEffect, useState } from 'react';
+import { Container } from '../components/container';
+import type { LoginData } from '../components/login-form';
+import { LoginForm } from '../components/login-form';
+import { Title } from '../components/title';
+import { getErrorMessage } from '../helpers/get-error-message.helper';
+import { HTTPError } from '../helpers/http.helper';
+import { useToasts } from '../hooks/use-toasts.helper';
+import { login, useUser } from '../hooks/use-user.helper';
 
 export default function Login() {
   const setToast = useToasts();
@@ -15,11 +15,11 @@ export default function Login() {
   const user = useUser();
 
   useEffect(() => {
-    if (user.data) Router.replace("/dashboard");
+    if (user.data) Router.replace('/dashboard');
   }, [user]);
 
   useEffect(() => {
-    Router.prefetch("/dashboard");
+    Router.prefetch('/dashboard');
   }, []);
 
   async function onContinue(data: LoginData) {
@@ -28,9 +28,9 @@ export default function Login() {
       await login(data);
     } catch (error: unknown) {
       if (error instanceof HTTPError && error.status === 401) {
-        setToast({ error: true, text: "Your username or password was incorrect." });
+        setToast({ error: true, text: 'Your username or password was incorrect.' });
       } else {
-        const message = getErrorMessage(error) ?? "An unknown error occured.";
+        const message = getErrorMessage(error) ?? 'An unknown error occured.';
         setToast({ error: true, text: message });
       }
     } finally {

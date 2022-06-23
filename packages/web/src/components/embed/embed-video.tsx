@@ -1,4 +1,4 @@
-import type { Embeddable } from "./embeddable";
+import type { Embeddable } from './embeddable';
 
 export const EmbedVideo = ({ file }: { file: Embeddable }) => {
   return (
@@ -10,9 +10,9 @@ export const EmbedVideo = ({ file }: { file: Embeddable }) => {
 
 EmbedVideo.embeddable = (data: Embeddable) => {
   switch (data.type) {
-    case "video/mp4":
-    case "video/webm":
-    case "video/ogg":
+    case 'video/mp4':
+    case 'video/webm':
+    case 'video/ogg':
       return true;
     default:
       return false;

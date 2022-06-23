@@ -1,18 +1,18 @@
-import classNames from "classnames";
-import type { FC } from "react";
-import { Crop } from "react-feather";
-import { usePaths } from "../../hooks/use-paths.helper";
-import { useUser } from "../../hooks/use-user.helper";
-import { Button } from "../button/button";
-import { Container } from "../container";
-import { Link } from "../link";
-import { HeaderUser } from "./header-user";
+import classNames from 'classnames';
+import type { FC } from 'react';
+import { Crop } from 'react-feather';
+import { usePaths } from '../../hooks/use-paths.helper';
+import { useUser } from '../../hooks/use-user.helper';
+import { Button } from '../button/button';
+import { Container } from '../container';
+import { Link } from '../link';
+import { HeaderUser } from './header-user';
 
 export const Header: FC = () => {
   const user = useUser();
   const paths = usePaths();
-  const classes = classNames("relative z-10 flex items-center justify-between h-16 my-auto transition", {
-    "pointer-events-none": paths.loading,
+  const classes = classNames('relative z-10 flex items-center justify-between h-16 my-auto transition', {
+    'pointer-events-none': paths.loading,
     invisible: paths.loading,
   });
 

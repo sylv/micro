@@ -81,7 +81,7 @@ export class FileService implements OnApplicationBootstrap {
     const typeStream = stream.pipe(new PassThrough());
     const uploadStream = stream.pipe(new PassThrough());
     const type = (await getStreamType(multipart.filename, typeStream)) ?? multipart.mimetype;
-    if (config.allowTypes && !config.allowTypes.has(type) === false) {
+    if (config.allowTypes && !config.allowTypes.has(type)) {
       throw new BadRequestException(`"${type}" is not supported by this server.`);
     }
 

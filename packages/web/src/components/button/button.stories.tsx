@@ -1,13 +1,13 @@
-import type { Meta, Story } from "@storybook/react";
-import type { ButtonProps } from "./button";
-import { Button } from "./button";
+import type { Meta, Story } from '@storybook/react';
+import type { ButtonProps } from './button';
+import { Button } from './button';
 
 export default {
   component: Button,
-  title: "Components/Button",
+  title: 'Components/Button',
   args: {
     primary: true,
-    children: "Button",
+    children: 'Button',
   },
 } as Meta<ButtonProps>;
 
@@ -21,4 +21,4 @@ export const Disabled = Template.bind({});
 Disabled.args = { disabled: true };
 
 export const LongContent = Template.bind({});
-LongContent.args = { children: "Some very long button content that will overflow" };
+LongContent.args = { children: 'Some very long button content that will overflow' };

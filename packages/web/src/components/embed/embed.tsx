@@ -1,12 +1,12 @@
-import type { FC} from "react";
-import { useMemo } from "react";
-import { EmbedContainer } from "./embed-container";
-import { EmbedDefault } from "./embed-default";
-import { EmbedImage } from "./embed-image";
-import { EmbedMarkdown } from "./embed-markdown";
-import { EmbedText } from "./embed-text";
-import { EmbedVideo } from "./embed-video";
-import type { Embeddable } from "./embeddable";
+import type { FC } from 'react';
+import { useMemo } from 'react';
+import { EmbedContainer } from './embed-container';
+import { EmbedDefault } from './embed-default';
+import { EmbedImage } from './embed-image';
+import { EmbedMarkdown } from './embed-markdown';
+import { EmbedText } from './embed-text';
+import { EmbedVideo } from './embed-video';
+import type { Embeddable } from './embeddable';
 
 export const Embed: FC<{ data: Embeddable }> = ({ data }) => {
   const isText = useMemo(() => EmbedText.embeddable(data), [data]);

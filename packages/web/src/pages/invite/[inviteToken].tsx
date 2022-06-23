@@ -1,17 +1,17 @@
-import type { GetInviteData } from "@ryanke/micro-api";
-import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import { Container } from "../../components/container";
-import type { LoginData} from "../../components/login-form";
-import { LoginForm } from "../../components/login-form";
-import { PageLoader } from "../../components/page-loader";
-import { Time } from "../../components/time";
-import { Title } from "../../components/title";
-import { getErrorMessage } from "../../helpers/get-error-message.helper";
-import { http } from "../../helpers/http.helper";
-import { useToasts } from "../../hooks/use-toasts.helper";
-import Error from "../_error";
+import type { GetInviteData } from '@ryanke/micro-api';
+import Router, { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { Container } from '../../components/container';
+import type { LoginData } from '../../components/login-form';
+import { LoginForm } from '../../components/login-form';
+import { PageLoader } from '../../components/page-loader';
+import { Time } from '../../components/time';
+import { Title } from '../../components/title';
+import { getErrorMessage } from '../../helpers/get-error-message.helper';
+import { http } from '../../helpers/http.helper';
+import { useToasts } from '../../hooks/use-toasts.helper';
+import Error from '../_error';
 
 export default function Invite() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Invite() {
   const expiresAt = invite.data?.expiresAt;
 
   useEffect(() => {
-    Router.prefetch("/login");
+    Router.prefetch('/login');
   }, []);
 
   if (invite.error) {
@@ -37,15 +37,15 @@ export default function Invite() {
     try {
       setLoading(true);
       await http(`user`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, invite: inviteToken }),
       });
 
-      Router.push("/login");
-      setToast({ text: "Account created successfully. Please sign in." });
+      Router.push('/login');
+      setToast({ text: 'Account created successfully. Please sign in.' });
     } catch (error: unknown) {
-      const message = getErrorMessage(error) ?? "An unknown error occurred.";
+      const message = getErrorMessage(error) ?? 'An unknown error occurred.';
       setToast({ error: true, text: message });
     } finally {
       setLoading(false);

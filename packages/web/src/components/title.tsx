@@ -1,8 +1,8 @@
-import Head from "next/head";
-import type { FC } from "react";
+import Head from 'next/head';
+import type { FC } from 'react';
 
 export const Title: FC<{ children: string | string[] }> = ({ children }) => {
-  const title = Array.isArray(children) ? children.join(" ") : children;
+  const title = Array.isArray(children) ? children.join(' ') : children;
   return (
     <Head>
       <title>{children} &mdash; micro</title>

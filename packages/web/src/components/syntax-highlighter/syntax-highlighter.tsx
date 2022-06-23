@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import type { Language } from 'prism-react-renderer';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import type { HTMLProps} from 'react';
+import type { HTMLProps } from 'react';
 import { memo, useState } from 'react';
 import { theme } from './prism-theme';
 import { SyntaxHighlighterControls } from './syntax-highlighter-controls';

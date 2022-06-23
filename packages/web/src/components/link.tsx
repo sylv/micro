@@ -1,5 +1,5 @@
-import NextLink from "next/link";
-import type { FC, HTMLAttributes } from "react";
+import NextLink from 'next/link';
+import type { FC, HTMLAttributes } from 'react';
 
 export interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;

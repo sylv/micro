@@ -1,12 +1,12 @@
-import type { Meta, Story } from "@storybook/react";
-import type { SelectProps } from "./select";
-import { Select } from "./select";
+import type { Meta, Story } from '@storybook/react';
+import type { SelectProps } from './select';
+import { Select } from './select';
 
 export default {
   component: Select,
-  title: "Components/Select",
+  title: 'Components/Select',
   args: {
-    placeholder: "Placeholder",
+    placeholder: 'Placeholder',
   },
 } as Meta<SelectProps>;
 

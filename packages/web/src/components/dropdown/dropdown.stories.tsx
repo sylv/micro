@@ -1,13 +1,13 @@
-import type { Meta, Story } from "@storybook/react";
-import { Button } from "../button/button";
-import type { DropdownProps } from "./dropdown";
-import { Dropdown } from "./dropdown";
-import { DropdownDivider } from "./dropdown-divider";
-import { DropdownTab } from "./dropdown-tab";
+import type { Meta, Story } from '@storybook/react';
+import { Button } from '../button/button';
+import type { DropdownProps } from './dropdown';
+import { Dropdown } from './dropdown';
+import { DropdownDivider } from './dropdown-divider';
+import { DropdownTab } from './dropdown-tab';
 
 export default {
   component: Dropdown,
-  title: "Components/Dropdown",
+  title: 'Components/Dropdown',
   args: {
     trigger: <Button>Click Me</Button>,
   },
