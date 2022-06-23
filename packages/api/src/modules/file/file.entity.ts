@@ -69,7 +69,10 @@ export class File extends WithHostname {
   @Property({ persist: false })
   get urls() {
     const owner = this.owner.unwrap();
-    const host = this.hostname ? config.hosts.find((host) => host.normalised === this.hostname) : null;
+    const host = this.hostname
+      ? config.hosts.find((host) => host.normalised === this.hostname || host.pattern.test(this.hostname!))
+      : null;
+
     const baseUrl = host ? host.url.replace('{{username}}', owner.username) : config.rootHost.url;
     return {
       view: baseUrl + this.paths.view,
