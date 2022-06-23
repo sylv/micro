@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/core';
+import { BeforeCreate, Entity, EventArgs, Property } from '@mikro-orm/core';
 import type { FastifyRequest } from 'fastify';
 import { config } from '../../config';
 
@@ -47,9 +47,7 @@ export abstract class WithHostname {
   }
 
   @BeforeCreate()
-  @BeforeUpdate()
   async onBeforePersist(args: EventArgs<WithHostname>) {
-    console.log('Before persist');
     if (args.entity.hostname?.includes('{{username}}')) {
       throw new Error('Host placeholders should be replaced before insert');
     }
