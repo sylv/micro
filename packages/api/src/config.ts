@@ -17,5 +17,4 @@ if (config.rootHost.isWildcard) {
   throw new Error(`Root host cannot be a wildcard domain.`);
 }
 
-console.dir(config, { depth: null });
 export { config };
