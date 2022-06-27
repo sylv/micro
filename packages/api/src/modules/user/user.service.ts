@@ -8,6 +8,7 @@ import { generateContentId } from '../../helpers/generate-content-id.helper';
 import { File } from '../file/file.entity';
 import type { Invite } from '../invite/invite.entity';
 import { InviteService } from '../invite/invite.service';
+import { Paste } from '../paste/paste.entity';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { Pagination } from './dto/pagination.dto';
 import { User } from './user.entity';
@@ -17,6 +18,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
     @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>,
     private readonly inviteService: InviteService
   ) {}
 
@@ -26,6 +28,21 @@ export class UserService {
 
   getUserFiles(userId: string, pagination: Pagination) {
     return this.fileRepo.find(
+      {
+        owner: userId,
+      },
+      {
+        limit: pagination.limit,
+        offset: pagination.offset,
+        orderBy: {
+          createdAt: QueryOrder.DESC,
+        },
+      }
+    );
+  }
+
+  getUserPastes(userId: string, pagination: Pagination) {
+    return this.pasteRepo.find(
       {
         owner: userId,
       },

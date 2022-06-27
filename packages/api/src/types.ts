@@ -16,6 +16,7 @@ export type GetInviteData = Await<ReturnType<InviteController['getInvite']>>;
 // user
 export type GetUserData = Await<ReturnType<UserController['getUser']>>;
 export type GetUserFilesData = Await<ReturnType<UserController['getUserFiles']>>;
+export type GetUserPastesData = Await<ReturnType<UserController['getUserPastes']>>;
 export type GetUploadTokenData = Await<ReturnType<UserController['getUserToken']>>;
 export type PutUploadTokenData = Await<ReturnType<UserController['resetUserToken']>>;
 
@@ -28,5 +29,5 @@ export type GetServerConfigData = Await<ReturnType<AppController['getConfig']>>;
 export type GetPasteData = Paste;
 export type CreatePasteBody = CreatePasteDto;
 
-export { User } from './modules/user/user.entity';
 export { File } from './modules/file/file.entity';
+export { User } from './modules/user/user.entity';

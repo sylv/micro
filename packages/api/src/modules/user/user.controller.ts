@@ -56,6 +56,12 @@ export class UserController {
     return this.userService.getUserFiles(userId, pagination);
   }
 
+  @Get('user/pastes')
+  @UseGuards(JWTAuthGuard)
+  async getUserPastes(@UserId() userId: string, @Query() pagination: Pagination) {
+    return this.userService.getUserPastes(userId, pagination);
+  }
+
   @Get('user/token')
   @UseGuards(JWTAuthGuard)
   async getUserToken(@UserId() userId: string) {

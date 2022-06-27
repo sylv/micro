@@ -1,13 +1,15 @@
-export interface GeneratedConfig {
-  name: string;
-  content: string;
+export interface GenerateConfigOptions {
+  hosts: string[];
+  token: string;
+  direct: boolean;
+  shortcut: boolean;
 }
 
-export function generateConfig(token: string, hosts: string[], direct: boolean): GeneratedConfig {
+export function generateConfig(options: GenerateConfigOptions) {
   const host = window.location.host;
   const protocol = window.location.protocol;
   const upload = `${protocol}//${host}/api/file`;
-  const joined = hosts.join(', ');
+  const joined = options.hosts.join(', ');
   const name = `micro - ${joined}.sxcu`;
   const content = {
     Version: '13.2.1',
@@ -17,13 +19,13 @@ export function generateConfig(token: string, hosts: string[], direct: boolean):
     RequestURL: upload,
     Body: 'MultipartFormData',
     FileFormName: 'file',
-    URL: direct ? '$json:urls.direct$' : '$json:urls.view$',
+    URL: options.direct ? '$json:urls.direct$' : '$json:urls.view$',
     ThumbnailURL: '$json:urls.thumbnail$',
     DeletionURL: '$json:urls.delete$',
     Headers: {
-      Authorization: token,
+      Authorization: options.token,
+      'X-Micro-Paste-Shortcut': options.shortcut.toString(),
       'X-Micro-Host': joined,
-      'X-Micro-Paste-Shortcut': 'true',
     },
   };
 

@@ -18,7 +18,7 @@ export const FilePreviewCard: FC<FileCardProps> = ({ file }) => {
   }, [file.id]);
 
   return (
-    <Link href={file.paths.view}>
+    <Link href={file.urls.view}>
       <div className="h-44 flex flex-col transition-colors rounded-lg shadow bg-dark-200 hover:bg-dark-400 group overflow-hidden">
         <div className="flex-grow overflow-hidden">
           {file.paths.thumbnail && !loadFailed && (

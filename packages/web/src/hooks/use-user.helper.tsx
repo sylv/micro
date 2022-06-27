@@ -1,7 +1,7 @@
-import { GetUserData } from '@ryanke/micro-api';
+import type { GetUserData } from '@ryanke/micro-api';
 import Router from 'next/router';
 import useSWR, { mutate } from 'swr';
-import { LoginData } from '../components/login-form';
+import type { LoginData } from '../components/login-form';
 import { http } from '../helpers/http.helper';
 
 /**

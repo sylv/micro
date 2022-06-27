@@ -45,8 +45,12 @@ export class FileService implements OnApplicationBootstrap {
     return file;
   }
 
-  async deleteFile(id: string, ownerId: string | null) {
+  async deleteFile(id: string, ownerId: string | null, deleteKey?: string) {
     const file = await this.fileRepo.findOneOrFail(id);
+    if (deleteKey && file.deleteKey !== deleteKey) {
+      throw new UnauthorizedException('Invalid delete key.');
+    }
+
     if (ownerId && file.owner.id !== ownerId) {
       throw new UnauthorizedException('You cannot delete other users files.');
     }

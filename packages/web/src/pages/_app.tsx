@@ -18,7 +18,9 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ToastWrapper>
         <Header />
-        <Component {...pageProps} />
+        <div className="py-4 md:py-16">
+          <Component {...pageProps} />
+        </div>
       </ToastWrapper>
     </SWRConfig>
   );

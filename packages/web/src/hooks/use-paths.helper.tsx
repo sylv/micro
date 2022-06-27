@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { useConfig } from './use-config.hook';
 
 export const usePaths = () => {
@@ -5,7 +6,8 @@ export const usePaths = () => {
   if (!config.data) {
     return {
       home: '/',
-      dashboard: '/dashboard',
+      files: '/dashboard',
+      preferences: '/dashboard/preferences',
       login: '/login',
       loading: !config.data && !config.error,
     };
@@ -13,12 +15,14 @@ export const usePaths = () => {
 
   const rootIsCurrent = config.data.rootHost.normalised === config.data.host.normalised;
   const home = config.data.host.redirect ?? rootIsCurrent ? '/' : config.data.rootHost.url;
-  const dashboard = rootIsCurrent ? '/dashboard' : config.data.rootHost.url + '/dashboard';
+  const files = rootIsCurrent ? '/dashboard' : config.data.rootHost.url + '/dashboard';
+  const preferences = `${files}/preferences`;
   const login = rootIsCurrent ? '/login' : config.data.rootHost.url + '/login';
   return {
     home,
-    dashboard,
+    files,
     login,
+    preferences,
     loading: false,
   };
 };

@@ -49,10 +49,16 @@ export class FileController {
     return reply.send(file);
   }
 
-  @Delete('file/:id')
+  @Delete('file/:fileId')
   @UseGuards(JWTAuthGuard)
-  async deleteFile(@Param('id') id: string, @UserId() userId: string) {
-    await this.fileService.deleteFile(id, userId);
+  async deleteFile(@Param('fileId') fileId: string, @UserId() userId: string) {
+    await this.fileService.deleteFile(fileId, userId);
+    return { deleted: true };
+  }
+
+  @Get('file/:fileId/delete')
+  async deleteFileByKey(@Param('fileId') fileId: string, @Param('key') deleteKey: string) {
+    await this.fileService.deleteFile(fileId, null, deleteKey);
     return { deleted: true };
   }
 

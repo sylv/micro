@@ -51,3 +51,8 @@ body {
 body {
   overflow-y: overlay;
 }
+
+.dots {
+  background-image: radial-gradient(black 1px, transparent 0);
+  background-size: 40px 40px;
+}

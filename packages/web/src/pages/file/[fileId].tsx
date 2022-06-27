@@ -104,7 +104,7 @@ export default function File({ fallbackData }: FileProps) {
   };
 
   return (
-    <Container className="mt-5 md-2 md:mt-10 md:mb-5">
+    <Container className="mt-5 md-2 md:mb-5">
       <Title>{file.data.displayName}</Title>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
         <div className="flex items-end col-span-5">

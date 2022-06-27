@@ -11,10 +11,10 @@ import { HeaderUser } from './header-user';
 export const Header: FC = () => {
   const user = useUser();
   const paths = usePaths();
-  const classes = classNames('relative z-10 flex items-center justify-between h-16 my-auto transition', {
-    'pointer-events-none': paths.loading,
-    invisible: paths.loading,
-  });
+  const classes = classNames(
+    'relative z-10 flex items-center justify-between h-16 my-auto transition',
+    paths.loading && 'pointer-events-none invisible'
+  );
 
   return (
     <Container>

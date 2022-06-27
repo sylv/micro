@@ -110,7 +110,7 @@ export default function ViewPaste({ fallbackData }: ViewPasteProps) {
   }
 
   return (
-    <Container className="mb-10 mt-10">
+    <Container className="mb-10">
       {paste.data.burn && !burn && !burnt && (
         <Warning className="mb-4">
           This paste will be burnt by the next person to view this page and will be unviewable.

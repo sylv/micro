@@ -6,6 +6,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Headers,
   HttpCode,
   NotFoundException,
   Param,
@@ -16,6 +17,7 @@ import {
 import { FastifyRequest } from 'fastify';
 import { config } from '../../config';
 import { generateContentId, generateParanoidId } from '../../helpers/generate-content-id.helper';
+import { randomItem } from '../../helpers/random-item.helper';
 import { UserId } from '../auth/auth.decorators';
 import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard';
 import { HostService } from '../host/host.service';
@@ -34,12 +36,24 @@ export class PasteController {
 
   @Post()
   @UseGuards(OptionalJWTAuthGuard)
-  async create(@UserId() userId: string, @Body() pasteBody: CreatePasteDto, @Req() request: FastifyRequest) {
+  async create(
+    @UserId() userId: string,
+    @Body() pasteBody: CreatePasteDto,
+    @Req() request: FastifyRequest,
+    @Headers('x-micro-host') hosts = config.rootHost.url
+  ) {
     const user = await this.userService.getUser(userId);
     if (!user) throw new ForbiddenException('Unknown user');
     if (request.host) this.hostService.checkUserCanUploadTo(request.host, user);
     if (!request.user && !config.publicPastes) {
       throw new BadRequestException('You must be logged in to create a paste on this instance.');
+    }
+
+    const possibleHosts = hosts.split(/, ?/gu);
+    const hostUrl = randomItem(possibleHosts);
+    const host = await this.hostService.getHostFrom(hostUrl, user.tags);
+    if (host) {
+      this.hostService.checkUserCanUploadTo(host, user);
     }
 
     const id = pasteBody.paranoid ? generateParanoidId() : generateContentId();
@@ -52,6 +66,7 @@ export class PasteController {
       ...pasteBody,
       expiresAt: expiresAt,
       owner: request.user,
+      hostname: host?.normalised,
       id: id,
     });
 

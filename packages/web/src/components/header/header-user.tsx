@@ -24,7 +24,8 @@ export const HeaderUser: FC<HeaderUserProps> = (props) => {
         Upload
       </Link>
       <Dropdown className="w-36" trigger={<UserPill username={props.username} userId={props.userId} />}>
-        <DropdownTab href={paths.dashboard}>Dashboard</DropdownTab>
+        <DropdownTab href={paths.files}>Files</DropdownTab>
+        <DropdownTab href={paths.preferences}>Preferences</DropdownTab>
         <DropdownDivider />
         <DropdownTab
           className="text-red-400 hover:text-red-400"
