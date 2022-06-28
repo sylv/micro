@@ -50,7 +50,7 @@ async function bootstrap(): Promise<void> {
   );
 
   await app.register(cookie as any);
-  await app.register(helmet as any);
+  await app.register(helmet);
   await app.register(multipart as any, limits);
 
   await app.listen(8080, '0.0.0.0', (error, address) => {

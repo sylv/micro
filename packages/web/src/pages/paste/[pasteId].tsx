@@ -166,7 +166,7 @@ export async function getServerSideProps(
   context: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<ViewPasteProps>> {
   try {
-    const fallbackData = await fetcher<GetPasteData>(`paste/${context.query.pasteId}`, context);
+    const fallbackData = await fetcher<GetPasteData>(`paste/${context.query.pasteId}`, { context });
     return { props: { fallbackData } };
   } catch (error) {
     if (error instanceof HTTPError) {

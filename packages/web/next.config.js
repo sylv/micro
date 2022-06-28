@@ -6,15 +6,15 @@ module.exports = {
         destination: 'http://localhost:8080/thumbnail/:thumbnailId/content',
       },
       {
-        source: '/(f|file)/:fileId.:extension',
+        source: '/(f|v|i)/:fileId.:extension',
         destination: 'http://localhost:8080/file/:fileId/content',
       },
       {
-        source: '/f/:fileId/delete',
+        source: '/(f|v|i)/:fileId/delete',
         destination: 'http://localhost:8080/file/:fileId/delete',
       },
       {
-        source: '/f/:fileId',
+        source: '/(f|v|i)/:fileId',
         destination: '/file/:fileId',
       },
       {

@@ -1,41 +1,42 @@
-import type { GetFileData } from '@ryanke/micro-api';
 import type { NextRequest } from 'next/server';
-import { fetcher } from '../helpers/fetcher.helper';
 
-const FILE_ID_REGEX = /\/(f|file)\/(?<id>[\dA-z]+)($|\?|#)/iu;
-const REDIRECT_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'video/mp4', 'video/webm']);
-const SCRAPING_UAS = new Set([
+// /i = image
+// /v = video
+const REDIRECT_URL_REGEX = /\/(i|v)\/(?<id>[\dA-z]+)($|\?|#)/iu;
+const REDIRECT_CONTENT_UAS = [
   'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)', // Discord
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 11.6; rv:92.0) Gecko/20100101 Firefox/92.0', // Discord follow-up
-]);
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 11.6; rv:92.0) Gecko/20100101 Firefox/92.0', // Discord
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0', // Discord
+  'wget/',
+  'curl/',
+];
+
+export function isAcceptableToRedirect(acceptHeader: string | null) {
+  if (!acceptHeader) return false;
+  if (acceptHeader.includes('image/*')) return true;
+  if (acceptHeader.includes('video/*')) return true;
+  return false;
+}
 
 export async function middleware(req: NextRequest) {
-  // for file routes, try detect image scrapers and send them the full image
-  // even if the url is embedded. this is what allows our images to be embedded
-  // in discord. its also absolutely disgusting.
-  const fileIdMatch = FILE_ID_REGEX.exec(req.url);
-  if (fileIdMatch) {
-    const fileId = fileIdMatch.groups!.id;
+  // match /i and /v urls and redirect them to the content url
+  // this is how pasting an embedded image link in discord still embeds the image
+  // /i and /v routes are necessary so we dont have to lookup the type of the file, because we still
+  // want to return html for other files so we can give opengraph tags about the files that discord wont embed directly.
+  const redirectUrlMatch = REDIRECT_URL_REGEX.exec(req.url);
+  if (redirectUrlMatch) {
+    const fileId = redirectUrlMatch.groups!.id;
     const accept = req.headers.get('accept');
     const userAgent = req.headers.get('user-agent');
-    if ((accept && accept.includes('image/*')) || (userAgent && SCRAPING_UAS.has(userAgent))) {
-      try {
-        // redirect scraping user agents to the files direct url
-        // todo: discord scrapes the url twice, once as discord and once with a generic
-        // user-agent when it doesnt find opengraph data. this means we're fetching the file twice
-        // every time someone sends a link in discord.
-        const file = await fetcher<GetFileData>(`file/${fileId}`);
-        if (REDIRECT_TYPES.has(file.type)) {
-          return new Response(null, {
-            status: 302,
-            headers: {
-              location: `/api/file/${file.id}/content`,
-            },
-          });
-        }
-      } catch (error) {
-        console.error(error);
-      }
+    const isScrapingUA = userAgent && REDIRECT_CONTENT_UAS.some((ua) => userAgent.startsWith(ua));
+    if (isAcceptableToRedirect(accept) || isScrapingUA) {
+      return new Response(null, {
+        status: 302,
+        headers: {
+          location: `/api/file/${fileId}/content`,
+          'x-beep': 'boop',
+        },
+      });
     }
   }
 }

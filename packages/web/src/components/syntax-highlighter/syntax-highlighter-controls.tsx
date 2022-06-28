@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
 import type { Language } from 'prism-react-renderer';
-import type { FC } from 'react';
+import { memo } from 'react';
 import { ChevronDown } from 'react-feather';
 import languages from '../../data/languages.json';
 import { useToasts } from '../../hooks/use-toasts.helper';
@@ -11,7 +11,7 @@ export interface SyntaxHighlighterControls {
   content: string;
 }
 
-export const SyntaxHighlighterControls: FC<SyntaxHighlighterControls> = ({ language, content, onLanguageChange }) => {
+export const SyntaxHighlighterControls = memo<SyntaxHighlighterControls>(({ language, content, onLanguageChange }) => {
   const setToast = useToasts();
   const copyContent = () => {
     navigator.clipboard.writeText(content);
@@ -48,4 +48,4 @@ export const SyntaxHighlighterControls: FC<SyntaxHighlighterControls> = ({ langu
       </button>
     </div>
   );
-};
+});

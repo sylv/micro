@@ -1,6 +1,5 @@
 import type { GetFileData } from '@ryanke/micro-api';
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { FileMinus, Trash } from 'react-feather';
 import { formatBytes } from '../../helpers/format-bytes.helper';
 import { Link } from '../link';
@@ -10,7 +9,7 @@ export interface FileCardProps {
   file: GetFileData;
 }
 
-export const FilePreviewCard: FC<FileCardProps> = ({ file }) => {
+export const FilePreviewCard = memo<FileCardProps>(({ file }) => {
   const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
@@ -45,4 +44,4 @@ export const FilePreviewCard: FC<FileCardProps> = ({ file }) => {
       </div>
     </Link>
   );
-};
+});

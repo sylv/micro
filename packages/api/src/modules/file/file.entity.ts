@@ -68,7 +68,7 @@ export class File extends WithHostname {
 
   @Property({ persist: false })
   get urls() {
-    const owner = this.owner.unwrap();
+    const owner = this.owner.getEntity();
     const host = this.hostname
       ? config.hosts.find((host) => host.normalised === this.hostname || host.pattern.test(this.hostname!))
       : null;
@@ -86,14 +86,15 @@ export class File extends WithHostname {
   @Property({ persist: false })
   get paths() {
     const extension = mimeType.extension(this.type);
-    const viewUrl = `/f/${this.id}`;
-    const directUrl = `/f/${this.id}.${extension}`;
+    const prefix = this.type.startsWith('video') ? '/v' : this.type.startsWith('image') ? '/i' : '/f';
+    const viewUrl = `${prefix}/${this.id}`;
+    const directUrl = `${prefix}/${this.id}.${extension}`;
     const metadataUrl = `/api/file/${this.id}`;
     const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : null;
     // todo: this.deleteKey is lazy which means the only time it should be present
     // is when the file is created or its explicitly asked for. that said, we should
     // still make sure we aren't leaking delete keys by accident.
-    const deleteUrl = this.deleteKey ? `/f/${this.id}/delete?key=${this.deleteKey}` : null;
+    const deleteUrl = this.deleteKey ? `${prefix}/${this.id}/delete?key=${this.deleteKey}` : null;
     return {
       view: viewUrl,
       direct: directUrl,

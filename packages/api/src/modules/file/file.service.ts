@@ -37,7 +37,7 @@ export class FileService implements OnApplicationBootstrap {
   ) {}
 
   async getFile(id: string, request: FastifyRequest) {
-    const file = await this.fileRepo.findOneOrFail(id);
+    const file = await this.fileRepo.findOneOrFail(id, { populate: ['owner'] });
     if (file.hostname && !file.canSendTo(request)) {
       throw new NotFoundException('Your file is in another castle.');
     }

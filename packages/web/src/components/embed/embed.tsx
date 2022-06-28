@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { EmbedContainer } from './embed-container';
 import { EmbedDefault } from './embed-default';
 import { EmbedImage } from './embed-image';
@@ -8,7 +8,11 @@ import { EmbedText } from './embed-text';
 import { EmbedVideo } from './embed-video';
 import type { Embeddable } from './embeddable';
 
-export const Embed: FC<{ data: Embeddable }> = ({ data }) => {
+interface EmbedProps {
+  data: Embeddable;
+}
+
+export const Embed: FC<EmbedProps> = memo(({ data }) => {
   const isText = useMemo(() => EmbedText.embeddable(data), [data]);
   const isImage = useMemo(() => EmbedImage.embeddable(data), [data]);
   const isVideo = useMemo(() => EmbedVideo.embeddable(data), [data]);
@@ -47,4 +51,4 @@ export const Embed: FC<{ data: Embeddable }> = ({ data }) => {
       <EmbedDefault data={data} />
     </EmbedContainer>
   );
-};
+});

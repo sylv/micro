@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { FC } from 'react';
+import { memo } from 'react';
 import { Crop } from 'react-feather';
 import { usePaths } from '../../hooks/use-paths.helper';
 import { useUser } from '../../hooks/use-user.helper';
@@ -8,7 +8,7 @@ import { Container } from '../container';
 import { Link } from '../link';
 import { HeaderUser } from './header-user';
 
-export const Header: FC = () => {
+export const Header = memo(() => {
   const user = useUser();
   const paths = usePaths();
   const classes = classNames(
@@ -39,4 +39,4 @@ export const Header: FC = () => {
       </nav>
     </Container>
   );
-};
+});
