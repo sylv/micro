@@ -64,7 +64,7 @@ export default function File({ fallbackData }: FileProps) {
   }
 
   const copyLink = () => {
-    copyToClipboard(window.location.href);
+    copyToClipboard(file.data?.urls.view ?? window.location.href);
     setToast({
       text: `Copied link to clipboard`,
     });
