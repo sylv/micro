@@ -1,10 +1,10 @@
 import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { WithHostname } from '../host/host.entity';
+import { ResourceBase } from '../../resource.entity-base';
 import { User } from '../user/user.entity';
 
 @Entity({ tableName: 'links' })
-export class Link extends WithHostname {
+export class Link extends ResourceBase {
   @PrimaryKey()
   id: string = generateContentId();
 
@@ -23,5 +23,13 @@ export class Link extends WithHostname {
   })
   owner: IdentifiedReference<User>;
 
-  [OptionalProps]: 'hostname' | 'clicks' | 'createdAt';
+  @Property({ persist: false })
+  get paths() {
+    return {
+      view: `/l/${this.id}`,
+      direct: `/l/${this.id}`,
+    };
+  }
+
+  [OptionalProps]: 'hostname' | 'clicks' | 'createdAt' | 'paths' | 'urls';
 }

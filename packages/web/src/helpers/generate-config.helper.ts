@@ -14,7 +14,7 @@ export function generateConfig(options: GenerateConfigOptions) {
   const content = {
     Version: '13.2.1',
     Name: `micro - ${joined}`,
-    DestinationType: 'ImageUploader, TextUploader, FileUploader',
+    DestinationType: 'ImageUploader, TextUploader, FileUploader, URLShortener',
     RequestMethod: 'POST',
     RequestURL: upload,
     Body: 'MultipartFormData',
@@ -22,6 +22,9 @@ export function generateConfig(options: GenerateConfigOptions) {
     URL: options.direct ? '$json:urls.direct$' : '$json:urls.view$',
     ThumbnailURL: '$json:urls.thumbnail$',
     DeletionURL: '$json:urls.delete$',
+    Parameters: {
+      input: '$input$',
+    },
     Headers: {
       Authorization: options.token,
       'X-Micro-Paste-Shortcut': options.shortcut.toString(),

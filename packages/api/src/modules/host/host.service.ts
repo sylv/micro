@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import normalizeUrl from 'normalize-url';
 import type { MicroHost } from '../../classes/MicroHost';
 import { config } from '../../config';
+import { randomItem } from '../../helpers/random-item.helper';
 import type { User } from '../user/user.entity';
 
 export class HostService {
@@ -17,7 +18,7 @@ export class HostService {
    * @param tags A list of tags the user has. If the host requires a tag that is not in this list, it will not be matched.
    * @throws if the host could not be resolved.
    */
-  async getHostFrom(url: string | undefined, tags: string[] | null): Promise<MicroHost> {
+  getHostFrom(url: string | undefined, tags: string[] | null): MicroHost {
     if (!url) return config.rootHost;
     const normalised = HostService.normaliseHostUrl(url);
     for (const host of config.hosts) {
@@ -41,6 +42,18 @@ export class HostService {
     }
 
     return true;
+  }
+
+  /**
+   * Resolve the x-micro-host header for content creation.
+   * Validates the user can upload to the host, and if so returns the host.
+   */
+  resolveUploadHost(input: string, user: User) {
+    const possibleHosts = input.split(/, ?/gu);
+    const hostUrl = randomItem(possibleHosts);
+    const host = this.getHostFrom(hostUrl, user.tags);
+    this.checkUserCanUploadTo(host, user);
+    return host;
   }
 
   static normaliseHostUrl(url: string) {

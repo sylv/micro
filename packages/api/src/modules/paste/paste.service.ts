@@ -11,7 +11,7 @@ export class PasteService {
   constructor(@InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>) {}
 
   async getPaste(pasteId: string, request: FastifyRequest) {
-    const paste = await this.pasteRepo.findOneOrFail(pasteId);
+    const paste = await this.pasteRepo.findOneOrFail(pasteId, { populate: ['owner'] });
     if (!paste.canSendTo(request)) {
       throw new BadRequestException('Your paste is in another castle.');
     }

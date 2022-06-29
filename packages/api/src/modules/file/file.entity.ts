@@ -11,15 +11,14 @@ import {
 } from '@mikro-orm/core';
 import { checkThumbnailSupport } from '@ryanke/thumbnail-generator';
 import mimeType from 'mime-types';
-import { config } from '../../config';
 import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
-import { WithHostname } from '../host/host.entity';
+import { ResourceBase } from '../../resource.entity-base';
 import { Thumbnail } from '../thumbnail/thumbnail.entity';
 import { User } from '../user/user.entity';
 import { FileMetadata } from './file-metadata.embeddable';
 
 @Entity({ tableName: 'files' })
-export class File extends WithHostname {
+export class File extends ResourceBase {
   @PrimaryKey()
   id: string;
 
@@ -67,40 +66,20 @@ export class File extends WithHostname {
   }
 
   @Property({ persist: false })
-  get urls() {
-    const owner = this.owner.getEntity();
-    const host = this.hostname
-      ? config.hosts.find((host) => host.normalised === this.hostname || host.pattern.test(this.hostname!))
-      : null;
-
-    const baseUrl = host ? host.url.replace('{{username}}', owner.username) : config.rootHost.url;
-    return {
-      view: baseUrl + this.paths.view,
-      direct: baseUrl + this.paths.direct,
-      metadata: baseUrl + this.paths.metadata,
-      thumbnail: this.paths.thumbnail ? baseUrl + this.paths.thumbnail : null,
-      delete: this.paths.delete ? baseUrl + this.paths.delete : null,
-    };
-  }
-
-  @Property({ persist: false })
   get paths() {
-    const extension = mimeType.extension(this.type);
     const prefix = this.type.startsWith('video') ? '/v' : this.type.startsWith('image') ? '/i' : '/f';
-    const viewUrl = `${prefix}/${this.id}`;
-    const directUrl = `${prefix}/${this.id}.${extension}`;
-    const metadataUrl = `/api/file/${this.id}`;
-    const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : null;
-    // todo: this.deleteKey is lazy which means the only time it should be present
-    // is when the file is created or its explicitly asked for. that said, we should
-    // still make sure we aren't leaking delete keys by accident.
-    const deleteUrl = this.deleteKey ? `${prefix}/${this.id}/delete?key=${this.deleteKey}` : null;
+    const viewPath = `${prefix}/${this.id}`;
+    const directPath = `${prefix}/${this.id}.${this.extension}`;
+    const metadataPath = `/api/file/${this.id}`;
+    const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : undefined;
+    const deletePath = this.deleteKey ? `${prefix}/${this.id}/delete?key=${this.deleteKey}` : undefined;
+
     return {
-      view: viewUrl,
-      direct: directUrl,
-      metadata: metadataUrl,
+      view: viewPath,
+      direct: directPath,
+      metadata: metadataPath,
       thumbnail: thumbnailUrl,
-      delete: deleteUrl,
+      delete: deletePath,
     };
   }
 

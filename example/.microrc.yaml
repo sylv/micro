@@ -24,10 +24,6 @@ storagePath: /data
 # then replace "one" with "two" and it would look like user "two" uploaded it.
 restrictFilesToHost: true
 
-# whether to allow anyone to paste without an account.
-# pastes are cheap to store so i'd recommend leaving this enabled
-publicPastes: true
-
 # # purging can be used to clean up old files, useful if you want to allow large files to be uploaded
 # # but dont want to store them forever. this is commented by default to prevent accidental purging
 # # uncomment the section below to enable it.

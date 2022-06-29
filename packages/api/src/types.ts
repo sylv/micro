@@ -31,3 +31,5 @@ export type CreatePasteBody = CreatePasteDto;
 
 export { File } from './modules/file/file.entity';
 export { User } from './modules/user/user.entity';
+export { ResourceBase } from './resource.entity-base';
+export type { ResourcePaths } from './resource.entity-base';

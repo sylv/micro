@@ -20,6 +20,9 @@ export const HeaderUser: FC<HeaderUserProps> = (props) => {
   const setToast = useToasts();
   return (
     <Fragment>
+      <Link href="/paste" className="mr-2 text-gray-500 transition hover:text-gray-400">
+        Paste
+      </Link>
       <Link href="/upload" className="mr-2 text-gray-500 transition hover:text-gray-400">
         Upload
       </Link>

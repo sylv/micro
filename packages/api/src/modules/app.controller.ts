@@ -25,7 +25,6 @@ export class AppController {
       uploadLimit: config.uploadLimit,
       allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : undefined,
       email: !!config.email,
-      publicPastes: config.publicPastes,
       rootHost: {
         url: config.rootHost.url,
         normalised: config.rootHost.normalised,

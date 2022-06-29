@@ -33,9 +33,6 @@ export class MicroConfig {
   @Transform(({ value }) => xbytes.parseSize(value))
   uploadLimit = xbytes.parseSize('50MB');
 
-  @IsBoolean()
-  publicPastes: boolean;
-
   @IsNumber()
   @IsOptional()
   @Max(500000)

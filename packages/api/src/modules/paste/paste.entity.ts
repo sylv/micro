@@ -1,13 +1,13 @@
 import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import mime from 'mime-types';
 import { config } from '../../config';
 import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { WithHostname } from '../host/host.entity';
+import { ResourceBase } from '../../resource.entity-base';
 import { User } from '../user/user.entity';
-import mime from 'mime-types';
 
 @Entity({ tableName: 'pastes' })
-export class Paste extends WithHostname {
+export class Paste extends ResourceBase {
   @PrimaryKey()
   id: string = generateContentId();
 
@@ -38,15 +38,6 @@ export class Paste extends WithHostname {
     wrappedReference: true,
   })
   owner?: IdentifiedReference<User>;
-
-  @Property({ persist: false })
-  get urls() {
-    return {
-      view: config.rootHost.url + this.paths.view,
-      direct: config.rootHost.url + this.paths.direct,
-      metadata: config.rootHost.url + this.paths.metadata,
-    };
-  }
 
   @Property({ persist: false })
   get paths() {

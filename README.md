@@ -64,7 +64,7 @@ Setup is now complete and your instance should be working. When updates come out
 I've made a best effort attempt to make migration as painless as possible, mostly for my own sanity. These steps are quite in-depth but in reality the migration should be fairly simple for most users. If you get stuck at any point, please join the [discord server](https://discord.gg/VDMX6VQRZm) and ask for help.
 
 1. Create a backup of the database and the data directory.
-2. Update your `.microrc` with the changes seen in [example config](example/.microrc.yaml) (your config may be in json with the example now being yaml, but the keys are 1:1), notable changes are `database` is now `databaseUrl` and `publicPastes` has been added.
+2. Update your `.microrc` with the changes seen in [example config](example/.microrc.yaml) (your config may be in json with the example now being yaml, but the keys are 1:1), notable changes are `database` is now `databaseUrl`.
 3. Change the docker image from `sylver/micro` or `sylver/micro:master` to `sylver/micro:main`
 4. Change the port from `8080` to `3000`. If you are using the example config, do this in `Caddyfile` by changing `micro:8080` to `micro:3000`.
 5. Start the container. It should exit on startup with an error message saying that there is data that must be migrated. If it does not, you did not update the image tag correctly or it cannot detect data to be migrated.
@@ -77,7 +77,9 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 
 - [ ] Ratelimiting
 - [ ] Admin UI
-- [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
+- [ ] Create paste UI
+- [ ] List of pastes in the dashboard
+- [ ] Deletion URLs for pastes/links
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] Password recovery via emails
 - [ ] Private email aliases (might be difficult/expensive)

@@ -9,6 +9,7 @@ import {
   Headers,
   Param,
   Post,
+  Query,
   Req,
   Request,
   Res,
@@ -16,10 +17,10 @@ import {
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { config } from '../../config';
-import { randomItem } from '../../helpers/random-item.helper';
 import { UserId } from '../auth/auth.decorators';
 import { JWTAuthGuard } from '../auth/guards/jwt.guard';
 import { HostService } from '../host/host.service';
+import { LinkService } from '../link/link.service';
 import { Paste } from '../paste/paste.entity';
 import { UserService } from '../user/user.service';
 import { FileService } from './file.service';
@@ -30,7 +31,8 @@ export class FileController {
     @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>,
     private readonly fileService: FileService,
     private readonly userService: UserService,
-    private readonly hostService: HostService
+    private readonly hostService: HostService,
+    private readonly linkService: LinkService
   ) {}
 
   @Get('file/:fileId/content')
@@ -67,18 +69,28 @@ export class FileController {
     @UserId() userId: string,
     @Req() request: FastifyRequest,
     @Headers('X-Micro-Paste-Shortcut') shortcut: string,
-    @Headers('x-micro-host') hosts = config.rootHost.url
+    @Headers('x-micro-host') hosts = config.rootHost.url,
+    @Query('input') input?: string
   ) {
     const user = await this.userService.getUser(userId, true);
-    const upload = (await request.file()) as MultipartFile | undefined;
-    if (!upload) throw new BadRequestException('Missing upload.');
+    const host = this.hostService.resolveUploadHost(hosts, user);
+    if (input && input.startsWith('http')) {
+      // sharex will send urls to shorten as the "input" query param
+      const link = await this.linkService.createLink(input, user.id, host);
+      return {
+        id: link.id,
+        urls: link.urls,
+        paths: link.paths,
+      };
+    }
 
-    const possibleHosts = hosts.split(/, ?/gu);
-    const hostUrl = randomItem(possibleHosts);
-    const host = await this.hostService.getHostFrom(hostUrl, user.tags);
+    const upload = (await request.file()) as MultipartFile | undefined;
+    if (!upload) {
+      throw new BadRequestException('Missing upload.');
+    }
 
     if (shortcut === 'true' && upload.mimetype === 'text/plain') {
-      if (host) this.hostService.checkUserCanUploadTo(host, user);
+      // shortcut text uploads to a paste
       const content = await upload.toBuffer();
       const paste = this.pasteRepo.create({
         content: content.toString(),
@@ -90,9 +102,18 @@ export class FileController {
       });
 
       await this.pasteRepo.persistAndFlush(paste);
-      return paste;
+      return {
+        id: paste.id,
+        urls: paste.urls,
+        paths: paste.paths,
+      };
     }
 
-    return this.fileService.createFile(upload, request, user, host);
+    const file = await this.fileService.createFile(upload, request, user, host);
+    return {
+      id: file.id,
+      urls: file.urls,
+      paths: file.paths,
+    };
   }
 }

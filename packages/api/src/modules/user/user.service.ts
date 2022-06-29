@@ -1,6 +1,11 @@
 import { EntityRepository, QueryOrder, UniqueConstraintViolationException } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable
+} from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import bcrypt from 'bcrypt';
 import { readFileSync } from 'fs';
@@ -37,7 +42,7 @@ export class UserService {
 
   async getUser(id: string, verified: boolean) {
     const user = await this.userRepo.findOneOrFail(id);
-    if (verified && config.email && !user.verifiedEmail) {
+    if (  verified && config.email && !user.verifiedEmail) {
       throw new ForbiddenException('You must verify your email first.');
     }
 
