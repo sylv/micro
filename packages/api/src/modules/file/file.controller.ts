@@ -5,7 +5,6 @@ import {
   BadRequestException,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Headers,
   Param,
@@ -70,8 +69,7 @@ export class FileController {
     @Headers('X-Micro-Paste-Shortcut') shortcut: string,
     @Headers('x-micro-host') hosts = config.rootHost.url
   ) {
-    const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException('Unknown user');
+    const user = await this.userService.getUser(userId, true);
     const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) throw new BadRequestException('Missing upload.');
 

@@ -79,7 +79,7 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 - [ ] Admin UI
 - [ ] `publicPastes=false` should hide the paste button and show an error on the paste page unless the user is signed in.
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
-- [ ] Email signup for easier password recovery
+- [ ] Password recovery via emails
 - [ ] Private email aliases (might be difficult/expensive)
 - [ ] Export data options (all files, though that could get huge)
 - [ ] GIFs should probably be converted to mp4 videos to save space

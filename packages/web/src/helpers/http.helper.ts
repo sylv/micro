@@ -2,7 +2,7 @@ import { getReasonPhrase } from 'http-status-codes';
 
 export class HTTPError extends Error {
   readonly status: number;
-  readonly text: number;
+  readonly text: string;
   constructor(readonly response: Response, readonly body: any) {
     const message = body?.message ?? response.statusText;
     const messageText = Array.isArray(message) ? message.join(', ') : message;

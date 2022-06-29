@@ -15,6 +15,7 @@ import fileType from 'file-type';
 import path from 'path';
 import xbytes from 'xbytes';
 import { MicroConfigPurge } from './MicroConfigPurge';
+import { MicroEmail } from './MicroEmail';
 import { MicroHost } from './MicroHost';
 
 export class MicroConfig {
@@ -76,6 +77,11 @@ export class MicroConfig {
   @IsOptional()
   @Type(() => MicroConfigPurge)
   purge?: MicroConfigPurge;
+
+  @ValidateNested()
+  @IsOptional()
+  @Type(() => MicroEmail)
+  email: MicroEmail;
 
   @ValidateNested({ each: true })
   @IsDefined()

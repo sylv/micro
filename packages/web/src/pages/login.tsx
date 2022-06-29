@@ -22,6 +22,16 @@ export default function Login() {
     Router.prefetch('/dashboard');
   }, []);
 
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const verified = url.searchParams.get('verified');
+    if (verified) {
+      setToast({
+        text: 'Your account has been verified.',
+      });
+    }
+  }, []);
+
   async function onContinue(data: LoginData) {
     try {
       setLoading(true);
@@ -42,7 +52,7 @@ export default function Login() {
     <Container center small>
       <Title>Sign in</Title>
       <h1 className="my-5 text-4xl font-bold">Sign In</h1>
-      <LoginForm buttonText="Sign In" loading={loading} onContinue={onContinue} />
+      <LoginForm buttonText="Sign In" loading={loading} onContinue={onContinue} emailPrompt={false} />
     </Container>
   );
 }

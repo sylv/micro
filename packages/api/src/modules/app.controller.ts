@@ -14,7 +14,7 @@ export class AppController {
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {
     let tags: string[] = [];
     if (userId) {
-      const user = await this.userService.getUser(userId);
+      const user = await this.userService.getUser(userId, false);
       if (user) {
         tags = user.tags;
       }
@@ -24,6 +24,8 @@ export class AppController {
       inquiries: config.inquiries,
       uploadLimit: config.uploadLimit,
       allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : undefined,
+      email: !!config.email,
+      publicPastes: config.publicPastes,
       rootHost: {
         url: config.rootHost.url,
         normalised: config.rootHost.normalised,

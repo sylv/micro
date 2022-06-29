@@ -1,13 +1,20 @@
 import { Collection, Entity, OneToMany, OneToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
-import { File } from '../file/file.entity';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { Invite } from '../invite/invite.entity';
 import { Exclude } from 'class-transformer';
+import { generateContentId } from '../../helpers/generate-content-id.helper';
+import { File } from '../file/file.entity';
+import { Invite } from '../invite/invite.entity';
+import { UserVerification } from './user-verification.entity';
 
 @Entity({ tableName: 'users' })
 export class User {
   @PrimaryKey()
   id: string = generateContentId();
+
+  @Property({ unique: true, index: true, nullable: true })
+  email?: string;
+
+  @Property({ default: false })
+  verifiedEmail: boolean;
 
   @Property({ unique: true, index: true })
   username: string;
@@ -28,9 +35,17 @@ export class User {
   @Property()
   tags: string[] = [];
 
-  @OneToMany(() => File, (file) => file.owner, { orphanRemoval: true })
+  @OneToMany(() => File, (file) => file.owner, { orphanRemoval: true, hidden: true })
   @Exclude()
   files = new Collection<File>(this);
 
-  [OptionalProps]: 'permissions' | 'tags';
+  @OneToMany(() => UserVerification, (verification) => verification.user, {
+    orphanRemoval: true,
+    persist: true,
+    hidden: true,
+  })
+  @Exclude()
+  verifications = new Collection<UserVerification>(this);
+
+  [OptionalProps]: 'permissions' | 'tags' | 'verifiedEmail';
 }

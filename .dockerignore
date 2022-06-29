@@ -21,3 +21,4 @@
 packages/api/data
 packages/api/dist
 packages/web/.next
+packages/*/.turbo

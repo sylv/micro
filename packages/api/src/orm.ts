@@ -10,6 +10,7 @@ import { Invite } from './modules/invite/invite.entity';
 import { Link } from './modules/link/link.entity';
 import { Paste } from './modules/paste/paste.entity';
 import { Thumbnail } from './modules/thumbnail/thumbnail.entity';
+import { UserVerification } from './modules/user/user-verification.entity';
 import { User } from './modules/user/user.entity';
 
 export const ormLogger = new Logger('MikroORM');
@@ -17,7 +18,7 @@ export const migrationsTableName = 'mikro_orm_migrations';
 
 export default {
   type: 'postgresql',
-  entities: [FileMetadata, File, Thumbnail, User, Invite, Paste, Link],
+  entities: [FileMetadata, File, Thumbnail, User, UserVerification, Invite, Paste, Link],
   clientUrl: config.databaseUrl,
   debug: true,
   logger: (message) => {

@@ -5,6 +5,7 @@ import { Button } from './button/button';
 import { Input } from './input/input';
 
 export interface LoginData {
+  email?: string;
   username: string;
   password: string;
 }
@@ -12,24 +13,24 @@ export interface LoginData {
 export interface LoginProps {
   loading: boolean;
   buttonText: string;
+  emailPrompt: boolean;
   onContinue: (user: LoginData) => void;
 }
 
-export const LoginForm: FC<LoginProps> = (props) => {
+export const LoginForm: FC<LoginProps> = ({ loading, buttonText, emailPrompt, onContinue }) => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const setToast = useToasts();
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
-  const disabled = !username || !password || props.loading;
+  const disabled = !username || !password || loading;
   const onUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value.toLowerCase());
   };
-  const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-  const onContinue = () => {
-    if (props.loading) return;
+
+  const onSubmit = () => {
+    if (loading) return;
     if (!username) {
       // focus username if missing on enter
       // only show toast if username is already focused
@@ -60,27 +61,45 @@ export const LoginForm: FC<LoginProps> = (props) => {
     }
 
     if (disabled) return;
-    props.onContinue({ username, password });
+    onContinue({ username, password, email: email || undefined });
   };
 
   const onKeyDown = (event: KeyboardEvent<unknown>) => {
     if (event.key !== 'Enter') return;
-    onContinue();
+    onSubmit();
   };
 
   return (
     <Fragment>
-      <Input placeholder="Username" onKeyDown={onKeyDown} onChange={onUsernameChange} autoFocus ref={usernameRef} />
+      {emailPrompt && (
+        <Input
+          placeholder="Email"
+          className="mb-2"
+          type="email"
+          onKeyDown={onKeyDown}
+          autoFocus
+          ref={usernameRef}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+      )}
+      <Input
+        placeholder="Username"
+        type="username"
+        onKeyDown={onKeyDown}
+        onChange={onUsernameChange}
+        autoFocus
+        ref={usernameRef}
+      />
       <Input
         className="mt-2"
         type="password"
         placeholder="Password"
         ref={passwordRef}
         onKeyDown={onKeyDown}
-        onChange={onPasswordChange}
+        onChange={(event) => setPassword(event.target.value)}
       />
-      <Button className="mt-4" onClick={onContinue} onKeyDown={onKeyDown} disabled={disabled} primary>
-        {props.buttonText}
+      <Button className="mt-4" onClick={onSubmit} onKeyDown={onKeyDown} disabled={disabled} primary>
+        {buttonText}
       </Button>
     </Fragment>
   );

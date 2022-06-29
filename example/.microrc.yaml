@@ -28,16 +28,16 @@ restrictFilesToHost: true
 # pastes are cheap to store so i'd recommend leaving this enabled
 publicPastes: true
 
-# purging can be used to clean up old files, useful if you want to allow large files to be uploaded
-# but dont want to store them forever. this is commented by default to prevent accidental purging
-# uncomment the section below to enable it.
+# # purging can be used to clean up old files, useful if you want to allow large files to be uploaded
+# # but dont want to store them forever. this is commented by default to prevent accidental purging
+# # uncomment the section below to enable it.
 # purge:
 #   overLimit: 1MB # files over this size will be purged
 #   afterTime: 1d # after this many days
 
-# allowTypes is a list of file types that can be uploaded.
-# a prefix will be expanded into known types, so `video` becomes `video/mp4`, `video/webm`, etc.
-# omit entirely to allow all types to be uploaded.
+# # allowTypes is a list of file types that can be uploaded.
+# # a prefix will be expanded into known types, so `video` becomes `video/mp4`, `video/webm`, etc.
+# # omit entirely to allow all types to be uploaded.
 # allowTypes:
 #   - video
 #   - image
@@ -57,3 +57,16 @@ hosts:
     tags: ["admin"]
 
 
+
+# # to allow and require users to sign up with an email, specify an SMTP server to send emails from.
+# # if you do not specify an email, it will not be asked for during signup and users will sign in with their username.
+# # enabling this on an existing instance will prompt users without an email to add one (https://micro.sylo.digital/i/J1Ilba)
+# email:
+#   from: 'noreply@example.net'
+#   smtp:
+#     host: smtp.example.net
+#     port: 465
+#     secure: true
+#     auth:
+#       user: 'username'
+#       pass: 'password'

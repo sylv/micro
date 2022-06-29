@@ -10,10 +10,12 @@ import { Time } from '../../components/time';
 import { Title } from '../../components/title';
 import { getErrorMessage } from '../../helpers/get-error-message.helper';
 import { http } from '../../helpers/http.helper';
+import { useConfig } from '../../hooks/use-config.hook';
 import { useToasts } from '../../hooks/use-toasts.helper';
 import Error from '../_error';
 
 export default function Invite() {
+  const config = useConfig();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const setToast = useToasts();
@@ -25,11 +27,12 @@ export default function Invite() {
     Router.prefetch('/login');
   }, []);
 
-  if (invite.error) {
-    return <Error status={invite.error.status} message={invite.error.text} />;
+  if (invite.error || config.error) {
+    const error = invite.error || config.error;
+    return <Error status={error.status} message={error.text} />;
   }
 
-  if (!invite.data) {
+  if (!invite.data || !config.data) {
     return <PageLoader title="You're Invited" />;
   }
 
@@ -63,7 +66,12 @@ export default function Invite() {
       )}
       <div className="grid flex-row-reverse grid-cols-6 gap-12">
         <div className="col-span-6 md:col-span-2">
-          <LoginForm buttonText="Create Account" onContinue={onSubmit} loading={loading} />
+          <LoginForm
+            buttonText="Create Account"
+            onContinue={onSubmit}
+            emailPrompt={config.data.email}
+            loading={loading}
+          />
         </div>
         <div className="flex-col justify-center hidden col-span-6 md:flex md:col-span-4">
           <h1 className="mb-2 text-4xl font-bold">Welcome to Micro</h1>

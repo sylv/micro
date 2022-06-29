@@ -1,6 +1,6 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { FastifyRequest } from 'fastify';
 import { Strategy } from 'passport-jwt';
@@ -27,12 +27,11 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JWTPayloadUser): Promise<FastifyRequest['user']> {
-    // requiring payload.secret does more or less make JWTs useless to us
-    // but they're convenient so why not keep them, in the future this requirement
-    // might be removed.
-    if (!payload.secret) throw new ForbiddenException('Outdated JWT - refresh your sesion.');
+    // todo: payload.secret makes jwts basically useless, but i'm keeping them so we dont break all
+    // existing jwt tokens and require configs to be regenerated.
+    if (!payload.secret) throw new UnauthorizedException('Outdated JWT - refresh your session.');
     const user = await this.userRepo.findOne({ secret: payload.secret });
-    if (!user) throw new ForbiddenException('Invalid token secret.');
+    if (!user) throw new UnauthorizedException('Invalid token secret.');
     return user;
   }
 }

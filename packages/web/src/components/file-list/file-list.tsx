@@ -28,10 +28,6 @@ export const FileList: FC = () => {
   });
 
   const source = filter === 'files' ? files : pastes;
-  if (source.data && !source.data[0]) {
-    return <Card>You have not uploaded anything yet. Once you do, files will appear here.</Card>;
-  }
-
   if (source.error) {
     return <Error message={source.error.message} status={500} />;
   }
@@ -77,6 +73,11 @@ export const FileList: FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pastes.data?.flatMap((page) => page.map((paste) => <PastePreviewCard key={paste.id} paste={paste} />))}
           </div>
+        )}
+        {!source.data[0][0] && (
+          <Card className="text-gray-500">
+            You haven't uploaded anything yet. Once you upload something, it will appear here.
+          </Card>
         )}
       </div>
       {hasMore && (

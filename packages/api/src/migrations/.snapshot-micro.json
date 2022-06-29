@@ -15,6 +15,25 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "verified_email": {
+          "name": "verified_email",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
         "username": {
           "name": "username",
           "type": "varchar(255)",
@@ -75,6 +94,24 @@
       "indexes": [
         {
           "columnNames": [
+            "email"
+          ],
+          "composite": false,
+          "keyName": "users_email_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "email"
+          ],
+          "composite": false,
+          "keyName": "users_email_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
             "username"
           ],
           "composite": false,
@@ -123,6 +160,67 @@
           ],
           "referencedTableName": "public.invites",
           "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "users_verification",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "users_verification_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "users_verification_user_id_foreign": {
+          "constraintName": "users_verification_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.users_verification",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "CASCADE",
           "updateRule": "cascade"
         }
       }

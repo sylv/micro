@@ -13,7 +13,6 @@ export class HostGuard implements CanActivate {
       return true;
     }
 
-    console.log({ referer });
     const host = config.hosts.find((host) => host.pattern.test(referer));
     if (!host) throw new BadRequestException('Invalid host.');
     request.host = host;

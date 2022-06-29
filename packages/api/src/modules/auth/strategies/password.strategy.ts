@@ -16,7 +16,7 @@ export class PasswordStrategy extends PassportStrategy(Strategy) {
   async validate(username: string, password: string): Promise<FastifyRequest['user']> {
     const lowerUsername = username.toLowerCase();
     const user = await this.userRepo.findOne({
-      username: lowerUsername,
+      $or: [{ username: lowerUsername }, { email: { $ilike: username } }],
     });
 
     if (!user) throw new UnauthorizedException();

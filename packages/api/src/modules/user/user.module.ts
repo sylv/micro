@@ -5,6 +5,7 @@ import { File } from '../file/file.entity';
 import { FileModule } from '../file/file.module';
 import { InviteModule } from '../invite/invite.module';
 import { Paste } from '../paste/paste.entity';
+import { UserVerification } from './user-verification.entity';
 import { UserController } from './user.controller';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -14,7 +15,7 @@ import { UserService } from './user.service';
     forwardRef(() => InviteModule),
     AuthModule,
     forwardRef(() => FileModule),
-    MikroOrmModule.forFeature([User, File, Paste]),
+    MikroOrmModule.forFeature([User, UserVerification, File, Paste]),
   ],
   controllers: [UserController],
   providers: [UserService],

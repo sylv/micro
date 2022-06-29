@@ -7,13 +7,17 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
   Query,
+  Response,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
+import ms from 'ms';
 import { nanoid } from 'nanoid';
 import { Permission } from '../../constants';
 import { RequirePermissions, UserId } from '../auth/auth.decorators';
@@ -23,13 +27,17 @@ import type { JWTPayloadUser } from '../auth/strategies/jwt.strategy';
 import { InviteService } from '../invite/invite.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Pagination } from './dto/pagination.dto';
+import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto';
+import { UserVerification } from './user-verification.entity';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
+  private static readonly MIN_RESEND_INTERVAL = ms('5m');
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
+    @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>,
     private readonly userService: UserService,
     private readonly inviteService: InviteService,
     private readonly authService: AuthService
@@ -38,9 +46,7 @@ export class UserController {
   @Get('user')
   @UseGuards(JWTAuthGuard)
   async getUser(@UserId() userId: string) {
-    const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException('Unknown user.');
-    return user;
+    return this.userService.getUser(userId, false);
   }
 
   @Post('user')
@@ -65,7 +71,7 @@ export class UserController {
   @Get('user/token')
   @UseGuards(JWTAuthGuard)
   async getUserToken(@UserId() userId: string) {
-    const user = await this.userService.getUser(userId);
+    const user = await this.userService.getUser(userId, false);
     if (!user) throw new ForbiddenException('Unknown user.');
     const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
       name: user.username,
@@ -86,12 +92,61 @@ export class UserController {
     return this.getUserToken(userId);
   }
 
+  @Get('user/:userId/verify/:verifyId')
+  async verifyUser(
+    @Param('userId') userId: string,
+    @Param('verifyId') verifyId: string,
+    @Response() reply: FastifyReply
+  ) {
+    await this.userService.verifyUser(userId, verifyId);
+    return reply.redirect(302, '/login?verified=true');
+  }
+
+  @Post('user/:userId/verify')
+  @UseGuards(JWTAuthGuard)
+  @HttpCode(204)
+  async resendVerificationEmail(@Param('userId') userId: string, @Body() body: ResendVerificationEmailDto) {
+    const user = await this.userService.getUser(userId, false);
+    const latestVerification = await this.verificationRepo.findOne(
+      {
+        user: userId,
+        expiresAt: {
+          $gt: new Date(),
+        },
+      },
+      {
+        orderBy: {
+          expiresAt: 'DESC',
+        },
+      }
+    );
+
+    if (
+      latestVerification &&
+      latestVerification.expiresAt.getTime() > Date.now() + UserController.MIN_RESEND_INTERVAL
+    ) {
+      throw new BadRequestException('You can only send a verification email every 5 minutes.');
+    }
+
+    if (body.email) {
+      if (user.email) {
+        throw new BadRequestException('User already has an email address');
+      }
+
+      await this.userService.checkEmail(body.email);
+      user.email = body.email;
+    }
+
+    await this.userService.sendVerificationEmail(user);
+    await this.userRepo.persistAndFlush(user);
+  }
+
   // temporary until admin UI
   @Get('user/:id/delete')
   @RequirePermissions(Permission.DELETE_USERS)
   @UseGuards(JWTAuthGuard)
   async deleteUser(@Param('id') targetId: string) {
-    const target = await this.userService.getUser(targetId);
+    const target = await this.userService.getUser(targetId, false);
     if (!target) throw new BadRequestException('Unknown target.');
     if (this.userService.checkPermissions(target.permissions, Permission.ADMINISTRATOR)) {
       throw new ForbiddenException("You can't do that to that user.");
@@ -106,7 +161,7 @@ export class UserController {
   @RequirePermissions(Permission.ADD_USER_TAGS)
   @UseGuards(JWTAuthGuard)
   async addTagToUser(@Param('id') targetId: string, @Param('tag') tag: string) {
-    const target = await this.userService.getUser(targetId);
+    const target = await this.userService.getUser(targetId, false);
     if (!target) throw new BadRequestException('Unknown target.');
     if (target.tags.includes(tag.toLowerCase())) {
       throw new BadRequestException('User already has that tag.');
@@ -122,7 +177,7 @@ export class UserController {
   @RequirePermissions(Permission.ADD_USER_TAGS)
   @UseGuards(JWTAuthGuard)
   async removeTagFromUser(@Param('id') targetId: string, @Param('tag') tag: string) {
-    const target = await this.userService.getUser(targetId);
+    const target = await this.userService.getUser(targetId, false);
     if (!target) throw new BadRequestException('Unknown target.');
     if (!target.tags.includes(tag)) {
       throw new BadRequestException('User does not have that tag.');

@@ -4,7 +4,6 @@ import {
   BadRequestException,
   Body,
   Controller,
-  ForbiddenException,
   Get,
   Headers,
   HttpCode,
@@ -42,8 +41,7 @@ export class PasteController {
     @Req() request: FastifyRequest,
     @Headers('x-micro-host') hosts = config.rootHost.url
   ) {
-    const user = await this.userService.getUser(userId);
-    if (!user) throw new ForbiddenException('Unknown user');
+    const user = await this.userService.getUser(userId, true);
     if (request.host) this.hostService.checkUserCanUploadTo(request.host, user);
     if (!request.user && !config.publicPastes) {
       throw new BadRequestException('You must be logged in to create a paste on this instance.');
