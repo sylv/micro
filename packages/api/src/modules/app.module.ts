@@ -1,9 +1,12 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import type { MercuriusDriverConfig } from '@nestjs/mercurius';
+import { MercuriusDriver } from '@nestjs/mercurius';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import MikroOrmOptions from '../orm';
-import { AppController } from './app.controller';
+import { AppResolver } from './app.resolver';
 import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { HostModule } from './host/host.module';
@@ -14,10 +17,22 @@ import { ThumbnailModule } from './thumbnail/thumbnail.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  controllers: [AppController],
-  providers: [],
+  providers: [AppResolver],
   imports: [
     MikroOrmModule.forRoot(MikroOrmOptions),
+    GraphQLModule.forRoot<MercuriusDriverConfig>({
+      driver: MercuriusDriver,
+      graphiql: false,
+      sortSchema: true,
+      allowBatchedQueries: true,
+      autoSchemaFile: 'src/schema.gql',
+      errorFormatter: (execution) => {
+        return {
+          statusCode: 200,
+          response: execution,
+        };
+      },
+    }),
     ScheduleModule.forRoot(),
     PassportModule,
     StorageModule,

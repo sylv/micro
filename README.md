@@ -82,10 +82,11 @@ After that, you should be able to use it as normal. Thumbnails are the only data
 - [ ] Deletion URLs for pastes/links
 - [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] Password recovery via emails
+- [ ] SQLite support
 - [ ] Private email aliases (might be difficult/expensive)
+- [ ] Signing in should redirect you back to the page you were on. Across domains it should redirect you to the same path on the root host.
 - [ ] Export data options (all files, though that could get huge)
-- [ ] GIFs should probably be converted to mp4 videos to save space
-  - Discord is currently blocking this as they handle embedding videos (and gifs) extremely poorly. Unless the url has "mp4" in it it outright won't embed most of the time.
+- [ ] Convert gifs to mp4s on upload to save space
 
 ## discord
 

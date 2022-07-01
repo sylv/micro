@@ -21,17 +21,18 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       audience: TokenType.USER,
       ignoreExpiration: false,
       secretOrKey: config.secret,
-      jwtFromRequest: (request: FastifyRequest<{ Querystring: { token?: string } }>) =>
-        request.cookies.token ?? request.query.token ?? request.headers.authorization,
+      jwtFromRequest: (request: FastifyRequest<{ Querystring: { token?: string } }>) => {
+        return request.cookies.token ?? request.query.token ?? request.headers.authorization;
+      },
     });
   }
 
   async validate(payload: JWTPayloadUser): Promise<FastifyRequest['user']> {
     // todo: payload.secret makes jwts basically useless, but i'm keeping them so we dont break all
     // existing jwt tokens and require configs to be regenerated.
-    if (!payload.secret) throw new UnauthorizedException('Outdated JWT - refresh your session.');
+    if (!payload.secret) throw new UnauthorizedException('Outdated JWT - try refresh your session');
     const user = await this.userRepo.findOne({ secret: payload.secret });
-    if (!user) throw new UnauthorizedException('Invalid token secret.');
+    if (!user) throw new UnauthorizedException('Invalid token secret');
     return user;
   }
 }

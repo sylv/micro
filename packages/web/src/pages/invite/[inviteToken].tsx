@@ -1,35 +1,33 @@
-import type { GetInviteData } from '@ryanke/micro-api';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
 import { Container } from '../../components/container';
 import type { LoginData } from '../../components/login-form';
 import { LoginForm } from '../../components/login-form';
 import { PageLoader } from '../../components/page-loader';
 import { Time } from '../../components/time';
 import { Title } from '../../components/title';
+import { useGetInviteQuery } from '../../generated/graphql';
 import { getErrorMessage } from '../../helpers/get-error-message.helper';
 import { http } from '../../helpers/http.helper';
-import { useConfig } from '../../hooks/use-config.hook';
-import { useToasts } from '../../hooks/use-toasts.helper';
-import Error from '../_error';
+import { useConfig } from '../../hooks/useConfig';
+import { useToasts } from '../../hooks/useToasts';
+import ErrorPage from '../_error';
 
 export default function Invite() {
   const config = useConfig();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const setToast = useToasts();
-  const inviteToken = router.query.inviteToken;
-  const invite = useSWR<GetInviteData>(inviteToken ? `/api/invite/${inviteToken}` : null);
-  const expiresAt = invite.data?.expiresAt;
+  const createToast = useToasts();
+  const inviteToken = router.query.inviteToken as string | undefined;
+  const invite = useGetInviteQuery({ skip: !inviteToken, variables: { inviteId: inviteToken! } });
+  const expiresAt = invite.data?.invite.expiresAt;
 
   useEffect(() => {
     Router.prefetch('/login');
   }, []);
 
   if (invite.error || config.error) {
-    const error = invite.error || config.error;
-    return <Error status={error.status} message={error.text} />;
+    return <ErrorPage error={invite.error || config.error} />;
   }
 
   if (!invite.data || !config.data) {
@@ -46,10 +44,10 @@ export default function Invite() {
       });
 
       Router.push('/login');
-      setToast({ text: 'Account created successfully. Please sign in.' });
+      createToast({ text: 'Account created successfully. Please sign in.' });
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? 'An unknown error occurred.';
-      setToast({ error: true, text: message });
+      createToast({ error: true, text: message });
     } finally {
       setLoading(false);
     }
@@ -69,7 +67,7 @@ export default function Invite() {
           <LoginForm
             buttonText="Create Account"
             onContinue={onSubmit}
-            emailPrompt={config.data.email}
+            emailPrompt={config.data.requireEmails}
             loading={loading}
           />
         </div>

@@ -3,7 +3,7 @@ import type { Language } from 'prism-react-renderer';
 import { memo } from 'react';
 import { ChevronDown } from 'react-feather';
 import languages from '../../data/languages.json';
-import { useToasts } from '../../hooks/use-toasts.helper';
+import { useToasts } from '../../hooks/useToasts';
 
 export interface SyntaxHighlighterControls {
   onLanguageChange: (language: Language) => void;
@@ -12,10 +12,10 @@ export interface SyntaxHighlighterControls {
 }
 
 export const SyntaxHighlighterControls = memo<SyntaxHighlighterControls>(({ language, content, onLanguageChange }) => {
-  const setToast = useToasts();
+  const createToast = useToasts();
   const copyContent = () => {
     navigator.clipboard.writeText(content);
-    setToast({ text: 'Copied file content to clipboard.' });
+    createToast({ text: 'Copied file content to clipboard.' });
   };
 
   return (

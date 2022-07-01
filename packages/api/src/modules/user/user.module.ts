@@ -8,17 +8,18 @@ import { Paste } from '../paste/paste.entity';
 import { UserVerification } from './user-verification.entity';
 import { UserController } from './user.controller';
 import { User } from './user.entity';
+import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
 @Module({
   imports: [
     forwardRef(() => InviteModule),
-    AuthModule,
     forwardRef(() => FileModule),
+    AuthModule,
     MikroOrmModule.forFeature([User, UserVerification, File, Paste]),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserResolver],
   exports: [UserService],
 })
 export class UserModule {}

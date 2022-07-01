@@ -1,0 +1,29 @@
+fragment PasteCard on Paste {
+  id
+  title
+  encrypted
+  burn
+  type
+  createdAt
+  expiresAt
+  urls {
+    view
+  }
+}
+
+fragment FileCard on File {
+  id
+  type
+  displayName
+  sizeFormatted
+  thumbnail {
+    width
+    height
+  }
+  paths {
+    thumbnail
+  }
+  urls {
+    view
+  }
+}

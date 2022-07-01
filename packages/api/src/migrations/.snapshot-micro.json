@@ -130,12 +130,30 @@
         },
         {
           "columnNames": [
+            "secret"
+          ],
+          "composite": false,
+          "keyName": "users_secret_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
             "invite_id"
           ],
           "composite": false,
           "keyName": "users_invite_id_unique",
           "primary": false,
           "unique": true
+        },
+        {
+          "keyName": "users_username_index",
+          "columnNames": [
+            "username"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": false
         },
         {
           "keyName": "users_pkey",
@@ -643,15 +661,6 @@
           "nullable": true,
           "mappedType": "string"
         },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamptz(0)",
@@ -661,6 +670,15 @@
           "nullable": false,
           "length": 6,
           "mappedType": "datetime"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         }
       },
       "name": "files",
@@ -674,6 +692,15 @@
           "keyName": "files_thumbnail_file_id_unique",
           "primary": false,
           "unique": true
+        },
+        {
+          "columnNames": [
+            "owner_id"
+          ],
+          "composite": false,
+          "keyName": "files_owner_id_index",
+          "primary": false,
+          "unique": false
         },
         {
           "keyName": "files_pkey",

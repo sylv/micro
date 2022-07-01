@@ -9,5 +9,5 @@
   },
   "exclude": ["node_modules"],
   "extends": "@sylo-digital/scripts/tsconfig/base.json",
-  "include": ["src", "src/blocklist.json"]
+  "include": ["src", "src/blocklist.json", "src/fastify.d.ts"]
 }

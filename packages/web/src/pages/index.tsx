@@ -1,6 +1,6 @@
 import { Container } from '../components/container';
 import { Spinner } from '../components/spinner';
-import { useConfig } from '../hooks/use-config.hook';
+import { useConfig } from '../hooks/useConfig';
 
 export default function Home() {
   const config = useConfig();
@@ -27,8 +27,8 @@ export default function Home() {
         {config.data && (
           <p className="text-gray-400">
             To get an account or get a file taken down, email{' '}
-            <a href={`mailto:${config.data.inquiries}`} className="text-brand">
-              {config.data.inquiries}
+            <a href={`mailto:${config.data.inquiriesEmail}`} className="text-brand">
+              {config.data.inquiriesEmail}
             </a>
             .
           </p>

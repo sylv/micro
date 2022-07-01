@@ -1,0 +1,185 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Config {
+  allowTypes: [String!]!
+
+  """
+  The host the request is being made to. This host may not be in the hosts list if the user is not authorized to access it.
+  """
+  currentHost: ConfigHost!
+
+  """A list of hosts the user can access."""
+  hosts: [ConfigHost!]!
+  inquiriesEmail: String!
+  requireEmails: Boolean!
+  rootHost: ConfigHost!
+  uploadLimit: Float!
+}
+
+type ConfigHost {
+  normalised: String!
+  redirect: String
+  url: String!
+}
+
+input CreatePasteDto {
+  burn: Boolean!
+  content: String!
+  encrypted: Boolean!
+  expiresAt: Float
+  extension: String
+  hostname: String
+  paranoid: Boolean!
+  title: String
+}
+
+input CreateUserDto {
+  email: String
+  invite: String!
+  password: String!
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type File {
+  createdAt: DateTime!
+  displayName: String!
+  hash: String!
+  id: ID!
+  isOwner: Boolean!
+  metadata: FileMetadata
+  name: String
+  paths: ResourceLocations!
+  size: Float!
+  sizeFormatted: String!
+  thumbnail: Thumbnail
+  type: String!
+  urls: ResourceLocations!
+}
+
+type FileMetadata {
+  height: Float
+  width: Float
+}
+
+type FilePage {
+  edges: [FilePageEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type FilePageEdge {
+  cursor: String!
+  node: File!
+}
+
+type Invite {
+  consumed: Boolean!
+  createdAt: DateTime!
+  expired: Boolean!
+  expiresAt: DateTime
+  id: ID!
+  path: String!
+  permissions: Float
+  url: String!
+}
+
+type Link {
+  clicks: Float!
+  createdAt: DateTime!
+  destination: String!
+  id: ID!
+  paths: ResourceLocations!
+  urls: ResourceLocations!
+}
+
+type Mutation {
+  createInvite: Invite!
+  createLink(destination: String!, host: String): Link!
+  createPaste(partial: CreatePasteDto!): Paste!
+  createUser(data: CreateUserDto!): User!
+  deleteFile(fileId: ID!, key: String): Boolean!
+  refreshToken: User!
+  resendVerificationEmail(data: ResendVerificationEmailDto): Boolean!
+}
+
+type PageInfo {
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+}
+
+type Paste {
+  burn: Boolean!
+  burnt: Boolean
+  content: String!
+  createdAt: DateTime!
+  encrypted: Boolean!
+  expiresAt: DateTime
+  extension: String
+  id: ID!
+  paths: ResourceLocations!
+  title: String
+  type: String!
+  urls: ResourceLocations!
+}
+
+type PastePage {
+  edges: [PastePageEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PastePageEdge {
+  cursor: String!
+  node: Paste!
+}
+
+type Query {
+  config: Config!
+  file(fileId: ID!): File!
+  invite(inviteId: ID!): Invite!
+  link(linkId: ID!): Link!
+  paste(pasteId: ID!): Paste!
+  user: User!
+}
+
+input ResendVerificationEmailDto {
+  email: String!
+}
+
+type ResourceLocations {
+  delete: String
+  direct: String!
+  thumbnail: String
+  view: String!
+}
+
+type Thumbnail {
+  createdAt: DateTime!
+  duration: Float!
+  height: Float!
+  size: Float!
+  type: String!
+  width: Float!
+}
+
+type User {
+  aggregateFileSize: Float!
+  email: String
+  files(after: String, first: Float): FilePage!
+  id: ID!
+  pastes(after: String, first: Float): PastePage!
+  permissions: Float!
+  tags: [String!]!
+  token: String!
+  username: String!
+  verifiedEmail: Boolean!
+}

@@ -1,0 +1,6 @@
+query GetInvite($inviteId: ID!) {
+  invite(inviteId: $inviteId) {
+    id
+    expiresAt
+  }
+}

@@ -11,7 +11,7 @@ export const ToastWrapper: FC<{ children: ReactNode }> = (props) => {
   // spread operators on arrays are to fix this
   // https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render
   const [toasts, setToasts] = useState<(ToastProps & { id: string; timer: NodeJS.Timeout })[]>([]);
-  const setToast = useCallback(
+  const createToast = useCallback(
     (toast: ToastProps) => {
       if (toasts.some((existing) => existing.text === toast.text)) {
         // skip duplicate cards
@@ -47,7 +47,7 @@ export const ToastWrapper: FC<{ children: ReactNode }> = (props) => {
   );
 
   return (
-    <ToastContext.Provider value={setToast}>
+    <ToastContext.Provider value={createToast}>
       {props.children}
       <div className="fixed flex justify-end bottom-5 right-5 left-5">
         {toasts.map((toast) => (

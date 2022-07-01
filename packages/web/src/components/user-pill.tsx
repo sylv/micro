@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
-import { Avatar } from './avatar/avatar';
+import { Avatar } from './avatar';
 
 export interface UserPillProps extends HTMLAttributes<HTMLDivElement> {
   userId: string;

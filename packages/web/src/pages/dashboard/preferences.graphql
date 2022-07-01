@@ -1,0 +1,5 @@
+mutation RefreshToken {
+  refreshToken {
+    ...RegularUser
+  }
+}

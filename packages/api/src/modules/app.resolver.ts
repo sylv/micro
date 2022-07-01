@@ -1,0 +1,53 @@
+import { UseGuards } from '@nestjs/common';
+import { Query, Resolver } from '@nestjs/graphql';
+import { MicroHost } from '../classes/MicroHost';
+import { config } from '../config';
+import type { ConfigHost } from '../types/config.type';
+import { Config } from '../types/config.type';
+import { CurrentHost, UserId } from './auth/auth.decorators';
+import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard';
+import { UserService } from './user/user.service';
+
+@Resolver(() => Config)
+export class AppResolver {
+  constructor(private readonly userService: UserService) {}
+
+  @Query(() => Config)
+  @UseGuards(OptionalJWTAuthGuard)
+  async config(@CurrentHost() currentHost: MicroHost, @UserId() userId?: string): Promise<Config> {
+    let tags: string[] = [];
+    if (userId) {
+      const user = await this.userService.getUser(userId, false);
+      if (user) {
+        tags = user.tags;
+      }
+    }
+
+    return {
+      inquiriesEmail: config.inquiries,
+      uploadLimit: config.uploadLimit,
+      allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : [],
+      requireEmails: !!config.email,
+      hosts: config.hosts
+        .filter((host) => {
+          if (!host.tags || !host.tags[0]) return true;
+          return host.tags.every((tag) => tags.includes(tag));
+        })
+        .map((host) => ({
+          url: host.url,
+          normalised: host.normalised,
+          redirect: host.redirect,
+        })),
+      rootHost: this.filterHost(config.rootHost),
+      currentHost: this.filterHost(currentHost),
+    } as const;
+  }
+
+  private filterHost(host: MicroHost): ConfigHost {
+    return {
+      url: host.url,
+      normalised: host.normalised,
+      redirect: host.redirect,
+    };
+  }
+}

@@ -1,19 +1,12 @@
-import { Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
-import { RequirePermissions, UserId } from '../auth/auth.decorators';
-import { InviteService } from './invite.service';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Permission } from '../../constants';
+import { RequirePermissions, UserId } from '../auth/auth.decorators';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard';
+import { InviteService } from './invite.service';
 
 @Controller()
 export class InviteController {
   constructor(private readonly inviteService: InviteService) {}
-
-  @Get('invite/:id')
-  async getInvite(@Param('id') inviteId: string) {
-    const invite = await this.inviteService.get(inviteId);
-    if (!invite) throw new NotFoundException();
-    return invite;
-  }
 
   @Get('invite')
   @Post('invite')

@@ -1,9 +1,8 @@
-import type { GetFileData } from '@ryanke/micro-api';
 import { useRouter } from 'next/router';
 import type { ChangeEventHandler, DragEventHandler } from 'react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Upload as UploadIcon } from 'react-feather';
-import { Button } from '../components/button/button';
+import { Button } from '../components/button';
 import { Card } from '../components/card';
 import { Container } from '../components/container';
 import { Select } from '../components/input/select';
@@ -13,24 +12,28 @@ import { Title } from '../components/title';
 import { getErrorMessage } from '../helpers/get-error-message.helper';
 import { http } from '../helpers/http.helper';
 import { replaceUsername } from '../helpers/replace-username.helper';
-import { useConfig } from '../hooks/use-config.hook';
-import { useToasts } from '../hooks/use-toasts.helper';
-import { useUser } from '../hooks/use-user.helper';
+import { useConfig } from '../hooks/useConfig';
+import { useToasts } from '../hooks/useToasts';
+import { useUser } from '../hooks/useUser';
+
+interface CreateFileResponse {
+  id: string;
+  hostname?: string;
+  urls: {
+    view: string;
+  };
+}
 
 export default function Upload() {
-  const user = useUser();
+  const user = useUser(true);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [hover, setHover] = useState(false);
-  const setToast = useToasts();
+  const createToast = useToasts();
   const [selectedHost, setSelectedHost] = useState<string | undefined>();
   const config = useConfig();
-
-  useEffect(() => {
-    if (user.error) router.replace('/');
-  }, [user.error, router]);
 
   const onDragEvent =
     (entering?: boolean): DragEventHandler =>
@@ -75,9 +78,9 @@ export default function Upload() {
         headers: headers,
       });
 
-      const body: GetFileData = await response.json();
+      const body: CreateFileResponse = await response.json();
       const route = `/file/${body.id}`;
-      const isSameHost = body.hostname === config.data.host.normalised;
+      const isSameHost = body.hostname === config.data.currentHost.normalised;
       if (isSameHost) {
         router.push(route);
       }
@@ -85,7 +88,7 @@ export default function Upload() {
       location.href = body.urls.view;
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? 'An unknown error occured.';
-      setToast({ error: true, text: message });
+      createToast({ error: true, text: message });
     } finally {
       setFile(null);
       setUploading(false);

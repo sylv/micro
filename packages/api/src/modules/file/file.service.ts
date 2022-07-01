@@ -3,14 +3,7 @@ import type { Multipart } from '@fastify/multipart';
 import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import type { OnApplicationBootstrap } from '@nestjs/common';
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  NotFoundException,
-  PayloadTooLargeException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import contentRange from 'content-range';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -38,31 +31,11 @@ export class FileService implements OnApplicationBootstrap {
 
   async getFile(id: string, request: FastifyRequest) {
     const file = await this.fileRepo.findOneOrFail(id, { populate: ['owner'] });
-    if (file.hostname && !file.canSendTo(request)) {
+    if (!file.canSendTo(request)) {
       throw new NotFoundException('Your file is in another castle.');
     }
 
     return file;
-  }
-
-  async deleteFile(id: string, ownerId: string | null, deleteKey?: string) {
-    const file = await this.fileRepo.findOneOrFail(id);
-    if (deleteKey && file.deleteKey !== deleteKey) {
-      throw new UnauthorizedException('Invalid delete key.');
-    }
-
-    if (ownerId && file.owner.id !== ownerId) {
-      throw new UnauthorizedException('You cannot delete other users files.');
-    }
-
-    // todo: this should use a subscriber for file delete events, should also do
-    // the same for thumbnails or something ig
-    const filesWithHash = await this.fileRepo.count({ hash: file.hash });
-    if (filesWithHash === 1) {
-      await this.storageService.delete(file.hash);
-    }
-
-    await this.fileRepo.removeAndFlush(file);
   }
 
   async createFile(
@@ -117,7 +90,7 @@ export class FileService implements OnApplicationBootstrap {
       .header('Content-Type', type)
       .header('Content-Length', file.size)
       .header('Last-Modified', file.createdAt)
-      .header('Content-Disposition', `inline; filename="${file.displayName}"`)
+      .header('Content-Disposition', `inline; filename="${file.getDisplayName()}"`)
       .header('Cache-Control', 'public, max-age=31536000')
       .header('Expires', DateTime.local().plus({ years: 1 }).toHTTP())
       .header('X-Content-Type-Options', 'nosniff')
@@ -142,7 +115,7 @@ export class FileService implements OnApplicationBootstrap {
     for (const file of files) {
       const size = xbytes(file.size, { space: false });
       const age = DateTime.fromJSDate(file.createdAt).toRelative();
-      await this.deleteFile(file.id, null);
+      await this.fileRepo.removeAndFlush(file);
       this.logger.log(`Purging ${file.id} (${size}, ${age})`);
     }
 

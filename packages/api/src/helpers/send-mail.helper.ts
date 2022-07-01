@@ -9,7 +9,5 @@ export const sendMail = (options: Omit<nodemailer.SendMailOptions, 'from'>) => {
   }
 
   const merged = { ...options, from: config.email.from };
-  console.log(merged);
-  // console.log({ options });
   return transport.sendMail(merged);
 };

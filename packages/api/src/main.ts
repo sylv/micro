@@ -11,7 +11,7 @@ import { config } from './config';
 import { migrate } from './migrate';
 import { AppModule } from './modules/app.module';
 import { HostGuard } from './modules/host/host.guard';
-import { SerializerInterceptor } from './serializer.interceptor';
+import { SerializerInterceptor } from './helpers/serializer.interceptor';
 
 const limits: FastifyMultipartOptions = {
   limits: {
@@ -51,8 +51,8 @@ async function bootstrap(): Promise<void> {
 
   await app.register(cookie as any);
   await app.register(helmet);
-  await app.register(multipart as any, limits);
 
+  await app.register(multipart as any, limits);
   await app.listen(8080, '0.0.0.0', (error, address) => {
     if (error) throw error;
     logger.log(`Listening at ${address}`);

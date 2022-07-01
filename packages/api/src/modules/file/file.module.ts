@@ -7,12 +7,13 @@ import { StorageModule } from '../storage/storage.module';
 import { UserModule } from '../user/user.module';
 import { FileController } from './file.controller';
 import { File } from './file.entity';
+import { FileResolver } from './file.resolver';
 import { FileService } from './file.service';
 
 @Module({
   imports: [StorageModule, HostModule, UserModule, LinkModule, MikroOrmModule.forFeature([File, Paste])],
   controllers: [FileController],
-  providers: [FileService],
+  providers: [FileService, FileResolver],
   exports: [FileService],
 })
 export class FileModule {}

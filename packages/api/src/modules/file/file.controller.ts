@@ -4,7 +4,6 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   BadRequestException,
   Controller,
-  Delete,
   Get,
   Headers,
   Param,
@@ -35,32 +34,13 @@ export class FileController {
     private readonly linkService: LinkService
   ) {}
 
-  @Get('file/:fileId/content')
+  @Get('file/:fileId')
   async getFileContent(
     @Res() reply: FastifyReply,
     @Param('fileId') fileId: string,
     @Request() request: FastifyRequest
   ) {
     return this.fileService.sendFile(fileId, request, reply);
-  }
-
-  @Get('file/:fileId')
-  async getFile(@Res() reply: FastifyReply, @Param('fileId') fileId: string, @Request() request: FastifyRequest) {
-    const file = await this.fileService.getFile(fileId, request);
-    return reply.send(file);
-  }
-
-  @Delete('file/:fileId')
-  @UseGuards(JWTAuthGuard)
-  async deleteFile(@Param('fileId') fileId: string, @UserId() userId: string) {
-    await this.fileService.deleteFile(fileId, userId);
-    return { deleted: true };
-  }
-
-  @Get('file/:fileId/delete')
-  async deleteFileByKey(@Param('fileId') fileId: string, @Param('key') deleteKey: string) {
-    await this.fileService.deleteFile(fileId, null, deleteKey);
-    return { deleted: true };
   }
 
   @Post('file')
@@ -79,8 +59,9 @@ export class FileController {
       const link = await this.linkService.createLink(input, user.id, host);
       return {
         id: link.id,
-        urls: link.urls,
-        paths: link.paths,
+        hostname: link.hostname,
+        urls: link.getUrls(),
+        paths: link.getPaths(),
       };
     }
 
@@ -104,16 +85,18 @@ export class FileController {
       await this.pasteRepo.persistAndFlush(paste);
       return {
         id: paste.id,
-        urls: paste.urls,
-        paths: paste.paths,
+        hostname: paste.hostname,
+        urls: paste.getUrls(),
+        paths: paste.getPaths(),
       };
     }
 
     const file = await this.fileService.createFile(upload, request, user, host);
     return {
       id: file.id,
-      urls: file.urls,
-      paths: file.paths,
+      hostname: file.hostname,
+      urls: file.getUrls(),
+      paths: file.getPaths(),
     };
   }
 }

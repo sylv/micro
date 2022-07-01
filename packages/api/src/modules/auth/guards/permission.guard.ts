@@ -1,8 +1,8 @@
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { FastifyRequest } from 'fastify';
 import { Permission } from '../../../constants';
+import { getRequest } from '../../../helpers/get-request';
 import { UserService } from '../../user/user.service';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class PermissionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermissions = this.reflector.get<number | undefined>('permissions', context.getHandler());
     if (requiredPermissions === undefined) throw new Error('Missing permissions definition');
-    const request = context.switchToHttp().getRequest<FastifyRequest>();
+    const request = getRequest(context);
     if (!request.user.id) return false;
     const userId = request.user.id;
     const user = await this.userService.getUser(userId, false);

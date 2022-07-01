@@ -9,14 +9,14 @@
         "node": ">=16"
     },
     "scripts": {
-        "watch": "NODE_ENV=development next dev",
+        "watch": "NODE_ENV=development concurrently \"next dev\" \"pnpm generate --watch\"",
         "start": "NODE_ENV=production next start",
         "build": "NODE_ENV=production next build",
         "lint": "NODE_ENV=production next lint",
-        "storybook": "BROWSER=none start-storybook -p 6006",
-        "storybook:build": "build-storybook -o ./dist/storybook"
+        "generate": "graphql-codegen --config codegen.yml"
     },
     "dependencies": {
+        "@apollo/client": "^3.6.9",
         "@headlessui/react": "^1.6.1",
         "@tailwindcss/typography": "^0.5.2",
         "autoprefixer": "^10.4.7",
@@ -24,6 +24,7 @@
         "copy-to-clipboard": "^3.3.1",
         "dayjs": "^1.11.1",
         "generate-avatar": "1.4.10",
+        "graphql": "^16.5.0",
         "http-status-codes": "^2.2.0",
         "nanoid": "^3.3.4",
         "next": "12.1.6",
@@ -32,7 +33,6 @@
         "react": "18.2.0",
         "react-dom": "^18.1.0",
         "react-feather": "^2.0.9",
-        "react-infinite-scroll-component": "^6.1.0",
         "react-markdown": "^8.0.3",
         "rehype-raw": "^6.1.1",
         "remark-gfm": "^3.0.1",
@@ -40,19 +40,14 @@
         "tailwindcss": "^3.0.24"
     },
     "devDependencies": {
-        "@ryanke/micro-api": "workspace:*",
-        "@storybook/addon-essentials": "^6.4.22",
-        "@storybook/addon-interactions": "^6.4.22",
-        "@storybook/addon-links": "^6.4.22",
-        "@storybook/addon-postcss": "^2.0.0",
-        "@storybook/builder-webpack5": "^6.4.22",
-        "@storybook/cli": "^6.4.22",
-        "@storybook/manager-webpack5": "^6.4.22",
-        "@storybook/react": "^6.4.22",
+        "@graphql-codegen/cli": "^2.6.2",
+        "@graphql-codegen/typescript": "2.5.1",
+        "@graphql-codegen/typescript-operations": "2.4.2",
+        "@graphql-codegen/typescript-react-apollo": "3.2.16",
         "@sylo-digital/scripts": "^1.0.2",
         "@types/node": "16",
         "@types/react": "^18.0.8",
-        "storybook-dark-mode": "^1.1.0",
+        "concurrently": "^7.2.2",
         "typescript": "^4.7.4"
     }
 }

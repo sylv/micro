@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 /* eslint-disable import/no-default-export */
+import { LoadStrategy } from '@mikro-orm/core';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { join } from 'path';
@@ -21,6 +22,7 @@ export default {
   entities: [FileMetadata, File, Thumbnail, User, UserVerification, Invite, Paste, Link],
   clientUrl: config.databaseUrl,
   debug: true,
+  loadStrategy: LoadStrategy.JOINED,
   logger: (message) => {
     ormLogger.debug(message);
   },

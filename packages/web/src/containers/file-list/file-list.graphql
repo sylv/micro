@@ -1,0 +1,31 @@
+query GetFiles($first: Float, $after: String) {
+  user {
+    files(first: $first, after: $after) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          ...FileCard
+        }
+      }
+    }
+  }
+}
+
+query GetPastes($first: Float, $after: String) {
+  user {
+    pastes(first: $first, after: $after) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          ...PasteCard
+        }
+      }
+    }
+  }
+}

@@ -29,7 +29,7 @@ export type GetServerConfigData = Await<ReturnType<AppController['getConfig']>>;
 export type GetPasteData = Paste;
 export type CreatePasteBody = CreatePasteDto;
 
+export { Resource as ResourceBase } from './helpers/resource.entity-base';
+export type { ResourcePaths } from './helpers/resource.entity-base';
 export { File } from './modules/file/file.entity';
 export { User } from './modules/user/user.entity';
-export { ResourceBase } from './resource.entity-base';
-export type { ResourcePaths } from './resource.entity-base';

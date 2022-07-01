@@ -1,0 +1,26 @@
+query GetFile($fileId: ID!) {
+  file(fileId: $fileId) {
+    id
+    type
+    displayName
+    size
+    sizeFormatted
+    isOwner
+    metadata {
+      height
+      width
+    }
+    paths {
+      view
+      thumbnail
+      direct
+    }
+    urls {
+      view
+    }
+  }
+}
+
+mutation DeleteFile($fileId: ID!, $deleteKey: String) {
+  deleteFile(fileId: $fileId, key: $deleteKey)
+}

@@ -1,11 +1,13 @@
-import type { CreatePasteBody, GetPasteData } from '@ryanke/micro-api';
 import { useState } from 'react';
-import { Button } from '../../components/button/button';
+import { Button } from '../../components/button';
 import { Container } from '../../components/container';
 import { Select } from '../../components/input/select';
 import { Title } from '../../components/title';
+import type { CreatePasteDto } from '../../generated/graphql';
+import { useCreatePasteMutation } from '../../generated/graphql';
 import { encryptContent } from '../../helpers/encrypt.helper';
-import { http } from '../../helpers/http.helper';
+import { useAsync } from '../../hooks/useAsync';
+import { useUser } from '../../hooks/useUser';
 import ErrorPage from '../_error';
 
 const EXPIRY_OPTIONS = [
@@ -60,63 +62,57 @@ const TYPE_OPTIONS = [
 ];
 
 export default function Paste() {
+  const user = useUser();
   const [expiryMinutes, setExpiryMinutes] = useState(1440);
   const [encrypt, setEncrypt] = useState(true);
   const [burn, setBurn] = useState(false);
   const [paranoid, setParanoid] = useState(false);
   const [content, setContent] = useState('');
   const [extension, setExtension] = useState<string | null>(null);
-  const [pasting, setPasting] = useState(false);
-  const [error, setError] = useState<any>(null);
   const [title, setTitle] = useState<string | undefined>();
   const inferredExtension = extension || (content.includes('# ') ? 'md' : 'txt');
-  const submitDisabled = !content || pasting;
+  const [pasteMutation] = useCreatePasteMutation();
 
-  const submit = async () => {
-    try {
-      setPasting(true);
-      const body: CreatePasteBody = {
-        content: content,
-        burn: burn,
-        encrypted: false,
-        extension: inferredExtension,
-        paranoid: paranoid,
-        title: title,
-      };
+  const [createPaste, creatingPaste] = useAsync(async () => {
+    if (!user.data) return;
+    const body: CreatePasteDto = {
+      content: content,
+      burn: burn,
+      encrypted: false,
+      extension: inferredExtension,
+      paranoid: paranoid,
+      title: title,
+    };
 
-      if (expiryMinutes) {
-        const expiresInMs = expiryMinutes * 60 * 1000;
-        body.expiresAt = Date.now() + expiresInMs;
-      }
-
-      let encryptionKey: string | undefined;
-      if (encrypt) {
-        const result = await encryptContent(content);
-        body.encrypted = true;
-        body.content = result.encryptedContent;
-        encryptionKey = result.key;
-      }
-
-      const response = await http(`paste`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      const paste = (await response.json()) as GetPasteData;
-      setPasting(false);
-      let url = `/p/${paste.id}?burn=false`;
-      if (encryptionKey) url += `#key=${encryptionKey}`;
-      window.location.href = url;
-    } catch (error) {
-      setError(error);
-    } finally {
-      setPasting(false);
+    if (expiryMinutes) {
+      const expiresInMs = expiryMinutes * 60 * 1000;
+      body.expiresAt = Date.now() + expiresInMs;
     }
-  };
 
-  if (error) {
-    return <ErrorPage status={error.status} message={error.text || error.message} />;
+    let encryptionKey: string | undefined;
+    if (encrypt) {
+      const result = await encryptContent(content);
+      body.encrypted = true;
+      body.content = result.encryptedContent;
+      encryptionKey = result.key;
+    }
+
+    const paste = await pasteMutation({
+      variables: {
+        input: body,
+      },
+    });
+
+    if (paste.errors && paste.errors[0]) throw paste.errors[0];
+    const url = new URL(paste.data!.createPaste.urls.view);
+    if (body.burn) url.searchParams.set('burn_unless', user.data.id);
+    if (encryptionKey) url.hash = `key=${encryptionKey}`;
+    window.location.href = url.href;
+  });
+
+  const submitDisabled = !content || creatingPaste || !user.data;
+  if (user.error) {
+    return <ErrorPage error={user.error} />;
   }
 
   return (
@@ -203,7 +199,7 @@ export default function Paste() {
             </option>
           ))}
         </Select>
-        <Button className="w-auto" disabled={submitDisabled} onClick={submit}>
+        <Button className="w-auto" disabled={submitDisabled} onClick={createPaste}>
           Submit
         </Button>
       </div>

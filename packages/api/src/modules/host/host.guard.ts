@@ -1,12 +1,12 @@
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import type { FastifyRequest } from 'fastify';
 import { config } from '../../config';
+import { getRequest } from '../../helpers/get-request';
 
 @Injectable()
 export class HostGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<FastifyRequest>();
+    const request = getRequest(context);
     const referer = request.headers.referer;
     if (!referer) {
       request.host = config.hosts[0];

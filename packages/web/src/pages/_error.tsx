@@ -1,22 +1,25 @@
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { useRouter } from 'next/router';
 import { Container } from '../components/container';
 import { Link } from '../components/link';
 import { Title } from '../components/title';
-import { usePaths } from '../hooks/use-paths.helper';
+import { getErrorMessage } from '../helpers/get-error-message.helper';
+import { usePaths } from '../hooks/usePaths';
 
-export interface ErrorProps {
-  status?: StatusCodes;
-  message?: string;
+export enum Lenny {
+  Concerned = 'ಠ_ಠ',
+  Crying = '(ಥ﹏ಥ)',
+  Bear = 'ʕ•ᴥ•ʔ',
+  Kawaii = '≧☉_☉≦',
+  Wut = 'ლ,ᔑ•ﺪ͟͠•ᔐ.ლ',
+  Happy = '(◉͜ʖ◉)',
+  Shrug = '¯\\_(⊙_ʖ⊙)_/¯',
 }
 
-const ERROR_LENNIES = ['ಠ_ಠ', '(ಥ﹏ಥ)', 'ʕ•ᴥ•ʔ', '≧☉_☉≦', 'ლ,ᔑ•ﺪ͟͠•ᔐ.ლ', '( ͡ಠ ʖ̯ ͡ಠ)', '(◉͜ʖ◉)', '¯\\_(⊙_ʖ⊙)_/¯'];
+export type ErrorProps = ({ error: unknown } | { message: string }) & { lenny?: Lenny };
+
 export default function Error(props: ErrorProps) {
-  const router = useRouter();
-  const status = props.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
-  const lenny = ERROR_LENNIES[status % ERROR_LENNIES.length];
-  const message = props.message ?? router.query.message ?? getReasonPhrase(status);
+  const message = 'message' in props ? props.message : getErrorMessage(props.error) || 'An unknown error occurred.';
   const paths = usePaths();
+  const lenny = props.lenny ?? Lenny.Wut;
 
   return (
     <Container center>

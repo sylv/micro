@@ -1,6 +1,5 @@
-import { StatusCodes } from 'http-status-codes';
-import Error from './_error';
+import ErrorPage, { Lenny } from './_error';
 
 export default function NotFound() {
-  return <Error status={StatusCodes.NOT_FOUND} message="This ain't it chief." />;
+  return <ErrorPage message="This ain't it chief" lenny={Lenny.Shrug} />;
 }

@@ -1,0 +1,13 @@
+query GetUser {
+  user {
+    ...RegularUser
+  }
+}
+
+fragment RegularUser on User {
+  id
+  username
+  email
+  verifiedEmail
+  token
+}

@@ -1,7 +1,7 @@
 import type { ChangeEvent, FC, KeyboardEvent } from 'react';
 import { Fragment, useRef, useState } from 'react';
-import { useToasts } from '../hooks/use-toasts.helper';
-import { Button } from './button/button';
+import { useToasts } from '../hooks/useToasts';
+import { Button } from './button';
 import { Input } from './input/input';
 
 export interface LoginData {
@@ -21,7 +21,7 @@ export const LoginForm: FC<LoginProps> = ({ loading, buttonText, emailPrompt, on
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const setToast = useToasts();
+  const createToast = useToasts();
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const disabled = !username || !password || loading;
@@ -35,7 +35,7 @@ export const LoginForm: FC<LoginProps> = ({ loading, buttonText, emailPrompt, on
       // focus username if missing on enter
       // only show toast if username is already focused
       if (document.activeElement === usernameRef.current) {
-        setToast({
+        createToast({
           text: 'Username is required.',
           error: true,
         });
@@ -49,7 +49,7 @@ export const LoginForm: FC<LoginProps> = ({ loading, buttonText, emailPrompt, on
     if (!password) {
       // same as username above
       if (document.activeElement === passwordRef.current) {
-        setToast({
+        createToast({
           text: 'Password is required.',
           error: true,
         });

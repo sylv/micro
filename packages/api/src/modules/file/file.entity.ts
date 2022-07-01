@@ -2,6 +2,7 @@ import {
   Embedded,
   Entity,
   IdentifiedReference,
+  Index,
   LoadStrategy,
   ManyToOne,
   OneToOne,
@@ -9,79 +10,87 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { checkThumbnailSupport } from '@ryanke/thumbnail-generator';
+import { Exclude } from 'class-transformer';
 import mimeType from 'mime-types';
 import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
-import { ResourceBase } from '../../resource.entity-base';
+import { ResourceBase } from '../../types';
+import { Paginated } from '../../types/paginated.type';
 import { Thumbnail } from '../thumbnail/thumbnail.entity';
 import { User } from '../user/user.entity';
 import { FileMetadata } from './file-metadata.embeddable';
 
 @Entity({ tableName: 'files' })
+@ObjectType()
 export class File extends ResourceBase {
   @PrimaryKey()
+  @Field(() => ID)
   id: string;
 
   @Property()
+  @Field()
   type: string;
 
   @Property()
+  @Field()
   size: number;
 
   @Property()
+  @Field()
   hash: string;
 
   @Embedded(() => FileMetadata, { nullable: true })
+  @Field(() => FileMetadata, { nullable: true })
   metadata?: FileMetadata;
 
   @Property({ lazy: true, nullable: true, hidden: true })
   deleteKey?: string = generateDeleteKey();
 
   @Property({ nullable: true })
+  @Field({ nullable: true })
   name?: string;
 
   @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, strategy: LoadStrategy.JOINED })
+  @Field(() => Thumbnail, { nullable: true })
   thumbnail?: Thumbnail;
 
-  @ManyToOne(() => User, {
-    // todo: mikroorm should handle this for us, it should serialize the user to an { id }
-    // object. instead it serializes it to a string which breaks types client-side.
-    serializer: (value) => ({ id: value.id }),
-    wrappedReference: true,
-  })
+  @Property()
+  @Field()
+  createdAt: Date = new Date();
+
+  @ManyToOne(() => User, { wrappedReference: true, hidden: true })
+  @Exclude()
+  @Index()
   owner: IdentifiedReference<User>;
 
-  @Property({ type: Date })
-  createdAt = new Date();
-
-  @Property({ persist: false })
-  get extension() {
+  getExtension() {
     return mimeType.extension(this.type) || 'bin';
   }
 
-  @Property({ persist: false })
-  get displayName() {
-    const extension = this.extension;
+  getDisplayName() {
+    const extension = this.getExtension();
     return this.name ? this.name : extension ? `${this.id}.${extension}` : this.id;
   }
 
-  @Property({ persist: false })
-  get paths() {
+  getPaths() {
+    const extension = this.getExtension();
     const prefix = this.type.startsWith('video') ? '/v' : this.type.startsWith('image') ? '/i' : '/f';
     const viewPath = `${prefix}/${this.id}`;
-    const directPath = `${prefix}/${this.id}.${this.extension}`;
-    const metadataPath = `/api/file/${this.id}`;
+    const directPath = `${prefix}/${this.id}.${extension}`;
     const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : undefined;
     const deletePath = this.deleteKey ? `${prefix}/${this.id}/delete?key=${this.deleteKey}` : undefined;
 
     return {
       view: viewPath,
       direct: directPath,
-      metadata: metadataPath,
       thumbnail: thumbnailUrl,
       delete: deletePath,
     };
   }
 
-  [OptionalProps]: 'paths' | 'urls' | 'displayName' | 'createdAt' | 'thumbnail' | 'name' | 'deleteKey' | 'extension';
+  [OptionalProps]: 'createdAt';
 }
+
+@ObjectType()
+export class FilePage extends Paginated(File) {}

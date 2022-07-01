@@ -12,16 +12,11 @@ export class LinkController {
     private readonly linkService: LinkService
   ) {}
 
-  @Get('link/:id/go')
+  @Get('link/:id')
   async followLink(@Param('id') id: string, @Request() request: FastifyRequest, @Res() reply: FastifyReply) {
     const link = await this.linkService.getLink(id, request);
     link.clicks++;
     await this.linkRepo.persistAndFlush(link);
     await reply.redirect(301, link.destination);
-  }
-
-  @Get('link/:id')
-  async getLink(@Request() request: FastifyRequest, @Param('id') id: string) {
-    return this.linkService.getLink(id, request);
   }
 }

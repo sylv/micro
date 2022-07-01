@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import { Fragment, memo, useRef, useState } from 'react';
 import { Crop } from 'react-feather';
-import { http } from '../../helpers/http.helper';
-import { useAsync } from '../../hooks/use-async';
-import { useConfig } from '../../hooks/use-config.hook';
-import { useOnClickOutside } from '../../hooks/use-on-click-outside.helper';
-import { usePaths } from '../../hooks/use-paths.helper';
-import { useUser } from '../../hooks/use-user.helper';
-import { Button } from '../button/button';
+import { useResendVerificationEmailMutation } from '../../generated/graphql';
+import { useAsync } from '../../hooks/useAsync';
+import { useConfig } from '../../hooks/useConfig';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import { usePaths } from '../../hooks/usePaths';
+import { useUser } from '../../hooks/useUser';
+import { Button } from '../button';
 import { Container } from '../container';
 import { Input } from '../input/input';
 import { Link } from '../link';
@@ -31,6 +31,7 @@ export const Header = memo(() => {
     setShowEmailInput(false);
   });
 
+  const [resendMutation] = useResendVerificationEmailMutation();
   const [resendVerification, sendingVerification] = useAsync(async () => {
     if (!user.data) return;
     if (!user.data.email && !email) {
@@ -38,12 +39,10 @@ export const Header = memo(() => {
       return;
     }
 
-    const body = !user.data.email && email ? { email } : {};
-    await http(`user/${user.data.id}/verify`, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
+    const payload = !user.data.email && email ? { email } : null;
+    await resendMutation({
+      variables: {
+        data: payload,
       },
     });
 
@@ -53,7 +52,7 @@ export const Header = memo(() => {
 
   return (
     <Fragment>
-      {user.data && !user.data.verifiedEmail && config.data?.email && (
+      {user.data && !user.data.verifiedEmail && config.data?.requireEmails && (
         <div className="bg-purple-500 py-2 text-white shadow-2xl">
           <Container>
             <span className="relative">

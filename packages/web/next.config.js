@@ -3,11 +3,11 @@ module.exports = {
     return [
       {
         source: '/t/:thumbnailId',
-        destination: 'http://localhost:8080/thumbnail/:thumbnailId/content',
+        destination: 'http://localhost:8080/thumbnail/:thumbnailId',
       },
       {
         source: '/(f|v|i)/:fileId.:extension',
-        destination: 'http://localhost:8080/file/:fileId/content',
+        destination: 'http://localhost:8080/file/:fileId',
       },
       {
         source: '/(f|v|i)/:fileId/delete',
@@ -19,11 +19,11 @@ module.exports = {
       },
       {
         source: '/(p|paste)/:pasteId.:extension',
-        destination: 'http://localhost:8080/paste/:pasteId/content',
+        destination: 'http://localhost:8080/paste/:pasteId',
       },
       {
         source: '/(l|s|link)/:linkId',
-        destination: 'http://localhost:8080/link/:linkId/go',
+        destination: 'http://localhost:8080/link/:linkId',
       },
       {
         source: '/p/:pasteId',

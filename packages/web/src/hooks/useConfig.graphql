@@ -1,0 +1,19 @@
+query Config {
+  config {
+    allowTypes
+    inquiriesEmail
+    requireEmails
+    uploadLimit
+    currentHost {
+      normalised
+      redirect
+    }
+    rootHost {
+      normalised
+      url
+    }
+    hosts {
+      normalised
+    }
+  }
+}
