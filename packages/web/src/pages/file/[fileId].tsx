@@ -1,15 +1,17 @@
 import classNames from 'classnames';
 import copyToClipboard from 'copy-to-clipboard';
+import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import type { FC, ReactNode } from 'react';
 import { useState } from 'react';
 import { Download, Share, Trash } from 'react-feather';
+import { addStateToPageProps, initializeApollo } from '../../apollo';
 import { Container } from '../../components/container';
 import { Embed } from '../../components/embed/embed';
 import { PageLoader } from '../../components/page-loader';
 import { Spinner } from '../../components/spinner';
 import { Title } from '../../components/title';
-import { useDeleteFileMutation, useGetFileQuery } from '../../generated/graphql';
+import { ConfigDocument, GetFileDocument, useDeleteFileMutation, useGetFileQuery } from '../../generated/graphql';
 import { downloadUrl } from '../../helpers/download.helper';
 import { useAsync } from '../../hooks/useAsync';
 import { useQueryState } from '../../hooks/useQueryState';
@@ -126,23 +128,21 @@ export default function File() {
   );
 }
 
-// export async function getServerSideProps(
-//   context: GetServerSidePropsContext
-// ): Promise<GetServerSidePropsResult<FileProps>> {
-//   // why on earth does nextjs, where the entire point is ssr, not have
-//   // an easy way to handle basic errors like 404 when server-side rendering? why cant it just catch the error
-//   // and pass it to my custom error page where i can have custom error handling?
-//   // why do i have to manually handle the error each time?
-//   // yes, im salty about it.
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const client = initializeApollo({ context });
+  await Promise.all([
+    await client.query({
+      query: ConfigDocument,
+    }),
+    await client.query({
+      query: GetFileDocument,
+      variables: {
+        fileId: context.query.fileId,
+      },
+    }),
+  ]);
 
-//   try {
-//     const fallbackData = await fetcher<GetFileData>(`file/${context.query.fileId}`, { context });
-//     return { props: { fallbackData } };
-//   } catch (error) {
-//     if (error instanceof HTTPError) {
-//       return { notFound: true };
-//     }
-
-//     throw error;
-//   }
-// }
+  return addStateToPageProps(client, {
+    props: {},
+  });
+}

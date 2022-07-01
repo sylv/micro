@@ -1,12 +1,14 @@
+import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BookOpen, Clock, Trash } from 'react-feather';
+import { addStateToPageProps, initializeApollo } from '../../apollo';
 import { Button } from '../../components/button';
 import { Container } from '../../components/container';
 import { Embed } from '../../components/embed/embed';
 import { PageLoader } from '../../components/page-loader';
 import { Time } from '../../components/time';
-import { useGetPasteQuery } from '../../generated/graphql';
+import { ConfigDocument, GetPasteDocument, useGetPasteQuery } from '../../generated/graphql';
 import { decryptContent } from '../../helpers/encrypt.helper';
 import { hashToObject } from '../../helpers/hash-to-object';
 import { useUser } from '../../hooks/useUser';
@@ -154,4 +156,23 @@ export default function ViewPaste() {
       </p>
     </Container>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const client = initializeApollo({ context });
+  await Promise.all([
+    await client.query({
+      query: ConfigDocument,
+    }),
+    await client.query({
+      query: GetPasteDocument,
+      variables: {
+        pasteId: context.query.pasteId,
+      },
+    }),
+  ]);
+
+  return addStateToPageProps(client, {
+    props: {},
+  });
 }

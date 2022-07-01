@@ -1,13 +1,15 @@
 import { ApolloProvider } from '@apollo/client';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { client } from '../apollo';
+import { useApollo } from '../apollo';
 import { Header } from '../components/header/header';
 import { Title } from '../components/title';
 import { ToastWrapper } from '../components/toast/toast-wrapper';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const client = useApollo(pageProps);
+
   return (
     <ApolloProvider client={client}>
       <Title>Home</Title>

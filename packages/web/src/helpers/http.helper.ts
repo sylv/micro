@@ -14,16 +14,13 @@ export class HTTPError extends Error {
   }
 }
 
-export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
-  const isServer = typeof window === 'undefined';
-  let url: string;
-  if (isServer && !pathOrUrl.startsWith('http')) {
-    const path = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
-    url = `${process.env.API_URL}${path}`;
-  } else {
-    url = pathOrUrl.startsWith('http') || pathOrUrl.startsWith('/') ? pathOrUrl : `/api/${pathOrUrl}`;
-  }
+export const isServer = typeof window === 'undefined';
+export const apiUri = isServer ? process.env.API_URL : `/api`;
 
+export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
+  const hasProtocol = pathOrUrl.startsWith('http');
+  const isAbsolute = pathOrUrl.startsWith('/');
+  const url = hasProtocol ? pathOrUrl : isAbsolute ? `${apiUri}${pathOrUrl}` : `${apiUri}/${pathOrUrl}`;
   const response = await fetch(url, options);
   if (!response.ok) {
     const clone = response.clone();
