@@ -29,7 +29,7 @@ const EXPIRY_OPTIONS = [
   { name: '1 year', value: 525600 },
 ];
 
-export const TEXT_TYPES = [
+const TEXT_TYPES = [
   { name: 'Markdown', ext: 'md', type: 'text/markdown' },
   { name: 'Plain Text', ext: 'txt', type: 'text/plain' },
   { name: 'HTML', ext: 'html', type: 'text/html' },
@@ -155,14 +155,14 @@ export default function Paste() {
               spellCheck="false"
               placeholder="Markdown, code or plain text"
             />
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-2 justify-end flex-wrap">
               <label className="flex gap-2 items-center">
                 <Checkbox id="burn" />
                 <span className="truncate">Destroy after viewing</span>
               </label>
               <label className="flex gap-2 items-center">
                 <Checkbox id="paranoid" />
-                Paranoid
+                Long ID
               </label>
               <label className="flex gap-2 items-center">
                 <Checkbox id="encrypt" />
