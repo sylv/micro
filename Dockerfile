@@ -24,6 +24,7 @@ RUN pnpm build
 
 # run as the "node" user https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
 RUN chmod +x ./wrapper.sh
+RUN chown node:node packages/api/src/schema.gql
 USER node
 ENV NODE_ENV=production
 
