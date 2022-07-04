@@ -1,23 +1,14 @@
-import classNames from 'classnames';
 import type { InputHTMLAttributes } from 'react';
 import React from 'react';
-import { inputClasses, InputContainer } from './input-container';
+import type { InputChildProps } from './container';
+import { InputContainer } from './container';
 
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
-  className?: string;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
-}
+export interface InputProps extends InputChildProps<InputHTMLAttributes<HTMLInputElement>> {}
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ prefix, suffix, className, ...rest }, ref) => {
-  const classes = classNames(inputClasses, {
-    'rounded-l': !prefix,
-    'rounded-r': !suffix,
-  });
-
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...delegated }, ref) => {
   return (
-    <InputContainer prefix={prefix} suffix={suffix} className={className}>
-      <input {...rest} className={classes} ref={ref} />
+    <InputContainer className={className} childProps={delegated}>
+      {({ childClasses, ...rest }) => <input {...rest} className={childClasses} ref={ref} />}
     </InputContainer>
   );
 });

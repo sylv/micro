@@ -87,7 +87,7 @@ export default function ViewPaste() {
         <p className="max-w-xl text-center text-gray-400">
           This paste is set to be destroyed unless anyone but the owner views it.
         </p>
-        <Button primary className="max-w-xs mt-4" onClick={() => setConfirmedBurn(true)}>
+        <Button className="max-w-xs mt-4" onClick={() => setConfirmedBurn(true)}>
           Destroy Paste and View
         </Button>
       </Container>

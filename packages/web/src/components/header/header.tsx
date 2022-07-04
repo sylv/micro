@@ -7,7 +7,7 @@ import { useConfig } from '../../hooks/useConfig';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { usePaths } from '../../hooks/usePaths';
 import { useUser } from '../../hooks/useUser';
-import { Button } from '../button';
+import { Button, ButtonStyle } from '../button';
 import { Container } from '../container';
 import { Input } from '../input/input';
 import { Link } from '../link';
@@ -78,7 +78,7 @@ export const Header = memo(() => {
                       placeholder="Email"
                       disabled={sendingVerification}
                     />
-                    <Button primary onClick={resendVerification} className="w-auto">
+                    <Button onClick={resendVerification} className="w-auto">
                       Submit
                     </Button>
                   </div>
@@ -99,7 +99,7 @@ export const Header = memo(() => {
             {user.data ? (
               <HeaderUser userId={user.data.id} username={user.data.username} />
             ) : (
-              <Button href={paths.login} className="bg-dark-500 hover:bg-dark-900">
+              <Button style={ButtonStyle.Secondary} href={paths.login}>
                 Sign In
               </Button>
             )}

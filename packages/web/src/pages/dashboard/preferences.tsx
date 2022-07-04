@@ -2,6 +2,7 @@ import { Container } from '../../components/container';
 import { PageLoader } from '../../components/page-loader';
 
 import { Breadcrumbs } from '../../components/breadcrumbs';
+import { Input } from '../../components/input/input';
 import { Title } from '../../components/title';
 import { ConfigGenerator } from '../../containers/config-generator/config-generator';
 import { useRefreshTokenMutation } from '../../generated/graphql';
@@ -43,8 +44,7 @@ export default function Preferences() {
           </p>
         </div>
         <div className="right flex items-center col-span-full md:col-span-1">
-          <input
-            className="bg-black rounded text-white px-2 py-1 outline-none border border-transparent focus:border-purple-400 w-full"
+          <Input
             readOnly
             value={user.data.token}
             onFocus={(event) => {
@@ -56,26 +56,6 @@ export default function Preferences() {
       <div className="mt-10">
         <ConfigGenerator />
       </div>
-      {/* <div className="grid grid-cols-8 gap-2">
-          <div className="col-span-full md:col-span-2">
-            <Button disabled={regenerating} onClick={regenerateToken}>
-              Regenerate
-            </Button>
-          </div>
-          <div className="col-span-full md:col-span-6">
-            <HostList
-              prefix="ShareX config hosts"
-              hosts={config.data.hosts.map((host) => host.normalised)}
-              username={user.data.username}
-              onChange={(hosts) => {
-                setSelectedHosts(hosts);
-              }}
-            />
-          </div>
-          <div className="col-span-full md:col-span-2">
-            <ShareXButton hosts={selectedHosts} token={token.data.token} />
-          </div>
-        </div> */}
     </Container>
   );
 }

@@ -4,3 +4,9 @@ query GetInvite($inviteId: ID!) {
     expiresAt
   }
 }
+
+mutation CreateUser($user: CreateUserDto!) {
+  createUser(data: $user) {
+    id
+  }
+}

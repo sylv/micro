@@ -19,12 +19,12 @@ export function Toggle<T extends string | number | boolean>({
   onChange,
 }: ToggleProps<T>) {
   return (
-    <div className="inline-flex items-center overflow-hidden select-none bg-dark-400 text-gray-400 rounded-full">
+    <div className="inline-flex items-center overflow-hidden select-none bg-black text-gray-400 rounded-full">
       {options.map((item) => {
         const active = item.value === selected;
         const classes = classNames(
           'rounded-full px-4 py-1 text-sm cursor-pointer h-full',
-          active ? 'text-white' : 'hover:bg-gray-800',
+          active ? 'text-white' : 'hover:bg-dark-200',
           active && backgroundColour
         );
 

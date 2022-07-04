@@ -2,7 +2,14 @@ import type { Embeddable } from './embeddable';
 
 export const EmbedVideo = ({ file }: { file: Embeddable }) => {
   return (
-    <video controls loop playsInline className="h-full outline-none" height={file.height} width={file.width}>
+    <video
+      controls
+      loop
+      playsInline
+      className="h-full outline-none"
+      height={file.height || undefined}
+      width={file.width || undefined}
+    >
       <source src={file.paths.direct} type={file.type} />
     </video>
   );

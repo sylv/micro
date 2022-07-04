@@ -135,9 +135,7 @@ export default function Upload() {
                 </option>
               ))}
             </Select>
-            <Button primary onClick={handleUpload}>
-              Upload
-            </Button>
+            <Button onClick={handleUpload}>Upload</Button>
           </div>
           <span
             className="mt-4 cursor-pointer text-brand"

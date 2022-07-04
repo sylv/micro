@@ -3,19 +3,21 @@ import { getErrorMessage } from '../helpers/get-error-message.helper';
 import { useToasts } from './useToasts';
 
 export function useAsync<T, X extends any[]>(handler: (...params: X) => Promise<T>) {
-  const [running, setRunning] = useState(false);
+  const [promise, setPromise] = useState<Promise<T> | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [result, setResult] = useState<T | null>(null);
   const createToast = useToasts();
+  const running = !!promise;
   const run = async (...params: X) => {
-    if (running) {
-      return;
+    if (promise) {
+      return promise;
     }
 
     try {
-      setRunning(true);
+      const promise = handler(...params);
+      setPromise(promise);
       setError(null);
-      const result = await handler(...params);
+      const result = await promise;
       setResult(result);
     } catch (error: any) {
       const message = getErrorMessage(error);
@@ -27,8 +29,9 @@ export function useAsync<T, X extends any[]>(handler: (...params: X) => Promise<
       }
 
       setError(error);
+      throw error;
     } finally {
-      setRunning(false);
+      setPromise(null);
     }
   };
 

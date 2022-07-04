@@ -13,8 +13,8 @@ export const EmbedImage = ({ data }: { data: Embeddable }) => {
         className="object-contain h-full"
         src={data.paths.direct}
         alt={data.displayName}
-        height={data.height}
-        width={data.width}
+        height={data.height || undefined}
+        width={data.width || undefined}
       />
     </Fragment>
   );

@@ -1,10 +1,14 @@
 import Router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { resetClient } from '../apollo';
-import type { LoginData } from '../components/login-form';
 import { useGetUserQuery } from '../generated/graphql';
 import { http } from '../helpers/http.helper';
 import { useAsync } from './useAsync';
+
+interface LoginData {
+  username: string;
+  password: string;
+}
 
 export const useUser = (redirect = false) => {
   const user = useGetUserQuery();
