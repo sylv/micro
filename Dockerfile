@@ -49,8 +49,10 @@ COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/static .
 COPY --from=builder --chown=node:node /usr/src/micro/packages/api/dist ./packages/api/dist
 COPY --from=builder --chown=node:node /usr/src/micro/packages/api/dist ./packages/api/dist
 
-USER node
 
 COPY wrapper.sh .
 RUN chmod +x ./wrapper.sh
+
+USER node
+
 ENTRYPOINT ["./wrapper.sh"]
