@@ -6,7 +6,7 @@ An invite-only file sharing service with support for ShareX. You can see a previ
   - [features](#features)
   - [screenshots](#screenshots)
   - [installation](#installation)
-  - [migrating from 0.0.x to 1.0.0](#migrating-from-00x-to-100)
+    - [updating](#updating)
   - [todo](#todo)
   - [discord](#discord)
 
@@ -48,7 +48,9 @@ An invite-only file sharing service with support for ShareX. You can see a previ
 
 ## installation
 
-If you need help, join the [discord server](https://discord.gg/VDMX6VQRZm). This guide assumes you are on linux with a basic understanding of linux and docker.
+> If you need help, join the [discord server](https://discord.gg/VDMX6VQRZm). This guide assumes you are on linux with a basic understanding of linux and docker.
+
+> To migrate from micro 0.0.x to 1.0.0, see [MIGRATING.md](MIGRATING.md).
 
 1. Install `git`, `docker` and `docker-compose`
 2. Download the files in this repository, `git clone https://github.com/sylv/micro.git`
@@ -57,34 +59,23 @@ If you need help, join the [discord server](https://discord.gg/VDMX6VQRZm). This
 5. Run `docker-compose up -d` to start the database and micro.
 6. Get the startup invite by doing `docker-compose logs micro` and copying the invite URL that should be somewhere towards the end of the log. Go to that URL to create the first account.
 
-Setup is now complete and your instance should be working. When updates come out, create a backup of the database then pull the latest image and restart the container. Unlike past versions migrations are applied automatically.
+Setup is now complete and your instance should be working.
 
-## migrating from 0.0.x to 1.0.0
+### updating
 
-I've made a best effort attempt to make migration as painless as possible, mostly for my own sanity. These steps are quite in-depth but in reality the migration should be fairly simple for most users. If you get stuck at any point, please join the [discord server](https://discord.gg/VDMX6VQRZm) and ask for help.
+You should take a full database backup before updating. Pending database migrations will be applied automatically on startup.
 
-1. Create a backup of the database and the data directory.
-2. Update your `.microrc` with the changes seen in [example config](example/.microrc.yaml) (your config may be in json with the example now being yaml, but the keys are 1:1), notable changes are `database` is now `databaseUrl`.
-3. Change the docker image from `sylver/micro` or `sylver/micro:master` to `sylver/micro:main`
-4. Change the port from `8080` to `3000`. If you are using the example config, do this in `Caddyfile` by changing `micro:8080` to `micro:3000`.
-5. Start the container. It should exit on startup with an error message saying that there is data that must be migrated. If it does not, you did not update the image tag correctly or it cannot detect data to be migrated.
-6. Read the error message, then stop the container and set the `MIGRATE_OLD_DATABASE` environment variable to `true`
-7. Start the container and it will migrate the database automatically.
-
-After that, you should be able to use it as normal. Thumbnails are the only data that is not migrated, as the format changed and it doesn't really matter because they can just be regenerated on demand. If you run into any issues during migration, join the [discord server](https://discord.gg/VDMX6VQRZm) or open an issue on [github](https://github.com/sylv/micro/issues/new).
+1. `docker-compose pull micro`
+2. `docker-compose up -d micro`
 
 ## todo
 
 - [ ] Ratelimiting
 - [ ] Admin UI
-- [ ] Create paste UI
-- [ ] List of pastes in the dashboard
 - [ ] Deletion URLs for pastes/links
-- [ ] Redirects may be broken. Also hosts with no redirect should probably just have it set to the root host, that should allow us to strip some unnecessary code.
 - [ ] Password recovery via emails
 - [ ] SQLite support
-- [ ] Private email aliases (might be difficult/expensive)
-- [ ] Signing in should redirect you back to the page you were on. Across domains it should redirect you to the same path on the root host.
+- [ ] Private email aliases like firefox relay (might be difficult/expensive)
 - [ ] Export data options (all files, though that could get huge)
 - [ ] Convert gifs to mp4s on upload to save space
 
