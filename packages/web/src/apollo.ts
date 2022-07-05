@@ -1,7 +1,7 @@
 import type { NormalizedCacheObject } from '@apollo/client';
 import { ApolloClient, from, HttpLink, InMemoryCache } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
-import { concatPagination } from '@apollo/client/utilities';
+import { relayStylePagination } from '@apollo/client/utilities';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 import type { GetServerSidePropsContext } from 'next';
@@ -44,10 +44,15 @@ function createApolloClient(context?: GetServerSidePropsContext) {
     link: from([errorLink, httpLink]),
     cache: new InMemoryCache({
       typePolicies: {
-        Query: {
+        User: {
+          keyFields: [],
           fields: {
-            allPosts: concatPagination(),
+            files: relayStylePagination(),
+            pastes: relayStylePagination(),
           },
+        },
+        Config: {
+          keyFields: [],
         },
       },
     }),
