@@ -33,7 +33,7 @@ export async function middleware(req: NextRequest) {
       return new Response(null, {
         status: 302,
         headers: {
-          location: `/api/file/${fileId}/content`,
+          location: `/api/file/${fileId}`,
           'x-beep': 'boop',
         },
       });
