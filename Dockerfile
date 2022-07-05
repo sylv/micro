@@ -36,6 +36,7 @@ ENV NODE_ENV production
 
 WORKDIR /usr/src/micro
 
+RUN apk add --no-cache ffmpeg
 
 # copy file dependencies
 COPY --from=builder /usr/src/micro/packages/web/public ./packages/web/public
