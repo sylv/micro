@@ -1,14 +1,9 @@
 import { EntityRepository, QueryOrder, UniqueConstraintViolationException } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import {
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Injectable
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import bcrypt from 'bcrypt';
-import { readFileSync } from 'fs';
+import dedent from 'dedent';
 import { compile } from 'handlebars';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
@@ -25,12 +20,18 @@ import type { Pagination } from './dto/pagination.dto';
 import { UserVerification } from './user-verification.entity';
 import { User } from './user.entity';
 
+const EMAIL_TEMPLATE_SOURCE = dedent`
+  <body>
+  <h1>Verify Your Email</h1>
+  <p>Thanks for signing up to micro. Click the link below to verify your email and activate your account.</p>
+  <a href="{{verifyUrl}}">{{verifyUrl}}</a>
+  <p><i>If you did not sign up for micro, ignore this email.</i></p>
+`;
+
 @Injectable()
 export class UserService {
   private static readonly VERIFICATION_EXPIRY = ms('6 hours');
-  private static readonly EMAIL_TEMPLATE = compile<{ verifyUrl: string }>(
-    readFileSync('templates/verify.handlebars', 'utf8')
-  );
+  private static readonly EMAIL_TEMPLATE = compile<{ verifyUrl: string }>(EMAIL_TEMPLATE_SOURCE);
 
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
@@ -42,7 +43,7 @@ export class UserService {
 
   async getUser(id: string, verified: boolean) {
     const user = await this.userRepo.findOneOrFail(id);
-    if (  verified && config.email && !user.verifiedEmail) {
+    if (verified && config.email && !user.verifiedEmail) {
       throw new ForbiddenException('You must verify your email first.');
     }
 

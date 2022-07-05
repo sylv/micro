@@ -15,7 +15,7 @@ import { checkThumbnailSupport } from '@ryanke/thumbnail-generator';
 import { Exclude } from 'class-transformer';
 import mimeType from 'mime-types';
 import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
-import { ResourceBase } from '../../types';
+import { Resource } from '../../helpers/resource.entity-base';
 import { Paginated } from '../../types/paginated.type';
 import { Thumbnail } from '../thumbnail/thumbnail.entity';
 import { User } from '../user/user.entity';
@@ -23,7 +23,7 @@ import { FileMetadata } from './file-metadata.embeddable';
 
 @Entity({ tableName: 'files' })
 @ObjectType()
-export class File extends ResourceBase {
+export class File extends Resource {
   @PrimaryKey()
   @Field(() => ID)
   id: string;

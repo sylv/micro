@@ -6,12 +6,11 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import ms from 'ms';
 import { nanoid } from 'nanoid';
 import { paginate, parseCursor } from '../../helpers/pagination';
-import { File } from '../../types';
 import { UserId } from '../auth/auth.decorators';
 import { AuthService, TokenType } from '../auth/auth.service';
 import { JWTAuthGuard } from '../auth/guards/jwt.guard';
 import type { JWTPayloadUser } from '../auth/strategies/jwt.strategy';
-import { FilePage } from '../file/file.entity';
+import { File, FilePage } from '../file/file.entity';
 import { InviteService } from '../invite/invite.service';
 import { Paste, PastePage } from '../paste/paste.entity';
 import { CreateUserDto } from './dto/create-user.dto';

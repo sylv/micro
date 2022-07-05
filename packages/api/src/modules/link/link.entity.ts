@@ -2,12 +2,12 @@ import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Prop
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { ResourceBase } from '../../types';
 import { User } from '../user/user.entity';
+import { Resource } from '../../helpers/resource.entity-base';
 
 @Entity({ tableName: 'links' })
 @ObjectType()
-export class Link extends ResourceBase {
+export class Link extends Resource {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateContentId();

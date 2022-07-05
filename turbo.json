@@ -7,7 +7,7 @@
             ],
             "outputs": [
                 "dist/**",
-                ".next/**"
+                ".next/{server,cache,src,static}"
             ]
         },
         "lint": {

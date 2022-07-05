@@ -18,13 +18,14 @@ export const migrate = async (
     return;
   }
 
-  const migrations = await migrator.getPendingMigrations();
-  if (!migrations[0]) {
-    ormLogger.debug(`No pending migrations`);
+  const executedMigrations = await migrator.getExecutedMigrations();
+  const pendingMigrations = await migrator.getPendingMigrations();
+  if (!pendingMigrations[0]) {
+    ormLogger.debug(`No pending migrations, ${executedMigrations.length} already executed`);
     return;
   }
 
-  ormLogger.log(`Migrating through ${migrations.length} migrations`);
+  ormLogger.log(`Migrating through ${pendingMigrations.length} migrations`);
   await em.transactional(async (em) => {
     if (!skipLock) await em.execute(`LOCK TABLE ${migrationsTableName} IN EXCLUSIVE MODE`);
     await migrator.up({ transaction: em.getTransactionContext() });

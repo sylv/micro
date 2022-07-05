@@ -5,13 +5,13 @@ import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validat
 import mime from 'mime-types';
 import { config } from '../../config';
 import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { ResourceBase } from '../../types';
+import { Resource } from '../../helpers/resource.entity-base';
 import { Paginated } from '../../types/paginated.type';
 import { User } from '../user/user.entity';
 
 @Entity({ tableName: 'pastes' })
 @ObjectType({ isAbstract: true })
-export class Paste extends ResourceBase {
+export class Paste extends Resource {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateContentId();
