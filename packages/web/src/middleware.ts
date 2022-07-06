@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // /i = image
 // /v = video
@@ -11,32 +12,26 @@ const REDIRECT_CONTENT_UAS = [
   'curl/',
 ];
 
-export function isAcceptableToRedirect(acceptHeader: string | null) {
+export function redirectAcceptHeader(acceptHeader: string | null) {
   if (!acceptHeader) return false;
   if (acceptHeader.includes('image/*')) return true;
   if (acceptHeader.includes('video/*')) return true;
   return false;
 }
 
-export async function middleware(req: NextRequest) {
+export async function middleware(request: NextRequest) {
   // match /i and /v urls and redirect them to the content url
   // this is how pasting an embedded image link in discord still embeds the image
   // /i and /v routes are necessary so we dont have to lookup the type of the file, because we still
   // want to return html for other files so we can give opengraph tags about the files that discord wont embed directly.
-  const redirectUrlMatch = REDIRECT_URL_REGEX.exec(req.url);
+  const redirectUrlMatch = REDIRECT_URL_REGEX.exec(request.url);
   if (redirectUrlMatch) {
     const fileId = redirectUrlMatch.groups!.id;
-    const accept = req.headers.get('accept');
-    const userAgent = req.headers.get('user-agent');
+    const accept = request.headers.get('accept');
+    const userAgent = request.headers.get('user-agent');
     const isScrapingUA = userAgent && REDIRECT_CONTENT_UAS.some((ua) => userAgent.startsWith(ua));
-    if (isAcceptableToRedirect(accept) || isScrapingUA) {
-      return new Response(null, {
-        status: 302,
-        headers: {
-          location: `/api/file/${fileId}`,
-          'x-beep': 'boop',
-        },
-      });
+    if (redirectAcceptHeader(accept) || isScrapingUA) {
+      return NextResponse.redirect(new URL(`/api/file/${fileId}`, request.url));
     }
   }
 }
