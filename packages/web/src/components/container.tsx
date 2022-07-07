@@ -10,17 +10,21 @@ export interface ContainerProps {
   children: ReactNode;
 }
 
-export const Container: FC<ContainerProps> = (props) => {
-  const centerX = props.centerX ?? props.center;
-  const centerY = props.centerY ?? props.center;
-  const center = centerX ?? centerY;
-  const classes = classNames(props.className, 'px-4 mx-auto', {
-    'sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl': !props.small,
-    'flex justify-center flex-col': center,
+export const Container: FC<ContainerProps> = ({
+  center,
+  centerX = center,
+  centerY = center,
+  className,
+  small,
+  children,
+}) => {
+  const classes = classNames(className, 'px-4 mx-auto', {
+    'sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl': !small,
+    'flex justify-center flex-col': centerX || centerY,
     'absolute top-16 bottom-0 right-0 left-0': centerY,
     'items-center': centerX,
-    'max-w-xs': props.small,
+    'max-w-xs': small,
   });
 
-  return <div className={classes}>{props.children}</div>;
+  return <div className={classes}>{children}</div>;
 };

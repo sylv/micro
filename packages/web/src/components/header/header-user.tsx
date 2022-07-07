@@ -19,6 +19,9 @@ export const HeaderUser: FC<HeaderUserProps> = (props) => {
 
   return (
     <Fragment>
+      <Link href="/shorten" className="mr-2 text-gray-500 transition hover:text-gray-400">
+        Shorten
+      </Link>
       <Link href="/paste" className="mr-2 text-gray-500 transition hover:text-gray-400">
         Paste
       </Link>

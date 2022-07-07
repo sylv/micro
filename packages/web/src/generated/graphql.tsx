@@ -353,6 +353,14 @@ export type GetPasteQueryVariables = Exact<{
 
 export type GetPasteQuery = { __typename?: 'Query', paste: { __typename?: 'Paste', id: string, title?: string | null, type: string, extension?: string | null, content: string, encrypted: boolean, createdAt: any, expiresAt?: any | null, burnt?: boolean | null, burn: boolean, urls: { __typename?: 'ResourceLocations', view: string } } };
 
+export type ShortenMutationVariables = Exact<{
+  link: Scalars['String'];
+  host?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ShortenMutation = { __typename?: 'Mutation', createLink: { __typename?: 'Link', id: string, urls: { __typename?: 'ResourceLocations', view: string } } };
+
 export const PasteCardFragmentDoc = gql`
     fragment PasteCard on Paste {
   id
@@ -867,3 +875,40 @@ export function useGetPasteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetPasteQueryHookResult = ReturnType<typeof useGetPasteQuery>;
 export type GetPasteLazyQueryHookResult = ReturnType<typeof useGetPasteLazyQuery>;
 export type GetPasteQueryResult = Apollo.QueryResult<GetPasteQuery, GetPasteQueryVariables>;
+export const ShortenDocument = gql`
+    mutation Shorten($link: String!, $host: String) {
+  createLink(destination: $link, host: $host) {
+    id
+    urls {
+      view
+    }
+  }
+}
+    `;
+export type ShortenMutationFn = Apollo.MutationFunction<ShortenMutation, ShortenMutationVariables>;
+
+/**
+ * __useShortenMutation__
+ *
+ * To run a mutation, you first call `useShortenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useShortenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [shortenMutation, { data, loading, error }] = useShortenMutation({
+ *   variables: {
+ *      link: // value for 'link'
+ *      host: // value for 'host'
+ *   },
+ * });
+ */
+export function useShortenMutation(baseOptions?: Apollo.MutationHookOptions<ShortenMutation, ShortenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument, options);
+      }
+export type ShortenMutationHookResult = ReturnType<typeof useShortenMutation>;
+export type ShortenMutationResult = Apollo.MutationResult<ShortenMutation>;
+export type ShortenMutationOptions = Apollo.BaseMutationOptions<ShortenMutation, ShortenMutationVariables>;

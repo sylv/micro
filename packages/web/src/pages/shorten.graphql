@@ -1,0 +1,8 @@
+mutation Shorten($link: String!, $host: String) {
+  createLink(destination: $link, host: $host) {
+    id
+    urls {
+      view
+    }
+  }
+}

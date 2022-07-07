@@ -3,11 +3,13 @@ import classNames from 'classnames';
 import type { HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 import { Link } from './link';
+import { Spinner } from './spinner';
 
 export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, 'prefix' | 'style'> {
   href?: string;
   disabled?: boolean;
   style?: ButtonStyle;
+  loading?: boolean;
   type?: 'submit' | 'reset' | 'button';
 }
 
@@ -18,7 +20,10 @@ export enum ButtonStyle {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ href, disabled, className, type, children, style = ButtonStyle.Primary, onClick, onKeyDown, ...rest }, ref) => {
+  (
+    { href, disabled, className, type, children, loading, style = ButtonStyle.Primary, onClick, onKeyDown, ...rest },
+    ref
+  ) => {
     if (disabled) style = ButtonStyle.Disabled;
     const onClickWrap = disabled ? undefined : onClick;
     const onKeyDownWrap = disabled ? undefined : onKeyDown;
@@ -36,7 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
       return (
         <Link href={href} className={classes} onClick={onClickWrap} onKeyDown={onKeyDownWrap} {...rest}>
-          {children}
+          {children} {loading && <Spinner size="small" />}
         </Link>
       );
     }
@@ -52,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...rest}
         ref={ref}
       >
-        {children}
+        {children} {loading && <Spinner size="small" />}
       </button>
     );
   }
