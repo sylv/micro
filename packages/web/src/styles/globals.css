@@ -56,3 +56,9 @@ body {
   background-image: radial-gradient(black 1px, transparent 0);
   background-size: 40px 40px;
 }
+
+code[class*='language-'],
+pre[class*='language-'] {
+  white-space: normal !important;
+  word-break: break-word !important;
+}

@@ -10,6 +10,7 @@ import { Title } from '../../components/title';
 import type { CreatePasteDto } from '../../generated/graphql';
 import { useCreatePasteMutation } from '../../generated/graphql';
 import { encryptContent } from '../../helpers/encrypt.helper';
+import { useConfig } from '../../hooks/useConfig';
 import { useUser } from '../../hooks/useUser';
 import ErrorPage from '../_error';
 
@@ -83,6 +84,7 @@ const schema = Yup.object().shape({
 
 export default function Paste() {
   const user = useUser();
+  const config = useConfig();
   const [pasteMutation] = useCreatePasteMutation();
   if (user.error) {
     return <ErrorPage error={user.error} />;
@@ -168,6 +170,13 @@ export default function Paste() {
                 <Checkbox id="encrypt" />
                 Encrypt
               </label>
+              <Select className="w-auto" id="host">
+                {config.data?.hosts.map((host) => (
+                  <option key={host.normalised} value={host.normalised}>
+                    {host.normalised}
+                  </option>
+                ))}
+              </Select>
               <Select className="w-auto" id="expiryMinutes" type="number">
                 <option value={0}>No Expiry</option>
                 {EXPIRY_OPTIONS.map((option) => (

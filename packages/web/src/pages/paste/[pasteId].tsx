@@ -121,21 +121,19 @@ export default function ViewPaste() {
       {paste.data.paste.title && (
         <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all mb-4">{paste.data.paste.title}</h1>
       )}
-      <div className="grid">
-        <Embed
-          data={{
-            type: paste.data.paste.type,
-            size: paste.data.paste.content.length,
-            displayName: `paste.${paste.data.paste.extension}`,
-            content: { data: content, error: error },
-            paths: {
-              view: `/paste/${pasteId}`,
-              direct: `/paste/${pasteId}.txt`,
-            },
-          }}
-        />
-      </div>
-      <p className="text-gray-600 text-sm mt-2 flex items-center gap-2">
+      <Embed
+        data={{
+          type: paste.data.paste.type,
+          size: paste.data.paste.content.length,
+          displayName: paste.data.paste.title ?? `${paste.data.paste.id}.${paste.data.paste.extension}`,
+          content: { data: content, error: error },
+          paths: {
+            view: `/paste/${pasteId}`,
+            direct: `/paste/${pasteId}.txt`,
+          },
+        }}
+      />
+      <p className="text-gray-600 text-sm mt-2 flex items-center gap-2 flex-wrap">
         <span className="flex items-center gap-2">
           <BookOpen className="h-4 w-4" /> {content?.length ?? 0} characters
         </span>

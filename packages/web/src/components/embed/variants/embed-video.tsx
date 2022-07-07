@@ -1,12 +1,15 @@
-import type { Embeddable } from './embeddable';
+import classNames from 'classnames';
+import { BASE_EMBED_CLASSES } from '../embed';
+import type { Embeddable } from '../embeddable';
 
 export const EmbedVideo = ({ file }: { file: Embeddable }) => {
+  const classes = classNames('outline-none', BASE_EMBED_CLASSES);
   return (
     <video
       controls
       loop
       playsInline
-      className="h-full outline-none"
+      className={classes}
       height={file.height || undefined}
       width={file.width || undefined}
     >

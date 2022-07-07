@@ -1,32 +1,26 @@
 import useSWR from 'swr';
-import { Markdown } from '../markdown';
-import { PageLoader } from '../page-loader';
-import { EmbedContainer } from './embed-container';
+import { Markdown } from '../../markdown';
+import { PageLoader } from '../../page-loader';
 import { EmbedDefault } from './embed-default';
-import type { Embeddable } from './embeddable';
-import { textFetcher } from './text-fetcher';
+import type { Embeddable } from '../embeddable';
+import { textFetcher } from '../text-fetcher';
+import classNames from 'classnames';
+import { BASE_EMBED_CLASSES } from '../embed';
 
 export const EmbedMarkdown = ({ data }: { data: Embeddable }) => {
   const swrContent = useSWR<string>(data.content ? null : data.paths.direct, { fetcher: textFetcher });
   const content = data.content ?? swrContent;
+  const classes = classNames('p-4', BASE_EMBED_CLASSES);
 
   if (content.error) {
-    return (
-      <EmbedContainer centre={false} data={data}>
-        <EmbedDefault data={data} />
-      </EmbedContainer>
-    );
+    return <EmbedDefault data={data} />;
   }
 
   if (!content.data) {
     return <PageLoader />;
   }
 
-  return (
-    <EmbedContainer centre={false} data={data} className="max-h-max">
-      <Markdown className="p-4">{content.data}</Markdown>
-    </EmbedContainer>
-  );
+  return <Markdown className={classes}>{content.data}</Markdown>;
 };
 
 const MAX_MARKDOWN_SIZE = 1_000_000; // 1mb

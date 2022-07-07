@@ -19,7 +19,7 @@ export const SyntaxHighlighterControls = memo<SyntaxHighlighterControls>(({ lang
   };
 
   return (
-    <div className="absolute right-0 top-0 flex items-center gap-2">
+    <div className="absolute right-0 top-0 flex items-center gap-2 z-10 bg-black bg-opacity-75 hover:bg-opacity-100 rounded-bl-lg pl-2 pb-2">
       <Menu as="div" className="relative">
         <Menu.Button className="text-xs flex items-center gap-1 text-gray-500 hover:text-white transition pt-2 ">
           {language} <ChevronDown className="h-4 w-4" />

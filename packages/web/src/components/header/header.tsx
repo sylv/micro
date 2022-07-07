@@ -22,7 +22,7 @@ export const Header = memo(() => {
   const [email, setEmail] = useState('');
   const [resent, setResent] = useState(false);
   const classes = classNames(
-    'relative z-10 flex items-center justify-between h-16 my-auto transition',
+    'relative z-20 flex items-center justify-between h-16 my-auto transition',
     paths.loading && 'pointer-events-none invisible'
   );
 

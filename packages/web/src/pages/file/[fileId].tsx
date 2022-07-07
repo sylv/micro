@@ -97,16 +97,18 @@ export default function File() {
           <h1 className="mr-2 text-xl font-bold md:text-4xl md:break-all">{file.data.file.displayName}</h1>
           <span className="text-xs text-gray-500">{file.data.file.sizeFormatted}</span>
         </div>
-        <Embed
-          data={{
-            type: file.data.file.type,
-            paths: file.data.file.paths,
-            size: file.data.file.size,
-            displayName: file.data.file.displayName,
-            height: file.data.file.metadata?.height,
-            width: file.data.file.metadata?.width,
-          }}
-        />
+        <div className="col-span-5">
+          <Embed
+            data={{
+              type: file.data.file.type,
+              paths: file.data.file.paths,
+              size: file.data.file.size,
+              displayName: file.data.file.displayName,
+              height: file.data.file.metadata?.height,
+              width: file.data.file.metadata?.width,
+            }}
+          />
+        </div>
         <div className="flex md:flex-col">
           <div className="flex text-sm gap-3 text-gray-500 cursor-pointer md:flex-col">
             <FileOption onClick={copyLink}>

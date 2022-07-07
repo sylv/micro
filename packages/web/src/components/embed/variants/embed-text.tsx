@@ -1,12 +1,13 @@
 import type { Language } from 'prism-react-renderer';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { getFileLanguage } from '../../helpers/get-file-language.helper';
-import { PageLoader } from '../page-loader';
-import { SyntaxHighlighter } from '../syntax-highlighter/syntax-highlighter';
+import { getFileLanguage } from '../../../helpers/get-file-language.helper';
+import { PageLoader } from '../../page-loader';
+import { SyntaxHighlighter } from '../../syntax-highlighter/syntax-highlighter';
+import { BASE_EMBED_CLASSES } from '../embed';
+import type { Embeddable } from '../embeddable';
+import { textFetcher } from '../text-fetcher';
 import { EmbedDefault } from './embed-default';
-import type { Embeddable } from './embeddable';
-import { textFetcher } from './text-fetcher';
 
 const DEFAULT_LANGUAGE = getFileLanguage('diff')!;
 const MAX_SIZE = 1_000_000; // 1mb
@@ -30,7 +31,7 @@ export const EmbedText = ({ data }: { data: Embeddable }) => {
   }
 
   return (
-    <SyntaxHighlighter language={language.key as Language} parentClassName="w-full h-full">
+    <SyntaxHighlighter language={language.key as Language} className={BASE_EMBED_CLASSES}>
       {content.data}
     </SyntaxHighlighter>
   );
