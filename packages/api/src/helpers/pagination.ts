@@ -31,8 +31,8 @@ export function paginate<T>(items: T[], total: number, offset: number): Paginate
     edges: edges,
     totalCount: total,
     pageInfo: {
-      endCursor: edges[edges.length - 1].cursor,
-      startCursor: edges[0].cursor,
+      endCursor: edges[0] ? edges[edges.length - 1].cursor : undefined,
+      startCursor: edges[0] ? edges[0].cursor : undefined,
       hasPreviousPage: offset > 0,
       hasNextPage: offset + items.length < total,
     },

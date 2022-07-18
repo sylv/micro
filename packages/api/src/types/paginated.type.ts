@@ -11,11 +11,11 @@ export interface Paginated<T> {
 
 @ObjectType()
 export class PageInfo {
-  @Field(() => String)
-  startCursor: string;
+  @Field(() => String, { nullable: true })
+  startCursor?: string;
 
-  @Field(() => String)
-  endCursor: string;
+  @Field(() => String, { nullable: true })
+  endCursor?: string;
 
   @Field(() => Boolean)
   hasNextPage: boolean;

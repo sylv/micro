@@ -153,10 +153,10 @@ export type MutationResendVerificationEmailArgs = {
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor: Scalars['String'];
+  endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
-  startCursor: Scalars['String'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export type Paste = {
@@ -283,7 +283,7 @@ export type GetFilesQueryVariables = Exact<{
 }>;
 
 
-export type GetFilesQuery = { __typename?: 'Query', user: { __typename?: 'User', files: { __typename?: 'FilePage', pageInfo: { __typename?: 'PageInfo', endCursor: string, hasNextPage: boolean }, edges: Array<{ __typename?: 'FilePageEdge', node: { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type GetFilesQuery = { __typename?: 'Query', user: { __typename?: 'User', files: { __typename?: 'FilePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'FilePageEdge', node: { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
 
 export type GetPastesQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Float']>;
@@ -291,7 +291,7 @@ export type GetPastesQueryVariables = Exact<{
 }>;
 
 
-export type GetPastesQuery = { __typename?: 'Query', user: { __typename?: 'User', pastes: { __typename?: 'PastePage', pageInfo: { __typename?: 'PageInfo', endCursor: string, hasNextPage: boolean }, edges: Array<{ __typename?: 'PastePageEdge', node: { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type GetPastesQuery = { __typename?: 'Query', user: { __typename?: 'User', pastes: { __typename?: 'PastePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'PastePageEdge', node: { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
 
 export type ConfigQueryVariables = Exact<{ [key: string]: never; }>;
 

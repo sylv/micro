@@ -110,10 +110,10 @@ type Mutation {
 }
 
 type PageInfo {
-  endCursor: String!
+  endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String!
+  startCursor: String
 }
 
 type Paste {
