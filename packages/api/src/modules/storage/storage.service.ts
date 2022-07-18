@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import crypto from 'crypto';
 import fs from 'fs';
 import { nanoid } from 'nanoid';
@@ -14,6 +14,7 @@ const pipeline = promisify(stream.pipeline);
 @Injectable()
 export class StorageService {
   private readonly createdPaths = new Set();
+  private readonly logger = new Logger(StorageService.name);
 
   async create(stream: NodeJS.ReadableStream) {
     // using .tmp in the upload dir solves cross-device link issues
@@ -51,6 +52,7 @@ export class StorageService {
 
   async delete(hash: string) {
     try {
+      this.logger.debug(`Deleting "${hash}" from disk`);
       const filePath = this.getPathFromHash(hash);
       await fs.promises.unlink(filePath);
     } catch (error: any) {

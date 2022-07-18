@@ -27,10 +27,10 @@ export class FileResolver {
   async deleteFile(
     @UserId() userId: string,
     @Args('fileId', { type: () => ID }) fileId: string,
-    @Args('key', { nullable: true }) key?: string
+    @Args('key', { nullable: true }) deleteKey?: string
   ) {
-    const file = await this.fileRepo.findOneOrFail(fileId);
-    if (file.owner.id !== userId && (!key || file.deleteKey !== key)) {
+    const file = await this.fileRepo.findOneOrFail(fileId, { populate: ['deleteKey'] });
+    if (file.owner.id !== userId && (!deleteKey || file.deleteKey !== deleteKey)) {
       throw new ForbiddenException('You are not allowed to delete this file');
     }
 

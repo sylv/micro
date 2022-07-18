@@ -79,7 +79,7 @@ export class File extends Resource {
     const viewPath = `${prefix}/${this.id}`;
     const directPath = `${prefix}/${this.id}.${extension}`;
     const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : undefined;
-    const deletePath = this.deleteKey ? `${prefix}/${this.id}/delete?key=${this.deleteKey}` : undefined;
+    const deletePath = this.deleteKey ? `${prefix}/${this.id}?deleteKey=${this.deleteKey}` : undefined;
 
     return {
       view: viewPath,
