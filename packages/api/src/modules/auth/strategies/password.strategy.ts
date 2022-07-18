@@ -2,7 +2,7 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import type { FastifyRequest } from 'fastify';
 import { Strategy } from 'passport-local';
 import { User } from '../../user/user.entity';

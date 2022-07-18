@@ -2,7 +2,7 @@ import { EntityRepository, QueryOrder, UniqueConstraintViolationException } from
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import dedent from 'dedent';
 import { compile } from 'handlebars';
 import ms from 'ms';
