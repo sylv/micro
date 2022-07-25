@@ -3,7 +3,7 @@ import type { Language } from 'prism-react-renderer';
 import { memo } from 'react';
 import { ChevronDown } from 'react-feather';
 import languages from '../../data/languages.json';
-import { useToasts } from '../../hooks/useToasts';
+import { useToasts } from '@ryanke/pandora';
 
 export interface SyntaxHighlighterControls {
   onLanguageChange: (language: Language) => void;

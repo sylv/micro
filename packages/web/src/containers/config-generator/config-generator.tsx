@@ -1,9 +1,8 @@
+import { Container, Spinner } from '@ryanke/pandora';
 import classNames from 'classnames';
 import { Fragment, useState } from 'react';
 import { Download } from 'react-feather';
-import { Container } from '../../components/container';
 import { Section } from '../../components/section';
-import { Spinner } from '../../components/spinner';
 import { Toggle } from '../../components/toggle';
 import { downloadFile } from '../../helpers/download.helper';
 import { generateConfig } from '../../helpers/generate-config.helper';
@@ -34,7 +33,7 @@ export const ConfigGenerator = () => {
 
   return (
     <Section>
-      <Container className="flex flex-col justify-between dots selection:bg-blue-500 py-8">
+      <Container className="flex flex-col justify-between dots selection:bg-purple-600 py-8">
         <div className="w-full flex-grow">
           {!config.data && (
             <div className="flex items-center justify-center w-full h-full py-10">
@@ -55,7 +54,7 @@ export const ConfigGenerator = () => {
                 >
                   <Toggle
                     selected={embedded}
-                    backgroundColour="bg-blue-500"
+                    backgroundColour="bg-purple-600"
                     onChange={({ value }) => setEmbedded(value)}
                     options={[
                       {
@@ -75,7 +74,7 @@ export const ConfigGenerator = () => {
                 >
                   <Toggle
                     selected={pasteShortcut}
-                    backgroundColour="bg-blue-500"
+                    backgroundColour="bg-purple-600"
                     onChange={({ value }) => setPasteShortcut(value)}
                     options={[
                       {
@@ -96,8 +95,8 @@ export const ConfigGenerator = () => {
                     const isSelected = selectedHosts.includes(host.normalised);
                     const classes = classNames(
                       'rounded px-2 py-1 truncate transition border border-transparent',
-                      isSelected && 'bg-blue-500 text-white',
-                      !isSelected && 'text-gray-400 bg-dark-100 hover:bg-gray-800 hover:text-white'
+                      isSelected && 'bg-purple-600 text-white',
+                      !isSelected && 'text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white'
                     );
 
                     return (
@@ -127,7 +126,7 @@ export const ConfigGenerator = () => {
           onClick={download}
           className={classNames(
             'mt-8 ml-auto flex items-center gap-1',
-            downloadable ? 'text-blue-400 hover:underline' : 'text-gray-700 cursor-not-allowed'
+            downloadable ? 'text-purple-400 hover:underline' : 'text-gray-700 cursor-not-allowed'
           )}
         >
           download config <Download className="h-3.5 w-3.5" />

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import type { FC } from 'react';
 import { Fragment, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Button } from '../components/button';
+import { Button } from '@ryanke/pandora';
 import { Input } from '../components/input/input';
 import { useUser } from '../hooks/useUser';
 

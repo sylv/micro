@@ -1,9 +1,9 @@
+import { useAsync } from '@ryanke/pandora';
 import Router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { resetClient } from '../apollo';
 import { useGetUserQuery } from '../generated/graphql';
 import { http } from '../helpers/http.helper';
-import { useAsync } from './useAsync';
 
 interface LoginData {
   username: string;

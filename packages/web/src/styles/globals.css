@@ -2,24 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --brand: rgb(167, 139, 250);
-}
-
-#__next {
-  @apply h-screen;
-}
-
-body {
-  @apply text-white;
-  background-color: #141414;
-}
-
-::selection {
-  @apply bg-violet-600;
-  @apply text-white;
-}
-
 ::-webkit-scrollbar {
   background: inherit;
   height: 14px;
@@ -46,15 +28,6 @@ body {
 ::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0);
   border-color: transparent;
-}
-
-body {
-  overflow-y: overlay;
-}
-
-.dots {
-  background-image: radial-gradient(black 1px, transparent 0);
-  background-size: 40px 40px;
 }
 
 code[class*='language-'],

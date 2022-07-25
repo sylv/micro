@@ -1,4 +1,4 @@
-import { Container } from '../components/container';
+import { Container } from '@ryanke/pandora';
 import { Link } from '../components/link';
 import { Title } from '../components/title';
 import { getErrorMessage } from '../helpers/get-error-message.helper';
@@ -26,7 +26,7 @@ export default function Error(props: ErrorProps) {
       <Title>{message}</Title>
       <h1 className="mb-4 text-4xl font-fold">{lenny}</h1>
       <p className="text-lg">{message}</p>
-      <Link className="text-brand" href={paths.home}>
+      <Link className="text-primary" href={paths.home}>
         Go Home
       </Link>
     </Container>

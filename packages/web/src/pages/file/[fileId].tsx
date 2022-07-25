@@ -1,3 +1,4 @@
+import { Container, Spinner, useAsync, useToasts } from '@ryanke/pandora';
 import classNames from 'classnames';
 import copyToClipboard from 'copy-to-clipboard';
 import type { GetServerSidePropsContext } from 'next';
@@ -6,16 +7,12 @@ import type { FC, ReactNode } from 'react';
 import { useState } from 'react';
 import { Download, Share, Trash } from 'react-feather';
 import { addStateToPageProps, initializeApollo } from '../../apollo';
-import { Container } from '../../components/container';
 import { Embed } from '../../components/embed/embed';
 import { PageLoader } from '../../components/page-loader';
-import { Spinner } from '../../components/spinner';
 import { Title } from '../../components/title';
 import { ConfigDocument, GetFileDocument, useDeleteFileMutation, useGetFileQuery } from '../../generated/graphql';
 import { downloadUrl } from '../../helpers/download.helper';
-import { useAsync } from '../../hooks/useAsync';
 import { useQueryState } from '../../hooks/useQueryState';
-import { useToasts } from '../../hooks/useToasts';
 import ErrorPage from '../_error';
 
 const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => void }> = ({

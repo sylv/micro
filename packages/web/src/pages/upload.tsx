@@ -1,19 +1,15 @@
+import { Button, Card, Container, Spinner, useToasts } from '@ryanke/pandora';
 import { useRouter } from 'next/router';
 import type { ChangeEventHandler, DragEventHandler } from 'react';
 import { useRef, useState } from 'react';
 import { Upload as UploadIcon } from 'react-feather';
-import { Button } from '../components/button';
-import { Card } from '../components/card';
-import { Container } from '../components/container';
 import { Select } from '../components/input/select';
 import { PageLoader } from '../components/page-loader';
-import { Spinner } from '../components/spinner';
 import { Title } from '../components/title';
 import { getErrorMessage } from '../helpers/get-error-message.helper';
 import { http } from '../helpers/http.helper';
 import { replaceUsername } from '../helpers/replace-username.helper';
 import { useConfig } from '../hooks/useConfig';
-import { useToasts } from '../hooks/useToasts';
 import { useUser } from '../hooks/useUser';
 
 interface CreateFileResponse {
@@ -138,7 +134,7 @@ export default function Upload() {
             <Button onClick={handleUpload}>Upload</Button>
           </div>
           <span
-            className="mt-4 cursor-pointer text-brand"
+            className="mt-4 cursor-pointer text-primary"
             onClick={() => {
               setFile(null);
             }}
@@ -172,7 +168,7 @@ export default function Upload() {
           )}
         </h1>
         <p className="text-gray-400 select-none">
-          Or <span className="text-brand">click here</span> to select a file.
+          Or <span className="text-primary">click here</span> to select a file.
         </p>
       </Card>
     </Container>

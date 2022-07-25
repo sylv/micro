@@ -1,14 +1,11 @@
+import { Button, ButtonStyle, Container, useAsync, useOnClickOutside } from '@ryanke/pandora';
 import classNames from 'classnames';
 import { Fragment, memo, useRef, useState } from 'react';
 import { Crop } from 'react-feather';
 import { useResendVerificationEmailMutation } from '../../generated/graphql';
-import { useAsync } from '../../hooks/useAsync';
 import { useConfig } from '../../hooks/useConfig';
-import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { usePaths } from '../../hooks/usePaths';
 import { useUser } from '../../hooks/useUser';
-import { Button, ButtonStyle } from '../button';
-import { Container } from '../container';
 import { Input } from '../input/input';
 import { Link } from '../link';
 import { HeaderUser } from './header-user';
@@ -92,7 +89,7 @@ export const Header = memo(() => {
         <nav className={classes}>
           <div className="flex items-center">
             <Link href={paths.home} className="flex">
-              <Crop className="mr-2 text-brand" /> micro
+              <Crop className="mr-2 text-primary" /> micro
             </Link>
           </div>
           <div className="flex items-center">

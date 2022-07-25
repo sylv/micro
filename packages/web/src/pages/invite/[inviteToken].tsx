@@ -1,6 +1,6 @@
+import { Container, useAsync, useToasts } from '@ryanke/pandora';
 import Router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Container } from '../../components/container';
 import { PageLoader } from '../../components/page-loader';
 import { Time } from '../../components/time';
 import { Title } from '../../components/title';
@@ -8,9 +8,7 @@ import type { SignupData } from '../../containers/signup-form';
 import { SignupForm } from '../../containers/signup-form';
 import { useCreateUserMutation, useGetInviteQuery } from '../../generated/graphql';
 import { getErrorMessage } from '../../helpers/get-error-message.helper';
-import { useAsync } from '../../hooks/useAsync';
 import { useConfig } from '../../hooks/useConfig';
-import { useToasts } from '../../hooks/useToasts';
 import ErrorPage from '../_error';
 
 export default function Invite() {

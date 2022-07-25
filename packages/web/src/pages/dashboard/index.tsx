@@ -1,4 +1,4 @@
-import { Container } from '../../components/container';
+import { Container } from '@ryanke/pandora';
 import { FileList } from '../../containers/file-list/file-list';
 import { useUser } from '../../hooks/useUser';
 

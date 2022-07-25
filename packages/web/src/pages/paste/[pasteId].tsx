@@ -1,10 +1,9 @@
+import { Button, Container } from '@ryanke/pandora';
 import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BookOpen, Clock, Trash } from 'react-feather';
 import { addStateToPageProps, initializeApollo } from '../../apollo';
-import { Button } from '../../components/button';
-import { Container } from '../../components/container';
 import { Embed } from '../../components/embed/embed';
 import { PageLoader } from '../../components/page-loader';
 import { Time } from '../../components/time';

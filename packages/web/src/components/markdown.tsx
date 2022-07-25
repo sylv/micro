@@ -14,11 +14,11 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
     // remove "" quotes from blockquotes
     'prose-p:before:content-none prose-p:after:content-none',
     // make links purple
-    'prose-a:text-brand hover:prose-a:underline prose-a:no-underline',
+    'prose-a:text-primary hover:prose-a:underline prose-a:no-underline',
     // remove italics from blockquotes
     'prose-blockquote:font-normal prose-blockquote:not-italic',
     // make inline `code` blocks purple
-    'prose-code:text-brand',
+    'prose-code:text-primary',
     className
   );
 

@@ -1,8 +1,7 @@
+import { Container, useToasts } from '@ryanke/pandora';
 import { useEffect } from 'react';
-import { Container } from '../components/container';
 import { Title } from '../components/title';
 import { LoginForm } from '../containers/login-form';
-import { useToasts } from '../hooks/useToasts';
 
 export default function Login() {
   const createToast = useToasts();
@@ -17,7 +16,7 @@ export default function Login() {
         text: 'Your account has been verified.',
       });
     }
-  }, []);
+  }, [createToast]);
 
   return (
     <Container center small>

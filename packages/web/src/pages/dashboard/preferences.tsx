@@ -1,12 +1,9 @@
-import { Container } from '../../components/container';
-import { PageLoader } from '../../components/page-loader';
-
-import { Breadcrumbs } from '../../components/breadcrumbs';
+import { Breadcrumbs, Container, useAsync } from '@ryanke/pandora';
 import { Input } from '../../components/input/input';
+import { PageLoader } from '../../components/page-loader';
 import { Title } from '../../components/title';
 import { ConfigGenerator } from '../../containers/config-generator/config-generator';
 import { useRefreshTokenMutation } from '../../generated/graphql';
-import { useAsync } from '../../hooks/useAsync';
 import { useConfig } from '../../hooks/useConfig';
 import { useUser } from '../../hooks/useUser';
 
@@ -29,7 +26,7 @@ export default function Preferences() {
   return (
     <Container>
       <Title>Preferences</Title>
-      <Breadcrumbs to="/dashboard" className="mb-4">
+      <Breadcrumbs href="/dashboard" className="mb-4">
         Dashboard
       </Breadcrumbs>
       <div className="grid grid-cols-2 gap-4">

@@ -1,7 +1,6 @@
+import { Breadcrumbs, Card } from '@ryanke/pandora';
 import type { FC } from 'react';
 import { Fragment } from 'react';
-import { Breadcrumbs } from '../../components/breadcrumbs';
-import { Card } from '../../components/card';
 import { PageLoader } from '../../components/page-loader';
 import { Toggle } from '../../components/toggle';
 import { useGetFilesQuery, useGetPastesQuery } from '../../generated/graphql';
@@ -29,7 +28,7 @@ export const FileList: FC = () => {
     <Fragment>
       <div className="flex justify-between gap-2 mb-6">
         <div>
-          <Breadcrumbs to="/">Home</Breadcrumbs>
+          <Breadcrumbs href="/">Home</Breadcrumbs>
           <h2 className="capitalize font-bold text-2xl">My {filter}</h2>
         </div>
         <div>

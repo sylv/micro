@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import type { FC } from 'react';
 import { Fragment, useMemo } from 'react';
 import * as Yup from 'yup';
-import { Button } from '../components/button';
+import { Button } from '@ryanke/pandora';
 import { Input } from '../components/input/input';
 import { useConfig } from '../hooks/useConfig';
 
