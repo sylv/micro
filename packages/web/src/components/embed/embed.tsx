@@ -12,7 +12,8 @@ interface EmbedProps {
   data: Embeddable;
 }
 
-export const BASE_EMBED_CLASSES = 'min-h-[25em] max-h-[70vh] bg-dark-200 rounded-lg w-full';
+export const MAX_HEIGHT = 'max-h-[70vh]';
+export const BASE_EMBED_CLASSES = `min-h-[150px] bg-dark-200 rounded-lg w-full ${MAX_HEIGHT}`;
 
 export const Embed: FC<EmbedProps> = memo(({ data }) => {
   const isText = useMemo(() => EmbedText.embeddable(data), [data]);

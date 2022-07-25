@@ -1,20 +1,22 @@
 import classNames from 'classnames';
 import Head from 'next/head';
 import { Fragment } from 'react';
-import { BASE_EMBED_CLASSES } from '../embed';
+import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
 import type { Embeddable } from '../embeddable';
 
 export const EmbedImage = ({ data }: { data: Embeddable }) => {
-  const classes = classNames('flex items-center justify-center', BASE_EMBED_CLASSES);
+  const containerClasses = classNames('flex items-center justify-center relative', BASE_EMBED_CLASSES);
+  const imageClasses = classNames(`object-contain`, MAX_HEIGHT);
+
   return (
     <Fragment>
       <Head>
         <meta name="twitter:image" content={data.paths.direct} />
         <meta property="og:image" content={data.paths.direct} />
       </Head>
-      <div className={classes}>
+      <div className={containerClasses}>
         <img
-          className="object-contain "
+          className={imageClasses}
           src={data.paths.direct}
           alt={data.displayName}
           height={data.height || undefined}
