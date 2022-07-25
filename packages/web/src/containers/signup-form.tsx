@@ -2,8 +2,8 @@ import { Form, Formik } from 'formik';
 import type { FC } from 'react';
 import { Fragment, useMemo } from 'react';
 import * as Yup from 'yup';
-import { Button } from '@ryanke/pandora';
 import { Input } from '../components/input/input';
+import { Submit } from '../components/input/submit';
 import { useConfig } from '../hooks/useConfig';
 
 export interface SignupData {
@@ -41,16 +41,14 @@ export const SignupForm: FC<SignupFormProps> = ({ onSubmit }) => {
           await onSubmit(values);
         }}
       >
-        {({ isValid, isSubmitting, dirty }) => (
-          <Form className="space-y-2">
-            {config.data?.requireEmails && <Input id="email" type="email" placeholder="Email" autoFocus />}
-            <Input id="username" type="username" placeholder="Username" autoComplete="username" />
-            <Input id="password" type="password" placeholder="Password" autoComplete="new-password" />
-            <Button className="mt-4" type="submit" disabled={!dirty || !isValid || isSubmitting}>
-              Sign Up
-            </Button>
-          </Form>
-        )}
+        <Form className="space-y-2">
+          {config.data?.requireEmails && <Input id="email" type="email" placeholder="Email" autoFocus />}
+          <Input id="username" type="username" placeholder="Username" autoComplete="username" />
+          <Input id="password" type="password" placeholder="Password" autoComplete="new-password" />
+          <Submit className="mt-4" type="submit">
+            Sign Up
+          </Submit>
+        </Form>
       </Formik>
     </Fragment>
   );

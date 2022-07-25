@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import type { FC } from 'react';
 import { Fragment, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Button } from '@ryanke/pandora';
 import { Input } from '../components/input/input';
+import { Submit } from '../components/input/submit';
 import { useUser } from '../hooks/useUser';
 
 const schema = Yup.object().shape({
@@ -38,21 +38,19 @@ export const LoginForm: FC = () => {
           redirect();
         }}
       >
-        {({ isValid, isSubmitting, dirty }) => (
-          <Form>
-            <Input id="username" type="username" placeholder="Username or email" autoComplete="username" autoFocus />
-            <Input
-              id="password"
-              type="password"
-              placeholder="Password"
-              autoComplete="current-password"
-              className="mt-2"
-            />
-            <Button className="mt-4" type="submit" disabled={!dirty || !isValid || isSubmitting}>
-              Sign In
-            </Button>
-          </Form>
-        )}
+        <Form>
+          <Input id="username" type="username" placeholder="Username or email" autoComplete="username" autoFocus />
+          <Input
+            id="password"
+            type="password"
+            placeholder="Password"
+            autoComplete="current-password"
+            className="mt-2"
+          />
+          <Submit className="mt-4" type="submit">
+            Sign In
+          </Submit>
+        </Form>
       </Formik>
     </Fragment>
   );

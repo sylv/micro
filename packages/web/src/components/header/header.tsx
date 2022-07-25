@@ -96,9 +96,9 @@ export const Header = memo(() => {
             {user.data ? (
               <HeaderUser userId={user.data.id} username={user.data.username} />
             ) : (
-              <Button style={ButtonStyle.Secondary} href={paths.login}>
-                Sign In
-              </Button>
+              <Link href={paths.login}>
+                <Button style={ButtonStyle.Secondary}>Sign In</Button>
+              </Link>
             )}
           </div>
         </nav>

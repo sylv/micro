@@ -204,7 +204,6 @@ importers:
       react: 18.2.0
       react-dom: ^18.1.0
       react-feather: ^2.0.9
-      react-icons: ^4.4.0
       react-markdown: ^8.0.3
       rehype-raw: ^6.1.1
       remark-gfm: ^3.0.1
@@ -235,7 +234,6 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-feather: 2.0.10_react@18.2.0
-      react-icons: 4.4.0_react@18.2.0
       react-markdown: 8.0.3_luyos4mouogwq6z3wafb3re4ce
       rehype-raw: 6.1.1
       remark-gfm: 3.0.1
@@ -11737,14 +11735,6 @@ packages:
       react: '>=16.8.6'
     dependencies:
       prop-types: 15.8.1
-      react: 18.2.0
-    dev: false
-
-  /react-icons/4.4.0_react@18.2.0:
-    resolution: {integrity: sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==}
-    peerDependencies:
-      react: '*'
-    dependencies:
       react: 18.2.0
     dev: false
 
