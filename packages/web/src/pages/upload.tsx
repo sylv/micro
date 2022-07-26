@@ -82,11 +82,11 @@ export default function Upload() {
       }
 
       location.href = body.urls.view;
+      setFile(null);
     } catch (error: unknown) {
       const message = getErrorMessage(error) ?? 'An unknown error occured.';
       createToast({ error: true, text: message });
     } finally {
-      setFile(null);
       setUploading(false);
     }
   };

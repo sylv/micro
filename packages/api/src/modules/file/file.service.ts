@@ -7,7 +7,10 @@ import { BadRequestException, Injectable, Logger, NotFoundException, PayloadTooL
 import { Cron, CronExpression } from '@nestjs/schedule';
 import contentRange from 'content-range';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+import ffmpeg from 'fluent-ffmpeg';
 import { DateTime } from 'luxon';
+import mime from 'mime-types';
+import sharp from 'sharp';
 import { PassThrough } from 'stream';
 import xbytes from 'xbytes';
 import type { MicroHost } from '../../classes/MicroHost';
@@ -46,33 +49,103 @@ export class FileService implements OnApplicationBootstrap {
   ): Promise<File> {
     if (host) this.hostService.checkUserCanUploadTo(host, owner);
     if (!request.headers['content-length']) throw new BadRequestException('Missing "Content-Length" header.');
-    if (Number(request.headers['content-length']) >= config.uploadLimit) {
+    const contentLength = Number(request.headers['content-length']);
+    if (Number.isNaN(contentLength) || contentLength >= config.uploadLimit) {
       const size = xbytes(Number(request.headers['content-length']));
       this.logger.warn(
         `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
       );
+
       throw new PayloadTooLargeException();
     }
 
     const stream = multipart.file;
     const typeStream = stream.pipe(new PassThrough());
-    const uploadStream = stream.pipe(new PassThrough());
-    const type = (await getStreamType(multipart.filename, typeStream)) ?? multipart.mimetype;
-    if (config.allowTypes && !config.allowTypes.has(type)) {
-      throw new BadRequestException(`"${type}" is not supported by this server.`);
+    let uploadStream = stream.pipe(new PassThrough());
+    const fileType = (await getStreamType(multipart.filename, typeStream)) ?? multipart.mimetype;
+    if (config.allowTypes && !config.allowTypes.has(fileType)) {
+      throw new BadRequestException(`"${fileType}" is not supported by this server.`);
+    }
+
+    const conversion = config.conversions?.find((conversion) => {
+      if (!conversion.from.has(fileType)) return false;
+      if (conversion.minSize && contentLength < conversion.minSize) return false; 
+      if (conversion.to === fileType) return false; // dont convert to the same type
+      return true;
+    });
+
+    if (conversion) {
+      this.logger.debug(`Converting ${fileType} to ${conversion.to}`);
+      const fromGroup = fileType.split('/')[0];
+      const toGroup = conversion.to.split('/')[0];
+      if (fromGroup !== toGroup && fileType !== 'image/gif') {
+        throw new Error(`Cannot convert from ${fromGroup} to ${toGroup}`);
+      }
+
+      switch (toGroup) {
+        case 'video': {
+          let fromFormat = fileType.split('/')[1];
+          if (fromFormat === 'gif') {
+            // ffmpeg doesnt support piping gifs unless "gif_pipe" is the input format.
+            // you have no idea how long it took to discover this.
+            fromFormat = 'gif_pipe';
+          }
+
+          const toFormat = conversion.to.split('/')[1];
+          const transcodeStream = new PassThrough();
+
+          ffmpeg()
+            .input(uploadStream)
+            .fromFormat(fromFormat)
+            .toFormat(toFormat)
+            .writeToStream(transcodeStream, { end: true });
+
+          uploadStream = transcodeStream;
+          break;
+        }
+        case 'image': {
+          const toFormat = conversion.to.split('/')[1];
+          if (!(toFormat in sharp.format)) {
+            throw new Error(`Unknown or unsupported image format ${toFormat}`);
+          }
+
+          // pages: -1 enables support to convert gif to webp without it being a static image
+          const transformer = sharp({ pages: -1 }).toFormat(toFormat as any, {
+            effort: 3,
+            quality: 70,
+            progressive: true,
+          });
+
+          uploadStream = uploadStream.pipe(transformer).pipe(new PassThrough());
+          break;
+        }
+        default:
+          throw new Error(`Unknown or unsupported conversion ${fromGroup} to ${toGroup}`);
+      }
     }
 
     const fileId = generateContentId();
     const { hash, size } = await this.storageService.create(uploadStream);
     const file = this.fileRepo.create({
       id: fileId,
-      type: type,
+      type: fileType,
       name: multipart.filename,
       owner: owner.id,
       hostname: host?.normalised.replace('{{username}}', owner.username),
       hash: hash,
       size: size,
     });
+
+    if (conversion) {
+      // swap the file type to the new mime type
+      const originalExtension = mime.extension(file.type);
+      file.type = conversion.to;
+      const conversionExtension = mime.extension(conversion.to);
+      if (file.name && originalExtension && conversionExtension) {
+        // "fix" extensions in the ile name, eg "Test.png" > "Test.webp"
+        file.name = file.name.replace(`.${originalExtension}`, `.${conversionExtension}`);
+      }
+    }
 
     await this.fileRepo.persistAndFlush(file);
     return file;

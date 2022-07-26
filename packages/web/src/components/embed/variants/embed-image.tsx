@@ -5,7 +5,7 @@ import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
 import type { Embeddable } from '../embeddable';
 
 export const EmbedImage = ({ data }: { data: Embeddable }) => {
-  const containerClasses = classNames('flex items-center justify-center relative', BASE_EMBED_CLASSES);
+  const containerClasses = classNames('flex items-center justify-center relative overflow-hidden', BASE_EMBED_CLASSES);
   const imageClasses = classNames(`object-contain`, MAX_HEIGHT);
 
   return (

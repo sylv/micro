@@ -3,7 +3,7 @@ import { IsNumber } from 'class-validator';
 import ms from 'ms';
 import xbytes from 'xbytes';
 
-export class MicroConfigPurge {
+export class MicroPurge {
   @IsNumber()
   @Transform(({ value }) => xbytes.parseSize(value))
   overLimit: number;

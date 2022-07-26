@@ -54,9 +54,11 @@ hosts:
 
 
 
-# # to allow and require users to sign up with an email, specify an SMTP server to send emails from.
-# # if you do not specify an email, it will not be asked for during signup and users will sign in with their username.
-# # enabling this on an existing instance will prompt users without an email to add one (https://micro.sylo.digital/i/J1Ilba)
+
+
+# # To allow and require users to sign up with an email, specify an SMTP server to send emails from.
+# # If you do not specify an email, it will not be asked for during signup and users will sign in with their username.
+# # Enabling this on an existing instance will prompt users without an email to add one (https://micro.sylo.digital/i/J1Ilba)
 # email:
 #   from: 'noreply@example.net'
 #   smtp:
@@ -66,3 +68,23 @@ hosts:
 #     auth:
 #       user: 'username'
 #       pass: 'password'
+
+
+
+
+
+# Conversions allow you to convert files to other formats on upload.
+# This is intended for converting inefficient formats like gif to webm (40mb>4mb in testing).
+# The original copy will be discarded.
+
+# Video conversions rely on ffmpeg which is a slow and flakey process. If possible,
+# it's recommended to disable conversions and just don't upload gifs.
+
+# The recommended options are below, on low power devices like a raspberry pi you should disable conversions entirely.
+# This is currently not retroactive, but in the future old files may also be converted.
+conversions:
+  # You cannot convert video/* to image/* and vice versa. How would that even work?
+  # image/gif to video/webm is an exception.
+  - from: image/gif # This could also be a list of types, just a category like "image", or both.
+    to: video/webm
+    minSize: 1MB # Required size before conversion, files uploaded under this limit are ignored

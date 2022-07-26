@@ -26,6 +26,7 @@ An invite-only file sharing service with support for ShareX. You can see a previ
 - [x] URL Shortening
 - [x] Mobile support
 - [x] EXIF metadata removal
+- [x] Conversions (GIF>WebM, WebP>PNG, etc.)
 - [x] Purging of old and/or large files (`config.purge`).
 
 ## screenshots
@@ -76,8 +77,6 @@ You should take a full database backup before updating. Pending database migrati
 - [ ] Password recovery via emails
 - [ ] SQLite support
 - [ ] Private email aliases like firefox relay (might be difficult/expensive)
-- [ ] Export data options (all files, though that could get huge)
-- [ ] Convert gifs to mp4s on upload to save space
 
 ## discord
 

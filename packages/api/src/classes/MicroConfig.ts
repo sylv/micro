@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDefined,
   IsEmail,
+  IsMimeType,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,12 +12,13 @@ import {
   NotEquals,
   ValidateNested,
 } from 'class-validator';
-import fileType from 'file-type';
 import path from 'path';
 import xbytes from 'xbytes';
-import { MicroConfigPurge } from './MicroConfigPurge';
+import { expandMime } from '../helpers/expand-mime';
+import { MicroConversion } from './MicroConversion';
 import { MicroEmail } from './MicroEmail';
 import { MicroHost } from './MicroHost';
+import { MicroPurge } from './MicroPurge';
 
 export class MicroConfig {
   @IsUrl({ require_tld: false, require_protocol: true, protocols: ['postgresql', 'postgres'] })
@@ -38,27 +40,11 @@ export class MicroConfig {
   @Max(500000)
   maxPasteLength = 500000;
 
-  @IsString({ each: true })
+  @IsMimeType({ each: true })
   @IsOptional()
   @Transform(({ value }) => {
     if (!value) return value;
-    const clean: string[] = [];
-    for (const type of value) {
-      const stripped = type.replace(/\/\*$/u, '');
-      if (stripped.includes('/')) {
-        if (!fileType.mimeTypes.has(type)) {
-          throw new Error(`Invalid mime type: ${type}`);
-        }
-
-        clean.push(type);
-        continue;
-      }
-
-      for (const knownType of fileType.mimeTypes.values()) {
-        if (knownType.startsWith(stripped)) clean.push(knownType);
-      }
-    }
-
+    const clean = expandMime(value);
     return new Set(clean);
   })
   allowTypes?: Set<string>;
@@ -72,13 +58,18 @@ export class MicroConfig {
 
   @ValidateNested()
   @IsOptional()
-  @Type(() => MicroConfigPurge)
-  purge?: MicroConfigPurge;
+  @Type(() => MicroPurge)
+  purge?: MicroPurge;
 
   @ValidateNested()
   @IsOptional()
   @Type(() => MicroEmail)
   email: MicroEmail;
+
+  @ValidateNested({ each: true })
+  @IsOptional()
+  @Type(() => MicroConversion)
+  conversions?: MicroConversion[];
 
   @ValidateNested({ each: true })
   @IsDefined()

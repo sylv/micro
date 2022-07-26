@@ -8,5 +8,6 @@ export interface Embeddable {
   paths: {
     direct: string;
     view?: string;
+    thumbnail?: string | null;
   };
 }

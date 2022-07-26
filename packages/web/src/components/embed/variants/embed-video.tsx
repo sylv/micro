@@ -9,6 +9,7 @@ export const EmbedVideo = ({ file }: { file: Embeddable }) => {
       controls
       loop
       playsInline
+      autoPlay
       className={classes}
       height={file.height || undefined}
       width={file.width || undefined}

@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should expand mime types 1`] = `
+Array [
+  "video/mp4",
+  "video/webm",
+  "video/ogg",
+  "video/quicktime",
+  "video/x-ms-wmv",
+  "video/x-msvideo",
+  "video/x-flv",
+  "video/x-matroska",
+  "video/3gpp",
+  "video/3gpp2",
+]
+`;
+
+exports[`should expand mime types 2`] = `
+Array [
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+]
+`;
+
+exports[`should expand mime types 3`] = `
+Array [
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+]
+`;
+
+exports[`should expand mime types 4`] = `
+Array [
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "video/mp4",
+]
+`;
+
+exports[`should expand mime types 5`] = `
+Array [
+  "image/bmp",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/tiff",
+  "image/webp",
+  "video/mp4",
+]
+`;
