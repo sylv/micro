@@ -120,7 +120,7 @@ export default function Paste() {
             title: values.title,
           };
 
-          if (values.expiryMinutes) {
+          if (Number(values.expiryMinutes)) {
             const expiresInMs = Number(values.expiryMinutes) * 60 * 1000;
             body.expiresAt = Date.now() + expiresInMs;
           }
