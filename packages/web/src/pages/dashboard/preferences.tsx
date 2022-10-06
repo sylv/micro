@@ -1,6 +1,6 @@
 import { Breadcrumbs, Button, Container, useAsync } from '@ryanke/pandora';
 import { useRouter } from 'next/router';
-import { TotpInput } from 'src/components/totp-input';
+import { OtpInput } from 'src/components/input/otp';
 import { Input } from '../../components/input/input';
 import { PageLoader } from '../../components/page-loader';
 import { Title } from '../../components/title';
@@ -70,7 +70,7 @@ export default function Preferences() {
         </div>
         <div className="right flex items-center col-span-full md:col-span-1">
           {user.data.otpEnabled && (
-            <TotpInput
+            <OtpInput
               loading={disableOTPMut.loading}
               onCode={(otpCode) => {
                 disableOTP({
