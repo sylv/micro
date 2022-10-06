@@ -28,6 +28,7 @@ An invite-only file sharing service with support for ShareX. You can see a previ
 - [x] EXIF metadata removal
 - [x] Conversions (GIF>WebM, WebP>PNG, etc.)
 - [x] Purging of old and/or large files (`config.purge`).
+- [x] 2FA support
 
 ## screenshots
 
@@ -44,7 +45,7 @@ An invite-only file sharing service with support for ShareX. You can see a previ
   </tr>
   <tr>
     <td><img src="https://i.imgur.com/1KUrtVf.png" title="Paste Page" alt="Paste Page"></td>
-    <td><img src="https://i.imgur.com/DFio2vy.png" title="2FA setup" alt="2FA setup"></td>
+    <td><img src="https://i.imgur.com/GYaEcKy.png" title="2FA setup" alt="2FA setup"></td>
   </tr>
 </table>
 
