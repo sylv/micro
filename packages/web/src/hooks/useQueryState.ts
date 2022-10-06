@@ -10,7 +10,7 @@ export const useQueryState = <S>(key: string, initialState?: S, parser?: (input:
       const result = parser ? parser(value) : (value as any);
       setValue(result);
     }
-  }, [key, parser]);
+  }, []);
 
   useEffect(() => {
     const route = new URL(window.location.href);

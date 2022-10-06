@@ -40,17 +40,20 @@ export class UserResolver {
   }
 
   @ResolveField(() => Number)
-  async aggregateFileSize(@Parent() user: User) {
+  async aggregateFileSize(@UserId() userId: string, @Parent() user: User) {
+    if (userId !== user.id) throw new UnauthorizedException();
     const result = await this.fileRepo.createQueryBuilder().where({ owner: user.id }).getKnex().sum('size').first();
     return Number(result.sum);
   }
 
   @ResolveField(() => FilePage)
   async files(
+    @UserId() userId: string,
     @Parent() user: User,
     @Args('first', { nullable: true }) limit: number = 0,
     @Args('after', { nullable: true }) cursor?: string
   ): Promise<FilePage> {
+    if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
     if (limit <= 0) limit = 10;
     const query: FilterQuery<File> = { owner: user.id };
@@ -68,10 +71,12 @@ export class UserResolver {
 
   @ResolveField(() => PastePage)
   async pastes(
+    @UserId() userId: string,
     @Parent() user: User,
     @Args('first', { nullable: true }) limit: number = 0,
     @Args('after', { nullable: true }) cursor?: string
   ): Promise<PastePage> {
+    if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
     if (limit <= 0) limit = 10;
     const query: FilterQuery<Paste> = { owner: user.id };
@@ -88,7 +93,8 @@ export class UserResolver {
   }
 
   @ResolveField(() => String)
-  async token(@Parent() user: User) {
+  async token(@UserId() userId: string, @Parent() user: User) {
+    if (userId !== user.id) throw new UnauthorizedException();
     return this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
       name: user.username,
       secret: user.secret,

@@ -1,32 +1,37 @@
 import { useAsync } from '@ryanke/pandora';
 import Router, { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { resetClient } from '../apollo';
-import { useGetUserQuery } from '../generated/graphql';
-import { http } from '../helpers/http.helper';
-
-interface LoginData {
-  username: string;
-  password: string;
-}
+import type { LoginMutationVariables } from '../generated/graphql';
+import { useGetUserQuery, useLoginMutation, useLogoutMutation } from '../generated/graphql';
 
 export const useUser = (redirect = false) => {
   const user = useGetUserQuery();
   const router = useRouter();
+  const [loginMutation] = useLoginMutation();
+  const [logoutMutation] = useLogoutMutation();
+  const [otp, setOtp] = useState(false);
 
-  const [login] = useAsync(async (data: LoginData) => {
-    await http(`auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+  const [login] = useAsync(async (variables: LoginMutationVariables) => {
+    try {
+      await loginMutation({
+        variables: variables,
+      });
 
-    await user.refetch();
-    Router.push('/dashboard');
+      await user.refetch();
+      Router.push('/dashboard');
+    } catch (error: any) {
+      console.log({ error });
+      if (error.message.toLowerCase().includes('otp')) {
+        setOtp(true);
+      }
+
+      throw error;
+    }
   });
 
   const [logout] = useAsync(async () => {
-    await http(`auth/logout`, { method: 'POST' });
+    await logoutMutation();
     resetClient();
   });
 
@@ -40,6 +45,7 @@ export const useUser = (redirect = false) => {
     data: user.data?.user,
     error: user.error,
     loading: user.loading,
+    otpRequired: otp,
     login: login,
     logout: logout,
   } as const;

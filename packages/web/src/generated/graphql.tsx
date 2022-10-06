@@ -115,13 +115,23 @@ export type Link = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  confirmOTP: Scalars['Boolean'];
   createInvite: Invite;
   createLink: Link;
   createPaste: Paste;
   createUser: User;
   deleteFile: Scalars['Boolean'];
+  disableOTP: Scalars['Boolean'];
+  generateOTP: OtpEnabledDto;
+  login: User;
+  logout: Scalars['Boolean'];
   refreshToken: User;
   resendVerificationEmail: Scalars['Boolean'];
+};
+
+
+export type MutationConfirmOtpArgs = {
+  otpCode: Scalars['String'];
 };
 
 
@@ -147,8 +157,27 @@ export type MutationDeleteFileArgs = {
 };
 
 
+export type MutationDisableOtpArgs = {
+  otpCode: Scalars['String'];
+};
+
+
+export type MutationLoginArgs = {
+  otpCode?: InputMaybe<Scalars['String']>;
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
 export type MutationResendVerificationEmailArgs = {
   data?: InputMaybe<ResendVerificationEmailDto>;
+};
+
+export type OtpEnabledDto = {
+  __typename?: 'OTPEnabledDto';
+  qrauthUrl: Scalars['String'];
+  recoveryCodes: Array<Scalars['String']>;
+  secret: Scalars['String'];
 };
 
 export type PageInfo = {
@@ -246,6 +275,7 @@ export type User = {
   email?: Maybe<Scalars['String']>;
   files: FilePage;
   id: Scalars['ID'];
+  otpEnabled: Scalars['Boolean'];
   pastes: PastePage;
   permissions: Scalars['Float'];
   tags: Array<Scalars['String']>;
@@ -301,9 +331,42 @@ export type ConfigQuery = { __typename?: 'Query', config: { __typename?: 'Config
 export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
+export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', otpEnabled: boolean, id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
 
 export type RegularUserFragment = { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string };
+
+export type LoginMutationVariables = Exact<{
+  username: Scalars['String'];
+  password: Scalars['String'];
+  otp?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type GenerateOtpMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GenerateOtpMutation = { __typename?: 'Mutation', generateOTP: { __typename?: 'OTPEnabledDto', recoveryCodes: Array<string>, qrauthUrl: string, secret: string } };
+
+export type ConfirmOtpMutationVariables = Exact<{
+  otpCode: Scalars['String'];
+}>;
+
+
+export type ConfirmOtpMutation = { __typename?: 'Mutation', confirmOTP: boolean };
+
+export type DisableOtpMutationVariables = Exact<{
+  otpCode: Scalars['String'];
+}>;
+
+
+export type DisableOtpMutation = { __typename?: 'Mutation', disableOTP: boolean };
 
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -577,6 +640,7 @@ export const GetUserDocument = gql`
     query GetUser {
   user {
     ...RegularUser
+    otpEnabled
   }
 }
     ${RegularUserFragmentDoc}`;
@@ -607,6 +671,167 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const LoginDocument = gql`
+    mutation Login($username: String!, $password: String!, $otp: String) {
+  login(username: $username, password: $password, otpCode: $otp) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *      otp: // value for 'otp'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const GenerateOtpDocument = gql`
+    mutation GenerateOTP {
+  generateOTP {
+    recoveryCodes
+    qrauthUrl
+    secret
+  }
+}
+    `;
+export type GenerateOtpMutationFn = Apollo.MutationFunction<GenerateOtpMutation, GenerateOtpMutationVariables>;
+
+/**
+ * __useGenerateOtpMutation__
+ *
+ * To run a mutation, you first call `useGenerateOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateOtpMutation, { data, loading, error }] = useGenerateOtpMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGenerateOtpMutation(baseOptions?: Apollo.MutationHookOptions<GenerateOtpMutation, GenerateOtpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateOtpMutation, GenerateOtpMutationVariables>(GenerateOtpDocument, options);
+      }
+export type GenerateOtpMutationHookResult = ReturnType<typeof useGenerateOtpMutation>;
+export type GenerateOtpMutationResult = Apollo.MutationResult<GenerateOtpMutation>;
+export type GenerateOtpMutationOptions = Apollo.BaseMutationOptions<GenerateOtpMutation, GenerateOtpMutationVariables>;
+export const ConfirmOtpDocument = gql`
+    mutation ConfirmOTP($otpCode: String!) {
+  confirmOTP(otpCode: $otpCode)
+}
+    `;
+export type ConfirmOtpMutationFn = Apollo.MutationFunction<ConfirmOtpMutation, ConfirmOtpMutationVariables>;
+
+/**
+ * __useConfirmOtpMutation__
+ *
+ * To run a mutation, you first call `useConfirmOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmOtpMutation, { data, loading, error }] = useConfirmOtpMutation({
+ *   variables: {
+ *      otpCode: // value for 'otpCode'
+ *   },
+ * });
+ */
+export function useConfirmOtpMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmOtpMutation, ConfirmOtpMutationVariables>(ConfirmOtpDocument, options);
+      }
+export type ConfirmOtpMutationHookResult = ReturnType<typeof useConfirmOtpMutation>;
+export type ConfirmOtpMutationResult = Apollo.MutationResult<ConfirmOtpMutation>;
+export type ConfirmOtpMutationOptions = Apollo.BaseMutationOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>;
+export const DisableOtpDocument = gql`
+    mutation DisableOTP($otpCode: String!) {
+  disableOTP(otpCode: $otpCode)
+}
+    `;
+export type DisableOtpMutationFn = Apollo.MutationFunction<DisableOtpMutation, DisableOtpMutationVariables>;
+
+/**
+ * __useDisableOtpMutation__
+ *
+ * To run a mutation, you first call `useDisableOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDisableOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [disableOtpMutation, { data, loading, error }] = useDisableOtpMutation({
+ *   variables: {
+ *      otpCode: // value for 'otpCode'
+ *   },
+ * });
+ */
+export function useDisableOtpMutation(baseOptions?: Apollo.MutationHookOptions<DisableOtpMutation, DisableOtpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DisableOtpMutation, DisableOtpMutationVariables>(DisableOtpDocument, options);
+      }
+export type DisableOtpMutationHookResult = ReturnType<typeof useDisableOtpMutation>;
+export type DisableOtpMutationResult = Apollo.MutationResult<DisableOtpMutation>;
+export type DisableOtpMutationOptions = Apollo.BaseMutationOptions<DisableOtpMutation, DisableOtpMutationVariables>;
 export const RefreshTokenDocument = gql`
     mutation RefreshToken {
   refreshToken {
