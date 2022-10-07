@@ -3,13 +3,10 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { nanoid } from 'nanoid';
 import path from 'path';
-import stream from 'stream';
-import getSizeTransform from 'stream-size';
-import { promisify } from 'util';
-import { ExifTransformer } from '../../classes/ExifTransformer';
-import { config } from '../../config';
-
-const pipeline = promisify(stream.pipeline);
+import { ExifTransformer } from 'src/classes/ExifTransformer.js';
+import { default as getSizeTransform } from 'stream-size';
+import { pipeline } from 'stream/promises';
+import { config } from '../../config.js';
 
 @Injectable()
 export class StorageService {
@@ -28,7 +25,7 @@ export class StorageService {
     try {
       const hashStream = crypto.createHash('sha256');
       const exifTransform = new ExifTransformer();
-      const sizeTransform = getSizeTransform(config.uploadLimit);
+      const sizeTransform = getSizeTransform.default(config.uploadLimit);
       const writeStream = fs.createWriteStream(uploadPath);
       await Promise.all([
         // prettier-ignore

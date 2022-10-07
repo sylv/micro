@@ -1,10 +1,11 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import type { Multipart } from '@fastify/multipart';
+import type { MultipartFile } from '@fastify/multipart';
 import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import type { OnApplicationBootstrap } from '@nestjs/common';
 import { BadRequestException, Injectable, Logger, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import bytes from 'bytes';
 import contentRange from 'content-range';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import ffmpeg from 'fluent-ffmpeg';
@@ -12,24 +13,23 @@ import { DateTime } from 'luxon';
 import mime from 'mime-types';
 import sharp from 'sharp';
 import { PassThrough } from 'stream';
-import xbytes from 'xbytes';
-import type { MicroHost } from '../../classes/MicroHost';
-import { config } from '../../config';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { getStreamType } from '../../helpers/get-stream-type.helper';
-import { HostService } from '../host/host.service';
-import { StorageService } from '../storage/storage.service';
-import type { User } from '../user/user.entity';
-import { File } from './file.entity';
+import type { MicroHost } from '../../classes/MicroHost.js';
+import { config } from '../../config.js';
+import { generateContentId } from '../../helpers/generate-content-id.helper.js';
+import { getStreamType } from '../../helpers/get-stream-type.helper.js';
+import { HostService } from '../host/host.service.js';
+import { StorageService } from '../storage/storage.service.js';
+import type { User } from '../user/user.entity.js';
+import type { File } from './file.entity.js';
 
 @Injectable()
 export class FileService implements OnApplicationBootstrap {
   private readonly logger = new Logger(FileService.name);
   constructor(
-    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    @InjectRepository('File') private readonly fileRepo: EntityRepository<File>,
     private readonly storageService: StorageService,
     private readonly hostService: HostService,
-    private readonly orm: MikroORM
+    protected readonly orm: MikroORM
   ) {}
 
   async getFile(id: string, request: FastifyRequest) {
@@ -42,7 +42,7 @@ export class FileService implements OnApplicationBootstrap {
   }
 
   async createFile(
-    multipart: Multipart,
+    multipart: MultipartFile,
     request: FastifyRequest,
     owner: User,
     host: MicroHost | undefined
@@ -51,7 +51,7 @@ export class FileService implements OnApplicationBootstrap {
     if (!request.headers['content-length']) throw new BadRequestException('Missing "Content-Length" header.');
     const contentLength = Number(request.headers['content-length']);
     if (Number.isNaN(contentLength) || contentLength >= config.uploadLimit) {
-      const size = xbytes(Number(request.headers['content-length']));
+      const size = bytes.parse(Number(request.headers['content-length']));
       this.logger.warn(
         `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
       );
@@ -69,7 +69,7 @@ export class FileService implements OnApplicationBootstrap {
 
     const conversion = config.conversions?.find((conversion) => {
       if (!conversion.from.has(fileType)) return false;
-      if (conversion.minSize && contentLength < conversion.minSize) return false; 
+      if (conversion.minSize && contentLength < conversion.minSize) return false;
       if (conversion.to === fileType) return false; // dont convert to the same type
       return true;
     });
@@ -175,7 +175,6 @@ export class FileService implements OnApplicationBootstrap {
   async purgeFiles() {
     if (!config.purge) return;
     const createdBefore = new Date(Date.now() - config.purge.afterTime);
-
     const files = await this.fileRepo.find({
       size: {
         $gte: config.purge.overLimit,
@@ -186,7 +185,7 @@ export class FileService implements OnApplicationBootstrap {
     });
 
     for (const file of files) {
-      const size = xbytes(file.size, { space: false });
+      const size = bytes.format(file.size);
       const age = DateTime.fromJSDate(file.createdAt).toRelative();
       await this.fileRepo.removeAndFlush(file);
       this.logger.log(`Purging ${file.id} (${size}, ${age})`);
@@ -199,7 +198,7 @@ export class FileService implements OnApplicationBootstrap {
 
   onApplicationBootstrap() {
     if (config.purge) {
-      const size = xbytes(config.purge.overLimit, { space: false });
+      const size = bytes.format(config.purge.overLimit);
       // todo: swap out luxon for dayjs
       const age = DateTime.local().minus(config.purge.afterTime).toRelative();
       this.logger.warn(`Purging files is enabled for files over ${size} uploaded more than ${age}.`);

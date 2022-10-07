@@ -11,10 +11,10 @@ import {
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { File } from '../file/file.entity';
-import { Invite } from '../invite/invite.entity';
-import { UserVerification } from './user-verification.entity';
+import { generateContentId } from '../../helpers/generate-content-id.helper.js';
+import { File } from '../file/file.entity.js';
+import { Invite } from '../invite/invite.entity.js';
+import { UserVerification } from './user-verification.entity.js';
 
 @Entity({ tableName: 'users' })
 @ObjectType()

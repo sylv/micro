@@ -1,13 +1,13 @@
-import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, type IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 import mime from 'mime-types';
-import { config } from '../../config';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { Resource } from '../../helpers/resource.entity-base';
-import { Paginated } from '../../types/paginated.type';
-import { User } from '../user/user.entity';
+import { config } from '../../config.js';
+import { generateContentId } from '../../helpers/generate-content-id.helper.js';
+import { Resource } from '../../helpers/resource.entity-base.js';
+import { Paginated } from '../../types/paginated.type.js';
+import { User } from '../user/user.entity.js';
 
 @Entity({ tableName: 'pastes' })
 @ObjectType({ isAbstract: true })

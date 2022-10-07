@@ -20,7 +20,7 @@ export const apiUri = isServer ? process.env.API_URL : `/api`;
 export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
   const hasProtocol = pathOrUrl.startsWith('http');
   const isAbsolute = pathOrUrl.startsWith('/');
-  const url = hasProtocol || isAbsolute ? pathOrUrl : `${apiUri}${pathOrUrl}`;
+  const url = hasProtocol || isAbsolute ? pathOrUrl : `${apiUri}${isAbsolute ? '' : '/'}${pathOrUrl}`;
   const response = await fetch(url, options);
   if (!response.ok) {
     const clone = response.clone();

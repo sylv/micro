@@ -4,21 +4,21 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable 
 import { Cron, CronExpression } from '@nestjs/schedule';
 import bcrypt from 'bcryptjs';
 import dedent from 'dedent';
-import { compile } from 'handlebars';
+import handlebars from 'handlebars';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
-import { config } from '../../config';
-import type { Permission } from '../../constants';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { sendMail } from '../../helpers/send-mail.helper';
-import { File } from '../file/file.entity';
-import type { Invite } from '../invite/invite.entity';
-import { InviteService } from '../invite/invite.service';
-import { Paste } from '../paste/paste.entity';
-import type { CreateUserDto } from './dto/create-user.dto';
-import type { Pagination } from './dto/pagination.dto';
-import { UserVerification } from './user-verification.entity';
-import { User } from './user.entity';
+import { config } from '../../config.js';
+import type { Permission } from '../../constants.js';
+import { generateContentId } from '../../helpers/generate-content-id.helper.js';
+import { sendMail } from '../../helpers/send-mail.helper.js';
+import { File } from '../file/file.entity.js';
+import type { Invite } from '../invite/invite.entity.js';
+import { InviteService } from '../invite/invite.service.js';
+import { Paste } from '../paste/paste.entity.js';
+import type { CreateUserDto } from './dto/create-user.dto.js';
+import type { Pagination } from './dto/pagination.dto.js';
+import { UserVerification } from './user-verification.entity.js';
+import { User } from './user.entity.js';
 
 const EMAIL_TEMPLATE_SOURCE = dedent`
   <body>
@@ -31,7 +31,7 @@ const EMAIL_TEMPLATE_SOURCE = dedent`
 @Injectable()
 export class UserService {
   private static readonly VERIFICATION_EXPIRY = ms('6 hours');
-  private static readonly EMAIL_TEMPLATE = compile<{ verifyUrl: string }>(EMAIL_TEMPLATE_SOURCE);
+  private static readonly EMAIL_TEMPLATE = handlebars.compile<{ verifyUrl: string }>(EMAIL_TEMPLATE_SOURCE);
 
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
@@ -134,6 +134,7 @@ export class UserService {
       username: data.username,
       invite: invite.id,
       permissions: invite.permissions ?? 0,
+      otpEnabled: false,
     });
 
     if (data.email) {

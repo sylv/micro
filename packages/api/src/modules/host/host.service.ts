@@ -1,9 +1,9 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import normalizeUrl from 'normalize-url';
-import type { MicroHost } from '../../classes/MicroHost';
-import { config } from '../../config';
-import { randomItem } from '../../helpers/random-item.helper';
-import type { User } from '../user/user.entity';
+import type { MicroHost } from '../../classes/MicroHost.js';
+import { config } from '../../config.js';
+import { randomItem } from '../../helpers/random-item.helper.js';
+import type { User } from '../user/user.entity.js';
 
 export class HostService {
   formatHostUrl(url: string, username: string, path?: string | null) {

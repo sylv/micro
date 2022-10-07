@@ -1,9 +1,9 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Controller, Get, Param, Request, Res } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { Link } from './link.entity';
-import { LinkService } from './link.service';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { Link } from './link.entity.js';
+import { LinkService } from './link.service.js';
 
 @Controller()
 export class LinkController {

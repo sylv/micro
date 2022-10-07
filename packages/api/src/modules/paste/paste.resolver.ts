@@ -3,14 +3,14 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { generateContentId, generateParanoidId } from '../../helpers/generate-content-id.helper';
-import { ResourceLocations } from '../../types/resource-locations.type';
-import { UserId } from '../auth/auth.decorators';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
-import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard';
-import { HostService } from '../host/host.service';
-import { UserService } from '../user/user.service';
-import { CreatePasteDto, Paste } from './paste.entity';
+import { generateContentId, generateParanoidId } from '../../helpers/generate-content-id.helper.js';
+import { ResourceLocations } from '../../types/resource-locations.type.js';
+import { UserId } from '../auth/auth.decorators.js';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
+import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard.js';
+import { HostService } from '../host/host.service.js';
+import { UserService } from '../user/user.service.js';
+import { CreatePasteDto, Paste } from './paste.entity.js';
 
 @Resolver(() => Paste)
 export class PasteResolver {

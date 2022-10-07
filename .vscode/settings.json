@@ -28,7 +28,6 @@
     // const selectedClass = 'value'
     ["const [a-zA-Z]+s = ['\"`]([^\"`'`]*)"]
   ],
-  "cSpell.words": ["xbytes"],
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": "file:///home/ryan/projects/micro/.github/workflows/build.yaml"
   }

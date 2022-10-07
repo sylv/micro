@@ -1,7 +1,7 @@
 import { loadConfig } from '@ryanke/venera';
 import { plainToClass } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { MicroConfig } from './classes/MicroConfig';
+import { MicroConfig } from './classes/MicroConfig.js';
 
 const data = loadConfig('micro');
 const config = plainToClass(MicroConfig, data, { exposeDefaultValues: true });

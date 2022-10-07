@@ -1,6 +1,6 @@
 import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { File } from '../file/file.entity';
+import { File } from '../file/file.entity.js';
 
 @Entity({ tableName: 'thumbnails' })
 @ObjectType()

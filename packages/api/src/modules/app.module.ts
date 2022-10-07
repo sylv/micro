@@ -1,3 +1,4 @@
+import MikroOrmOptions from '../orm.js';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -5,16 +6,15 @@ import type { MercuriusDriverConfig } from '@nestjs/mercurius';
 import { MercuriusDriver } from '@nestjs/mercurius';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
-import MikroOrmOptions from '../orm';
-import { AppResolver } from './app.resolver';
-import { AuthModule } from './auth/auth.module';
-import { FileModule } from './file/file.module';
-import { HostModule } from './host/host.module';
-import { InviteModule } from './invite/invite.module';
-import { PasteModule } from './paste/paste.module';
-import { StorageModule } from './storage/storage.module';
-import { ThumbnailModule } from './thumbnail/thumbnail.module';
-import { UserModule } from './user/user.module';
+import { AppResolver } from './app.resolver.js';
+import { AuthModule } from './auth/auth.module.js';
+import { FileModule } from './file/file.module.js';
+import { HostModule } from './host/host.module.js';
+import { InviteModule } from './invite/invite.module.js';
+import { PasteModule } from './paste/paste.module.js';
+import { StorageModule } from './storage/storage.module.js';
+import { ThumbnailModule } from './thumbnail/thumbnail.module.js';
+import { UserModule } from './user/user.module.js';
 
 @Module({
   providers: [AppResolver],

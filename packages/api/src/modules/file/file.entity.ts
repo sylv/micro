@@ -1,7 +1,6 @@
 import {
   Embedded,
   Entity,
-  IdentifiedReference,
   Index,
   LoadStrategy,
   ManyToOne,
@@ -9,17 +8,18 @@ import {
   OptionalProps,
   PrimaryKey,
   Property,
+  type IdentifiedReference,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { checkThumbnailSupport } from '@ryanke/thumbnail-generator';
 import { Exclude } from 'class-transformer';
 import mimeType from 'mime-types';
-import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
-import { Resource } from '../../helpers/resource.entity-base';
-import { Paginated } from '../../types/paginated.type';
-import { Thumbnail } from '../thumbnail/thumbnail.entity';
-import { User } from '../user/user.entity';
-import { FileMetadata } from './file-metadata.embeddable';
+import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
+import { Resource } from '../../helpers/resource.entity-base.js';
+import { Paginated } from '../../types/paginated.type.js';
+import { Thumbnail } from '../thumbnail/thumbnail.entity.js';
+import { ThumbnailService } from '../thumbnail/thumbnail.service.js';
+import { User } from '../user/user.entity.js';
+import { FileMetadata } from './file-metadata.embeddable.js';
 
 @Entity({ tableName: 'files' })
 @ObjectType()
@@ -78,7 +78,7 @@ export class File extends Resource {
     const prefix = this.type.startsWith('video') ? '/v' : this.type.startsWith('image') ? '/i' : '/f';
     const viewPath = `${prefix}/${this.id}`;
     const directPath = `${prefix}/${this.id}.${extension}`;
-    const thumbnailUrl = checkThumbnailSupport(this.type) ? `/t/${this.id}` : undefined;
+    const thumbnailUrl = ThumbnailService.checkSupport(this.type) ? `/t/${this.id}` : undefined;
     const deletePath = this.deleteKey ? `${prefix}/${this.id}?deleteKey=${this.deleteKey}` : undefined;
 
     return {
