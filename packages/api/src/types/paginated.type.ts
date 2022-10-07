@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-keyword-prefix */
 import type { Type } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Edge } from './edge.type';
+import { Edge } from './edge.type.js';
 
 export interface Paginated<T> {
   totalCount: number;

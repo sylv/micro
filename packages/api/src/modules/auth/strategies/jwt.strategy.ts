@@ -4,9 +4,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { FastifyRequest } from 'fastify';
 import { Strategy } from 'passport-jwt';
-import { config } from '../../../config';
-import { User } from '../../user/user.entity';
-import { TokenType } from '../auth.service';
+import { config } from '../../../config.js';
+import { User } from '../../user/user.entity.js';
+import { TokenType } from '../auth.service.js';
 
 export interface JWTPayloadUser {
   id: string;

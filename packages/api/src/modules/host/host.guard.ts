@@ -1,7 +1,7 @@
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { config } from '../../config';
-import { getRequest } from '../../helpers/get-request';
+import { config } from '../../config.js';
+import { getRequest } from '../../helpers/get-request.js';
 
 @Injectable()
 export class HostGuard implements CanActivate {

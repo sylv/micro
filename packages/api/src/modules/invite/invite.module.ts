@@ -1,12 +1,12 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { forwardRef, Module } from '@nestjs/common';
-import { AuthModule } from '../auth/auth.module';
-import { User } from '../user/user.entity';
-import { UserModule } from '../user/user.module';
-import { InviteController } from './invite.controller';
-import { Invite } from './invite.entity';
-import { InviteResolver } from './invite.resolver';
-import { InviteService } from './invite.service';
+import { AuthModule } from '../auth/auth.module.js';
+import { User } from '../user/user.entity.js';
+import { UserModule } from '../user/user.module.js';
+import { InviteController } from './invite.controller.js';
+import { Invite } from './invite.entity.js';
+import { InviteResolver } from './invite.resolver.js';
+import { InviteService } from './invite.service.js';
 
 @Module({
   controllers: [InviteController],

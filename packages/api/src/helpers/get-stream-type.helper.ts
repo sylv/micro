@@ -1,4 +1,4 @@
-import * as fileType from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
 import { isBinary } from 'istextorbinary';
 import * as mimeType from 'mime-types';
 import path from 'path';
@@ -29,7 +29,7 @@ export async function getStreamType(fileName: string, stream: PassThrough): Prom
   const firstBytes = await readFirstBytes(stream);
   const binary = isBinary(fileName, firstBytes);
   if (binary) {
-    const result = await fileType.fromBuffer(firstBytes);
+    const result = await fileTypeFromBuffer(firstBytes);
     return result?.mime ?? DEFAULT_TYPE;
   }
 

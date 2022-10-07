@@ -14,15 +14,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { config } from '../../config';
-import { UserId } from '../auth/auth.decorators';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
-import { HostService } from '../host/host.service';
-import { LinkService } from '../link/link.service';
-import { Paste } from '../paste/paste.entity';
-import { UserService } from '../user/user.service';
-import { FileService } from './file.service';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { config } from '../../config.js';
+import { UserId } from '../auth/auth.decorators.js';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
+import { HostService } from '../host/host.service.js';
+import { LinkService } from '../link/link.service.js';
+import { Paste } from '../paste/paste.entity.js';
+import { UserService } from '../user/user.service.js';
+import { FileService } from './file.service.js';
 
 @Controller()
 export class FileController {

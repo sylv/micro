@@ -1,3 +1,4 @@
+import bytes from 'bytes';
 import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -13,12 +14,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 import path from 'path';
-import xbytes from 'xbytes';
-import { expandMime } from '../helpers/expand-mime';
-import { MicroConversion } from './MicroConversion';
-import { MicroEmail } from './MicroEmail';
-import { MicroHost } from './MicroHost';
-import { MicroPurge } from './MicroPurge';
+import { expandMime } from '../helpers/expand-mime.js';
+import { MicroConversion } from './MicroConversion.js';
+import { MicroEmail } from './MicroEmail.js';
+import { MicroHost } from './MicroHost.js';
+import { MicroPurge } from './MicroPurge.js';
 
 export class MicroConfig {
   @IsUrl({ require_tld: false, require_protocol: true, protocols: ['postgresql', 'postgres'] })
@@ -32,8 +32,8 @@ export class MicroConfig {
   inquiries: string;
 
   @IsNumber()
-  @Transform(({ value }) => xbytes.parseSize(value))
-  uploadLimit = xbytes.parseSize('50MB');
+  @Transform(({ value }) => bytes.parse(value))
+  uploadLimit = bytes.parse('50MB');
 
   @IsNumber()
   @IsOptional()
@@ -77,6 +77,6 @@ export class MicroConfig {
   hosts: MicroHost[];
 
   get rootHost() {
-    return this.hosts[0];
+    return this.hosts[0]!;
   }
 }

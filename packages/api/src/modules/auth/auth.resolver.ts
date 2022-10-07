@@ -4,13 +4,13 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import type { FastifyReply } from 'fastify';
 import ms from 'ms';
-import { config } from '../../config';
-import { User } from '../user/user.entity';
-import { UserId } from './auth.decorators';
-import { AuthService, TokenType } from './auth.service';
-import { OTPEnabledDto } from './dto/otp-enabled.dto';
-import { JWTAuthGuard } from './guards/jwt.guard';
-import type { JWTPayloadUser } from './strategies/jwt.strategy';
+import { config } from '../../config.js';
+import { User } from '../user/user.entity.js';
+import { UserId } from './auth.decorators.js';
+import { AuthService, TokenType } from './auth.service.js';
+import { OTPEnabledDto } from './dto/otp-enabled.dto.js';
+import { JWTAuthGuard } from './guards/jwt.guard.js';
+import type { JWTPayloadUser } from './strategies/jwt.strategy.js';
 
 @Resolver(() => User)
 export class AuthResolver {

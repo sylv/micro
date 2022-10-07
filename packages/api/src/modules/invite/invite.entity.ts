@@ -1,8 +1,8 @@
 import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { config } from '../../config';
-import { generateDeleteKey } from '../../helpers/generate-delete-key.helper';
-import { User } from '../user/user.entity';
+import { config } from '../../config.js';
+import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
+import { User } from '../user/user.entity.js';
 
 @Entity({ tableName: 'invites' })
 @ObjectType()

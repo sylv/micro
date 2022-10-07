@@ -1,8 +1,8 @@
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { Permission } from '../../constants';
-import { RequirePermissions, UserId } from '../auth/auth.decorators';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
-import { InviteService } from './invite.service';
+import { Permission } from '../../constants.js';
+import { RequirePermissions, UserId } from '../auth/auth.decorators.js';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
+import { InviteService } from './invite.service.js';
 
 @Controller()
 export class InviteController {

@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Response } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
-import { UserService } from './user.service';
+import type { FastifyReply } from 'fastify';
+import { UserService } from './user.service.js';
 
 @Controller()
 export class UserController {

@@ -1,8 +1,8 @@
 import type { EventArgs, EventSubscriber } from '@mikro-orm/core';
 import { Subscriber } from '@mikro-orm/core';
 import { Injectable, Logger } from '@nestjs/common';
-import { StorageService } from '../storage/storage.service';
-import { File } from './file.entity';
+import { StorageService } from '../storage/storage.service.js';
+import { File } from './file.entity.js';
 
 @Injectable()
 @Subscriber()

@@ -2,9 +2,9 @@ import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import type { OnApplicationBootstrap } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
-import { Permission } from '../../constants';
-import { User } from '../user/user.entity';
-import { Invite } from './invite.entity';
+import { Permission } from '../../constants.js';
+import { User } from '../user/user.entity.js';
+import { Invite } from './invite.entity.js';
 
 export interface JWTPayloadInvite {
   id: string;
@@ -23,8 +23,8 @@ export class InviteService implements OnApplicationBootstrap {
 
   async create(inviterId: string | null, permissions: Permission | null) {
     const invite = this.inviteRepo.create({
-      inviter: inviterId,
-      permissions: permissions,
+      inviter: inviterId || undefined,
+      permissions: permissions || undefined,
     });
 
     await this.inviteRepo.persistAndFlush(invite);

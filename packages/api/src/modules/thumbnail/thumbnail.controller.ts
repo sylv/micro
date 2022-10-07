@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { ThumbnailService } from './thumbnail.service';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { ThumbnailService } from './thumbnail.service.js';
 
 @Controller()
 export class ThumbnailController {

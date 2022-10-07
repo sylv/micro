@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsUrl, Matches } from 'class-validator';
 import escapeString from 'escape-string-regexp';
-import { HostService } from '../modules/host/host.service';
+import { HostService } from '../modules/host/host.service.js';
 
 export class MicroHost {
   constructor(url: string, tags?: string[], redirect?: string) {

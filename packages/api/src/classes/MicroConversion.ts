@@ -1,7 +1,7 @@
+import bytes from 'bytes';
 import { Transform } from 'class-transformer';
 import { IsMimeType, IsNumber, IsOptional, IsString } from 'class-validator';
-import xbytes from 'xbytes';
-import { expandMime } from '../helpers/expand-mime';
+import { expandMime } from '../helpers/expand-mime.js';
 
 export class MicroConversion {
   @IsString({ each: true })
@@ -16,6 +16,6 @@ export class MicroConversion {
 
   @IsNumber()
   @IsOptional()
-  @Transform(({ value }) => xbytes.parseSize(value))
+  @Transform(({ value }) => bytes.parse(value))
   minSize?: number;
 }

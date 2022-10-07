@@ -1,12 +1,12 @@
 import { UseGuards } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
-import { MicroHost } from '../classes/MicroHost';
-import { config } from '../config';
-import type { ConfigHost } from '../types/config.type';
-import { Config } from '../types/config.type';
-import { CurrentHost, UserId } from './auth/auth.decorators';
-import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard';
-import { UserService } from './user/user.service';
+import { MicroHost } from '../classes/MicroHost.js';
+import { config } from '../config.js';
+import type { ConfigHost } from '../types/config.type.js';
+import { Config } from '../types/config.type.js';
+import { CurrentHost, UserId } from './auth/auth.decorators.js';
+import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard.js';
+import { UserService } from './user/user.service.js';
 
 @Resolver(() => Config)
 export class AppResolver {
@@ -28,6 +28,8 @@ export class AppResolver {
       uploadLimit: config.uploadLimit,
       allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : [],
       requireEmails: !!config.email,
+      rootHost: this.filterHost(config.rootHost),
+      currentHost: this.filterHost(currentHost),
       hosts: config.hosts
         .filter((host) => {
           if (!host.tags || !host.tags[0]) return true;
@@ -38,8 +40,6 @@ export class AppResolver {
           normalised: host.normalised,
           redirect: host.redirect,
         })),
-      rootHost: this.filterHost(config.rootHost),
-      currentHost: this.filterHost(currentHost),
     } as const;
   }
 

@@ -4,10 +4,10 @@ import { EntityRepository } from '@mikro-orm/postgresql';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import prettyBytes from 'pretty-bytes';
-import { ResourceLocations } from '../../types/resource-locations.type';
-import { UserId } from '../auth/auth.decorators';
-import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard';
-import { File } from './file.entity';
+import { ResourceLocations } from '../../types/resource-locations.type.js';
+import { UserId } from '../auth/auth.decorators.js';
+import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard.js';
+import { File } from './file.entity.js';
 
 @Resolver(() => File)
 export class FileResolver {

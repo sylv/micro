@@ -1,11 +1,11 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { File } from '../file/file.entity';
-import { FileModule } from '../file/file.module';
-import { StorageModule } from '../storage/storage.module';
-import { ThumbnailController } from './thumbnail.controller';
-import { Thumbnail } from './thumbnail.entity';
-import { ThumbnailService } from './thumbnail.service';
+import { File } from '../file/file.entity.js';
+import { FileModule } from '../file/file.module.js';
+import { StorageModule } from '../storage/storage.module.js';
+import { ThumbnailController } from './thumbnail.controller.js';
+import { Thumbnail } from './thumbnail.entity.js';
+import { ThumbnailService } from './thumbnail.service.js';
 
 @Module({
   imports: [StorageModule, FileModule, MikroOrmModule.forFeature([Thumbnail, File])],

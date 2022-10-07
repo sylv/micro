@@ -3,16 +3,17 @@
 import { LoadStrategy } from '@mikro-orm/core';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { join } from 'path';
-import { config } from './config';
-import { FileMetadata } from './modules/file/file-metadata.embeddable';
-import { File } from './modules/file/file.entity';
-import { Invite } from './modules/invite/invite.entity';
-import { Link } from './modules/link/link.entity';
-import { Paste } from './modules/paste/paste.entity';
-import { Thumbnail } from './modules/thumbnail/thumbnail.entity';
-import { UserVerification } from './modules/user/user-verification.entity';
-import { User } from './modules/user/user.entity';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { config } from './config.js';
+import { FileMetadata } from './modules/file/file-metadata.embeddable.js';
+import { File } from './modules/file/file.entity.js';
+import { Invite } from './modules/invite/invite.entity.js';
+import { Link } from './modules/link/link.entity.js';
+import { Paste } from './modules/paste/paste.entity.js';
+import { Thumbnail } from './modules/thumbnail/thumbnail.entity.js';
+import { UserVerification } from './modules/user/user-verification.entity.js';
+import { User } from './modules/user/user.entity.js';
 
 export const ormLogger = new Logger('MikroORM');
 export const migrationsTableName = 'mikro_orm_migrations';
@@ -30,7 +31,7 @@ export default {
     throw new NotFoundException();
   },
   migrations: {
-    path: join(__dirname, 'migrations'),
+    path: join(dirname(fileURLToPath(import.meta.url)), 'migrations'),
     tableName: migrationsTableName,
   },
 } as MikroOrmModuleSyncOptions;

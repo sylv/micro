@@ -1,6 +1,6 @@
 import type { ExecutionContext } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common';
-import { JWTAuthGuard } from './jwt.guard';
+import { JWTAuthGuard } from './jwt.guard.js';
 
 export class OptionalJWTAuthGuard extends JWTAuthGuard {
   async canActivate(context: ExecutionContext) {

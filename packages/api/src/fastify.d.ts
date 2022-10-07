@@ -1,5 +1,5 @@
-import type { MicroHost } from '../classes/MicroHost';
-import type { User } from './user/user.entity';
+import type { MicroHost } from '../classes/MicroHost.js';
+import type { User } from './user/user.entity.js';
 import 'fastify';
 
 declare module 'fastify' {

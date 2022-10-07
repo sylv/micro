@@ -1,8 +1,8 @@
 import { applyDecorators, createParamDecorator, SetMetadata, UseGuards } from '@nestjs/common';
-import type { Permission } from '../../constants';
-import { getRequest } from '../../helpers/get-request';
-import { JWTAuthGuard } from './guards/jwt.guard';
-import { PermissionGuard } from './guards/permission.guard';
+import type { Permission } from '../../constants.js';
+import { getRequest } from '../../helpers/get-request.js';
+import { JWTAuthGuard } from './guards/jwt.guard.js';
+import { PermissionGuard } from './guards/permission.guard.js';
 
 export const RequirePermissions = (...permissions: Permission[]) => {
   let aggregate = 0;

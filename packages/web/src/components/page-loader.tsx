@@ -1,7 +1,7 @@
 import { Container, Spinner } from '@ryanke/pandora';
 import type { FC } from 'react';
 import { useEffect } from 'react';
-import { Title } from '../components/title';
+import { Title } from './title';
 
 export const PageLoader: FC<{ title?: string }> = ({ title }) => {
   useEffect(() => {

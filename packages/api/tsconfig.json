@@ -1,13 +1,38 @@
 {
+  "include": ["src"],
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
+    // https://www.npmjs.com/package/@tsconfig/node16
+    // https://github.com/sindresorhus/tsconfig/blob/main/tsconfig.json
+    "module": "node16",
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
+    "target": "es2021", // node 16
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "pretty": true,
+    "newLine": "lf",
+    "stripInternal": true,
+    "strict": true,
+    "noImplicitOverride": false,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
+    "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "outDir": "dist",
+    "noUncheckedIndexedAccess": false,
     "strictPropertyInitialization": false,
-    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true
-  },
-  "exclude": ["node_modules"],
-  "extends": "@sylo-digital/scripts/tsconfig/base.json",
-  "include": ["src", "src/blocklist.json", "src/fastify.d.ts"]
+    "experimentalDecorators": true,
+    "lib": ["es2021", "dom"],
+    "baseUrl": ".",
+    "paths": {
+      // https://github.com/bevry/istextorbinary/issues/270
+      "istextorbinary": ["node_modules/istextorbinary/compiled-types/index.d.ts"]
+    }
+  }
 }

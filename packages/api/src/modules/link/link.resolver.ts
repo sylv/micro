@@ -2,12 +2,12 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { ResourceLocations } from '../../types/resource-locations.type';
-import { UserId } from '../auth/auth.decorators';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
-import { HostService } from '../host/host.service';
-import { UserService } from '../user/user.service';
-import { Link } from './link.entity';
+import { ResourceLocations } from '../../types/resource-locations.type.js';
+import { UserId } from '../auth/auth.decorators.js';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
+import { HostService } from '../host/host.service.js';
+import { UserService } from '../user/user.service.js';
+import { Link } from './link.entity.js';
 
 @Resolver(() => Link)
 export class LinkResolver {

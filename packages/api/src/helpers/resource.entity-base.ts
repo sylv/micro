@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import type { IdentifiedReference } from '@mikro-orm/core';
-import { BeforeCreate, Entity, EventArgs, Property } from '@mikro-orm/core';
+import { BeforeCreate, Entity, type EventArgs, Property } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import type { FastifyRequest } from 'fastify';
-import { config } from '../config';
-import type { ResourceLocations } from '../types/resource-locations.type';
-import type { User } from '../modules/user/user.entity';
-import { getHostFromRequest } from './get-host-from-request';
+import { config } from '../config.js';
+import type { ResourceLocations } from '../types/resource-locations.type.js';
+import type { User } from '../modules/user/user.entity.js';
+import { getHostFromRequest } from './get-host-from-request.js';
 
 @Entity({ abstract: true })
 @ObjectType({ isAbstract: true })

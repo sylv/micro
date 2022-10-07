@@ -1,11 +1,11 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
-import { HostModule } from '../host/host.module';
-import { UserModule } from '../user/user.module';
-import { PasteController } from './paste.controller';
-import { Paste } from './paste.entity';
-import { PasteResolver } from './paste.resolver';
-import { PasteService } from './paste.service';
+import { HostModule } from '../host/host.module.js';
+import { UserModule } from '../user/user.module.js';
+import { PasteController } from './paste.controller.js';
+import { Paste } from './paste.entity.js';
+import { PasteResolver } from './paste.resolver.js';
+import { PasteService } from './paste.service.js';
 
 @Module({
   imports: [MikroOrmModule.forFeature([Paste]), HostModule, UserModule],

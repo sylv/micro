@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { randomBytes } from 'crypto';
-import { User } from './user.entity';
+import { User } from './user.entity.js';
 
 @Entity({ tableName: 'users_verification' })
 export class UserVerification {

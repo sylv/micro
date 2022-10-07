@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
-import type { Edge } from '../types/edge.type';
-import type { Paginated } from '../types/paginated.type';
+import type { Edge } from '../types/edge.type.js';
+import type { Paginated } from '../types/paginated.type.js';
 
 export function createCursor(offset: number) {
   return Buffer.from(`${offset}`, 'utf8').toString('base64');

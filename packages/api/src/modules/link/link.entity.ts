@@ -1,9 +1,9 @@
-import { Entity, IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, type IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
-import { generateContentId } from '../../helpers/generate-content-id.helper';
-import { User } from '../user/user.entity';
-import { Resource } from '../../helpers/resource.entity-base';
+import { generateContentId } from '../../helpers/generate-content-id.helper.js';
+import { User } from '../user/user.entity.js';
+import { Resource } from '../../helpers/resource.entity-base.js';
 
 @Entity({ tableName: 'links' })
 @ObjectType()

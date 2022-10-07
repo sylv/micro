@@ -2,10 +2,10 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Permission } from '../../constants';
-import { RequirePermissions, UserId } from '../auth/auth.decorators';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard';
-import { Invite } from './invite.entity';
+import { Permission } from '../../constants.js';
+import { RequirePermissions, UserId } from '../auth/auth.decorators.js';
+import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
+import { Invite } from './invite.entity.js';
 
 @Resolver(() => Invite)
 export class InviteResolver {

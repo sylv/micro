@@ -1,11 +1,11 @@
+import bytes from 'bytes';
 import { Transform } from 'class-transformer';
 import { IsNumber } from 'class-validator';
 import ms from 'ms';
-import xbytes from 'xbytes';
 
 export class MicroPurge {
   @IsNumber()
-  @Transform(({ value }) => xbytes.parseSize(value))
+  @Transform(({ value }) => bytes.parse(value))
   overLimit: number;
 
   @IsNumber()
