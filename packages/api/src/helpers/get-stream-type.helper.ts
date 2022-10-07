@@ -1,8 +1,10 @@
 import { fileTypeFromBuffer } from 'file-type';
-import { isBinary } from 'istextorbinary';
 import * as mimeType from 'mime-types';
 import path from 'path';
 import type { PassThrough } from 'stream';
+
+// @ts-expect-error see tsconfig.json/paths
+import { isBinary } from 'istextorbinary';
 
 const DEFAULT_TYPE = 'application/octet-stream';
 // is-binary scans the first 1kb

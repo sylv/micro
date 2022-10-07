@@ -1,5 +1,5 @@
 {
-  "include": ["src"],
+  "include": ["src", "types"],
   "compilerOptions": {
     // https://www.npmjs.com/package/@tsconfig/node16
     // https://github.com/sindresorhus/tsconfig/blob/main/tsconfig.json
@@ -32,7 +32,8 @@
     "baseUrl": ".",
     "paths": {
       // https://github.com/bevry/istextorbinary/issues/270
-      "istextorbinary": ["node_modules/istextorbinary/compiled-types/index.d.ts"]
+      // voids the bad types or else ncc fails
+      "istextorbinary": ["*.sink.d.ts"]
     }
   }
 }

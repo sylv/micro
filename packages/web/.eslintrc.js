@@ -7,5 +7,6 @@ module.exports = {
     'jsx-a11y/media-has-caption': 'off',
     '@typescript-eslint/no-confusing-void-expression': 'off',
     '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
   },
 };

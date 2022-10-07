@@ -10,7 +10,7 @@
         "node": ">=16"
     },
     "scripts": {
-        "watch": "tsup src/main.ts src/migrations/* --watch --clean --format esm --sourcemap --onSuccess \"node dist/main.js --inspect --inspect-brk\"",
+        "watch": "tsup src/main.ts src/migrations/* --target node16 --watch --clean --format esm --sourcemap --onSuccess \"node dist/main.js --inspect --inspect-brk\"",
         "build": "rm -rf ./dist && ncc build src/main.ts -o dist --minify --transpile-only --v8-cache --no-source-map-register",
         "lint": "eslint src --fix --cache",
         "test": "vitest run"

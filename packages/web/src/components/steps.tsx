@@ -6,7 +6,6 @@ import { Ping } from './ping';
 export interface StepsProps {
   steps: string[];
   stepIndex: number;
-  onClick?: (index: number) => void;
 }
 
 export const Steps: FC<StepsProps> = ({ steps, stepIndex }) => {

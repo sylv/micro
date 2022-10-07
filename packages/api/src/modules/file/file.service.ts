@@ -199,7 +199,6 @@ export class FileService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     if (config.purge) {
       const size = bytes.format(config.purge.overLimit);
-      // todo: swap out luxon for dayjs
       const age = DateTime.local().minus(config.purge.afterTime).toRelative();
       this.logger.warn(`Purging files is enabled for files over ${size} uploaded more than ${age}.`);
     }

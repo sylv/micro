@@ -16,7 +16,7 @@ export default function Generate() {
   const [result, setResult] = useState<GenerateOtpMutation | null>(null);
   const createToast = useToasts();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useQueryState('step', 0, (value) => Number(value));
+  const [currentStep, setCurrentStep] = useQueryState('step', 0, Number);
   const [confirmOtp] = useConfirmOtpMutation();
 
   useEffect(() => {
