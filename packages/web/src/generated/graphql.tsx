@@ -129,45 +129,37 @@ export type Mutation = {
   resendVerificationEmail: Scalars['Boolean'];
 };
 
-
 export type MutationConfirmOtpArgs = {
   otpCode: Scalars['String'];
 };
-
 
 export type MutationCreateLinkArgs = {
   destination: Scalars['String'];
   host?: InputMaybe<Scalars['String']>;
 };
 
-
 export type MutationCreatePasteArgs = {
   partial: CreatePasteDto;
 };
 
-
 export type MutationCreateUserArgs = {
   data: CreateUserDto;
 };
-
 
 export type MutationDeleteFileArgs = {
   fileId: Scalars['ID'];
   key?: InputMaybe<Scalars['String']>;
 };
 
-
 export type MutationDisableOtpArgs = {
   otpCode: Scalars['String'];
 };
-
 
 export type MutationLoginArgs = {
   otpCode?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
   username: Scalars['String'];
 };
-
 
 export type MutationResendVerificationEmailArgs = {
   data?: InputMaybe<ResendVerificationEmailDto>;
@@ -227,21 +219,17 @@ export type Query = {
   user: User;
 };
 
-
 export type QueryFileArgs = {
   fileId: Scalars['ID'];
 };
-
 
 export type QueryInviteArgs = {
   inviteId: Scalars['ID'];
 };
 
-
 export type QueryLinkArgs = {
   linkId: Scalars['ID'];
 };
-
 
 export type QueryPasteArgs = {
   pasteId: Scalars['ID'];
@@ -284,12 +272,10 @@ export type User = {
   verifiedEmail: Scalars['Boolean'];
 };
 
-
 export type UserFilesArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Float']>;
 };
-
 
 export type UserPastesArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -300,40 +286,129 @@ export type ResendVerificationEmailMutationVariables = Exact<{
   data?: InputMaybe<ResendVerificationEmailDto>;
 }>;
 
+export type ResendVerificationEmailMutation = { __typename?: 'Mutation'; resendVerificationEmail: boolean };
 
-export type ResendVerificationEmailMutation = { __typename?: 'Mutation', resendVerificationEmail: boolean };
+export type PasteCardFragment = {
+  __typename?: 'Paste';
+  id: string;
+  title?: string | null;
+  encrypted: boolean;
+  burn: boolean;
+  type: string;
+  createdAt: any;
+  expiresAt?: any | null;
+  urls: { __typename?: 'ResourceLocations'; view: string };
+};
 
-export type PasteCardFragment = { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } };
-
-export type FileCardFragment = { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } };
+export type FileCardFragment = {
+  __typename?: 'File';
+  id: string;
+  type: string;
+  displayName: string;
+  sizeFormatted: string;
+  thumbnail?: { __typename?: 'Thumbnail'; width: number; height: number } | null;
+  paths: { __typename?: 'ResourceLocations'; thumbnail?: string | null };
+  urls: { __typename?: 'ResourceLocations'; view: string };
+};
 
 export type GetFilesQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Float']>;
   after?: InputMaybe<Scalars['String']>;
 }>;
 
-
-export type GetFilesQuery = { __typename?: 'Query', user: { __typename?: 'User', files: { __typename?: 'FilePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'FilePageEdge', node: { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type GetFilesQuery = {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    files: {
+      __typename?: 'FilePage';
+      pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null; hasNextPage: boolean };
+      edges: Array<{
+        __typename?: 'FilePageEdge';
+        node: {
+          __typename?: 'File';
+          id: string;
+          type: string;
+          displayName: string;
+          sizeFormatted: string;
+          thumbnail?: { __typename?: 'Thumbnail'; width: number; height: number } | null;
+          paths: { __typename?: 'ResourceLocations'; thumbnail?: string | null };
+          urls: { __typename?: 'ResourceLocations'; view: string };
+        };
+      }>;
+    };
+  };
+};
 
 export type GetPastesQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Float']>;
   after?: InputMaybe<Scalars['String']>;
 }>;
 
+export type GetPastesQuery = {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    pastes: {
+      __typename?: 'PastePage';
+      pageInfo: { __typename?: 'PageInfo'; endCursor?: string | null; hasNextPage: boolean };
+      edges: Array<{
+        __typename?: 'PastePageEdge';
+        node: {
+          __typename?: 'Paste';
+          id: string;
+          title?: string | null;
+          encrypted: boolean;
+          burn: boolean;
+          type: string;
+          createdAt: any;
+          expiresAt?: any | null;
+          urls: { __typename?: 'ResourceLocations'; view: string };
+        };
+      }>;
+    };
+  };
+};
 
-export type GetPastesQuery = { __typename?: 'Query', user: { __typename?: 'User', pastes: { __typename?: 'PastePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'PastePageEdge', node: { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type ConfigQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ConfigQueryVariables = Exact<{ [key: string]: never; }>;
+export type ConfigQuery = {
+  __typename?: 'Query';
+  config: {
+    __typename?: 'Config';
+    allowTypes: Array<string>;
+    inquiriesEmail: string;
+    requireEmails: boolean;
+    uploadLimit: number;
+    currentHost: { __typename?: 'ConfigHost'; normalised: string; redirect?: string | null };
+    rootHost: { __typename?: 'ConfigHost'; normalised: string; url: string };
+    hosts: Array<{ __typename?: 'ConfigHost'; normalised: string }>;
+  };
+};
 
+export type GetUserQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ConfigQuery = { __typename?: 'Query', config: { __typename?: 'Config', allowTypes: Array<string>, inquiriesEmail: string, requireEmails: boolean, uploadLimit: number, currentHost: { __typename?: 'ConfigHost', normalised: string, redirect?: string | null }, rootHost: { __typename?: 'ConfigHost', normalised: string, url: string }, hosts: Array<{ __typename?: 'ConfigHost', normalised: string }> } };
+export type GetUserQuery = {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    otpEnabled: boolean;
+    id: string;
+    username: string;
+    email?: string | null;
+    verifiedEmail: boolean;
+    token: string;
+  };
+};
 
-export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', otpEnabled: boolean, id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
-
-export type RegularUserFragment = { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string };
+export type RegularUserFragment = {
+  __typename?: 'User';
+  id: string;
+  username: string;
+  email?: string | null;
+  verifiedEmail: boolean;
+  token: string;
+};
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -341,136 +416,188 @@ export type LoginMutationVariables = Exact<{
   otp?: InputMaybe<Scalars['String']>;
 }>;
 
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'User';
+    id: string;
+    username: string;
+    email?: string | null;
+    verifiedEmail: boolean;
+    token: string;
+  };
+};
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+export type LogoutMutation = { __typename?: 'Mutation'; logout: boolean };
 
+export type GenerateOtpMutationVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
-
-export type GenerateOtpMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GenerateOtpMutation = { __typename?: 'Mutation', generateOTP: { __typename?: 'OTPEnabledDto', recoveryCodes: Array<string>, qrauthUrl: string, secret: string } };
+export type GenerateOtpMutation = {
+  __typename?: 'Mutation';
+  generateOTP: { __typename?: 'OTPEnabledDto'; recoveryCodes: Array<string>; qrauthUrl: string; secret: string };
+};
 
 export type ConfirmOtpMutationVariables = Exact<{
   otpCode: Scalars['String'];
 }>;
 
-
-export type ConfirmOtpMutation = { __typename?: 'Mutation', confirmOTP: boolean };
+export type ConfirmOtpMutation = { __typename?: 'Mutation'; confirmOTP: boolean };
 
 export type DisableOtpMutationVariables = Exact<{
   otpCode: Scalars['String'];
 }>;
 
+export type DisableOtpMutation = { __typename?: 'Mutation'; disableOTP: boolean };
 
-export type DisableOtpMutation = { __typename?: 'Mutation', disableOTP: boolean };
+export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>;
 
-export type RefreshTokenMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RefreshTokenMutation = { __typename?: 'Mutation', refreshToken: { __typename?: 'User', id: string, username: string, email?: string | null, verifiedEmail: boolean, token: string } };
+export type RefreshTokenMutation = {
+  __typename?: 'Mutation';
+  refreshToken: {
+    __typename?: 'User';
+    id: string;
+    username: string;
+    email?: string | null;
+    verifiedEmail: boolean;
+    token: string;
+  };
+};
 
 export type GetFileQueryVariables = Exact<{
   fileId: Scalars['ID'];
 }>;
 
-
-export type GetFileQuery = { __typename?: 'Query', file: { __typename?: 'File', id: string, type: string, displayName: string, size: number, sizeFormatted: string, isOwner: boolean, metadata?: { __typename?: 'FileMetadata', height?: number | null, width?: number | null } | null, paths: { __typename?: 'ResourceLocations', view: string, thumbnail?: string | null, direct: string }, urls: { __typename?: 'ResourceLocations', view: string } } };
+export type GetFileQuery = {
+  __typename?: 'Query';
+  file: {
+    __typename?: 'File';
+    id: string;
+    type: string;
+    displayName: string;
+    size: number;
+    sizeFormatted: string;
+    isOwner: boolean;
+    metadata?: { __typename?: 'FileMetadata'; height?: number | null; width?: number | null } | null;
+    paths: { __typename?: 'ResourceLocations'; view: string; thumbnail?: string | null; direct: string };
+    urls: { __typename?: 'ResourceLocations'; view: string };
+  };
+};
 
 export type DeleteFileMutationVariables = Exact<{
   fileId: Scalars['ID'];
   deleteKey?: InputMaybe<Scalars['String']>;
 }>;
 
-
-export type DeleteFileMutation = { __typename?: 'Mutation', deleteFile: boolean };
+export type DeleteFileMutation = { __typename?: 'Mutation'; deleteFile: boolean };
 
 export type GetInviteQueryVariables = Exact<{
   inviteId: Scalars['ID'];
 }>;
 
-
-export type GetInviteQuery = { __typename?: 'Query', invite: { __typename?: 'Invite', id: string, expiresAt?: any | null } };
+export type GetInviteQuery = {
+  __typename?: 'Query';
+  invite: { __typename?: 'Invite'; id: string; expiresAt?: any | null };
+};
 
 export type CreateUserMutationVariables = Exact<{
   user: CreateUserDto;
 }>;
 
-
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
+export type CreateUserMutation = { __typename?: 'Mutation'; createUser: { __typename?: 'User'; id: string } };
 
 export type CreatePasteMutationVariables = Exact<{
   input: CreatePasteDto;
 }>;
 
-
-export type CreatePasteMutation = { __typename?: 'Mutation', createPaste: { __typename?: 'Paste', id: string, urls: { __typename?: 'ResourceLocations', view: string } } };
+export type CreatePasteMutation = {
+  __typename?: 'Mutation';
+  createPaste: { __typename?: 'Paste'; id: string; urls: { __typename?: 'ResourceLocations'; view: string } };
+};
 
 export type GetPasteQueryVariables = Exact<{
   pasteId: Scalars['ID'];
 }>;
 
-
-export type GetPasteQuery = { __typename?: 'Query', paste: { __typename?: 'Paste', id: string, title?: string | null, type: string, extension?: string | null, content: string, encrypted: boolean, createdAt: any, expiresAt?: any | null, burnt?: boolean | null, burn: boolean, urls: { __typename?: 'ResourceLocations', view: string } } };
+export type GetPasteQuery = {
+  __typename?: 'Query';
+  paste: {
+    __typename?: 'Paste';
+    id: string;
+    title?: string | null;
+    type: string;
+    extension?: string | null;
+    content: string;
+    encrypted: boolean;
+    createdAt: any;
+    expiresAt?: any | null;
+    burnt?: boolean | null;
+    burn: boolean;
+    urls: { __typename?: 'ResourceLocations'; view: string };
+  };
+};
 
 export type ShortenMutationVariables = Exact<{
   link: Scalars['String'];
   host?: InputMaybe<Scalars['String']>;
 }>;
 
-
-export type ShortenMutation = { __typename?: 'Mutation', createLink: { __typename?: 'Link', id: string, urls: { __typename?: 'ResourceLocations', view: string } } };
+export type ShortenMutation = {
+  __typename?: 'Mutation';
+  createLink: { __typename?: 'Link'; id: string; urls: { __typename?: 'ResourceLocations'; view: string } };
+};
 
 export const PasteCardFragmentDoc = gql`
-    fragment PasteCard on Paste {
-  id
-  title
-  encrypted
-  burn
-  type
-  createdAt
-  expiresAt
-  urls {
-    view
+  fragment PasteCard on Paste {
+    id
+    title
+    encrypted
+    burn
+    type
+    createdAt
+    expiresAt
+    urls {
+      view
+    }
   }
-}
-    `;
+`;
 export const FileCardFragmentDoc = gql`
-    fragment FileCard on File {
-  id
-  type
-  displayName
-  sizeFormatted
-  thumbnail {
-    width
-    height
+  fragment FileCard on File {
+    id
+    type
+    displayName
+    sizeFormatted
+    thumbnail {
+      width
+      height
+    }
+    paths {
+      thumbnail
+    }
+    urls {
+      view
+    }
   }
-  paths {
-    thumbnail
-  }
-  urls {
-    view
-  }
-}
-    `;
+`;
 export const RegularUserFragmentDoc = gql`
-    fragment RegularUser on User {
-  id
-  username
-  email
-  verifiedEmail
-  token
-}
-    `;
+  fragment RegularUser on User {
+    id
+    username
+    email
+    verifiedEmail
+    token
+  }
+`;
 export const ResendVerificationEmailDocument = gql`
-    mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
-  resendVerificationEmail(data: $data)
-}
-    `;
-export type ResendVerificationEmailMutationFn = Apollo.MutationFunction<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>;
+  mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
+    resendVerificationEmail(data: $data)
+  }
+`;
+export type ResendVerificationEmailMutationFn = Apollo.MutationFunction<
+  ResendVerificationEmailMutation,
+  ResendVerificationEmailMutationVariables
+>;
 
 /**
  * __useResendVerificationEmailMutation__
@@ -489,30 +616,39 @@ export type ResendVerificationEmailMutationFn = Apollo.MutationFunction<ResendVe
  *   },
  * });
  */
-export function useResendVerificationEmailMutation(baseOptions?: Apollo.MutationHookOptions<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>(ResendVerificationEmailDocument, options);
-      }
+export function useResendVerificationEmailMutation(
+  baseOptions?: Apollo.MutationHookOptions<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>(
+    ResendVerificationEmailDocument,
+    options
+  );
+}
 export type ResendVerificationEmailMutationHookResult = ReturnType<typeof useResendVerificationEmailMutation>;
 export type ResendVerificationEmailMutationResult = Apollo.MutationResult<ResendVerificationEmailMutation>;
-export type ResendVerificationEmailMutationOptions = Apollo.BaseMutationOptions<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>;
+export type ResendVerificationEmailMutationOptions = Apollo.BaseMutationOptions<
+  ResendVerificationEmailMutation,
+  ResendVerificationEmailMutationVariables
+>;
 export const GetFilesDocument = gql`
-    query GetFiles($first: Float, $after: String) {
-  user {
-    files(first: $first, after: $after) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      edges {
-        node {
-          ...FileCard
+  query GetFiles($first: Float, $after: String) {
+    user {
+      files(first: $first, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            ...FileCard
+          }
         }
       }
     }
   }
-}
-    ${FileCardFragmentDoc}`;
+  ${FileCardFragmentDoc}
+`;
 
 /**
  * __useGetFilesQuery__
@@ -532,33 +668,34 @@ export const GetFilesDocument = gql`
  * });
  */
 export function useGetFilesQuery(baseOptions?: Apollo.QueryHookOptions<GetFilesQuery, GetFilesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
+}
 export function useGetFilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFilesQuery, GetFilesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
+}
 export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
 export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
 export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
 export const GetPastesDocument = gql`
-    query GetPastes($first: Float, $after: String) {
-  user {
-    pastes(first: $first, after: $after) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
-      edges {
-        node {
-          ...PasteCard
+  query GetPastes($first: Float, $after: String) {
+    user {
+      pastes(first: $first, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            ...PasteCard
+          }
         }
       }
     }
   }
-}
-    ${PasteCardFragmentDoc}`;
+  ${PasteCardFragmentDoc}
+`;
 
 /**
  * __useGetPastesQuery__
@@ -578,37 +715,39 @@ export const GetPastesDocument = gql`
  * });
  */
 export function useGetPastesQuery(baseOptions?: Apollo.QueryHookOptions<GetPastesQuery, GetPastesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
-      }
-export function useGetPastesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPastesQuery, GetPastesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
+}
+export function useGetPastesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPastesQuery, GetPastesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
+}
 export type GetPastesQueryHookResult = ReturnType<typeof useGetPastesQuery>;
 export type GetPastesLazyQueryHookResult = ReturnType<typeof useGetPastesLazyQuery>;
 export type GetPastesQueryResult = Apollo.QueryResult<GetPastesQuery, GetPastesQueryVariables>;
 export const ConfigDocument = gql`
-    query Config {
-  config {
-    allowTypes
-    inquiriesEmail
-    requireEmails
-    uploadLimit
-    currentHost {
-      normalised
-      redirect
-    }
-    rootHost {
-      normalised
-      url
-    }
-    hosts {
-      normalised
+  query Config {
+    config {
+      allowTypes
+      inquiriesEmail
+      requireEmails
+      uploadLimit
+      currentHost {
+        normalised
+        redirect
+      }
+      rootHost {
+        normalised
+        url
+      }
+      hosts {
+        normalised
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useConfigQuery__
@@ -626,24 +765,25 @@ export const ConfigDocument = gql`
  * });
  */
 export function useConfigQuery(baseOptions?: Apollo.QueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
+}
 export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ConfigQuery, ConfigQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
+}
 export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
 export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
 export type ConfigQueryResult = Apollo.QueryResult<ConfigQuery, ConfigQueryVariables>;
 export const GetUserDocument = gql`
-    query GetUser {
-  user {
-    ...RegularUser
-    otpEnabled
+  query GetUser {
+    user {
+      ...RegularUser
+      otpEnabled
+    }
   }
-}
-    ${RegularUserFragmentDoc}`;
+  ${RegularUserFragmentDoc}
+`;
 
 /**
  * __useGetUserQuery__
@@ -661,23 +801,24 @@ export const GetUserDocument = gql`
  * });
  */
 export function useGetUserQuery(baseOptions?: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!, $otp: String) {
-  login(username: $username, password: $password, otpCode: $otp) {
-    ...RegularUser
+  mutation Login($username: String!, $password: String!, $otp: String) {
+    login(username: $username, password: $password, otpCode: $otp) {
+      ...RegularUser
+    }
   }
-}
-    ${RegularUserFragmentDoc}`;
+  ${RegularUserFragmentDoc}
+`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -700,17 +841,17 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  * });
  */
 export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = gql`
-    mutation Logout {
-  logout
-}
-    `;
+  mutation Logout {
+    logout
+  }
+`;
 export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
 
 /**
@@ -730,21 +871,21 @@ export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMut
  * });
  */
 export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+}
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const GenerateOtpDocument = gql`
-    mutation GenerateOTP {
-  generateOTP {
-    recoveryCodes
-    qrauthUrl
-    secret
+  mutation GenerateOTP {
+    generateOTP {
+      recoveryCodes
+      qrauthUrl
+      secret
+    }
   }
-}
-    `;
+`;
 export type GenerateOtpMutationFn = Apollo.MutationFunction<GenerateOtpMutation, GenerateOtpMutationVariables>;
 
 /**
@@ -763,18 +904,20 @@ export type GenerateOtpMutationFn = Apollo.MutationFunction<GenerateOtpMutation,
  *   },
  * });
  */
-export function useGenerateOtpMutation(baseOptions?: Apollo.MutationHookOptions<GenerateOtpMutation, GenerateOtpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<GenerateOtpMutation, GenerateOtpMutationVariables>(GenerateOtpDocument, options);
-      }
+export function useGenerateOtpMutation(
+  baseOptions?: Apollo.MutationHookOptions<GenerateOtpMutation, GenerateOtpMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<GenerateOtpMutation, GenerateOtpMutationVariables>(GenerateOtpDocument, options);
+}
 export type GenerateOtpMutationHookResult = ReturnType<typeof useGenerateOtpMutation>;
 export type GenerateOtpMutationResult = Apollo.MutationResult<GenerateOtpMutation>;
 export type GenerateOtpMutationOptions = Apollo.BaseMutationOptions<GenerateOtpMutation, GenerateOtpMutationVariables>;
 export const ConfirmOtpDocument = gql`
-    mutation ConfirmOTP($otpCode: String!) {
-  confirmOTP(otpCode: $otpCode)
-}
-    `;
+  mutation ConfirmOTP($otpCode: String!) {
+    confirmOTP(otpCode: $otpCode)
+  }
+`;
 export type ConfirmOtpMutationFn = Apollo.MutationFunction<ConfirmOtpMutation, ConfirmOtpMutationVariables>;
 
 /**
@@ -794,18 +937,20 @@ export type ConfirmOtpMutationFn = Apollo.MutationFunction<ConfirmOtpMutation, C
  *   },
  * });
  */
-export function useConfirmOtpMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ConfirmOtpMutation, ConfirmOtpMutationVariables>(ConfirmOtpDocument, options);
-      }
+export function useConfirmOtpMutation(
+  baseOptions?: Apollo.MutationHookOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ConfirmOtpMutation, ConfirmOtpMutationVariables>(ConfirmOtpDocument, options);
+}
 export type ConfirmOtpMutationHookResult = ReturnType<typeof useConfirmOtpMutation>;
 export type ConfirmOtpMutationResult = Apollo.MutationResult<ConfirmOtpMutation>;
 export type ConfirmOtpMutationOptions = Apollo.BaseMutationOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>;
 export const DisableOtpDocument = gql`
-    mutation DisableOTP($otpCode: String!) {
-  disableOTP(otpCode: $otpCode)
-}
-    `;
+  mutation DisableOTP($otpCode: String!) {
+    disableOTP(otpCode: $otpCode)
+  }
+`;
 export type DisableOtpMutationFn = Apollo.MutationFunction<DisableOtpMutation, DisableOtpMutationVariables>;
 
 /**
@@ -825,20 +970,23 @@ export type DisableOtpMutationFn = Apollo.MutationFunction<DisableOtpMutation, D
  *   },
  * });
  */
-export function useDisableOtpMutation(baseOptions?: Apollo.MutationHookOptions<DisableOtpMutation, DisableOtpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DisableOtpMutation, DisableOtpMutationVariables>(DisableOtpDocument, options);
-      }
+export function useDisableOtpMutation(
+  baseOptions?: Apollo.MutationHookOptions<DisableOtpMutation, DisableOtpMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DisableOtpMutation, DisableOtpMutationVariables>(DisableOtpDocument, options);
+}
 export type DisableOtpMutationHookResult = ReturnType<typeof useDisableOtpMutation>;
 export type DisableOtpMutationResult = Apollo.MutationResult<DisableOtpMutation>;
 export type DisableOtpMutationOptions = Apollo.BaseMutationOptions<DisableOtpMutation, DisableOtpMutationVariables>;
 export const RefreshTokenDocument = gql`
-    mutation RefreshToken {
-  refreshToken {
-    ...RegularUser
+  mutation RefreshToken {
+    refreshToken {
+      ...RegularUser
+    }
   }
-}
-    ${RegularUserFragmentDoc}`;
+  ${RegularUserFragmentDoc}
+`;
 export type RefreshTokenMutationFn = Apollo.MutationFunction<RefreshTokenMutation, RefreshTokenMutationVariables>;
 
 /**
@@ -857,37 +1005,42 @@ export type RefreshTokenMutationFn = Apollo.MutationFunction<RefreshTokenMutatio
  *   },
  * });
  */
-export function useRefreshTokenMutation(baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, options);
-      }
+export function useRefreshTokenMutation(
+  baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, options);
+}
 export type RefreshTokenMutationHookResult = ReturnType<typeof useRefreshTokenMutation>;
 export type RefreshTokenMutationResult = Apollo.MutationResult<RefreshTokenMutation>;
-export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<RefreshTokenMutation, RefreshTokenMutationVariables>;
+export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<
+  RefreshTokenMutation,
+  RefreshTokenMutationVariables
+>;
 export const GetFileDocument = gql`
-    query GetFile($fileId: ID!) {
-  file(fileId: $fileId) {
-    id
-    type
-    displayName
-    size
-    sizeFormatted
-    isOwner
-    metadata {
-      height
-      width
-    }
-    paths {
-      view
-      thumbnail
-      direct
-    }
-    urls {
-      view
+  query GetFile($fileId: ID!) {
+    file(fileId: $fileId) {
+      id
+      type
+      displayName
+      size
+      sizeFormatted
+      isOwner
+      metadata {
+        height
+        width
+      }
+      paths {
+        view
+        thumbnail
+        direct
+      }
+      urls {
+        view
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetFileQuery__
@@ -906,21 +1059,21 @@ export const GetFileDocument = gql`
  * });
  */
 export function useGetFileQuery(baseOptions: Apollo.QueryHookOptions<GetFileQuery, GetFileQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
+}
 export function useGetFileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFileQuery, GetFileQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
+}
 export type GetFileQueryHookResult = ReturnType<typeof useGetFileQuery>;
 export type GetFileLazyQueryHookResult = ReturnType<typeof useGetFileLazyQuery>;
 export type GetFileQueryResult = Apollo.QueryResult<GetFileQuery, GetFileQueryVariables>;
 export const DeleteFileDocument = gql`
-    mutation DeleteFile($fileId: ID!, $deleteKey: String) {
-  deleteFile(fileId: $fileId, key: $deleteKey)
-}
-    `;
+  mutation DeleteFile($fileId: ID!, $deleteKey: String) {
+    deleteFile(fileId: $fileId, key: $deleteKey)
+  }
+`;
 export type DeleteFileMutationFn = Apollo.MutationFunction<DeleteFileMutation, DeleteFileMutationVariables>;
 
 /**
@@ -941,21 +1094,23 @@ export type DeleteFileMutationFn = Apollo.MutationFunction<DeleteFileMutation, D
  *   },
  * });
  */
-export function useDeleteFileMutation(baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
-      }
+export function useDeleteFileMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
+}
 export type DeleteFileMutationHookResult = ReturnType<typeof useDeleteFileMutation>;
 export type DeleteFileMutationResult = Apollo.MutationResult<DeleteFileMutation>;
 export type DeleteFileMutationOptions = Apollo.BaseMutationOptions<DeleteFileMutation, DeleteFileMutationVariables>;
 export const GetInviteDocument = gql`
-    query GetInvite($inviteId: ID!) {
-  invite(inviteId: $inviteId) {
-    id
-    expiresAt
+  query GetInvite($inviteId: ID!) {
+    invite(inviteId: $inviteId) {
+      id
+      expiresAt
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useGetInviteQuery__
@@ -974,23 +1129,25 @@ export const GetInviteDocument = gql`
  * });
  */
 export function useGetInviteQuery(baseOptions: Apollo.QueryHookOptions<GetInviteQuery, GetInviteQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
-      }
-export function useGetInviteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInviteQuery, GetInviteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
+}
+export function useGetInviteLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<GetInviteQuery, GetInviteQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
+}
 export type GetInviteQueryHookResult = ReturnType<typeof useGetInviteQuery>;
 export type GetInviteLazyQueryHookResult = ReturnType<typeof useGetInviteLazyQuery>;
 export type GetInviteQueryResult = Apollo.QueryResult<GetInviteQuery, GetInviteQueryVariables>;
 export const CreateUserDocument = gql`
-    mutation CreateUser($user: CreateUserDto!) {
-  createUser(data: $user) {
-    id
+  mutation CreateUser($user: CreateUserDto!) {
+    createUser(data: $user) {
+      id
+    }
   }
-}
-    `;
+`;
 export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
 /**
@@ -1010,23 +1167,25 @@ export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, C
  *   },
  * });
  */
-export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
-      }
+export function useCreateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+}
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const CreatePasteDocument = gql`
-    mutation CreatePaste($input: CreatePasteDto!) {
-  createPaste(partial: $input) {
-    id
-    urls {
-      view
+  mutation CreatePaste($input: CreatePasteDto!) {
+    createPaste(partial: $input) {
+      id
+      urls {
+        view
+      }
     }
   }
-}
-    `;
+`;
 export type CreatePasteMutationFn = Apollo.MutationFunction<CreatePasteMutation, CreatePasteMutationVariables>;
 
 /**
@@ -1046,32 +1205,34 @@ export type CreatePasteMutationFn = Apollo.MutationFunction<CreatePasteMutation,
  *   },
  * });
  */
-export function useCreatePasteMutation(baseOptions?: Apollo.MutationHookOptions<CreatePasteMutation, CreatePasteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePasteMutation, CreatePasteMutationVariables>(CreatePasteDocument, options);
-      }
+export function useCreatePasteMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreatePasteMutation, CreatePasteMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePasteMutation, CreatePasteMutationVariables>(CreatePasteDocument, options);
+}
 export type CreatePasteMutationHookResult = ReturnType<typeof useCreatePasteMutation>;
 export type CreatePasteMutationResult = Apollo.MutationResult<CreatePasteMutation>;
 export type CreatePasteMutationOptions = Apollo.BaseMutationOptions<CreatePasteMutation, CreatePasteMutationVariables>;
 export const GetPasteDocument = gql`
-    query GetPaste($pasteId: ID!) {
-  paste(pasteId: $pasteId) {
-    id
-    title
-    type
-    extension
-    content
-    encrypted
-    createdAt
-    expiresAt
-    burnt
-    burn
-    urls {
-      view
+  query GetPaste($pasteId: ID!) {
+    paste(pasteId: $pasteId) {
+      id
+      title
+      type
+      extension
+      content
+      encrypted
+      createdAt
+      expiresAt
+      burnt
+      burn
+      urls {
+        view
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetPasteQuery__
@@ -1090,26 +1251,26 @@ export const GetPasteDocument = gql`
  * });
  */
 export function useGetPasteQuery(baseOptions: Apollo.QueryHookOptions<GetPasteQuery, GetPasteQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
+}
 export function useGetPasteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPasteQuery, GetPasteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
+}
 export type GetPasteQueryHookResult = ReturnType<typeof useGetPasteQuery>;
 export type GetPasteLazyQueryHookResult = ReturnType<typeof useGetPasteLazyQuery>;
 export type GetPasteQueryResult = Apollo.QueryResult<GetPasteQuery, GetPasteQueryVariables>;
 export const ShortenDocument = gql`
-    mutation Shorten($link: String!, $host: String) {
-  createLink(destination: $link, host: $host) {
-    id
-    urls {
-      view
+  mutation Shorten($link: String!, $host: String) {
+    createLink(destination: $link, host: $host) {
+      id
+      urls {
+        view
+      }
     }
   }
-}
-    `;
+`;
 export type ShortenMutationFn = Apollo.MutationFunction<ShortenMutation, ShortenMutationVariables>;
 
 /**
@@ -1130,10 +1291,12 @@ export type ShortenMutationFn = Apollo.MutationFunction<ShortenMutation, Shorten
  *   },
  * });
  */
-export function useShortenMutation(baseOptions?: Apollo.MutationHookOptions<ShortenMutation, ShortenMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument, options);
-      }
+export function useShortenMutation(
+  baseOptions?: Apollo.MutationHookOptions<ShortenMutation, ShortenMutationVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument, options);
+}
 export type ShortenMutationHookResult = ReturnType<typeof useShortenMutation>;
 export type ShortenMutationResult = Apollo.MutationResult<ShortenMutation>;
 export type ShortenMutationOptions = Apollo.BaseMutationOptions<ShortenMutation, ShortenMutationVariables>;

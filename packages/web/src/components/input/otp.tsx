@@ -2,7 +2,7 @@ import { Spinner } from '@ryanke/pandora';
 import type { FC } from 'react';
 import { Input } from './input';
 
-export interface TotpInputProps {
+export interface OtpInputProps {
   loading: boolean;
   invalid?: boolean;
   onCode: (code: string) => void;
@@ -12,7 +12,7 @@ const TOTP_CODE_LENGTH = 6;
 const RECOVERY_CODE_LENGTH = 19;
 const NUMBER_REGEX = /^\d+$/u;
 
-export const OtpInput: FC<TotpInputProps> = ({ loading, invalid, onCode }) => {
+export const OtpInput: FC<OtpInputProps> = ({ loading, invalid, onCode }) => {
   return (
     <div className="relative w-full">
       <Input
