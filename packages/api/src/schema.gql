@@ -100,13 +100,24 @@ type Link {
 }
 
 type Mutation {
+  confirmOTP(otpCode: String!): Boolean!
   createInvite: Invite!
   createLink(destination: String!, host: String): Link!
   createPaste(partial: CreatePasteDto!): Paste!
   createUser(data: CreateUserDto!): User!
   deleteFile(fileId: ID!, key: String): Boolean!
+  disableOTP(otpCode: String!): Boolean!
+  generateOTP: OTPEnabledDto!
+  login(otpCode: String, password: String!, username: String!): User!
+  logout: Boolean!
   refreshToken: User!
   resendVerificationEmail(data: ResendVerificationEmailDto): Boolean!
+}
+
+type OTPEnabledDto {
+  qrauthUrl: String!
+  recoveryCodes: [String!]!
+  secret: String!
 }
 
 type PageInfo {
@@ -176,6 +187,7 @@ type User {
   email: String
   files(after: String, first: Float): FilePage!
   id: ID!
+  otpEnabled: Boolean!
   pastes(after: String, first: Float): PastePage!
   permissions: Float!
   tags: [String!]!

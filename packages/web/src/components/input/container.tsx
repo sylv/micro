@@ -22,6 +22,7 @@ export interface InputContainerProps<T> {
   maxHeight?: boolean;
   className?: string;
   style?: InputStyle;
+  isError?: boolean;
   childProps: T;
   children: (data: { childClasses: string } & T) => ReactNode;
 }
@@ -29,7 +30,8 @@ export interface InputContainerProps<T> {
 export function InputContainer<T extends InputChildPropsBase>({
   children,
   className,
-  style = InputStyle.Default,
+  isError,
+  style = isError ? InputStyle.Error : InputStyle.Default,
   maxHeight = true,
   childProps,
   ...rest

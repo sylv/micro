@@ -87,6 +87,34 @@
           "primary": false,
           "nullable": false,
           "mappedType": "array"
+        },
+        "otp_secret": {
+          "name": "otp_secret",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "otp_enabled": {
+          "name": "otp_enabled",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "otp_recovery_codes": {
+          "name": "otp_recovery_codes",
+          "type": "text[]",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "array"
         }
       },
       "name": "users",

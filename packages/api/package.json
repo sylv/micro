@@ -9,7 +9,7 @@
         "node": ">=16"
     },
     "scripts": {
-        "watch": "tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
+        "watch": "rm -rf ./dist && tsup src/main.ts src/migrations/* --watch --onSuccess \"node dist/main.js\" --target node16",
         "build": "rm -rf ./dist && ncc build src/main.ts -o dist --minify --transpile-only --v8-cache --no-source-map-register",
         "lint": "eslint src --fix --cache",
         "test": "jest"
@@ -55,6 +55,7 @@
         "nanoid": "^3.3.4",
         "nodemailer": "^6.7.6",
         "normalize-url": "^6",
+        "otplib": "^12.0.1",
         "passport": "^0.6.0",
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",

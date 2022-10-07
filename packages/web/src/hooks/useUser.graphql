@@ -1,6 +1,7 @@
 query GetUser {
   user {
     ...RegularUser
+    otpEnabled
   }
 }
 
@@ -10,4 +11,30 @@ fragment RegularUser on User {
   email
   verifiedEmail
   token
+}
+
+mutation Login($username: String!, $password: String!, $otp: String) {
+  login(username: $username, password: $password, otpCode: $otp) {
+    ...RegularUser
+  }
+}
+
+mutation Logout {
+  logout
+}
+
+mutation GenerateOTP {
+  generateOTP {
+    recoveryCodes
+    qrauthUrl
+    secret
+  }
+}
+
+mutation ConfirmOTP($otpCode: String!) {
+  confirmOTP(otpCode: $otpCode)
+}
+
+mutation DisableOTP($otpCode: String!) {
+  disableOTP(otpCode: $otpCode)
 }

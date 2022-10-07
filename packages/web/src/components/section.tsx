@@ -1,7 +1,10 @@
-import classNames from 'classnames';
 import type { FC, ReactNode } from 'react';
 
 export const Section: FC<{ className?: string; children: ReactNode }> = ({ className, children }) => {
-  const classes = classNames('absolute left-0 right-0 py-8 bg-black shadow-lg', className);
-  return <section className={classes}>{children}</section>;
+  return (
+    <div className="relative py-8">
+      <section className={className}>{children}</section>
+      <div className="top-0 bottom-0 absolute w-[500vw] -left-full h-full bg-black shadow-lg -z-10" />
+    </div>
+  );
 };

@@ -1,15 +1,18 @@
-import { Breadcrumbs, Container, useAsync } from '@ryanke/pandora';
+import { Breadcrumbs, Button, Container, useAsync } from '@ryanke/pandora';
+import { useRouter } from 'next/router';
+import { OtpInput } from 'src/components/input/otp';
 import { Input } from '../../components/input/input';
 import { PageLoader } from '../../components/page-loader';
 import { Title } from '../../components/title';
 import { ConfigGenerator } from '../../containers/config-generator/config-generator';
-import { useRefreshTokenMutation } from '../../generated/graphql';
+import { GetUserDocument, useDisableOtpMutation, useRefreshTokenMutation } from '../../generated/graphql';
 import { useConfig } from '../../hooks/useConfig';
 import { useUser } from '../../hooks/useUser';
 
 export default function Preferences() {
   const user = useUser(true);
   const config = useConfig();
+  const router = useRouter();
   const [refreshMutation] = useRefreshTokenMutation();
   const [refresh, refreshing] = useAsync(async () => {
     // eslint-disable-next-line no-alert
@@ -17,6 +20,10 @@ export default function Preferences() {
     if (!confirmation) return;
     await refreshMutation();
     await user.logout();
+  });
+
+  const [disableOTP, disableOTPMut] = useDisableOtpMutation({
+    refetchQueries: [{ query: GetUserDocument }],
   });
 
   if (!user.data || !config.data) {
@@ -52,6 +59,32 @@ export default function Preferences() {
       </div>
       <div className="mt-10">
         <ConfigGenerator />
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-8">
+        <div className="left col-span-full md:col-span-1">
+          <div className="font-bold text-xl">2-factor Authentication</div>
+          <p className="text-sm mt-2 text-gray-400">
+            2-factor authentication is currently {user.data.otpEnabled ? 'enabled' : 'disabled'}.{' '}
+            {user.data.otpEnabled ? `Enter an authenticator code to disable it.` : 'Click to setup.'}
+          </p>
+        </div>
+        <div className="right flex items-center col-span-full md:col-span-1">
+          {user.data.otpEnabled && (
+            <OtpInput
+              loading={disableOTPMut.loading}
+              onCode={(otpCode) => {
+                disableOTP({
+                  variables: { otpCode },
+                });
+              }}
+            />
+          )}
+          {!user.data.otpEnabled && (
+            <Button className="w-auto ml-auto" onClick={() => router.push(`/dashboard/mfa`)}>
+              Enable 2FA
+            </Button>
+          )}
+        </div>
       </div>
     </Container>
   );

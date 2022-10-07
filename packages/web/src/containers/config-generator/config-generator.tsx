@@ -33,7 +33,7 @@ export const ConfigGenerator = () => {
 
   return (
     <Section>
-      <Container className="flex flex-col justify-between dots selection:bg-purple-600 py-8">
+      <Container className="flex flex-col justify-between dots selection:bg-purple-600 py-8 px-0">
         <div className="w-full flex-grow">
           {!config.data && (
             <div className="flex items-center justify-center w-full h-full py-10">
