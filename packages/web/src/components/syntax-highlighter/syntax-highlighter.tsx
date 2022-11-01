@@ -31,7 +31,7 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
               <SyntaxHighlighterControls language={language} onLanguageChange={setLanguage} content={children} />
               {tokens.map((line, index) => {
                 const props = getLineProps({ line, key: index });
-                const classes = classNames(props.className, 'table-row');
+                const classes = classNames(props.className, 'table-row whitespace-pre-wrap');
 
                 return (
                   // handled by getLineProps
