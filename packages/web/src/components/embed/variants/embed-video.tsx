@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import { BASE_EMBED_CLASSES } from '../embed';
+import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
 import type { Embeddable } from '../embeddable';
 
 export const EmbedVideo = ({ file }: { file: Embeddable }) => {
-  const classes = classNames('outline-none', BASE_EMBED_CLASSES);
+  const classes = classNames('outline-none', BASE_EMBED_CLASSES, MAX_HEIGHT);
   return (
     <video
       controls
