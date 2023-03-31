@@ -18,7 +18,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 WORKDIR /usr/src/micro
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git python3
 RUN npm i -g pnpm
 
 COPY --from=deps /usr/src/micro .
