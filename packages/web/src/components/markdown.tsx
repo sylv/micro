@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import type { Language } from 'prism-react-renderer';
 import { Fragment, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import { SyntaxHighlighter } from './syntax-highlighter/syntax-highlighter';
 

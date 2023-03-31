@@ -1,4 +1,4 @@
-FROM node:16-alpine AS deps
+FROM node:18-alpine AS deps
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN apk add --no-cache libc6-compat
@@ -13,7 +13,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 
 
 
-FROM node:16-alpine AS builder 
+FROM node:18-alpine AS builder 
 ENV NEXT_TELEMETRY_DISABLED 1
 
 WORKDIR /usr/src/micro
@@ -30,7 +30,7 @@ RUN pnpm build
 
 
 
-FROM node:16-alpine AS runner 
+FROM node:18-alpine AS runner 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 

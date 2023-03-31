@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC, ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import { Info } from 'react-feather';
 
 export const Warning: FC<{ children: ReactNode; className?: string }> = ({ children, className }) => {

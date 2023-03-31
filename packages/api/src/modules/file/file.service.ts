@@ -6,7 +6,7 @@ import type { OnApplicationBootstrap } from '@nestjs/common';
 import { BadRequestException, Injectable, Logger, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import bytes from 'bytes';
-import contentRange from 'content-range';
+import * as contentRange from 'content-range';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import ffmpeg from 'fluent-ffmpeg';
 import { DateTime } from 'luxon';

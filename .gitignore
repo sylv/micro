@@ -44,3 +44,4 @@ packages/web/.next
 packages/api/data
 packages/*/.turbo
 packages/*/.eslintcache
+packages/api/.tsup-build
