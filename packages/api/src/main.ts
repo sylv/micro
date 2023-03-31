@@ -1,7 +1,7 @@
 import fastifyCookie from '@fastify/cookie';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyMultipart from '@fastify/multipart';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
@@ -29,6 +29,20 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
+      exceptionFactory(errors) {
+        // without this, nestjs won't include validation errors in the graphql response,
+        // just a blank bad request error, which is just a little confusing. thanks nestjs!
+        const formattedErrors = errors.map((error) => {
+          if (error.constraints) {
+            const constraints = Object.values(error.constraints);
+            if (constraints[0]) return constraints.join(', ');
+          }
+
+          return error.toString();
+        });
+
+        return new BadRequestException(formattedErrors.join('\n'));
+      },
       transformOptions: {
         enableImplicitConversion: true,
       },
