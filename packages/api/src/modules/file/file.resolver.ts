@@ -1,8 +1,8 @@
-import { Selections } from '@jenyus-org/nestjs-graphql-utils';
+import { resolveSelections } from '@jenyus-org/graphql-utils';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import prettyBytes from 'pretty-bytes';
 import { ResourceLocations } from '../../types/resource-locations.type.js';
 import { UserId } from '../auth/auth.decorators.js';
@@ -15,11 +15,11 @@ export class FileResolver {
 
   @Query(() => File)
   @UseGuards(OptionalJWTAuthGuard)
-  async file(
-    @Args('fileId', { type: () => ID }) fileId: string,
-    @Selections([{ field: 'urls', selector: 'owner' }]) populate: any[]
-  ) {
-    return this.fileRepo.findOneOrFail(fileId, { populate });
+  async file(@Args('fileId', { type: () => ID }) fileId: string, @Info() info: any) {
+    const populate = resolveSelections([{ field: 'urls', selector: 'owner' }], info) as any[];
+    return this.fileRepo.findOneOrFail(fileId, {
+      populate,
+    });
   }
 
   @Mutation(() => Boolean)

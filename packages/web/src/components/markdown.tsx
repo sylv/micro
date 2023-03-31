@@ -25,7 +25,7 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
   return (
     <div className={classes}>
       <ReactMarkdown
-        rehypePlugins={[rehypeRaw]}
+        // rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
         components={{
           pre({ children }) {

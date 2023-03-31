@@ -1,4 +1,4 @@
-import { Entity, type IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validator';
@@ -45,12 +45,8 @@ export class Paste extends Resource {
   createdAt: Date = new Date();
 
   @Exclude()
-  @ManyToOne(() => User, {
-    hidden: true,
-    nullable: true,
-    wrappedReference: true,
-  })
-  owner?: IdentifiedReference<User>;
+  @ManyToOne(() => User, { hidden: true, nullable: true, ref: true })
+  owner?: Ref<User>;
 
   @Field({ nullable: true })
   @Property({ persist: false })

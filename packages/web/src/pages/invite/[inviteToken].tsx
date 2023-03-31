@@ -57,7 +57,7 @@ export default function Invite() {
   return (
     <Container centerY>
       <Title>You&apos;re Invited</Title>
-      <h1 className="text-4xl font-bold text-center md:hidden">Sign Up</h1>
+      <h1 className="text-4xl font-bold text-center mb-6 md:hidden">Sign Up</h1>
       {expiresAt && (
         <p className="mt-2 mb-2 text-xs text-center text-gray-600 md:hidden">
           This invite will expire <Time date={expiresAt} />.

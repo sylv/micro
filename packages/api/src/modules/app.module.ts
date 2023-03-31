@@ -1,4 +1,4 @@
-import MikroOrmOptions from '../orm.js';
+import MikroOrmOptions from '../orm.config.js';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -13,8 +13,8 @@ import { HostModule } from './host/host.module.js';
 import { InviteModule } from './invite/invite.module.js';
 import { PasteModule } from './paste/paste.module.js';
 import { StorageModule } from './storage/storage.module.js';
-import { ThumbnailModule } from './thumbnail/thumbnail.module.js';
 import { UserModule } from './user/user.module.js';
+import { ThumbnailModule } from './thumbnail/thumbnail.module.js';
 
 @Module({
   providers: [AppResolver],
@@ -26,12 +26,6 @@ import { UserModule } from './user/user.module.js';
       sortSchema: true,
       allowBatchedQueries: true,
       autoSchemaFile: 'src/schema.gql',
-      errorFormatter: (execution) => {
-        return {
-          statusCode: 200,
-          response: execution,
-        };
-      },
     }),
     ScheduleModule.forRoot(),
     PassportModule,

@@ -8,7 +8,7 @@ import {
   OptionalProps,
   PrimaryKey,
   Property,
-  type IdentifiedReference,
+  type Ref,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
@@ -51,18 +51,18 @@ export class File extends Resource {
   @Field({ nullable: true })
   name?: string;
 
-  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, strategy: LoadStrategy.JOINED })
+  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED })
   @Field(() => Thumbnail, { nullable: true })
-  thumbnail?: Thumbnail;
+  thumbnail?: Ref<Thumbnail>;
 
   @Property()
   @Field()
   createdAt: Date = new Date();
 
-  @ManyToOne(() => User, { wrappedReference: true, hidden: true })
+  @ManyToOne(() => User, { ref: true, hidden: true })
   @Exclude()
   @Index()
-  owner: IdentifiedReference<User>;
+  owner: Ref<User>;
 
   getExtension() {
     return mimeType.extension(this.type) || 'bin';

@@ -8,6 +8,7 @@ import {
   OptionalProps,
   PrimaryKey,
   Property,
+  type Ref,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
@@ -48,8 +49,8 @@ export class User {
   @Index()
   secret: string;
 
-  @OneToOne({ nullable: true })
-  invite?: Invite;
+  @OneToOne({ entity: () => Invite, nullable: true, ref: true })
+  invite?: Ref<Invite>;
 
   @Property()
   @Field(() => [String])

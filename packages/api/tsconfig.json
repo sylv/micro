@@ -1,34 +1,31 @@
 {
   "include": ["src", "types"],
   "compilerOptions": {
-    // https://www.npmjs.com/package/@tsconfig/node16
+    // https://www.npmjs.com/package/@tsconfig/node18
     // https://github.com/sindresorhus/tsconfig/blob/main/tsconfig.json
-    "module": "node16",
-    "moduleResolution": "node16",
     "moduleDetection": "force",
-    "target": "es2021", // node 16
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "lib": ["es2022"],
+    "module": "nodenext",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node16",
     "declaration": true,
     "pretty": true,
     "newLine": "lf",
     "stripInternal": true,
-    "strict": true,
     "noImplicitOverride": false,
-    "esModuleInterop": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmitOnError": true,
-    "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
-    "skipLibCheck": true,
-    "isolatedModules": true,
     "outDir": "dist",
     "noUncheckedIndexedAccess": false,
     "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es2021", "dom"],
     "baseUrl": ".",
     "paths": {
       // https://github.com/bevry/istextorbinary/issues/270

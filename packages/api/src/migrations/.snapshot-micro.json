@@ -50,6 +50,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "password": {
@@ -221,178 +222,6 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "users_verification",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "users_verification_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "users_verification_user_id_foreign": {
-          "constraintName": "users_verification_user_id_foreign",
-          "columnNames": [
-            "user_id"
-          ],
-          "localTableName": "public.users_verification",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.users",
-          "deleteRule": "CASCADE",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "permissions": {
-          "name": "permissions",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
-        },
-        "inviter_id": {
-          "name": "inviter_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
-        "invited_id": {
-          "name": "invited_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "invites",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "invited_id"
-          ],
-          "composite": false,
-          "keyName": "invites_invited_id_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "keyName": "invites_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "invites_inviter_id_foreign": {
-          "constraintName": "invites_inviter_id_foreign",
-          "columnNames": [
-            "inviter_id"
-          ],
-          "localTableName": "public.invites",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.users",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "invites_invited_id_foreign": {
-          "constraintName": "invites_invited_id_foreign",
-          "columnNames": [
-            "invited_id"
-          ],
-          "localTableName": "public.invites",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.users",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
         "hostname": {
           "name": "hostname",
           "type": "varchar(255)",
@@ -546,6 +375,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "created_at": {
@@ -593,6 +423,127 @@
             "id"
           ],
           "referencedTableName": "public.users",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "inviter_id": {
+          "name": "inviter_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "invited_id": {
+          "name": "invited_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "skip_verification": {
+          "name": "skip_verification",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "invites",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "invited_id"
+          ],
+          "composite": false,
+          "keyName": "invites_invited_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "invites_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "invites_inviter_id_foreign": {
+          "constraintName": "invites_inviter_id_foreign",
+          "columnNames": [
+            "inviter_id"
+          ],
+          "localTableName": "public.invites",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "invites_invited_id_foreign": {
+          "constraintName": "invites_invited_id_foreign",
+          "columnNames": [
+            "invited_id"
+          ],
+          "localTableName": "public.invites",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }
@@ -870,7 +821,68 @@
             "id"
           ],
           "referencedTableName": "public.files",
-          "deleteRule": "cascade",
+          "deleteRule": "CASCADE",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "users_verification",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "users_verification_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "users_verification_user_id_foreign": {
+          "constraintName": "users_verification_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "public.users_verification",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "CASCADE",
           "updateRule": "cascade"
         }
       }

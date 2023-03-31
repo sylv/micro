@@ -1,4 +1,4 @@
-import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property } from '@mikro-orm/core';
+import { BlobType, Entity, OneToOne, OptionalProps, PrimaryKeyType, Property, type Ref } from '@mikro-orm/core';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { File } from '../file/file.entity.js';
 
@@ -28,8 +28,8 @@ export class Thumbnail {
   @Property({ type: BlobType, lazy: true, hidden: true })
   data: Buffer;
 
-  @OneToOne({ entity: () => File, primary: true, onDelete: 'CASCADE' })
-  file: File;
+  @OneToOne({ entity: () => File, primary: true, ref: true, onDelete: 'CASCADE' })
+  file: Ref<File>;
 
   @Property()
   @Field()

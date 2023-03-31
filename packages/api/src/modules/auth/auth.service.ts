@@ -5,8 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { authenticator } from 'otplib';
-import { User } from '../user/user.entity';
-import type { OTPEnabledDto } from './dto/otp-enabled.dto';
+import { User } from '../user/user.entity.js';
+import type { OTPEnabledDto } from './dto/otp-enabled.dto.js';
 
 export enum TokenType {
   USER = 'USER',

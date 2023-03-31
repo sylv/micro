@@ -1,9 +1,9 @@
-import { Entity, type IdentifiedReference, ManyToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Exclude } from 'class-transformer';
 import { generateContentId } from '../../helpers/generate-content-id.helper.js';
-import { User } from '../user/user.entity.js';
 import { Resource } from '../../helpers/resource.entity-base.js';
+import { User } from '../user/user.entity.js';
 
 @Entity({ tableName: 'links' })
 @ObjectType()
@@ -24,9 +24,9 @@ export class Link extends Resource {
   @Field()
   createdAt: Date = new Date();
 
-  @ManyToOne(() => User, { wrappedReference: true, hidden: true })
+  @ManyToOne(() => User, { ref: true, hidden: true })
   @Exclude()
-  owner: IdentifiedReference<User>;
+  owner: Ref<User>;
 
   getPaths() {
     return {

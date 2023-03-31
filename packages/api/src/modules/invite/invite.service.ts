@@ -1,4 +1,4 @@
-import { EntityRepository, MikroORM, UseRequestContext } from '@mikro-orm/core';
+import { EntityRepository, MikroORM, ref, UseRequestContext } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import type { OnApplicationBootstrap } from '@nestjs/common';
 import { Injectable, Logger } from '@nestjs/common';
@@ -21,7 +21,7 @@ export class InviteService implements OnApplicationBootstrap {
     protected orm: MikroORM
   ) {}
 
-  async create(inviterId: string | null, permissions: Permission | null) {
+  async create(inviterId: string | null, permissions: Permission | null, extra?: Partial<Invite>) {
     const invite = this.inviteRepo.create({
       inviter: inviterId || undefined,
       permissions: permissions || undefined,
@@ -35,9 +35,14 @@ export class InviteService implements OnApplicationBootstrap {
     return this.inviteRepo.findOne(inviteId);
   }
 
-  async consume(invite: Invite) {
-    this.inviteRepo.remove(invite);
-    await this.inviteRepo.flush();
+  async consume(invite: Invite, user: User) {
+    invite.invited = ref(user);
+    if (invite.skipVerification) {
+      user.verifiedEmail = true;
+      this.inviteRepo.persist(user);
+    }
+
+    await this.inviteRepo.persistAndFlush(invite);
   }
 
   @UseRequestContext()
@@ -50,7 +55,7 @@ export class InviteService implements OnApplicationBootstrap {
       return;
     }
 
-    const invite = await this.create(null, Permission.ADMINISTRATOR);
+    const invite = await this.create(null, Permission.ADMINISTRATOR, { skipVerification: true });
     this.logger.log(`Go to ${invite.url} to create the first account.`);
   }
 }

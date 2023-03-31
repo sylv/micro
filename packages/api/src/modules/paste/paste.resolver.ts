@@ -1,8 +1,7 @@
-import { HasFields, Selections } from '@jenyus-org/nestjs-graphql-utils';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { BadRequestException, UseGuards } from '@nestjs/common';
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { generateContentId, generateParanoidId } from '../../helpers/generate-content-id.helper.js';
 import { ResourceLocations } from '../../types/resource-locations.type.js';
 import { UserId } from '../auth/auth.decorators.js';
@@ -11,6 +10,7 @@ import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard.js';
 import { HostService } from '../host/host.service.js';
 import { UserService } from '../user/user.service.js';
 import { CreatePasteDto, Paste } from './paste.entity.js';
+import { resolveSelections, hasFields } from '@jenyus-org/graphql-utils';
 
 @Resolver(() => Paste)
 export class PasteResolver {
@@ -24,15 +24,16 @@ export class PasteResolver {
   @UseGuards(OptionalJWTAuthGuard)
   async paste(
     @UserId() userId: string,
-    @HasFields('paste.content') wantsContent: boolean,
-    @Args('pasteId', { type: () => ID }) pasteId: string,
-    @Selections([{ field: 'urls', selector: 'owner' }, 'content']) populate?: any[]
+    @Info() info: any,
+    @Args('pasteId', { type: () => ID }) pasteId: string
   ): Promise<Paste> {
+    const populate = resolveSelections([{ field: 'urls', selector: 'owner' }, 'content'], info) as any[];
     const paste = await this.pasteRepo.findOneOrFail(pasteId, { populate });
 
     // if the owner is viewing the paste, don't burn it
     // otherwise, set that bitch alight
     const isOwner = paste.owner?.id === userId;
+    const wantsContent = hasFields(info, 'paste.content');
     if (paste.burn && !isOwner && wantsContent) {
       await this.pasteRepo.removeAndFlush(paste);
       paste.burnt = true;

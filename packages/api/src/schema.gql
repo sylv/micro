@@ -87,6 +87,7 @@ type Invite {
   id: ID!
   path: String!
   permissions: Float
+  skipVerification: Boolean!
   url: String!
 }
 

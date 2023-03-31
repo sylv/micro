@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { nanoid } from 'nanoid';
 import path from 'path';
-import { ExifTransformer } from 'src/classes/ExifTransformer.js';
+import { ExifTransformer } from '../../classes/ExifTransformer.js';
 import { default as getSizeTransform } from 'stream-size';
 import { pipeline } from 'stream/promises';
 import { config } from '../../config.js';

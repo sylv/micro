@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { config } from '../../config.js';
 import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
@@ -15,15 +15,19 @@ export class Invite {
   @Field({ nullable: true })
   permissions?: number;
 
-  @ManyToOne({ entity: () => User, nullable: true })
-  inviter?: User;
+  @ManyToOne({ entity: () => User, ref: true, nullable: true })
+  inviter?: Ref<User>;
 
-  @OneToOne({ entity: () => User, nullable: true })
-  invited?: User;
+  @OneToOne({ entity: () => User, ref: true, nullable: true })
+  invited?: Ref<User>;
 
   @Property()
   @Field()
   createdAt: Date = new Date();
+
+  @Property()
+  @Field()
+  skipVerification: boolean = false;
 
   @Property({ nullable: true })
   @Field({ nullable: true })
@@ -53,5 +57,5 @@ export class Invite {
     return `${config.rootHost.url}/${this.path}`;
   }
 
-  [OptionalProps]: 'url' | 'path' | 'consumed' | 'expired' | 'createdAt';
+  [OptionalProps]: 'url' | 'path' | 'consumed' | 'expired' | 'createdAt' | 'skipVerification';
 }

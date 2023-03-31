@@ -5,10 +5,6 @@ export interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;
 }
 
-export const Link: FC<LinkProps> = ({ href, children, ...rest }) => {
-  return (
-    <NextLink href={href} passHref>
-      <a {...rest}>{children}</a>
-    </NextLink>
-  );
+export const Link: FC<LinkProps> = ({ children, ...rest }) => {
+  return <NextLink {...rest}>{children}</NextLink>;
 };

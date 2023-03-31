@@ -1,4 +1,4 @@
-import { Button, ButtonStyle, Container, useAsync, useOnClickOutside } from '@ryanke/pandora';
+import { Button, ButtonStyle, Container, useAsync, useOnClickOutside, useToasts } from '@ryanke/pandora';
 import classNames from 'classnames';
 import { Fragment, memo, useRef, useState } from 'react';
 import { Crop } from 'react-feather';
@@ -17,6 +17,7 @@ export const Header = memo(() => {
   const [showEmailInput, setShowEmailInput] = useState(false);
   const emailInputRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState('');
+  const createToast = useToasts();
   const [resent, setResent] = useState(false);
   const classes = classNames(
     'relative z-20 flex items-center justify-between h-16 my-auto transition',
@@ -30,21 +31,33 @@ export const Header = memo(() => {
 
   const [resendMutation] = useResendVerificationEmailMutation();
   const [resendVerification, sendingVerification] = useAsync(async () => {
-    if (!user.data) return;
+    if (resent || !user.data) return;
     if (!user.data.email && !email) {
       setShowEmailInput(true);
       return;
     }
 
     const payload = !user.data.email && email ? { email } : null;
-    await resendMutation({
-      variables: {
-        data: payload,
-      },
-    });
+    try {
+      await resendMutation({
+        variables: {
+          data: payload,
+        },
+      });
 
-    setShowEmailInput(false);
-    setResent(true);
+      setShowEmailInput(false);
+      setResent(true);
+    } catch (error: any) {
+      if (error.message.includes('You can only') || error.message.includes('You have already')) {
+        createToast({
+          text: 'You have already requested a verification email. Please check your inbox, or try resend in 5 minutes.',
+          error: true,
+        });
+        return;
+      }
+
+      throw error;
+    }
   });
 
   return (
@@ -54,8 +67,13 @@ export const Header = memo(() => {
           <Container>
             <span className="relative">
               You must verify your email before you can upload files.{' '}
-              <button type="button" className="underline" onClick={resendVerification} disabled={sendingVerification}>
-                {resent ? 'Verification email sent' : 'Resend verification email'}
+              <button
+                type="button"
+                className={resent ? 'cursor-default' : 'underline'}
+                onClick={resendVerification}
+                disabled={sendingVerification || resent}
+              >
+                {resent ? `Verification email sent to ${user.data.email}!` : 'Resend verification email'}
               </button>
               {showEmailInput && (
                 <div

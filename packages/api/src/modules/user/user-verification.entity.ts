@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
 import { randomBytes } from 'crypto';
 import { User } from './user.entity.js';
 
@@ -7,8 +7,8 @@ export class UserVerification {
   @PrimaryKey()
   id: string = randomBytes(16).toString('hex');
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  user: User;
+  @ManyToOne(() => User, { ref: true, onDelete: 'CASCADE' })
+  user: Ref<User>;
 
   @Property()
   expiresAt: Date;

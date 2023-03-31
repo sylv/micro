@@ -100,6 +100,7 @@ export type Invite = {
   id: Scalars['ID'];
   path: Scalars['String'];
   permissions?: Maybe<Scalars['Float']>;
+  skipVerification: Scalars['Boolean'];
   url: Scalars['String'];
 };
 

@@ -114,7 +114,7 @@ export class UserService {
     const verifyUrl = `${config.rootHost.url}/api/user/${verification.user.id}/verify/${verification.id}`;
     const html = UserService.EMAIL_TEMPLATE({ verifyUrl });
     await sendMail({
-      to: verification.user.email,
+      to: user.email,
       subject: 'Verify your account | micro',
       html: html,
     });
@@ -137,14 +137,16 @@ export class UserService {
       otpEnabled: false,
     });
 
+    console.log(user);
     if (data.email) {
+      console.log('check');
       await this.checkEmail(data.email);
       await this.sendVerificationEmail(user);
     }
 
     try {
-      await this.inviteService.consume(invite);
-      await this.userRepo.persistAndFlush(user);
+      await this.inviteService.consume(invite, user);
+      await this.userRepo.flush();
       return user;
     } catch (error) {
       if (error instanceof UniqueConstraintViolationException) {
@@ -171,7 +173,7 @@ export class UserService {
       throw new BadRequestException('Invalid or expired verification code');
     }
 
-    verification.user.verifiedEmail = true;
+    verification.user.$.verifiedEmail = true;
     await this.userRepo.persistAndFlush(verification.user);
     await this.verificationRepo.nativeDelete({
       user: userId,
@@ -179,11 +181,13 @@ export class UserService {
   }
 
   async checkEmail(email: string) {
+    console.log('findOne');
     const existingByLowerEmail = await this.userRepo.findOne({
       email: {
         $ilike: email.toLowerCase(),
       },
     });
+    console.log('findOne DONE');
 
     if (existingByLowerEmail) {
       throw new ConflictException('Username or email already exists.');

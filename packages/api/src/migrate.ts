@@ -3,7 +3,7 @@ import { MikroORM } from '@mikro-orm/core';
 import type { EntityManager } from '@mikro-orm/postgresql';
 import { Logger } from '@nestjs/common';
 import { checkForOldDatabase, migrateOldDatabase } from './helpers/migrate-old-database.js';
-import mikroOrmConfig, { migrationsTableName, ormLogger } from './orm.js';
+import mikroOrmConfig, { MIGRATIONS_TABLE_NAME, ORM_LOGGER } from './orm.config.js';
 
 const logger = new Logger('migrate');
 
@@ -25,13 +25,13 @@ export const migrate = async (
   const executedMigrations = await migrator.getExecutedMigrations();
   const pendingMigrations = await migrator.getPendingMigrations();
   if (!pendingMigrations[0]) {
-    ormLogger.debug(`No pending migrations, ${executedMigrations.length} already executed`);
+    ORM_LOGGER.debug(`No pending migrations, ${executedMigrations.length} already executed`);
     return;
   }
 
-  ormLogger.log(`Migrating through ${pendingMigrations.length} migrations`);
+  ORM_LOGGER.log(`Migrating through ${pendingMigrations.length} migrations`);
   await em.transactional(async (em) => {
-    if (!skipLock) await em.execute(`LOCK TABLE ${migrationsTableName} IN EXCLUSIVE MODE`);
+    if (!skipLock) await em.execute(`LOCK TABLE ${MIGRATIONS_TABLE_NAME} IN EXCLUSIVE MODE`);
     await migrator.up({ transaction: em.getTransactionContext() });
   });
 
