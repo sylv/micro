@@ -1,7 +1,7 @@
 FROM node:18-alpine AS deps
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat make clang build-base python3
 RUN npm i -g pnpm
 
 WORKDIR /usr/src/micro
@@ -18,7 +18,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 WORKDIR /usr/src/micro
 
-RUN apk add --no-cache git python3
+RUN apk add --no-cache git
 RUN npm i -g pnpm
 
 COPY --from=deps /usr/src/micro .
