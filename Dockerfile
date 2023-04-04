@@ -27,6 +27,10 @@ COPY . .
 RUN pnpm install --offline --frozen-lockfile
 RUN pnpm build
 
+# RUN cd packages/api && pnpm prune --prod
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    cd packages/api && pnpm --filter @ryanke/micro-api --prod deploy pruned
+
 
 
 
@@ -46,9 +50,8 @@ COPY --from=builder /usr/src/micro/packages/web/next.config.js ./packages/web/ne
 COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/standalone/ ./
 COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/static ./packages/web/.next/static/
 
-# copy api
-COPY --from=builder --chown=node:node /usr/src/micro/packages/api/dist ./packages/api/dist
-COPY --from=builder --chown=node:node /usr/src/micro/packages/api/dist ./packages/api/dist
+# # copy api
+COPY --from=builder --chown=node:node /usr/src/micro/packages/api/pruned ./packages/api
 
 
 COPY wrapper.sh .
