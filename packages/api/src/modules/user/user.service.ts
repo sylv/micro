@@ -137,9 +137,7 @@ export class UserService {
       otpEnabled: false,
     });
 
-    console.log(user);
     if (data.email) {
-      console.log('check');
       await this.checkEmail(data.email);
       await this.sendVerificationEmail(user);
     }
@@ -181,13 +179,11 @@ export class UserService {
   }
 
   async checkEmail(email: string) {
-    console.log('findOne');
     const existingByLowerEmail = await this.userRepo.findOne({
       email: {
         $ilike: email.toLowerCase(),
       },
     });
-    console.log('findOne DONE');
 
     if (existingByLowerEmail) {
       throw new ConflictException('Username or email already exists.');
