@@ -2,5 +2,5 @@
 # i.example.com for a specific domain
 i.example.com, *.example.net {
     encode gzip
-    reverse_proxy micro:8080
+    reverse_proxy micro:3000
 }

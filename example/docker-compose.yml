@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   micro:
     image: sylver/micro:main
@@ -8,7 +8,7 @@ services:
       - $PWD/data:/data
     # uncomment this if you dont care about https, then comment out the proxy service
     # ports:
-    #   - 80:8080
+    #   - 80:3000
   postgres:
     image: postgres:12-alpine
     restart: unless-stopped
