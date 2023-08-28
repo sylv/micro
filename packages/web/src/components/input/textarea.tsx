@@ -10,7 +10,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ 
   return (
     <InputContainer className={className} maxHeight={false} childProps={delegated}>
       {({ childClasses, ...rest }) => {
-        const classes = classNames(childClasses, 'h-[40vh]');
+        const classes = classNames(childClasses, 'h-[50vh]');
         return <textarea {...rest} className={classes} ref={ref} />;
       }}
     </InputContainer>
