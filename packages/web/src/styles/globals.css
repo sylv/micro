@@ -29,9 +29,3 @@
   background-color: rgba(0, 0, 0, 0);
   border-color: transparent;
 }
-
-code[class*='language-'],
-pre[class*='language-'] {
-  white-space: normal !important;
-  word-break: break-word !important;
-}

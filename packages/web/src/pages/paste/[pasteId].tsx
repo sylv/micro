@@ -24,7 +24,8 @@ export default function ViewPaste() {
   const [missingKey, setMissingKey] = useState(false);
   const pasteId = router.query.pasteId as string | undefined;
   const paste = useGetPasteQuery({
-    skip: !confirmedBurn && (burnUnless === undefined || (burnUnless ? burnUnless !== user.data?.id : false)),
+    skip:
+      !pasteId || (!confirmedBurn && (burnUnless === undefined || (burnUnless ? burnUnless !== user.data?.id : false))),
     variables: {
       pasteId: pasteId!,
     },
@@ -122,7 +123,7 @@ export default function ViewPaste() {
       )}
       <Embed
         data={{
-          type: paste.data.paste.type,
+          type: 'text/plain',
           size: paste.data.paste.content.length,
           displayName: paste.data.paste.title ?? `${paste.data.paste.id}.${paste.data.paste.extension}`,
           content: { data: content, error: error },
