@@ -54,7 +54,9 @@ export class Invite {
   @Property({ persist: false })
   @Field(() => String)
   get url() {
-    return `${config.rootHost.url}/${this.path}`;
+    const url = new URL(config.rootHost.url);
+    url.pathname = this.path;
+    return url;
   }
 
   [OptionalProps]: 'url' | 'path' | 'consumed' | 'expired' | 'createdAt' | 'skipVerification';
