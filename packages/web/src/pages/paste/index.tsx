@@ -102,7 +102,7 @@ export default function Paste() {
           title: undefined,
           content: '',
           encrypt: false,
-          extension: 'md',
+          extension: 'txt',
           burn: false,
           paranoid: false,
           hostname: undefined,
