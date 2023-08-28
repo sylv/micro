@@ -39,6 +39,7 @@ export const EmbedText = ({ data }: { data: Embeddable }) => {
 
 EmbedText.embeddable = (data: Embeddable) => {
   if (data.type.startsWith('text/')) return true;
+  if (data.type === 'application/json') return true;
   if (getFileLanguage(data.displayName)) return true;
   if (data.size > MAX_SIZE) return false;
   return false;
