@@ -6,6 +6,6 @@ import { getRequest } from '../../../helpers/get-request.js';
 @Injectable()
 export class JWTAuthGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
-    return getRequest(context);
+    return getRequest(context) as any;
   }
 }

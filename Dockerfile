@@ -24,10 +24,12 @@ RUN npm i -g pnpm
 COPY --from=deps /usr/src/micro .
 COPY . .
 
+# install all deps
 RUN pnpm install --offline --frozen-lockfile
+# build everthing
 RUN pnpm build
 
-# RUN cd packages/api && pnpm prune --prod
+# use "pnpm deploy" to prune the api into a smaller package
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     cd packages/api && pnpm --filter @ryanke/micro-api --prod deploy pruned
 
@@ -46,11 +48,11 @@ RUN apk add --no-cache ffmpeg
 COPY --from=builder /usr/src/micro/packages/web/public ./packages/web/public
 COPY --from=builder /usr/src/micro/packages/web/next.config.js ./packages/web/next.config.js
 
-# copy web server
+# copy web
 COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/standalone/ ./
 COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/static ./packages/web/.next/static/
 
-# # copy api
+# copy api
 COPY --from=builder --chown=node:node /usr/src/micro/packages/api/pruned ./packages/api
 
 

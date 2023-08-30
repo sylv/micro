@@ -5,6 +5,11 @@ module.exports = {
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
+  eslint: {
+    // todo: eslint is broken with typescript 5.2 and every file errors out,
+    // this is temporary to get it to build with eslint broken.
+    ignoreDuringBuilds: true,
+  },
   async redirects() {
     return [
       {

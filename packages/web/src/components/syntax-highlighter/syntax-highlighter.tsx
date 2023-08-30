@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { Language } from 'prism-react-renderer';
-import Highlight, { defaultProps } from 'prism-react-renderer';
+import { Highlight } from 'prism-react-renderer';
 import type { HTMLProps } from 'react';
 import { memo, useState } from 'react';
 import { theme } from './prism-theme';
@@ -18,8 +18,9 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
     const trimmed = children.trim();
 
     return (
-      <Highlight {...defaultProps} theme={theme} code={trimmed} language={language}>
+      <Highlight theme={theme} code={trimmed} language={language}>
         {({ className: highlighterClasses, style, tokens, getLineProps, getTokenProps }) => {
+          console.log(highlighterClasses);
           const containerClasses = classNames(
             'text-left overflow-x-auto h-full relative',
             highlighterClasses,
@@ -27,27 +28,16 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
           );
 
           return (
-            <pre className={containerClasses} style={{ ...style, whiteSpace: 'nowrap', overflowX: 'auto' }} {...rest}>
+            <pre className={containerClasses} style={{ background: 'black' }}>
               <SyntaxHighlighterControls language={language} onLanguageChange={setLanguage} content={children} />
-              {tokens.map((line, index) => {
-                const props = getLineProps({ line, key: index });
-                const classes = classNames(props.className, 'table-row');
-
-                return (
-                  // handled by getLineProps
-                  // eslint-disable-next-line react/jsx-key
-                  <div {...props} className={classes}>
-                    <span className="table-cell px-1 text-sm text-gray-500 select-none">{index + 1}</span>
-                    <span className="table-cell pl-1">
-                      {line.map((token, key) => (
-                        // handled by getTokenProps
-                        // eslint-disable-next-line react/jsx-key
-                        <span {...getTokenProps({ token, key })} />
-                      ))}
-                    </span>
-                  </div>
-                );
-              })}
+              {tokens.map((line, i) => (
+                <div key={i} {...getLineProps({ line })}>
+                  <span className="text-sm text-gray-500 px-2">{i + 1}</span>
+                  {line.map((token, key) => (
+                    <span key={key} {...getTokenProps({ token })} />
+                  ))}
+                </div>
+              ))}
             </pre>
           );
         }}

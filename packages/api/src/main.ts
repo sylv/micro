@@ -49,9 +49,9 @@ async function bootstrap() {
     })
   );
 
-  await app.register(fastifyCookie);
-  await app.register(fastifyHelmet.default);
-  await app.register(fastifyMultipart.default, {
+  await app.register(fastifyCookie as any);
+  await app.register(fastifyHelmet.default as any);
+  await app.register(fastifyMultipart.default as any, {
     limits: {
       fieldNameSize: 100,
       fieldSize: 100,

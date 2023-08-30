@@ -17,6 +17,6 @@
     "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}"
   },
   "devDependencies": {
-    "turbo": "1.8.8"
+    "turbo": "1.10.13"
   }
 }

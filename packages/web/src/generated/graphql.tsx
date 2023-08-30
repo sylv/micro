@@ -5,138 +5,140 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
-  DateTime: any;
+  DateTime: { input: any; output: any };
 };
 
 export type Config = {
   __typename?: 'Config';
-  allowTypes: Array<Scalars['String']>;
+  allowTypes: Array<Scalars['String']['output']>;
   /** The host the request is being made to. This host may not be in the hosts list if the user is not authorized to access it. */
   currentHost: ConfigHost;
   /** A list of hosts the user can access. */
   hosts: Array<ConfigHost>;
-  inquiriesEmail: Scalars['String'];
-  requireEmails: Scalars['Boolean'];
+  inquiriesEmail: Scalars['String']['output'];
+  requireEmails: Scalars['Boolean']['output'];
   rootHost: ConfigHost;
-  uploadLimit: Scalars['Float'];
+  uploadLimit: Scalars['Float']['output'];
 };
 
 export type ConfigHost = {
   __typename?: 'ConfigHost';
-  normalised: Scalars['String'];
-  redirect?: Maybe<Scalars['String']>;
-  url: Scalars['String'];
+  normalised: Scalars['String']['output'];
+  redirect?: Maybe<Scalars['String']['output']>;
+  url: Scalars['String']['output'];
 };
 
 export type CreatePasteDto = {
-  burn: Scalars['Boolean'];
-  content: Scalars['String'];
-  encrypted: Scalars['Boolean'];
-  expiresAt?: InputMaybe<Scalars['Float']>;
-  extension?: InputMaybe<Scalars['String']>;
-  hostname?: InputMaybe<Scalars['String']>;
-  paranoid: Scalars['Boolean'];
-  title?: InputMaybe<Scalars['String']>;
+  burn: Scalars['Boolean']['input'];
+  content: Scalars['String']['input'];
+  encrypted: Scalars['Boolean']['input'];
+  expiresAt?: InputMaybe<Scalars['Float']['input']>;
+  extension?: InputMaybe<Scalars['String']['input']>;
+  hostname?: InputMaybe<Scalars['String']['input']>;
+  paranoid: Scalars['Boolean']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateUserDto = {
-  email?: InputMaybe<Scalars['String']>;
-  invite: Scalars['String'];
-  password: Scalars['String'];
-  username: Scalars['String'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  invite: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 export type File = {
   __typename?: 'File';
-  createdAt: Scalars['DateTime'];
-  displayName: Scalars['String'];
-  hash: Scalars['String'];
-  id: Scalars['ID'];
-  isOwner: Scalars['Boolean'];
+  createdAt: Scalars['DateTime']['output'];
+  displayName: Scalars['String']['output'];
+  hash: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isOwner: Scalars['Boolean']['output'];
   metadata?: Maybe<FileMetadata>;
-  name?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']['output']>;
   paths: ResourceLocations;
-  size: Scalars['Float'];
-  sizeFormatted: Scalars['String'];
+  size: Scalars['Float']['output'];
+  sizeFormatted: Scalars['String']['output'];
   thumbnail?: Maybe<Thumbnail>;
-  type: Scalars['String'];
+  type: Scalars['String']['output'];
   urls: ResourceLocations;
 };
 
 export type FileMetadata = {
   __typename?: 'FileMetadata';
-  height?: Maybe<Scalars['Float']>;
-  width?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']['output']>;
+  width?: Maybe<Scalars['Float']['output']>;
 };
 
 export type FilePage = {
   __typename?: 'FilePage';
   edges: Array<FilePageEdge>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type FilePageEdge = {
   __typename?: 'FilePageEdge';
-  cursor: Scalars['String'];
+  cursor: Scalars['String']['output'];
   node: File;
 };
 
 export type Invite = {
   __typename?: 'Invite';
-  consumed: Scalars['Boolean'];
-  createdAt: Scalars['DateTime'];
-  expired: Scalars['Boolean'];
-  expiresAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
-  path: Scalars['String'];
-  permissions?: Maybe<Scalars['Float']>;
-  skipVerification: Scalars['Boolean'];
-  url: Scalars['String'];
+  consumed: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  expired: Scalars['Boolean']['output'];
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  path: Scalars['String']['output'];
+  permissions?: Maybe<Scalars['Float']['output']>;
+  skipVerification: Scalars['Boolean']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type Link = {
   __typename?: 'Link';
-  clicks: Scalars['Float'];
-  createdAt: Scalars['DateTime'];
-  destination: Scalars['String'];
-  id: Scalars['ID'];
+  clicks: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  destination: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   paths: ResourceLocations;
   urls: ResourceLocations;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  confirmOTP: Scalars['Boolean'];
+  confirmOTP: Scalars['Boolean']['output'];
   createInvite: Invite;
   createLink: Link;
   createPaste: Paste;
   createUser: User;
-  deleteFile: Scalars['Boolean'];
-  disableOTP: Scalars['Boolean'];
+  deleteFile: Scalars['Boolean']['output'];
+  disableOTP: Scalars['Boolean']['output'];
   generateOTP: OtpEnabledDto;
   login: User;
-  logout: Scalars['Boolean'];
+  logout: Scalars['Boolean']['output'];
   refreshToken: User;
-  resendVerificationEmail: Scalars['Boolean'];
+  resendVerificationEmail: Scalars['Boolean']['output'];
 };
 
 export type MutationConfirmOtpArgs = {
-  otpCode: Scalars['String'];
+  otpCode: Scalars['String']['input'];
 };
 
 export type MutationCreateLinkArgs = {
-  destination: Scalars['String'];
-  host?: InputMaybe<Scalars['String']>;
+  destination: Scalars['String']['input'];
+  host?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationCreatePasteArgs = {
@@ -148,18 +150,18 @@ export type MutationCreateUserArgs = {
 };
 
 export type MutationDeleteFileArgs = {
-  fileId: Scalars['ID'];
-  key?: InputMaybe<Scalars['String']>;
+  fileId: Scalars['ID']['input'];
+  key?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MutationDisableOtpArgs = {
-  otpCode: Scalars['String'];
+  otpCode: Scalars['String']['input'];
 };
 
 export type MutationLoginArgs = {
-  otpCode?: InputMaybe<Scalars['String']>;
-  password: Scalars['String'];
-  username: Scalars['String'];
+  otpCode?: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 export type MutationResendVerificationEmailArgs = {
@@ -168,32 +170,32 @@ export type MutationResendVerificationEmailArgs = {
 
 export type OtpEnabledDto = {
   __typename?: 'OTPEnabledDto';
-  qrauthUrl: Scalars['String'];
-  recoveryCodes: Array<Scalars['String']>;
-  secret: Scalars['String'];
+  qrauthUrl: Scalars['String']['output'];
+  recoveryCodes: Array<Scalars['String']['output']>;
+  secret: Scalars['String']['output'];
 };
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']>;
-  hasNextPage: Scalars['Boolean'];
-  hasPreviousPage: Scalars['Boolean'];
-  startCursor?: Maybe<Scalars['String']>;
+  endCursor?: Maybe<Scalars['String']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor?: Maybe<Scalars['String']['output']>;
 };
 
 export type Paste = {
   __typename?: 'Paste';
-  burn: Scalars['Boolean'];
-  burnt?: Maybe<Scalars['Boolean']>;
-  content: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  encrypted: Scalars['Boolean'];
-  expiresAt?: Maybe<Scalars['DateTime']>;
-  extension?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  burn: Scalars['Boolean']['output'];
+  burnt?: Maybe<Scalars['Boolean']['output']>;
+  content: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  encrypted: Scalars['Boolean']['output'];
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  extension?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
   paths: ResourceLocations;
-  title?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  title?: Maybe<Scalars['String']['output']>;
+  type: Scalars['String']['output'];
   urls: ResourceLocations;
 };
 
@@ -201,12 +203,12 @@ export type PastePage = {
   __typename?: 'PastePage';
   edges: Array<PastePageEdge>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Int']['output'];
 };
 
 export type PastePageEdge = {
   __typename?: 'PastePageEdge';
-  cursor: Scalars['String'];
+  cursor: Scalars['String']['output'];
   node: Paste;
 };
 
@@ -221,66 +223,66 @@ export type Query = {
 };
 
 export type QueryFileArgs = {
-  fileId: Scalars['ID'];
+  fileId: Scalars['ID']['input'];
 };
 
 export type QueryInviteArgs = {
-  inviteId: Scalars['ID'];
+  inviteId: Scalars['ID']['input'];
 };
 
 export type QueryLinkArgs = {
-  linkId: Scalars['ID'];
+  linkId: Scalars['ID']['input'];
 };
 
 export type QueryPasteArgs = {
-  pasteId: Scalars['ID'];
+  pasteId: Scalars['ID']['input'];
 };
 
 export type ResendVerificationEmailDto = {
-  email: Scalars['String'];
+  email: Scalars['String']['input'];
 };
 
 export type ResourceLocations = {
   __typename?: 'ResourceLocations';
-  delete?: Maybe<Scalars['String']>;
-  direct: Scalars['String'];
-  thumbnail?: Maybe<Scalars['String']>;
-  view: Scalars['String'];
+  delete?: Maybe<Scalars['String']['output']>;
+  direct: Scalars['String']['output'];
+  thumbnail?: Maybe<Scalars['String']['output']>;
+  view: Scalars['String']['output'];
 };
 
 export type Thumbnail = {
   __typename?: 'Thumbnail';
-  createdAt: Scalars['DateTime'];
-  duration: Scalars['Float'];
-  height: Scalars['Float'];
-  size: Scalars['Float'];
-  type: Scalars['String'];
-  width: Scalars['Float'];
+  createdAt: Scalars['DateTime']['output'];
+  duration: Scalars['Float']['output'];
+  height: Scalars['Float']['output'];
+  size: Scalars['Float']['output'];
+  type: Scalars['String']['output'];
+  width: Scalars['Float']['output'];
 };
 
 export type User = {
   __typename?: 'User';
-  aggregateFileSize: Scalars['Float'];
-  email?: Maybe<Scalars['String']>;
+  aggregateFileSize: Scalars['Float']['output'];
+  email?: Maybe<Scalars['String']['output']>;
   files: FilePage;
-  id: Scalars['ID'];
-  otpEnabled: Scalars['Boolean'];
+  id: Scalars['ID']['output'];
+  otpEnabled: Scalars['Boolean']['output'];
   pastes: PastePage;
-  permissions: Scalars['Float'];
-  tags: Array<Scalars['String']>;
-  token: Scalars['String'];
-  username: Scalars['String'];
-  verifiedEmail: Scalars['Boolean'];
+  permissions: Scalars['Float']['output'];
+  tags: Array<Scalars['String']['output']>;
+  token: Scalars['String']['output'];
+  username: Scalars['String']['output'];
+  verifiedEmail: Scalars['Boolean']['output'];
 };
 
 export type UserFilesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Float']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type UserPastesArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Float']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type ResendVerificationEmailMutationVariables = Exact<{
@@ -313,8 +315,8 @@ export type FileCardFragment = {
 };
 
 export type GetFilesQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Float']>;
-  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type GetFilesQuery = {
@@ -342,8 +344,8 @@ export type GetFilesQuery = {
 };
 
 export type GetPastesQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Float']>;
-  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type GetPastesQuery = {
@@ -412,9 +414,9 @@ export type RegularUserFragment = {
 };
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars['String'];
-  password: Scalars['String'];
-  otp?: InputMaybe<Scalars['String']>;
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  otp?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type LoginMutation = {
@@ -441,13 +443,13 @@ export type GenerateOtpMutation = {
 };
 
 export type ConfirmOtpMutationVariables = Exact<{
-  otpCode: Scalars['String'];
+  otpCode: Scalars['String']['input'];
 }>;
 
 export type ConfirmOtpMutation = { __typename?: 'Mutation'; confirmOTP: boolean };
 
 export type DisableOtpMutationVariables = Exact<{
-  otpCode: Scalars['String'];
+  otpCode: Scalars['String']['input'];
 }>;
 
 export type DisableOtpMutation = { __typename?: 'Mutation'; disableOTP: boolean };
@@ -467,7 +469,7 @@ export type RefreshTokenMutation = {
 };
 
 export type GetFileQueryVariables = Exact<{
-  fileId: Scalars['ID'];
+  fileId: Scalars['ID']['input'];
 }>;
 
 export type GetFileQuery = {
@@ -487,14 +489,14 @@ export type GetFileQuery = {
 };
 
 export type DeleteFileMutationVariables = Exact<{
-  fileId: Scalars['ID'];
-  deleteKey?: InputMaybe<Scalars['String']>;
+  fileId: Scalars['ID']['input'];
+  deleteKey?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type DeleteFileMutation = { __typename?: 'Mutation'; deleteFile: boolean };
 
 export type GetInviteQueryVariables = Exact<{
-  inviteId: Scalars['ID'];
+  inviteId: Scalars['ID']['input'];
 }>;
 
 export type GetInviteQuery = {
@@ -518,7 +520,7 @@ export type CreatePasteMutation = {
 };
 
 export type GetPasteQueryVariables = Exact<{
-  pasteId: Scalars['ID'];
+  pasteId: Scalars['ID']['input'];
 }>;
 
 export type GetPasteQuery = {
@@ -540,8 +542,8 @@ export type GetPasteQuery = {
 };
 
 export type ShortenMutationVariables = Exact<{
-  link: Scalars['String'];
-  host?: InputMaybe<Scalars['String']>;
+  link: Scalars['String']['input'];
+  host?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 export type ShortenMutation = {
@@ -618,12 +620,12 @@ export type ResendVerificationEmailMutationFn = Apollo.MutationFunction<
  * });
  */
 export function useResendVerificationEmailMutation(
-  baseOptions?: Apollo.MutationHookOptions<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ResendVerificationEmailMutation, ResendVerificationEmailMutationVariables>(
     ResendVerificationEmailDocument,
-    options
+    options,
   );
 }
 export type ResendVerificationEmailMutationHookResult = ReturnType<typeof useResendVerificationEmailMutation>;
@@ -720,7 +722,7 @@ export function useGetPastesQuery(baseOptions?: Apollo.QueryHookOptions<GetPaste
   return Apollo.useQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
 }
 export function useGetPastesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetPastesQuery, GetPastesQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<GetPastesQuery, GetPastesQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
@@ -906,7 +908,7 @@ export type GenerateOtpMutationFn = Apollo.MutationFunction<GenerateOtpMutation,
  * });
  */
 export function useGenerateOtpMutation(
-  baseOptions?: Apollo.MutationHookOptions<GenerateOtpMutation, GenerateOtpMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<GenerateOtpMutation, GenerateOtpMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<GenerateOtpMutation, GenerateOtpMutationVariables>(GenerateOtpDocument, options);
@@ -939,7 +941,7 @@ export type ConfirmOtpMutationFn = Apollo.MutationFunction<ConfirmOtpMutation, C
  * });
  */
 export function useConfirmOtpMutation(
-  baseOptions?: Apollo.MutationHookOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<ConfirmOtpMutation, ConfirmOtpMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ConfirmOtpMutation, ConfirmOtpMutationVariables>(ConfirmOtpDocument, options);
@@ -972,7 +974,7 @@ export type DisableOtpMutationFn = Apollo.MutationFunction<DisableOtpMutation, D
  * });
  */
 export function useDisableOtpMutation(
-  baseOptions?: Apollo.MutationHookOptions<DisableOtpMutation, DisableOtpMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<DisableOtpMutation, DisableOtpMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<DisableOtpMutation, DisableOtpMutationVariables>(DisableOtpDocument, options);
@@ -1007,7 +1009,7 @@ export type RefreshTokenMutationFn = Apollo.MutationFunction<RefreshTokenMutatio
  * });
  */
 export function useRefreshTokenMutation(
-  baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<RefreshTokenMutation, RefreshTokenMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(RefreshTokenDocument, options);
@@ -1096,7 +1098,7 @@ export type DeleteFileMutationFn = Apollo.MutationFunction<DeleteFileMutation, D
  * });
  */
 export function useDeleteFileMutation(
-  baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<DeleteFileMutation, DeleteFileMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<DeleteFileMutation, DeleteFileMutationVariables>(DeleteFileDocument, options);
@@ -1134,7 +1136,7 @@ export function useGetInviteQuery(baseOptions: Apollo.QueryHookOptions<GetInvite
   return Apollo.useQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
 }
 export function useGetInviteLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetInviteQuery, GetInviteQueryVariables>
+  baseOptions?: Apollo.LazyQueryHookOptions<GetInviteQuery, GetInviteQueryVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
@@ -1169,7 +1171,7 @@ export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, C
  * });
  */
 export function useCreateUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
@@ -1207,7 +1209,7 @@ export type CreatePasteMutationFn = Apollo.MutationFunction<CreatePasteMutation,
  * });
  */
 export function useCreatePasteMutation(
-  baseOptions?: Apollo.MutationHookOptions<CreatePasteMutation, CreatePasteMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<CreatePasteMutation, CreatePasteMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<CreatePasteMutation, CreatePasteMutationVariables>(CreatePasteDocument, options);
@@ -1293,7 +1295,7 @@ export type ShortenMutationFn = Apollo.MutationFunction<ShortenMutation, Shorten
  * });
  */
 export function useShortenMutation(
-  baseOptions?: Apollo.MutationHookOptions<ShortenMutation, ShortenMutationVariables>
+  baseOptions?: Apollo.MutationHookOptions<ShortenMutation, ShortenMutationVariables>,
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useMutation<ShortenMutation, ShortenMutationVariables>(ShortenDocument, options);
