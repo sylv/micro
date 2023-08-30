@@ -1,5 +1,5 @@
 import { Container, Spinner } from '@ryanke/pandora';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { Fragment, useState } from 'react';
 import { Download } from 'react-feather';
 import { Section } from '../../components/section';
@@ -93,7 +93,7 @@ export const ConfigGenerator = () => {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
                   {config.data.hosts.map((host) => {
                     const isSelected = selectedHosts.includes(host.normalised);
-                    const classes = classNames(
+                    const classes = clsx(
                       'rounded px-2 py-1 truncate transition border border-transparent',
                       isSelected && 'bg-purple-600 text-white',
                       !isSelected && 'text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white'
@@ -124,7 +124,7 @@ export const ConfigGenerator = () => {
         <button
           type="submit"
           onClick={download}
-          className={classNames(
+          className={clsx(
             'mt-8 ml-auto flex items-center gap-1',
             downloadable ? 'text-purple-400 hover:underline' : 'text-gray-700 cursor-not-allowed'
           )}

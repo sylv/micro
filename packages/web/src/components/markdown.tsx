@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { Language } from 'prism-react-renderer';
 import { Fragment, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -8,7 +8,7 @@ import { SyntaxHighlighter } from './syntax-highlighter/syntax-highlighter';
 const LANGUAGE_REGEX = /(^| )language-(?<language>.+)$/u;
 
 export const Markdown = memo<{ children: string; className?: string }>(({ children, className }) => {
-  const classes = classNames(
+  const classes = clsx(
     'prose prose-invert max-w-none',
     // remove "" quotes from blockquotes
     'prose-p:before:content-none prose-p:after:content-none',

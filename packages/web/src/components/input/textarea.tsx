@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { TextareaHTMLAttributes } from 'react';
 import React from 'react';
 import type { InputChildProps } from './container';
@@ -10,7 +10,7 @@ export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ 
   return (
     <InputContainer className={className} maxHeight={false} childProps={delegated}>
       {({ childClasses, ...rest }) => {
-        const classes = classNames(childClasses, 'h-[50vh]');
+        const classes = clsx(childClasses, 'h-[50vh]');
         return <textarea {...rest} className={classes} ref={ref} />;
       }}
     </InputContainer>

@@ -15,7 +15,7 @@
     ".microrc.development": "jsonc"
   },
   "tailwindCSS.experimental.classRegex": [
-    ["classNames\\(([^)]*)\\)", "'([^']*)'", "\"([^']*)\""],
+    ["clsx\\(([^)]*)\\)", "'([^']*)'", "\"([^']*)\""],
     [":\\s*?[\"'`]([^\"'`]*).*?,"],
     ["baseStyle.=.[\"'`]([^\"'`]*)"],
     // Enum = 'value'

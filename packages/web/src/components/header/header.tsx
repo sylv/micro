@@ -1,5 +1,5 @@
 import { Button, ButtonStyle, Container, useAsync, useOnClickOutside, useToasts } from '@ryanke/pandora';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { Fragment, memo, useRef, useState } from 'react';
 import { Crop } from 'react-feather';
 import { useResendVerificationEmailMutation } from '../../generated/graphql';
@@ -19,7 +19,7 @@ export const Header = memo(() => {
   const [email, setEmail] = useState('');
   const createToast = useToasts();
   const [resent, setResent] = useState(false);
-  const classes = classNames(
+  const classes = clsx(
     'relative z-20 flex items-center justify-between h-16 my-auto transition',
     paths.loading && 'pointer-events-none invisible'
   );

@@ -1,5 +1,5 @@
 import { Button, ButtonStyle, Container, useAsync, useToasts } from '@ryanke/pandora';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { QRCodeSVG } from 'qrcode.react';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
@@ -146,7 +146,7 @@ export default function Generate() {
             type="button"
             onClick={() => setCurrentStep((prev) => prev - 1)}
             disabled={currentStep === 0}
-            className={classNames(
+            className={clsx(
               `text-gray-400 flex items-center gap-1 hover:underline`,
               currentStep === 0 && 'opacity-0 pointer-events-none'
             )}

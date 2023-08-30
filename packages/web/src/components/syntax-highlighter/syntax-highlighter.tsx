@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { Language } from 'prism-react-renderer';
 import { Highlight } from 'prism-react-renderer';
 import type { HTMLProps } from 'react';
@@ -21,7 +21,7 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
       <Highlight theme={theme} code={trimmed} language={language}>
         {({ className: highlighterClasses, style, tokens, getLineProps, getTokenProps }) => {
           console.log(highlighterClasses);
-          const containerClasses = classNames(
+          const containerClasses = clsx(
             'text-left overflow-x-auto h-full relative',
             highlighterClasses,
             additionalClasses

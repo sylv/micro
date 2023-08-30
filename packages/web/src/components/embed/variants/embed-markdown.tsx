@@ -4,13 +4,13 @@ import { PageLoader } from '../../page-loader';
 import { EmbedDefault } from './embed-default';
 import type { Embeddable } from '../embeddable';
 import { textFetcher } from '../text-fetcher';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { BASE_EMBED_CLASSES } from '../embed';
 
 export const EmbedMarkdown = ({ data }: { data: Embeddable }) => {
   const swrContent = useSWR<string>(data.content ? null : data.paths.direct, { fetcher: textFetcher });
   const content = data.content ?? swrContent;
-  const classes = classNames('p-4', BASE_EMBED_CLASSES);
+  const classes = clsx('p-4', BASE_EMBED_CLASSES);
 
   if (content.error) {
     return <EmbedDefault data={data} />;

@@ -1,5 +1,5 @@
 import { Container, Spinner, useAsync, useToasts } from '@ryanke/pandora';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import copyToClipboard from 'copy-to-clipboard';
 import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
   className,
   onClick,
 }) => {
-  const classes = classNames(
+  const classes = clsx(
     'flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300',
     className
   );

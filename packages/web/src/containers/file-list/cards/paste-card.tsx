@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { memo } from 'react';
 import { Link } from '../../../components/link';
 import { Time } from '../../../components/time';
@@ -13,7 +13,7 @@ export const PasteCard = memo<PasteCardProps>(({ paste }) => {
   const user = useUser();
   const showUrl = !paste.encrypted && user.data;
   const url = showUrl ? (paste.burn ? `${paste.urls.view}?burn_unless=${user.data.id}` : paste.urls.view) : '#';
-  const containerClasses = classNames(!showUrl && 'cursor-not-allowed');
+  const containerClasses = clsx(!showUrl && 'cursor-not-allowed');
   const modifiers: string[] = [paste.type];
   if (paste.burn) modifiers.push('burn');
   if (paste.encrypted) modifiers.push('encrypted');

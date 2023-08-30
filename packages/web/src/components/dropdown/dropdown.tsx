@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { FC, ReactNode } from 'react';
 import React, { Fragment } from 'react';
 
@@ -10,7 +10,7 @@ export interface DropdownProps {
 }
 
 export const Dropdown: FC<DropdownProps> = ({ trigger, children, className }) => {
-  const itemsClasses = classNames(
+  const itemsClasses = clsx(
     'absolute right-0 mt-2 overflow-y-auto rounded-md shadow-2xl bg-dark-300 focus:outline-none max-h-56 min-w-[10em]',
     className
   );

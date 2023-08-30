@@ -1,12 +1,12 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import Head from 'next/head';
 import { Fragment } from 'react';
 import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
 import type { Embeddable } from '../embeddable';
 
 export const EmbedImage = ({ data }: { data: Embeddable }) => {
-  const imageClasses = classNames(`object-contain`, MAX_HEIGHT);
-  const containerClasses = classNames(
+  const imageClasses = clsx(`object-contain`, MAX_HEIGHT);
+  const containerClasses = clsx(
     'flex items-center justify-center relative overflow-hidden',
     BASE_EMBED_CLASSES,
     MAX_HEIGHT

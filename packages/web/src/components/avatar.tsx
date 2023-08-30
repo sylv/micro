@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import classNames from 'classnames';
+import clsx from 'clsx';
 import * as avatar from 'generate-avatar';
 import type { FC } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
@@ -10,7 +10,7 @@ export interface AvatarProps {
 }
 
 export const Avatar: FC<AvatarProps> = (props) => {
-  const classes = classNames('overflow-hidden rounded-full select-none', props.className);
+  const classes = clsx('overflow-hidden rounded-full select-none', props.className);
   const containerRef = useRef<HTMLDivElement>(null);
   const svg = useMemo(() => {
     return avatar.generateFromString(props.userId);

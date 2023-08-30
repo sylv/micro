@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { SelectHTMLAttributes } from 'react';
 import React from 'react';
 import { ChevronDown } from 'react-feather';
@@ -11,7 +11,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ classN
   return (
     <InputContainer className={className} childProps={delegated}>
       {({ childClasses, ...rest }) => {
-        const classes = classNames(className, childClasses, 'appearance-none pr-8');
+        const classes = clsx(className, childClasses, 'appearance-none pr-8');
         return (
           <div className="relative select-none">
             <select className={classes} ref={ref} {...rest}>

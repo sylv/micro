@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import type { FormikContextType } from 'formik';
 import { FormikContext } from 'formik';
 import type { ReactNode } from 'react';
@@ -41,7 +41,7 @@ export function InputContainer<T extends InputChildPropsBase>({
   const formik = useContext<FormikContextType<any>>(FormikContext);
   const errorMessage = !!(formik && id && formik.touched[id]) && (formik.errors[id] as string);
   if (errorMessage) style = InputStyle.Error;
-  const childClasses = classNames(
+  const childClasses = clsx(
     'w-full h-full px-3 py-2 rounded outline-none border transition duration-75',
     maxHeight && 'max-h-[calc(2.65em-2px)]',
     style,

@@ -1,5 +1,5 @@
 import { useAsync } from '@ryanke/pandora';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import type { FC } from 'react';
@@ -59,7 +59,7 @@ export const LoginForm: FC = () => {
             login({ ...loginInfo, otp });
           }}
         />
-        <span className={classNames(`text-xs text-center`, invalidOTP ? 'text-red-400' : 'text-gray-600')}>
+        <span className={clsx(`text-xs text-center`, invalidOTP ? 'text-red-400' : 'text-gray-600')}>
           {invalidOTP ? 'Invalid OTP code' : 'Enter the OTP code from your authenticator app'}
         </span>
       </div>
