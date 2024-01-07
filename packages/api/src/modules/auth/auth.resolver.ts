@@ -4,7 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import type { FastifyReply } from 'fastify';
 import ms from 'ms';
-import { config } from '../../config.js';
+import { rootHost } from '../../config.js';
 import { User } from '../user/user.entity.js';
 import { UserId } from './auth.decorators.js';
 import { AuthService, TokenType } from './auth.service.js';
@@ -18,13 +18,13 @@ export class AuthResolver {
   private static readonly COOKIE_OPTIONS = {
     path: '/',
     httpOnly: true,
-    domain: config.rootHost.normalised.split(':').shift(),
-    secure: config.rootHost.url.startsWith('https'),
+    domain: rootHost.normalised.split(':').shift(),
+    secure: rootHost.url.startsWith('https'),
   };
 
   constructor(
     @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   @Mutation(() => User)
@@ -32,7 +32,7 @@ export class AuthResolver {
     @Context() ctx: any,
     @Args('username') username: string,
     @Args('password') password: string,
-    @Args('otpCode', { nullable: true }) otpCode?: string
+    @Args('otpCode', { nullable: true }) otpCode?: string,
   ) {
     const reply = ctx.reply as FastifyReply;
     const user = await this.authService.authenticateUser(username, password, otpCode);

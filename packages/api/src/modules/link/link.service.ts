@@ -2,8 +2,8 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
-import type { MicroHost } from '../../classes/MicroHost.js';
 import { Link } from './link.entity.js';
+import type { MicroHost } from '../../config.js';
 
 @Injectable()
 export class LinkService {

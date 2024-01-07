@@ -15,7 +15,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { config } from '../../config.js';
+import { rootHost } from '../../config.js';
 import { UserId } from '../auth/auth.decorators.js';
 import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
 import { HostService } from '../host/host.service.js';
@@ -31,14 +31,14 @@ export class FileController {
     private readonly fileService: FileService,
     private readonly userService: UserService,
     private readonly hostService: HostService,
-    private readonly linkService: LinkService
+    private readonly linkService: LinkService,
   ) {}
 
   @Get('file/:fileId')
   async getFileContent(
     @Res() reply: FastifyReply,
     @Param('fileId') fileId: string,
-    @Request() request: FastifyRequest
+    @Request() request: FastifyRequest,
   ) {
     return this.fileService.sendFile(fileId, request, reply);
   }
@@ -49,8 +49,8 @@ export class FileController {
     @UserId() userId: string,
     @Req() request: FastifyRequest,
     @Headers('X-Micro-Paste-Shortcut') shortcut: string,
-    @Headers('x-micro-host') hosts = config.rootHost.url,
-    @Query('input') input?: string
+    @Headers('x-micro-host') hosts = rootHost.url,
+    @Query('input') input?: string,
   ) {
     const user = await this.userService.getUser(userId, true);
     const host = this.hostService.resolveUploadHost(hosts, user);

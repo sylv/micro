@@ -13,8 +13,7 @@ import { DateTime } from 'luxon';
 import mime from 'mime-types';
 import sharp from 'sharp';
 import { PassThrough } from 'stream';
-import type { MicroHost } from '../../classes/MicroHost.js';
-import { config } from '../../config.js';
+import { config, type MicroHost } from '../../config.js';
 import { generateContentId } from '../../helpers/generate-content-id.helper.js';
 import { getStreamType } from '../../helpers/get-stream-type.helper.js';
 import { HostService } from '../host/host.service.js';
@@ -29,7 +28,7 @@ export class FileService implements OnApplicationBootstrap {
     @InjectRepository('File') private readonly fileRepo: EntityRepository<File>,
     private readonly storageService: StorageService,
     private readonly hostService: HostService,
-    protected readonly orm: MikroORM
+    protected readonly orm: MikroORM,
   ) {}
 
   async getFile(id: string, request: FastifyRequest) {
@@ -45,7 +44,7 @@ export class FileService implements OnApplicationBootstrap {
     multipart: MultipartFile,
     request: FastifyRequest,
     owner: User,
-    host: MicroHost | undefined
+    host: MicroHost | undefined,
   ): Promise<File> {
     if (host) this.hostService.checkUserCanUploadTo(host, owner);
     if (!request.headers['content-length']) throw new BadRequestException('Missing "Content-Length" header.');
@@ -53,7 +52,7 @@ export class FileService implements OnApplicationBootstrap {
     if (Number.isNaN(contentLength) || contentLength >= config.uploadLimit) {
       const size = bytes.parse(Number(request.headers['content-length']));
       this.logger.warn(
-        `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`
+        `User ${owner.id} tried uploading a ${size} file, which is over the configured upload size limit.`,
       );
 
       throw new PayloadTooLargeException();

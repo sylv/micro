@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
-import { config } from '../config.js';
+import { config, hosts, rootHost } from '../config.js';
 import { UserId } from './auth/auth.decorators.js';
 import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard.js';
 import { UserService } from './user/user.service.js';
@@ -26,10 +26,10 @@ export class AppController {
       allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : undefined,
       email: !!config.email,
       rootHost: {
-        url: config.rootHost.url,
-        normalised: config.rootHost.normalised,
+        url: rootHost.url,
+        normalised: rootHost.normalised,
       },
-      hosts: config.hosts
+      hosts: hosts
         .filter((host) => {
           if (!host.tags || !host.tags[0]) return true;
           return host.tags.every((tag) => tags.includes(tag));

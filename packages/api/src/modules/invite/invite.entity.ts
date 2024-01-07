@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { config } from '../../config.js';
+import { rootHost } from '../../config.js';
 import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
 import { User } from '../user/user.entity.js';
 
@@ -54,7 +54,7 @@ export class Invite {
   @Property({ persist: false })
   @Field(() => String)
   get url() {
-    const url = new URL(config.rootHost.url);
+    const url = new URL(rootHost.url);
     url.pathname = this.path;
     return url;
   }

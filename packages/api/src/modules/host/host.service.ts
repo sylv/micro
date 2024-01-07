@@ -1,7 +1,6 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import normalizeUrl from 'normalize-url';
-import type { MicroHost } from '../../classes/MicroHost.js';
-import { config } from '../../config.js';
+import { hosts, rootHost, type MicroHost } from '../../config.js';
 import { randomItem } from '../../helpers/random-item.helper.js';
 import type { User } from '../user/user.entity.js';
 
@@ -19,9 +18,9 @@ export class HostService {
    * @throws if the host could not be resolved.
    */
   getHostFrom(url: string | undefined, tags: string[] | null): MicroHost {
-    if (!url) return config.rootHost;
+    if (!url) return rootHost;
     const normalised = HostService.normaliseHostUrl(url);
-    for (const host of config.hosts) {
+    for (const host of hosts) {
       if (!host.pattern.test(normalised)) continue;
       if (tags && host.tags) {
         const hasTags = host.tags.every((tag) => tags.includes(tag));

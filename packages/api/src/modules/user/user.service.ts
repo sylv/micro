@@ -7,7 +7,7 @@ import dedent from 'dedent';
 import handlebars from 'handlebars';
 import ms from 'ms';
 import { nanoid } from 'nanoid';
-import { config } from '../../config.js';
+import { config, rootHost } from '../../config.js';
 import type { Permission } from '../../constants.js';
 import { generateContentId } from '../../helpers/generate-content-id.helper.js';
 import { sendMail } from '../../helpers/send-mail.helper.js';
@@ -38,7 +38,7 @@ export class UserService {
     @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>,
     @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
     @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>,
-    private readonly inviteService: InviteService
+    private readonly inviteService: InviteService,
   ) {}
 
   async getUser(id: string, verified: boolean) {
@@ -61,7 +61,7 @@ export class UserService {
         orderBy: {
           createdAt: QueryOrder.DESC,
         },
-      }
+      },
     );
   }
 
@@ -76,7 +76,7 @@ export class UserService {
         orderBy: {
           createdAt: QueryOrder.DESC,
         },
-      }
+      },
     );
   }
 
@@ -111,7 +111,7 @@ export class UserService {
     });
 
     user.verifications.add(verification);
-    const verifyUrl = `${config.rootHost.url}/api/user/${verification.user.id}/verify/${verification.id}`;
+    const verifyUrl = `${rootHost.url}/api/user/${verification.user.id}/verify/${verification.id}`;
     const html = UserService.EMAIL_TEMPLATE({ verifyUrl });
     await sendMail({
       to: user.email,
@@ -164,7 +164,7 @@ export class UserService {
           $gt: new Date(),
         },
       },
-      { populate: ['user'] }
+      { populate: ['user'] },
     );
 
     if (!verification) {

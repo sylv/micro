@@ -1,7 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
-import { MicroHost } from '../classes/MicroHost.js';
-import { config } from '../config.js';
+import { config, hosts, rootHost, type MicroHost } from '../config.js';
 import type { ConfigHost } from '../types/config.type.js';
 import { Config } from '../types/config.type.js';
 import { CurrentHost, UserId } from './auth/auth.decorators.js';
@@ -28,9 +27,9 @@ export class AppResolver {
       uploadLimit: config.uploadLimit,
       allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : [],
       requireEmails: !!config.email,
-      rootHost: this.filterHost(config.rootHost),
+      rootHost: this.filterHost(rootHost),
       currentHost: this.filterHost(currentHost),
-      hosts: config.hosts
+      hosts: hosts
         .filter((host) => {
           if (!host.tags || !host.tags[0]) return true;
           return host.tags.every((tag) => tags.includes(tag));
