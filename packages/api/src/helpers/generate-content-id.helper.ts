@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import blocklist from '../blocklist.json' assert { type: 'json' };
+import blocklist from '../blocklist.json';
 
 const contentIdLength = 6;
 const paranoidIdLength = 12;

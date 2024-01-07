@@ -1,38 +1,13 @@
 {
-  "include": ["src", "types"],
+  "extends": "@atlasbot/configs/tsconfig/esm.json",
+  "include": ["src"],
   "compilerOptions": {
-    // https://www.npmjs.com/package/@tsconfig/node18
-    // https://github.com/sindresorhus/tsconfig/blob/main/tsconfig.json
-    "moduleDetection": "force",
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "lib": ["es2022"],
-    // "module": "CommonJS",
-    // "moduleResolution": "node",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
-    "target": "es2022",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "pretty": true,
-    "newLine": "lf",
-    "stripInternal": true,
-    "noImplicitOverride": false,
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true,
     "outDir": "dist",
     "noUncheckedIndexedAccess": false,
     "strictPropertyInitialization": false,
+    "noImplicitOverride": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
-    "paths": {
-      // https://github.com/bevry/istextorbinary/issues/270
-      // voids the bad types or else ncc fails
-      "istextorbinary": ["*.sink.d.ts"]
-    }
+    "lib": ["es2021", "dom"]
   }
 }

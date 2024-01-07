@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsLowercase, IsNotIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import blocklist from '../../../blocklist.json' assert { type: 'json' };
+import blocklist from '../../../blocklist.json';
 
 @InputType()
 export class CreateUserDto {

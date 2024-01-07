@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import type { Language } from 'prism-react-renderer';
-import { Fragment, memo } from 'react';
+import { Children, Fragment, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { SyntaxHighlighter } from './syntax-highlighter/syntax-highlighter';
@@ -18,7 +18,7 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
     'prose-blockquote:font-normal prose-blockquote:not-italic',
     // make inline `code` blocks purple
     'prose-code:text-primary',
-    className
+    className,
   );
 
   return (
@@ -32,10 +32,15 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
             // prism syntax highlighter. so this just doesnt render the pre tag.
             return <Fragment>{children}</Fragment>;
           },
-          code({ inline, className, children, ...rest }) {
-            const languageMatch = !inline && className && LANGUAGE_REGEX.exec(className);
-            const text = languageMatch ? children.filter((child) => typeof child === 'string').join(' ') : null;
-            if (inline || !languageMatch || !text) {
+          code({ className, children, ...rest }) {
+            const languageMatch = className && LANGUAGE_REGEX.exec(className);
+            const text = languageMatch
+              ? Children.toArray(children)
+                  .filter((child) => typeof child === 'string')
+                  .join(' ')
+              : null;
+
+            if (!languageMatch || !text) {
               return (
                 <code className={className} {...rest}>
                   {children}
@@ -45,7 +50,7 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
 
             const language = languageMatch.groups!.language as Language;
             return (
-              <SyntaxHighlighter language={language} className={className} {...rest}>
+              <SyntaxHighlighter language={language} className={className} {...(rest as any)}>
                 {text}
               </SyntaxHighlighter>
             );

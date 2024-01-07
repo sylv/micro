@@ -678,8 +678,15 @@ export function useGetFilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
 }
+export function useGetFilesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetFilesQuery, GetFilesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetFilesQuery, GetFilesQueryVariables>(GetFilesDocument, options);
+}
 export type GetFilesQueryHookResult = ReturnType<typeof useGetFilesQuery>;
 export type GetFilesLazyQueryHookResult = ReturnType<typeof useGetFilesLazyQuery>;
+export type GetFilesSuspenseQueryHookResult = ReturnType<typeof useGetFilesSuspenseQuery>;
 export type GetFilesQueryResult = Apollo.QueryResult<GetFilesQuery, GetFilesQueryVariables>;
 export const GetPastesDocument = gql`
   query GetPastes($first: Float, $after: String) {
@@ -727,8 +734,15 @@ export function useGetPastesLazyQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
 }
+export function useGetPastesSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetPastesQuery, GetPastesQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPastesQuery, GetPastesQueryVariables>(GetPastesDocument, options);
+}
 export type GetPastesQueryHookResult = ReturnType<typeof useGetPastesQuery>;
 export type GetPastesLazyQueryHookResult = ReturnType<typeof useGetPastesLazyQuery>;
+export type GetPastesSuspenseQueryHookResult = ReturnType<typeof useGetPastesSuspenseQuery>;
 export type GetPastesQueryResult = Apollo.QueryResult<GetPastesQuery, GetPastesQueryVariables>;
 export const ConfigDocument = gql`
   query Config {
@@ -775,8 +789,15 @@ export function useConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Con
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
 }
+export function useConfigSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<ConfigQuery, ConfigQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<ConfigQuery, ConfigQueryVariables>(ConfigDocument, options);
+}
 export type ConfigQueryHookResult = ReturnType<typeof useConfigQuery>;
 export type ConfigLazyQueryHookResult = ReturnType<typeof useConfigLazyQuery>;
+export type ConfigSuspenseQueryHookResult = ReturnType<typeof useConfigSuspenseQuery>;
 export type ConfigQueryResult = Apollo.QueryResult<ConfigQuery, ConfigQueryVariables>;
 export const GetUserDocument = gql`
   query GetUser {
@@ -811,8 +832,15 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
 }
+export function useGetUserSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserQuery, GetUserQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+}
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
+export type GetUserSuspenseQueryHookResult = ReturnType<typeof useGetUserSuspenseQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
 export const LoginDocument = gql`
   mutation Login($username: String!, $password: String!, $otp: String) {
@@ -1069,8 +1097,15 @@ export function useGetFileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
 }
+export function useGetFileSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetFileQuery, GetFileQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetFileQuery, GetFileQueryVariables>(GetFileDocument, options);
+}
 export type GetFileQueryHookResult = ReturnType<typeof useGetFileQuery>;
 export type GetFileLazyQueryHookResult = ReturnType<typeof useGetFileLazyQuery>;
+export type GetFileSuspenseQueryHookResult = ReturnType<typeof useGetFileSuspenseQuery>;
 export type GetFileQueryResult = Apollo.QueryResult<GetFileQuery, GetFileQueryVariables>;
 export const DeleteFileDocument = gql`
   mutation DeleteFile($fileId: ID!, $deleteKey: String) {
@@ -1141,8 +1176,15 @@ export function useGetInviteLazyQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
 }
+export function useGetInviteSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetInviteQuery, GetInviteQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetInviteQuery, GetInviteQueryVariables>(GetInviteDocument, options);
+}
 export type GetInviteQueryHookResult = ReturnType<typeof useGetInviteQuery>;
 export type GetInviteLazyQueryHookResult = ReturnType<typeof useGetInviteLazyQuery>;
+export type GetInviteSuspenseQueryHookResult = ReturnType<typeof useGetInviteSuspenseQuery>;
 export type GetInviteQueryResult = Apollo.QueryResult<GetInviteQuery, GetInviteQueryVariables>;
 export const CreateUserDocument = gql`
   mutation CreateUser($user: CreateUserDto!) {
@@ -1261,8 +1303,15 @@ export function useGetPasteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
 }
+export function useGetPasteSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<GetPasteQuery, GetPasteQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetPasteQuery, GetPasteQueryVariables>(GetPasteDocument, options);
+}
 export type GetPasteQueryHookResult = ReturnType<typeof useGetPasteQuery>;
 export type GetPasteLazyQueryHookResult = ReturnType<typeof useGetPasteLazyQuery>;
+export type GetPasteSuspenseQueryHookResult = ReturnType<typeof useGetPasteSuspenseQuery>;
 export type GetPasteQueryResult = Apollo.QueryResult<GetPasteQuery, GetPasteQueryVariables>;
 export const ShortenDocument = gql`
   mutation Shorten($link: String!, $host: String) {

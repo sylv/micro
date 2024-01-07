@@ -1,0 +1,31 @@
+{
+  "indent": "  ",
+  "sortFirst": [
+    "name",
+    "version",
+    "license",
+    "repository",
+    "author",
+    "type",
+    "main",
+    "private",
+    "types",
+    "module",
+    "exports",
+    "source",
+    "publishConfig",
+    "contributors",
+    "keywords",
+    "files",
+    "workspaces",
+    "engines",
+    "scripts",
+    "contributors",
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "keywords",
+    "mikro-orm",
+    "jest"
+  ]
+}

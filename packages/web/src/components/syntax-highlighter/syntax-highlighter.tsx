@@ -24,7 +24,7 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
           const containerClasses = clsx(
             'text-left overflow-x-auto h-full relative',
             highlighterClasses,
-            additionalClasses
+            additionalClasses,
           );
 
           return (
@@ -43,5 +43,5 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
         }}
       </Highlight>
     );
-  }
+  },
 );

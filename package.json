@@ -1,22 +1,24 @@
 {
   "name": "micro",
   "version": "1.0.0",
+  "license": "GPL-3.0",
   "repository": "https://github.com/sylv/micro.git",
   "author": "Ryan <ryan@sylver.me>",
-  "license": "GPL-3.0",
   "private": true,
-  "packageManager": "pnpm@7.0.0",
   "engines": {
     "node": ">=16",
     "pnpm": ">=7"
   },
   "scripts": {
-    "lint": "turbo run lint",
     "build": "turbo run build",
-    "test": "turbo run test",
-    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}"
+    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}",
+    "lint": "turbo run lint",
+    "sync": "syncpack format && syncpack fix-mismatches",
+    "test": "turbo run test"
   },
   "devDependencies": {
-    "turbo": "1.10.13"
-  }
+    "syncpack": "^12.3.0",
+    "turbo": "1.11.3"
+  },
+  "packageManager": "pnpm@7.0.0"
 }

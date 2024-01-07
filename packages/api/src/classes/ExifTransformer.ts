@@ -16,7 +16,7 @@ export class ExifTransformer extends Transform {
   private static readonly maxMarkerLength = Math.max(
     ExifTransformer.exifMarker.length,
     ExifTransformer.xmpMarker.length,
-    ExifTransformer.flirMarker.length
+    ExifTransformer.flirMarker.length,
   );
 
   private remainingBytes?: number;
