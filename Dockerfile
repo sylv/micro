@@ -57,7 +57,6 @@ COPY --from=build /usr/src/micro/packages/web/.next/standalone ./packages/web/
 
 COPY wrapper.sh .
 RUN chmod +x ./wrapper.sh
-RUN apk add --no-cache nodejs
 
 # run the app
 USER bun
