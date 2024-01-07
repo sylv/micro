@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=next,tailwind,nest,typescript,docker,graphql" />
+  <img src="https://skillicons.dev/icons?i=typescript,bun,next,tailwind,nest,docker,graphql" />
   <br/>
   <a href="https://discord.gg/VDMX6VQRZm"><kbd>🔵 discord</kbd></a> <a href="https://micro.sylo.digital"><kbd>🟢 hosted instance</kbd></a>
 </p>

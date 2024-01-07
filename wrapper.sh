@@ -8,7 +8,7 @@ cleanup() {
 # Trap signals and errors
 trap cleanup EXIT HUP INT QUIT PIPE TERM ERR
 
-cd packages/api && node ./dist/main.js &
+cd packages/api && bun run ./dist/main.js &
 cd packages/web && node ./server.js &
 
 wait -n

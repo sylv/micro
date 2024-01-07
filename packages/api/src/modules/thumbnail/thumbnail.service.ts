@@ -23,7 +23,7 @@ export class ThumbnailService {
   private static readonly IMAGE_TYPES = new Set(
     Object.keys(sharp.format)
       .map((key) => mime.lookup(key))
-      .filter((key) => key && key.startsWith('image'))
+      .filter((key) => key && key.startsWith('image')),
   );
 
   private static readonly VIDEO_TYPES = new Set([
@@ -42,7 +42,7 @@ export class ThumbnailService {
     @InjectRepository('Thumbnail') private readonly thumbnailRepo: EntityRepository<Thumbnail>,
     @InjectRepository('File') private readonly fileRepo: EntityRepository<File>,
     private readonly storageService: StorageService,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
   ) {}
 
   async getThumbnail(fileId: string) {

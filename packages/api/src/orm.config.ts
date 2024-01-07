@@ -3,7 +3,7 @@
 import { FlushMode } from '@mikro-orm/core';
 import type { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { Logger, NotFoundException } from '@nestjs/common';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import { config } from './config.js';
 import { FileMetadata } from './modules/file/file-metadata.embeddable.js';
 import { File } from './modules/file/file.entity.js';
@@ -13,9 +13,6 @@ import { Paste } from './modules/paste/paste.entity.js';
 import { Thumbnail } from './modules/thumbnail/thumbnail.entity.js';
 import { UserVerification } from './modules/user/user-verification.entity.js';
 import { User } from './modules/user/user.entity.js';
-import { fileURLToPath } from 'url';
-
-process.env.MIKRO_ORM_DYNAMIC_IMPORTS = 'true';
 
 export const ORM_LOGGER = new Logger('MikroORM');
 export const MIGRATIONS_TABLE_NAME = 'mikro_orm_migrations';
@@ -33,7 +30,7 @@ export default {
     throw new NotFoundException();
   },
   migrations: {
-    path: join(fileURLToPath(dirname(import.meta.url)), 'migrations'),
+    path: join(import.meta.dir, 'migrations'),
     tableName: MIGRATIONS_TABLE_NAME,
   },
 } as MikroOrmModuleSyncOptions;

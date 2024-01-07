@@ -1,64 +1,65 @@
-FROM node:18-alpine AS deps
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN apk add --no-cache libc6-compat make clang build-base python3
-RUN npm i -g pnpm
-
+# use the official Bun image
+# see all versions at https://hub.docker.com/r/oven/bun/tags
+FROM oven/bun:1-alpine as base
 WORKDIR /usr/src/micro
-
-COPY pnpm-lock.yaml pnpm-workspace.yaml ./ 
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    pnpm fetch
+ENV NODE_ENV=production
 
 
 
 
-FROM node:18-alpine AS builder 
-ENV NEXT_TELEMETRY_DISABLED 1
 
-WORKDIR /usr/src/micro
+# install dependencies into temp directory
+# this will cache them and speed up future builds
+FROM base AS install
 
-RUN apk add --no-cache git
-RUN npm i -g pnpm
+RUN mkdir -p /temp/dev
+COPY ./packages/api/package.json /temp/dev/packages/api/
+COPY ./packages/web/package.json /temp/dev/packages/web/
+COPY package.json bun.lockb /temp/dev/
+RUN cd /temp/dev && bun install --frozen-lockfile
 
-COPY --from=deps /usr/src/micro .
-COPY . .
-
-# install all deps
-RUN pnpm install --offline --frozen-lockfile
-# build everthing
-RUN pnpm build
-
-# use "pnpm deploy" to prune the api into a smaller package
-RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    cd packages/api && pnpm --filter @ryanke/micro-api --prod deploy pruned
+# install with --production (exclude devDependencies)
+RUN mkdir -p /temp/prod
+COPY ./packages/api/package.json /temp/prod/packages/api/
+COPY ./packages/web/package.json /temp/prod/packages/web/
+COPY package.json bun.lockb /temp/prod/
+RUN cd /temp/prod && bun install --production
 
 
 
 
-FROM node:18-alpine AS runner 
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
 
-WORKDIR /usr/src/micro
+# copy node_modules from temp directory
+# then copy all (non-ignored) project files into the image
+FROM base AS build
+COPY --from=install /temp/dev/node_modules node_modules
 
-RUN apk add --no-cache ffmpeg
+COPY ./packages/web ./packages/web
+RUN cd ./packages/web && bun run build
 
-# copy file dependencies
-COPY --from=builder /usr/src/micro/packages/web/public ./packages/web/public
-COPY --from=builder /usr/src/micro/packages/web/next.config.js ./packages/web/next.config.js
+COPY ./packages/api ./packages/api
+RUN cd ./packages/api && bun run build
 
-# copy web
-COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/standalone/ ./
-COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/static ./packages/web/.next/static/
 
-# copy api
-COPY --from=builder --chown=node:node /usr/src/micro/packages/api/pruned ./packages/api
 
+
+
+
+# copy production dependencies and source code into final image
+FROM base AS release
+# necessary for sharp, apparently
+RUN apk add --no-cache libstdc++
+
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=build /usr/src/micro/packages/api/dist ./packages/api/dist
+COPY --from=build /usr/src/micro/packages/api/package.json ./packages/api/
+COPY --from=build /usr/src/micro/packages/web/.next/standalone ./packages/web/
 
 COPY wrapper.sh .
 RUN chmod +x ./wrapper.sh
+RUN apk add --no-cache nodejs
 
-USER node
-
-ENTRYPOINT ["./wrapper.sh"]
+# run the app
+USER bun
+EXPOSE 3000/tcp
+CMD [ "./wrapper.sh" ]

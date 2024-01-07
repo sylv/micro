@@ -4,10 +4,17 @@
   "compilerOptions": {
     "outDir": "dist",
     "noUncheckedIndexedAccess": false,
-    "strictPropertyInitialization": false,
-    "noImplicitOverride": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es2021", "dom"]
+    "strictPropertyInitialization": false,
+    "noImplicitOverride": false,
+    "types": ["vitest/importMeta", "@types/bun"],
+
+    // Bun options
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler"
   }
 }
