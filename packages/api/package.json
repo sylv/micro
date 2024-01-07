@@ -51,7 +51,7 @@
     "stream-size": "^0.0.6"
   },
   "devDependencies": {
-    "@atlasbot/configs": "^10.5.14",
+    "@atlasbot/configs": "^10.5.15",
     "@mikro-orm/cli": "^5.9.7",
     "@swc/core": "^1.3.102",
     "@types/bcryptjs": "^2.4.6",
