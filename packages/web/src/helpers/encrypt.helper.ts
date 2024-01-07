@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-code-point */
 const ENCRYPTION_ALGORITHM = 'AES-GCM';
 const ENCRYPTION_LENGTH = 256;
 
@@ -36,7 +37,7 @@ export async function encryptContent(content: string): Promise<EncryptionResult>
       length: ENCRYPTION_LENGTH,
     },
     true,
-    ['encrypt', 'decrypt']
+    ['encrypt', 'decrypt'],
   );
 
   const encryptedContent = await crypto.subtle.encrypt(
@@ -45,7 +46,7 @@ export async function encryptContent(content: string): Promise<EncryptionResult>
       iv,
     },
     key,
-    new TextEncoder().encode(content)
+    new TextEncoder().encode(content),
   );
 
   const ivString = arrayBufferToBase64(iv);
@@ -68,7 +69,7 @@ export async function decryptContent(data: EncryptionResult): Promise<string> {
         name: ENCRYPTION_ALGORITHM,
       },
       true,
-      ['encrypt', 'decrypt']
+      ['encrypt', 'decrypt'],
     );
 
     const decryptedContent = await crypto.subtle.decrypt(
@@ -77,7 +78,7 @@ export async function decryptContent(data: EncryptionResult): Promise<string> {
         iv: base64ToArrayBuffer(iv),
       },
       key,
-      base64ToArrayBuffer(encryptedContent)
+      base64ToArrayBuffer(encryptedContent),
     );
 
     return new TextDecoder().decode(decryptedContent);

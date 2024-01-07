@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Menu } from '@headlessui/react';
 import clsx from 'clsx';
 import type { FC, ReactNode } from 'react';

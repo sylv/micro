@@ -133,14 +133,14 @@ export default function Upload() {
             </Select>
             <Button onClick={handleUpload}>Upload</Button>
           </div>
-          <span
+          <button
             className="mt-4 cursor-pointer text-primary"
             onClick={() => {
               setFile(null);
             }}
           >
             Cancel
-          </span>
+          </button>
         </Card>
       </Container>
     );

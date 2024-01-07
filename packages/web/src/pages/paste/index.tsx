@@ -157,15 +157,15 @@ export default function Paste() {
               placeholder="Markdown, code or plain text"
             />
             <div className="flex gap-2 justify-end flex-wrap">
-              <label className="flex gap-2 items-center">
+              <label className="flex gap-2 items-center" htmlFor="burn">
                 <Checkbox id="burn" />
                 <span className="truncate">Destroy after viewing</span>
               </label>
-              <label className="flex gap-2 items-center">
+              <label className="flex gap-2 items-center" htmlFor="paranoid">
                 <Checkbox id="paranoid" />
                 Long ID
               </label>
-              <label className="flex gap-2 items-center">
+              <label className="flex gap-2 items-center" htmlFor="encrypt">
                 <Checkbox id="encrypt" />
                 Encrypt
               </label>

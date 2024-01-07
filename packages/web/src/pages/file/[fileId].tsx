@@ -22,13 +22,13 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
 }) => {
   const classes = clsx(
     'flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300',
-    className
+    className,
   );
 
   return (
-    <span className={classes} onClick={onClick}>
+    <button className={classes} onClick={onClick}>
       {children}
-    </span>
+    </button>
   );
 };
 

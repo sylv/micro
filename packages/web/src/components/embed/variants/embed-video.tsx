@@ -23,9 +23,11 @@ EmbedVideo.embeddable = (data: Embeddable) => {
   switch (data.type) {
     case 'video/mp4':
     case 'video/webm':
-    case 'video/ogg':
+    case 'video/ogg': {
       return true;
-    default:
+    }
+    default: {
       return false;
+    }
   }
 };

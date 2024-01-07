@@ -52,21 +52,17 @@ export const FileList: FC = () => {
         {!source.data && <PageLoader />}
         {filter === 'files' && (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {files.data?.user.files.edges.map(({ node }) => (
-              <FileCard key={node.id} file={node} />
-            ))}
+            {files.data?.user.files.edges.map(({ node }) => <FileCard key={node.id} file={node} />)}
           </div>
         )}
         {filter === 'pastes' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {pastes.data?.user.pastes.edges.map(({ node }) => (
-              <PasteCard key={node.id} paste={node} />
-            ))}
+            {pastes.data?.user.pastes.edges.map(({ node }) => <PasteCard key={node.id} paste={node} />)}
           </div>
         )}
         {!source.loading && !hasContent && (
           <Card className="text-gray-500">
-            You haven't uploaded anything yet. Once you upload something, it will appear here.
+            You haven&apos;t uploaded anything yet. Once you upload something, it will appear here.
           </Card>
         )}
       </div>

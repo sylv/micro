@@ -39,9 +39,11 @@ EmbedImage.embeddable = (data: Embeddable) => {
     case 'image/svg+xml':
     case 'image/webp':
     case 'image/bmp':
-    case 'image/tiff':
+    case 'image/tiff': {
       return true;
-    default:
+    }
+    default: {
       return false;
+    }
   }
 };

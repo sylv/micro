@@ -120,7 +120,7 @@ export default function Generate() {
                     such as Google Authenticator and Authy.
                   </p>
                   <p className="text-xs text-gray-600">
-                    If you can't scan the QR code, you can enter the code{' '}
+                    If you can&apos;t scan the QR code, you can enter the code{' '}
                     <code className="text-purple-400">{result.generateOTP.secret}</code> manually.
                   </p>
                 </div>
@@ -148,7 +148,7 @@ export default function Generate() {
             disabled={currentStep === 0}
             className={clsx(
               `text-gray-400 flex items-center gap-1 hover:underline`,
-              currentStep === 0 && 'opacity-0 pointer-events-none'
+              currentStep === 0 && 'opacity-0 pointer-events-none',
             )}
           >
             <ChevronLeft className="h-4 w-4" /> Back

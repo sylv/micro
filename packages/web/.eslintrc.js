@@ -3,5 +3,9 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.json',
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-floating-promises': 'off',
+    'jsx-a11y/no-autofocus': 'off',
+    'jsx-a11y/media-has-caption': 'off',
+  },
 };
