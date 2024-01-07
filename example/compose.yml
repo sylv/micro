@@ -13,8 +13,8 @@ services:
     image: postgres:12-alpine
     restart: unless-stopped
     environment:
-      # lleaving this as default should be fine as postgres will only ever be exposed to services
-      # in this docker-compose file, but you might still want to consider changing it to something more secure.
+      # leaving this as default should be fine as postgres will only ever be exposed to services
+      # in this compose file, but you might still want to consider changing it to something more secure.
       - POSTGRES_PASSWORD=youshallnotpass
       - POSTGRES_USER=micro
       - POSTGRES_DB=micro
