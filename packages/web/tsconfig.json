@@ -1,7 +1,8 @@
 {
   "include": [
     "./src/**/*",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules/*"
@@ -37,6 +38,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowJs": true,
-    "incremental": true
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   }
 }

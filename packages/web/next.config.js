@@ -1,10 +1,6 @@
-const path = require('path');
-
+/** @type {import('next').NextConfig} */
 module.exports = {
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
   eslint: {
     // todo: eslint is broken with typescript 5.2 and every file errors out,
     // this is temporary to get it to build with eslint broken.

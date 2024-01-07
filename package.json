@@ -5,20 +5,18 @@
   "repository": "https://github.com/sylv/micro.git",
   "author": "Ryan <ryan@sylver.me>",
   "private": true,
-  "engines": {
-    "node": ">=16",
-    "pnpm": ">=7"
-  },
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "build": "turbo run build",
-    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}",
     "lint": "turbo run lint",
-    "sync": "syncpack format && syncpack fix-mismatches",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}",
+    "sync": "syncpack format && syncpack fix-mismatches"
   },
   "devDependencies": {
     "syncpack": "^12.3.0",
     "turbo": "1.11.3"
-  },
-  "packageManager": "pnpm@7.0.0"
+  }
 }

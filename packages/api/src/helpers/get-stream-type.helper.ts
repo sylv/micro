@@ -2,6 +2,7 @@ import { fileTypeFromBuffer } from 'file-type';
 import * as mimeType from 'mime-types';
 import path from 'path';
 import type { PassThrough } from 'stream';
+// @ts-expect-error type error? i guess?
 import { isBinary } from 'istextorbinary';
 
 const DEFAULT_TYPE = 'application/octet-stream';

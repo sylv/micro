@@ -3,10 +3,13 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { nanoid } from 'nanoid';
 import path from 'path';
-import { ExifTransformer } from '../../classes/ExifTransformer.js';
 import { default as getSizeTransform } from 'stream-size';
-import { pipeline } from 'stream/promises';
+import { ExifTransformer } from '../../classes/ExifTransformer.js';
 import { config } from '../../config.js';
+
+// @ts-expect-error @types/bun is missing this but bun supports it (probably)
+// todo: in the future this should work™️
+import { pipeline } from 'stream/promises';
 
 @Injectable()
 export class StorageService {
@@ -25,8 +28,9 @@ export class StorageService {
     try {
       const hashStream = crypto.createHash('sha256');
       const exifTransform = new ExifTransformer();
-      const sizeTransform = getSizeTransform.default(config.uploadLimit);
+      const sizeTransform = getSizeTransform(config.uploadLimit);
       const writeStream = fs.createWriteStream(uploadPath);
+
       await Promise.all([
         // prettier-ignore
         pipeline(stream, hashStream),
