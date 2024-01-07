@@ -21,7 +21,7 @@ const schema = strictObject({
   allowTypes: z
     .union([array(string()), string()])
     .optional()
-    .transform((value) => new Set(value ? expandMime(value) : [])),
+    .transform((value) => (value ? new Set(expandMime(value)) : null)),
   storagePath: string(),
   restrictFilesToHost: boolean().default(true),
   purge: strictObject({
