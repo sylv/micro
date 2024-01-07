@@ -41,7 +41,7 @@ export default function ViewPaste() {
 
     setBurnUnless(burnUnless);
     url.searchParams.delete('burn_unless');
-    window.history.replaceState(null, '', url.href);
+    window.history.replaceState(window.history.state, '', url.href);
   }, [router]);
 
   useEffect(() => {
