@@ -2,11 +2,9 @@ import type { FC } from 'react';
 import { Fragment } from 'react';
 import { usePaths } from '../../hooks/usePaths';
 import { useUser } from '../../hooks/useUser';
-import { Dropdown } from '../dropdown/dropdown';
-import { DropdownDivider } from '../dropdown/dropdown-divider';
-import { DropdownTab } from '../dropdown/dropdown-tab';
 import { Link } from '../link';
 import { UserPill } from '../user-pill';
+import { Dropdown, DropdownDivider, DropdownTab } from '../dropdown';
 
 export interface HeaderUserProps {
   username: string;

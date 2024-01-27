@@ -8,10 +8,17 @@ import { ResourceLocations } from '../../types/resource-locations.type.js';
 import { UserId } from '../auth/auth.decorators.js';
 import { OptionalJWTAuthGuard } from '../auth/guards/optional-jwt.guard.js';
 import { File } from './file.entity.js';
+import { StorageService } from '../storage/storage.service.js';
+import isValidUtf8 from 'utf-8-validate';
+import { isLikelyBinary } from '../../helpers/is-likely-binary.js';
 
 @Resolver(() => File)
 export class FileResolver {
-  constructor(@InjectRepository(File) private readonly fileRepo: EntityRepository<File>) {}
+  private static readonly MAX_PREVIEWABLE_TEXT_SIZE = 1 * 1024 * 1024; // 1 MB
+  constructor(
+    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
+    private storageService: StorageService,
+  ) {}
 
   @Query(() => File)
   @UseGuards(OptionalJWTAuthGuard)
@@ -27,7 +34,7 @@ export class FileResolver {
   async deleteFile(
     @UserId() userId: string,
     @Args('fileId', { type: () => ID }) fileId: string,
-    @Args('key', { nullable: true }) deleteKey?: string
+    @Args('key', { nullable: true }) deleteKey?: string,
   ) {
     const file = await this.fileRepo.findOneOrFail(fileId, { populate: ['deleteKey'] });
     if (file.owner.id !== userId && (!deleteKey || file.deleteKey !== deleteKey)) {
@@ -36,6 +43,30 @@ export class FileResolver {
 
     await this.fileRepo.removeAndFlush(file);
     return true;
+  }
+
+  @ResolveField(() => String, { nullable: true })
+  async textContent(@Parent() file: File) {
+    if (file.isUtf8 === false) return null;
+    if (file.size > FileResolver.MAX_PREVIEWABLE_TEXT_SIZE) return null;
+    if (isLikelyBinary(file.type)) return null;
+
+    const stream = this.storageService.createReadStream(file.hash);
+    const chunks = [];
+    for await (const chunk of stream) {
+      const isUtf8 = isValidUtf8(chunk);
+      if (!isUtf8) {
+        const ref = this.fileRepo.getReference(file.id);
+        ref.isUtf8 = false;
+        await this.fileRepo.persistAndFlush(ref);
+        return null;
+      }
+
+      chunks.push(chunk);
+    }
+
+    const buffer = Buffer.concat(chunks);
+    return buffer.toString();
   }
 
   @ResolveField(() => String)

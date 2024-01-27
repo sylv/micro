@@ -8,8 +8,8 @@ cleanup() {
 # Trap signals and errors
 trap cleanup EXIT HUP INT QUIT PIPE TERM ERR
 
-cd packages/api && node ./dist/main.js &
-cd packages/web && node ./server.js &
+cd packages/api && npm run start &
+cd packages/web && npm run start &
 
 wait -n
 exit $?

@@ -1,10 +1,13 @@
-import NextLink from 'next/link';
-import type { FC, HTMLAttributes } from 'react';
+import { forwardRef, Fragment, type HTMLAttributes } from 'react';
 
 export interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;
 }
 
-export const Link: FC<LinkProps> = ({ children, ...rest }) => {
-  return <NextLink {...rest}>{children}</NextLink>;
-};
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(({ children, ...rest }, ref) => {
+  return (
+    <a {...rest} ref={ref}>
+      {children}
+    </a>
+  );
+});

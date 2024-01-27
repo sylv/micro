@@ -1,10 +1,10 @@
-import { ApolloError } from '@apollo/client';
+import { GraphQLError } from 'graphql';
 import { HTTPError } from './http.helper';
 import { isObject } from './is-object.helper';
 
 export function getErrorMessage(error: unknown): string | undefined {
   if (typeof error === 'string') return error;
-  if (error instanceof ApolloError) {
+  if (error instanceof GraphQLError) {
     return error.message;
   }
 

@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import * as avatar from 'generate-avatar';
 import type { FC } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 export interface AvatarProps {
   userId: string;
@@ -13,15 +13,9 @@ export const Avatar: FC<AvatarProps> = (props) => {
   const classes = clsx('overflow-hidden rounded-full select-none', props.className);
   const containerRef = useRef<HTMLDivElement>(null);
   const svg = useMemo(() => {
-    return avatar.generateFromString(props.userId);
+    const result = avatar.generateFromString(props.userId);
+    return result.replace(/(width|height)="(\d+)"/g, '$1="100%"');
   }, [props.userId]);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.firstElementChild?.setAttribute('height', 'inherit');
-      containerRef.current.firstElementChild?.setAttribute('width', 'inherit');
-    }
-  }, [containerRef]);
 
   return <div className={classes} dangerouslySetInnerHTML={{ __html: svg }} ref={containerRef} />;
 };

@@ -1,5 +1,4 @@
-FROM node:18-alpine AS deps
-ENV NEXT_TELEMETRY_DISABLED 1
+FROM node:20-alpine AS deps
 
 RUN apk add --no-cache libc6-compat make clang build-base python3
 RUN npm i -g pnpm
@@ -13,8 +12,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 
 
 
-FROM node:18-alpine AS builder 
-ENV NEXT_TELEMETRY_DISABLED 1
+FROM node:20-alpine AS builder 
 
 WORKDIR /usr/src/micro
 
@@ -36,8 +34,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 
 
 
-FROM node:18-alpine AS runner 
-ENV NEXT_TELEMETRY_DISABLED 1
+FROM node:20-alpine AS runner 
 ENV NODE_ENV production
 
 WORKDIR /usr/src/micro
@@ -45,12 +42,8 @@ WORKDIR /usr/src/micro
 RUN apk add --no-cache ffmpeg
 
 # copy file dependencies
-COPY --from=builder /usr/src/micro/packages/web/public ./packages/web/public
-COPY --from=builder /usr/src/micro/packages/web/next.config.js ./packages/web/next.config.js
-
-# copy web
-COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/standalone/ ./
-COPY --from=builder --chown=node:node /usr/src/micro/packages/web/.next/static ./packages/web/.next/static/
+COPY --from=builder --chown=node:node /usr/src/micro/packages/web/dist/ ./packages/web/dist/
+COPY --from=builder --chown=node:node /usr/src/micro/packages/web/package.json ./packages/web/
 
 # copy api
 COPY --from=builder --chown=node:node /usr/src/micro/packages/api/pruned ./packages/api

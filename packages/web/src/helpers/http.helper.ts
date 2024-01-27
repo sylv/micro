@@ -3,7 +3,10 @@ import { getReasonPhrase } from 'http-status-codes';
 export class HTTPError extends Error {
   readonly status: number;
   readonly text: string;
-  constructor(readonly response: Response, readonly body: any) {
+  constructor(
+    readonly response: Response,
+    readonly body: any,
+  ) {
     const message = body?.message ?? response.statusText;
     const messageText = Array.isArray(message) ? message.join(', ') : message;
     const responseText = getReasonPhrase(response.status);
@@ -15,7 +18,7 @@ export class HTTPError extends Error {
 }
 
 export const isServer = typeof window === 'undefined';
-export const apiUri = isServer ? process.env.API_URL : `/api`;
+export const apiUri = isServer ? process.env.FRONTEND_API_URL : `/api`;
 
 export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
   const hasProtocol = pathOrUrl.startsWith('http');

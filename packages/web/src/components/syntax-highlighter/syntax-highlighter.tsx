@@ -19,8 +19,7 @@ export const SyntaxHighlighter = memo<SyntaxHighlighterProps>(
 
     return (
       <Highlight theme={theme} code={trimmed} language={language}>
-        {({ className: highlighterClasses, style, tokens, getLineProps, getTokenProps }) => {
-          console.log(highlighterClasses);
+        {({ className: highlighterClasses, tokens, getLineProps, getTokenProps }) => {
           const containerClasses = clsx(
             'text-left overflow-x-auto h-full relative',
             highlighterClasses,

@@ -1,27 +1,49 @@
-import { useAsync } from '@ryanke/pandora';
-import Router, { useRouter } from 'next/router';
+import { TypedDocumentNode, useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { resetClient } from '../apollo';
-import type { LoginMutationVariables } from '../generated/graphql';
-import { useGetUserQuery, useLoginMutation, useLogoutMutation } from '../generated/graphql';
+import { graphql } from '../@generated';
+import type { GetUserQuery, LoginMutationVariables, RegularUserFragment } from '../@generated/graphql';
+import { navigate, reload } from '../helpers/routing';
+import { useAsync } from './useAsync';
 
-export const useUser = (redirect = false) => {
-  const user = useGetUserQuery();
-  const router = useRouter();
-  const [loginMutation] = useLoginMutation();
-  const [logoutMutation] = useLogoutMutation();
+const RegularUserFragment = graphql(`
+  fragment RegularUser on User {
+    id
+    username
+    email
+    verifiedEmail
+  }
+`);
+
+const UserQuery = graphql(`
+  query GetUser {
+    user {
+      ...RegularUser
+    }
+  }
+`);
+
+const LoginMutation = graphql(`
+  mutation Login($username: String!, $password: String!, $otp: String) {
+    login(username: $username, password: $password, otpCode: $otp) {
+      ...RegularUser
+    }
+  }
+`);
+
+const LogoutMutation = graphql(`
+  mutation Logout {
+    logout
+  }
+`);
+
+export const useLoginUser = () => {
   const [otp, setOtp] = useState(false);
-
+  const [loginMutation] = useMutation(LoginMutation);
   const [login] = useAsync(async (variables: LoginMutationVariables) => {
     try {
-      await loginMutation({
-        variables: variables,
-      });
-
-      await user.refetch();
-      Router.push('/dashboard');
+      await loginMutation({ variables });
+      navigate('/dashboard');
     } catch (error: any) {
-      console.log({ error });
       if (error.message.toLowerCase().includes('otp')) {
         setOtp(true);
       }
@@ -30,22 +52,46 @@ export const useUser = (redirect = false) => {
     }
   });
 
+  return {
+    login,
+    otpRequired: otp,
+  };
+};
+
+export const useLogoutUser = () => {
+  const [logoutMutation] = useMutation(LogoutMutation);
   const [logout] = useAsync(async () => {
-    await logoutMutation();
-    resetClient();
+    await logoutMutation({});
+    reload();
   });
 
+  return { logout };
+};
+
+export const useUserRedirect = (
+  data: RegularUserFragment | null | undefined,
+  loading: boolean,
+  redirect: boolean | undefined,
+) => {
   useEffect(() => {
-    if (!user.data && !user.loading && redirect) {
-      router.push(`/login?to=${router.asPath}`);
+    if (!data && !loading && redirect) {
+      navigate(`/login?to=${window.location.href}`);
     }
-  }, [router, redirect, user.data, user.loading]);
+  }, [redirect, data, loading]);
+};
+
+export const useUser = <T extends TypedDocumentNode<GetUserQuery, any>>(redirect?: boolean, query?: T) => {
+  const { login, otpRequired } = useLoginUser();
+  const { logout } = useLogoutUser();
+  const { data, loading, error } = useQuery((query || UserQuery) as T);
+
+  useUserRedirect(data?.user, loading, redirect);
 
   return {
-    data: user.data?.user,
-    error: user.error,
-    loading: user.loading,
-    otpRequired: otp,
+    data: data?.user as RegularUserFragment | null | undefined,
+    loading: loading,
+    error: error,
+    otpRequired: otpRequired,
     login: login,
     logout: logout,
   } as const;

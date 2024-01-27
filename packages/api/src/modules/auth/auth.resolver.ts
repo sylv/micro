@@ -1,7 +1,7 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import type { FastifyReply } from 'fastify';
 import ms from 'ms';
 import { rootHost } from '../../config.js';
@@ -60,7 +60,7 @@ export class AuthResolver {
     return true;
   }
 
-  @Mutation(() => OTPEnabledDto)
+  @Query(() => OTPEnabledDto)
   @UseGuards(JWTAuthGuard)
   async generateOTP(@UserId() userId: string) {
     const user = await this.userRepo.findOneOrFail(userId);

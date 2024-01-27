@@ -4,7 +4,7 @@ export interface Embeddable {
   displayName?: string;
   height?: number | null;
   width?: number | null;
-  content?: { data?: string | null; error?: any };
+  textContent?: string | null;
   paths: {
     direct: string;
     view?: string;

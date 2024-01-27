@@ -40,6 +40,9 @@ export class File extends Resource {
   @Field()
   hash: string;
 
+  @Property({ nullable: true })
+  isUtf8?: boolean;
+
   @Embedded(() => FileMetadata, { nullable: true })
   @Field(() => FileMetadata, { nullable: true })
   metadata?: FileMetadata;

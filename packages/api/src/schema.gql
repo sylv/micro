@@ -58,6 +58,7 @@ type File {
   paths: ResourceLocations!
   size: Float!
   sizeFormatted: String!
+  textContent: String
   thumbnail: Thumbnail
   type: String!
   urls: ResourceLocations!
@@ -108,7 +109,6 @@ type Mutation {
   createUser(data: CreateUserDto!): User!
   deleteFile(fileId: ID!, key: String): Boolean!
   disableOTP(otpCode: String!): Boolean!
-  generateOTP: OTPEnabledDto!
   login(otpCode: String, password: String!, username: String!): User!
   logout: Boolean!
   refreshToken: User!
@@ -157,6 +157,7 @@ type PastePageEdge {
 type Query {
   config: Config!
   file(fileId: ID!): File!
+  generateOTP: OTPEnabledDto!
   invite(inviteId: ID!): Invite!
   link(linkId: ID!): Link!
   paste(pasteId: ID!): Paste!

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import Head from 'next/head';
 import { Fragment } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
 import type { Embeddable } from '../embeddable';
 
@@ -9,15 +9,15 @@ export const EmbedImage = ({ data }: { data: Embeddable }) => {
   const containerClasses = clsx(
     'flex items-center justify-center relative overflow-hidden',
     BASE_EMBED_CLASSES,
-    MAX_HEIGHT
+    MAX_HEIGHT,
   );
 
   return (
     <Fragment>
-      <Head>
+      <Helmet>
         <meta name="twitter:image" content={data.paths.direct} />
         <meta property="og:image" content={data.paths.direct} />
-      </Head>
+      </Helmet>
       <div className={containerClasses}>
         <img
           className={imageClasses}

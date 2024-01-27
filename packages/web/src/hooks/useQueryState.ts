@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react';
+import { usePageContext } from '../renderer/usePageContext';
 
 export const useQueryState = <S>(key: string, initialState?: S, parser?: (input: string) => S) => {
-  const [value, setValue] = useState<S>(initialState as any);
-
-  useEffect(() => {
-    const search = new URLSearchParams(window.location.search);
-    const value = search.get(key);
-    if (value) {
-      const result = parser ? parser(value) : (value as any);
-      setValue(result);
+  const pageContext = usePageContext();
+  const [value, setValue] = useState<S>(() => {
+    if (typeof window === 'undefined') {
+      // during SSR, we can grab query params from the page context
+      const value = pageContext.urlParsed.search[key];
+      if (value) {
+        const result = parser ? parser(value) : (value as any);
+        return result;
+      }
     }
-  }, []);
+
+    if (typeof window !== 'undefined' && window.location.search) {
+      // during
+      const search = new URLSearchParams(window.location.search);
+      const value = search.get(key);
+      if (value) {
+        const result = parser ? parser(value) : (value as any);
+        return result;
+      }
+    }
+
+    return initialState;
+  });
 
   useEffect(() => {
     const route = new URL(window.location.href);

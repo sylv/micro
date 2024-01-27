@@ -1,23 +1,63 @@
-import { Breadcrumbs, Card } from '@ryanke/pandora';
+import { useQuery } from '@apollo/client';
 import type { FC } from 'react';
 import { Fragment } from 'react';
+import { graphql } from '../../@generated';
+import { Breadcrumbs } from '../../components/breadcrumbs';
+import { Card } from '../../components/card';
+import { Error } from '../../components/error';
 import { PageLoader } from '../../components/page-loader';
 import { Toggle } from '../../components/toggle';
-import { useGetFilesQuery, useGetPastesQuery } from '../../generated/graphql';
 import { useQueryState } from '../../hooks/useQueryState';
-import ErrorPage from '../../pages/_error';
 import { FileCard } from './cards/file-card';
 import { PasteCard } from './cards/paste-card';
 
 const PER_PAGE = 24;
 
+const GetFilesQuery = graphql(`
+  query GetFiles($after: String) {
+    user {
+      files(first: 24, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            id
+            ...FileCard
+          }
+        }
+      }
+    }
+  }
+`);
+
+const GetPastesQuery = graphql(`
+  query GetPastes($after: String) {
+    user {
+      pastes(first: 24, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            id
+            ...PasteCard
+          }
+        }
+      }
+    }
+  }
+`);
+
 export const FileList: FC = () => {
   const [filter, setFilter] = useQueryState('filter', 'files');
-  const files = useGetFilesQuery({ skip: filter !== 'files', variables: { first: PER_PAGE } });
-  const pastes = useGetPastesQuery({ skip: filter !== 'pastes', variables: { first: PER_PAGE } });
+  const files = useQuery(GetFilesQuery, { skip: filter !== 'files' });
+  const pastes = useQuery(GetPastesQuery, { skip: filter !== 'pastes' });
   const source = filter === 'files' ? files : pastes;
   if (source.error) {
-    return <ErrorPage error={source.error} />;
+    return <Error error={source.error} />;
   }
 
   const currentPageInfo = filter === 'files' ? files.data?.user.files : pastes.data?.user.pastes;

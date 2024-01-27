@@ -45,7 +45,7 @@ export const SignupForm: FC<SignupFormProps> = ({ onSubmit }) => {
           {config.data?.requireEmails && <Input id="email" type="email" placeholder="Email" autoFocus />}
           <Input id="username" type="username" placeholder="Username" autoComplete="username" />
           <Input id="password" type="password" placeholder="Password" autoComplete="new-password" />
-          <Submit className="mt-4" type="submit">
+          <Submit className="mt-4 w-full" type="submit">
             Sign Up
           </Submit>
         </Form>

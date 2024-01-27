@@ -1,9 +1,25 @@
 import clsx from 'clsx';
 import { memo } from 'react';
+import { graphql } from '../../../@generated';
+import { PasteCardFragment } from '../../../@generated/graphql';
 import { Link } from '../../../components/link';
 import { Time } from '../../../components/time';
-import type { PasteCardFragment } from '../../../generated/graphql';
 import { useUser } from '../../../hooks/useUser';
+
+export const PasteCardFrag = graphql(`
+  fragment PasteCard on Paste {
+    id
+    title
+    encrypted
+    burn
+    type
+    createdAt
+    expiresAt
+    urls {
+      view
+    }
+  }
+`);
 
 export interface PasteCardProps {
   paste: PasteCardFragment;

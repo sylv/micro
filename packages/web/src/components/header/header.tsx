@@ -1,14 +1,25 @@
-import { Button, ButtonStyle, Container, useAsync, useOnClickOutside, useToasts } from '@ryanke/pandora';
 import clsx from 'clsx';
 import { Fragment, memo, useRef, useState } from 'react';
-import { Crop } from 'react-feather';
-import { useResendVerificationEmailMutation } from '../../generated/graphql';
+import { FiCrop } from 'react-icons/fi';
+import { useAsync } from '../../hooks/useAsync';
 import { useConfig } from '../../hooks/useConfig';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { usePaths } from '../../hooks/usePaths';
 import { useUser } from '../../hooks/useUser';
+import { Button, ButtonStyle } from '../button';
+import { Container } from '../container';
 import { Input } from '../input/input';
 import { Link } from '../link';
+import { useToasts } from '../toast';
 import { HeaderUser } from './header-user';
+import { graphql } from '../../@generated';
+import { useMutation } from '@apollo/client';
+
+const ResendVerificationEmail = graphql(`
+  mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
+    resendVerificationEmail(data: $data)
+  }
+`);
 
 export const Header = memo(() => {
   const user = useUser();
@@ -21,7 +32,7 @@ export const Header = memo(() => {
   const [resent, setResent] = useState(false);
   const classes = clsx(
     'relative z-20 flex items-center justify-between h-16 my-auto transition',
-    paths.loading && 'pointer-events-none invisible'
+    paths.loading && 'pointer-events-none invisible',
   );
 
   useOnClickOutside(emailInputRef, () => {
@@ -29,7 +40,7 @@ export const Header = memo(() => {
     setShowEmailInput(false);
   });
 
-  const [resendMutation] = useResendVerificationEmailMutation();
+  const [resendMutation] = useMutation(ResendVerificationEmail);
   const [resendVerification, sendingVerification] = useAsync(async () => {
     if (resent || !user.data) return;
     if (!user.data.email && !email) {
@@ -107,7 +118,7 @@ export const Header = memo(() => {
         <nav className={classes}>
           <div className="flex items-center">
             <Link href={paths.home} className="flex">
-              <Crop className="mr-2 text-primary" /> micro
+              <FiCrop className="w-[24px] h-[24px] mr-2 text-primary" /> micro
             </Link>
           </div>
           <div className="flex items-center">

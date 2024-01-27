@@ -1,15 +1,35 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { FileMinus, Trash } from 'react-feather';
+import { FiFileMinus, FiTrash } from 'react-icons/fi';
+import { graphql } from '../../../@generated';
+import { FileCardFragment } from '../../../@generated/graphql';
 import { Link } from '../../../components/link';
-import type { FileCardFragment } from '../../../generated/graphql';
 import { useConfig } from '../../../hooks/useConfig';
 import { MissingPreview } from '../missing-preview';
+
+export const FileCardFrag = graphql(`
+  fragment FileCard on File {
+    id
+    type
+    displayName
+    sizeFormatted
+    thumbnail {
+      width
+      height
+    }
+    paths {
+      thumbnail
+    }
+    urls {
+      view
+    }
+  }
+`);
 
 export interface FileCardProps {
   file: FileCardFragment;
 }
 
-export const FileCard = memo<FileCardProps>(({ file }) => {
+export const FileCard = memo<{ file: FileCardFragment }>(({ file }) => {
   const [loadFailed, setLoadFailed] = useState(false);
   const config = useConfig();
   const url = useMemo(() => {
@@ -47,12 +67,12 @@ export const FileCard = memo<FileCardProps>(({ file }) => {
               }}
             />
           )}
-          {loadFailed && <MissingPreview text="Load Failed" icon={Trash} type={file.type} />}
-          {!file.paths.thumbnail && <MissingPreview text="No Preview" icon={FileMinus} type={file.type} />}
+          {loadFailed && <MissingPreview text="Load Failed" icon={FiTrash} type={file.type} />}
+          {!file.paths.thumbnail && <MissingPreview text="No Preview" icon={FiFileMinus} type={file.type} />}
         </div>
         <div className="py-2 px-3 text-sm text-gray-500 group-hover:text-white transition truncate flex items-center gap-2 justify-between">
           <span className="truncate">{file.displayName}</span>
-          <span className="text-gray-700 text-xs">{file.sizeFormatted}</span>
+          <span className="text-gray-700 text-xs ">{file.sizeFormatted}</span>
         </div>
       </div>
     </Link>

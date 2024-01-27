@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import type { SelectHTMLAttributes } from 'react';
 import React from 'react';
-import { ChevronDown } from 'react-feather';
 import type { InputChildProps } from './container';
 import { InputContainer } from './container';
+import { FiChevronDown } from 'react-icons/fi';
 
 export interface SelectProps extends InputChildProps<SelectHTMLAttributes<HTMLSelectElement>> {}
 
@@ -18,7 +18,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ classN
               {children}
             </select>
             <div className="absolute right-0 top-0 bottom-0 flex items-center justify-center w-10 text-gray-500 pointer-events-none">
-              <ChevronDown size="1em" className="stroke-current" />
+              <FiChevronDown size="1em" className="stroke-current" />
             </div>
           </div>
         );

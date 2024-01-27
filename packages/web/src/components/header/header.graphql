@@ -1,3 +1,0 @@
-mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
-  resendVerificationEmail(data: $data)
-}

@@ -1,17 +1,21 @@
-import { Container, Spinner } from '@ryanke/pandora';
 import clsx from 'clsx';
-import { Fragment, useState } from 'react';
-import { Download } from 'react-feather';
+import { FC, Fragment, useState } from 'react';
+import { FiDownload } from 'react-icons/fi';
+import { RegularUserFragment } from '../../@generated/graphql';
+import { Container } from '../../components/container';
 import { Section } from '../../components/section';
+import { Spinner } from '../../components/spinner';
 import { Toggle } from '../../components/toggle';
 import { downloadFile } from '../../helpers/download.helper';
 import { generateConfig } from '../../helpers/generate-config.helper';
 import { useConfig } from '../../hooks/useConfig';
-import { useUser } from '../../hooks/useUser';
 import { CustomisationOption } from './customisation-option';
 
-export const ConfigGenerator = () => {
-  const user = useUser();
+export interface ConfigGeneratorProps {
+  user: RegularUserFragment & { token: string };
+}
+
+export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
   const [selectedHosts, setSelectedHosts] = useState<string[]>([]);
   const [embedded, setEmbedded] = useState(true);
   const [pasteShortcut, setPasteShortcut] = useState(true);
@@ -19,15 +23,15 @@ export const ConfigGenerator = () => {
   const downloadable = !!selectedHosts[0];
 
   const download = () => {
-    if (!downloadable || !user.data) return;
+    if (!downloadable) return;
     const { name, content } = generateConfig({
       direct: !embedded,
       hosts: selectedHosts,
       shortcut: pasteShortcut,
-      token: user.data.token,
+      token: user.token,
     });
 
-    const cleanName = name.split('{{username}}').join(user.data.username);
+    const cleanName = name.split('{{username}}').join(user.username);
     downloadFile(cleanName, content);
   };
 
@@ -96,7 +100,7 @@ export const ConfigGenerator = () => {
                     const classes = clsx(
                       'rounded px-2 py-1 truncate transition border border-transparent',
                       isSelected && 'bg-purple-600 text-white',
-                      !isSelected && 'text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white'
+                      !isSelected && 'text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white',
                     );
 
                     return (
@@ -112,7 +116,7 @@ export const ConfigGenerator = () => {
                           }
                         }}
                       >
-                        {user.data ? host.normalised.replace('{{username}}', user.data.username) : host.normalised}
+                        {host.normalised.replace('{{username}}', user.username)}
                       </button>
                     );
                   })}
@@ -126,10 +130,10 @@ export const ConfigGenerator = () => {
           onClick={download}
           className={clsx(
             'mt-8 ml-auto flex items-center gap-1',
-            downloadable ? 'text-purple-400 hover:underline' : 'text-gray-700 cursor-not-allowed'
+            downloadable ? 'text-purple-400 hover:underline' : 'text-gray-700 cursor-not-allowed',
           )}
         >
-          download config <Download className="h-3.5 w-3.5" />
+          download config <FiDownload className="h-3.5 w-3.5" />
         </button>
       </Container>
     </Section>

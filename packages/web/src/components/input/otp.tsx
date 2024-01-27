@@ -1,6 +1,6 @@
-import { Spinner } from '@ryanke/pandora';
 import type { FC } from 'react';
 import { Input } from './input';
+import { Spinner } from '../spinner';
 
 export interface OtpInputProps {
   loading: boolean;
