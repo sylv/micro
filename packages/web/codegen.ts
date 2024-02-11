@@ -4,6 +4,7 @@ export default {
   overwrite: true,
   schema: '../api/src/schema.gql',
   documents: ['src/**/*.tsx'],
+  errorsOnly: true,
   generates: {
     'src/@generated/': {
       preset: 'client',

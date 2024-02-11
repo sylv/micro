@@ -69,23 +69,22 @@ export const useLogoutUser = () => {
 };
 
 export const useUserRedirect = (
-  data: RegularUserFragment | null | undefined,
-  loading: boolean,
+  query: { data: { user: RegularUserFragment } | null | undefined; loading: boolean; called: boolean },
   redirect: boolean | undefined,
 ) => {
   useEffect(() => {
-    if (!data && !loading && redirect) {
+    if (!query.data && !query.loading && query.called && redirect) {
       navigate(`/login?to=${window.location.href}`);
     }
-  }, [redirect, data, loading]);
+  }, [redirect, query.data, query.loading, query.called]);
 };
 
 export const useUser = <T extends TypedDocumentNode<GetUserQuery, any>>(redirect?: boolean, query?: T) => {
   const { login, otpRequired } = useLoginUser();
   const { logout } = useLogoutUser();
-  const { data, loading, error } = useQuery((query || UserQuery) as T);
+  const { data, loading, called, error } = useQuery((query || UserQuery) as T);
 
-  useUserRedirect(data?.user, loading, redirect);
+  useUserRedirect({ data, loading, called }, redirect);
 
   return {
     data: data?.user as RegularUserFragment | null | undefined,

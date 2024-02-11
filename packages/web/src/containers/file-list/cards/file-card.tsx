@@ -3,6 +3,7 @@ import { FiFileMinus, FiTrash } from 'react-icons/fi';
 import { graphql } from '../../../@generated';
 import { FileCardFragment } from '../../../@generated/graphql';
 import { Link } from '../../../components/link';
+import { Skeleton } from '../../../components/skeleton';
 import { useConfig } from '../../../hooks/useConfig';
 import { MissingPreview } from '../missing-preview';
 
@@ -78,3 +79,5 @@ export const FileCard = memo<{ file: FileCardFragment }>(({ file }) => {
     </Link>
   );
 });
+
+export const FileCardSkeleton = () => <Skeleton className="h-44" />;

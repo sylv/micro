@@ -5,13 +5,11 @@ import { graphql } from '../../@generated';
 import { Breadcrumbs } from '../../components/breadcrumbs';
 import { Card } from '../../components/card';
 import { Error } from '../../components/error';
-import { PageLoader } from '../../components/page-loader';
+import { SkeletonList } from '../../components/skeleton';
 import { Toggle } from '../../components/toggle';
 import { useQueryState } from '../../hooks/useQueryState';
-import { FileCard } from './cards/file-card';
+import { FileCard, FileCardSkeleton } from './cards/file-card';
 import { PasteCard } from './cards/paste-card';
-
-const PER_PAGE = 24;
 
 const GetFilesQuery = graphql(`
   query GetFiles($after: String) {
@@ -89,7 +87,11 @@ export const FileList: FC = () => {
         </div>
       </div>
       <div className="pb-5">
-        {!source.data && <PageLoader />}
+        {!source.data && (
+          <SkeletonList count={12} className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+            <FileCardSkeleton />
+          </SkeletonList>
+        )}
         {filter === 'files' && (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
             {files.data?.user.files.edges.map(({ node }) => <FileCard key={node.id} file={node} />)}

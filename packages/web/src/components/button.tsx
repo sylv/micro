@@ -19,6 +19,9 @@ export enum ButtonStyle {
   Disabled = 'bg-dark-300 hover:bg-dark-400 cursor-not-allowed',
 }
 
+export const BASE_BUTTON_CLASSES =
+  'flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition rounded truncate max-h-[2.65em]';
+
 export const Button = forwardRef<any, ButtonProps>(
   (
     {
@@ -38,11 +41,7 @@ export const Button = forwardRef<any, ButtonProps>(
     if (disabled) style = ButtonStyle.Disabled;
     const onClickWrap = disabled || loading ? undefined : onClick;
     const onKeyDownWrap = disabled || loading ? undefined : onKeyDown;
-    const classes = clsx(
-      'flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition rounded truncate max-h-[2.65em]',
-      className,
-      style,
-    );
+    const classes = clsx(BASE_BUTTON_CLASSES, className, style);
 
     return (
       <As

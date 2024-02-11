@@ -2,13 +2,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import copyToClipboard from 'copy-to-clipboard';
 import type { FC, ReactNode } from 'react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { FiDownload, FiShare, FiTrash } from 'react-icons/fi';
 import { graphql } from '../../../@generated';
 import { Container } from '../../../components/container';
 import { Embed } from '../../../components/embed/embed';
 import { Error } from '../../../components/error';
-import { PageLoader } from '../../../components/page-loader';
+import { Skeleton, SkeletonList } from '../../../components/skeleton';
 import { Spinner } from '../../../components/spinner';
 import { Title } from '../../../components/title';
 import { useToasts } from '../../../components/toast';
@@ -114,46 +114,59 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
     return <Error error={file.error} />;
   }
 
-  if (!file.data) {
-    return <PageLoader />;
-  }
-
-  const canDelete = file.data.file.isOwner || deleteKey;
+  const canDelete = file.data?.file.isOwner || deleteKey;
 
   return (
     <Container className="mt-5 md-2 md:mb-5">
-      <Title>{file.data.file.displayName}</Title>
+      {file.data && <Title>{file.data.file.displayName}</Title>}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6 pb-1">
         <div className="flex items-end col-span-5 overflow-hidden whitespace-nowrap pb-1">
-          <h1 className="mr-2 text-xl font-bold md:text-4xl md:break-all">{file.data.file.displayName}</h1>
-          <span className="text-xs text-gray-500">{file.data.file.sizeFormatted}</span>
+          {file.data && (
+            <Fragment>
+              <h1 className="mr-2 text-xl font-bold md:text-4xl md:break-all">{file.data.file.displayName}</h1>
+              <span className="text-xs text-gray-500">{file.data.file.sizeFormatted}</span>
+            </Fragment>
+          )}
+          {!file.data && <Skeleton className="w-1/2 h-8" />}
         </div>
         <div className="col-span-5">
-          <Embed
-            data={{
-              type: file.data.file.type,
-              paths: file.data.file.paths,
-              size: file.data.file.size,
-              displayName: file.data.file.displayName,
-              height: file.data.file.metadata?.height,
-              width: file.data.file.metadata?.width,
-              textContent: file.data.file.textContent,
-            }}
-          />
+          {file.data && (
+            <Embed
+              data={{
+                type: file.data.file.type,
+                paths: file.data.file.paths,
+                size: file.data.file.size,
+                displayName: file.data.file.displayName,
+                height: file.data.file.metadata?.height,
+                width: file.data.file.metadata?.width,
+                textContent: file.data.file.textContent,
+              }}
+            />
+          )}
+          {!file.data && <Skeleton className="w-full h-[50dvh]" />}
         </div>
         <div className="flex md:flex-col">
           <div className="flex text-sm gap-3 text-gray-500 cursor-pointer md:flex-col">
-            <FileOption onClick={copyLink}>
-              <FiShare className="h-4 mr-1" /> Copy link
-            </FileOption>
-            <FileOption onClick={downloadFile}>
-              <FiDownload className="h-4 mr-1" /> Download
-            </FileOption>
-            {canDelete && (
-              <FileOption onClick={deleteFile} className="text-red-400 hover:text-red-500">
-                <FiTrash className="h-4 mr-1" />
-                {deletingFile ? <Spinner size="small" /> : confirm ? 'Are you sure?' : 'Delete'}
-              </FileOption>
+            {file.data && (
+              <Fragment>
+                <FileOption onClick={copyLink}>
+                  <FiShare className="h-4 mr-1" /> Copy link
+                </FileOption>
+                <FileOption onClick={downloadFile}>
+                  <FiDownload className="h-4 mr-1" /> Download
+                </FileOption>
+                {canDelete && (
+                  <FileOption onClick={deleteFile} className="text-red-400 hover:text-red-500">
+                    <FiTrash className="h-4 mr-1" />
+                    {deletingFile ? <Spinner size="small" /> : confirm ? 'Are you sure?' : 'Delete'}
+                  </FileOption>
+                )}
+              </Fragment>
+            )}
+            {!file.data && (
+              <SkeletonList count={3} className="space-y-2">
+                <Skeleton className="w-1/2" />
+              </SkeletonList>
             )}
           </div>
         </div>

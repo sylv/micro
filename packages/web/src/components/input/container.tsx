@@ -41,12 +41,7 @@ export function InputContainer<T extends InputChildPropsBase>({
   const formik = useContext<FormikContextType<any>>(FormikContext);
   const errorMessage = !!(formik && id && formik.touched[id]) && (formik.errors[id] as string);
   if (errorMessage) style = InputStyle.Error;
-  const childClasses = clsx(
-    'w-full h-full px-3 py-2 rounded outline-none border transition duration-75',
-    maxHeight && 'max-h-[calc(2.65em-2px)]',
-    style,
-    className
-  );
+  const childClasses = clsx(BASE_INPUT_CLASSES, maxHeight && BASE_INPUT_MAX_HEIGHT, className, style);
 
   if (formik) {
     if (!id) {
@@ -74,3 +69,6 @@ export function InputContainer<T extends InputChildPropsBase>({
     </Fragment>
   );
 }
+
+export const BASE_INPUT_CLASSES = 'w-full h-full px-3 py-2 rounded outline-none border transition duration-75';
+export const BASE_INPUT_MAX_HEIGHT = 'max-h-[calc(2.65em-2px)]';
