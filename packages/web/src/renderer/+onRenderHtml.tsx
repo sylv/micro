@@ -1,12 +1,14 @@
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
-import { renderToStringWithData } from '@apollo/client/react/ssr';
+import { createClient, fetchExchange, ssrExchange } from 'urql';
 import { HelmetProvider, HelmetServerState } from 'react-helmet-async';
+import { Provider as UrqlProvider } from 'urql';
 import { dangerouslySkipEscape, escapeInject } from 'vike/server';
 import type { OnRenderHtmlAsync } from 'vike/types';
 import { App } from '../app';
-import { typePolicies } from './policy';
+import { renderToStringWithData } from './prepass';
 import { PageProps } from './types';
 import { PageContextProvider } from './usePageContext';
+import { cacheExchange } from '@urql/exchange-graphcache';
+import { cacheOptions } from './cache';
 
 const GRAPHQL_URL = (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + '/graphql';
 
@@ -15,30 +17,30 @@ export const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<O
   const pageProps: PageProps = { routeParams: pageContext.routeParams };
 
   const headers = pageContext.cookies ? { Cookie: pageContext.cookies } : undefined;
-  const client = new ApolloClient({
-    ssrMode: true,
-    cache: new InMemoryCache({ typePolicies }),
-    link: new HttpLink({
-      uri: GRAPHQL_URL,
-      credentials: 'same-origin',
+  const ssr = ssrExchange({ isClient: false });
+  const client = createClient({
+    url: GRAPHQL_URL,
+    exchanges: [ssr, cacheExchange(cacheOptions), fetchExchange],
+    fetchOptions: {
       headers: headers,
-    }),
+      credentials: 'same-origin',
+    },
   });
 
   const helmetContext: { helmet?: HelmetServerState } = {};
   const tree = (
     <PageContextProvider pageContext={pageContext}>
-      <ApolloProvider client={client}>
+      <UrqlProvider value={client}>
         <HelmetProvider context={helmetContext}>
           <App>
             <Page {...pageProps} />
           </App>
         </HelmetProvider>
-      </ApolloProvider>
+      </UrqlProvider>
     </PageContextProvider>
   );
 
-  const pageHtml = await renderToStringWithData(tree);
+  const pageHtml = await renderToStringWithData(client, tree);
   const helmet = helmetContext.helmet!;
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
@@ -59,7 +61,7 @@ export const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<O
   return {
     documentHtml: documentHtml,
     pageContext: {
-      state: client.cache.extract(),
+      state: ssr.extractData(),
     },
   };
 };

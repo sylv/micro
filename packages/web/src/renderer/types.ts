@@ -1,12 +1,12 @@
-import { NormalizedCacheObject } from '@apollo/client';
 import { FC } from 'react';
+import { SSRData } from 'urql';
 
 // https://vike.dev/pageContext#typescript
 declare global {
   namespace Vike {
     interface PageContext {
       Page: FC<PageProps>;
-      state?: NormalizedCacheObject;
+      state?: SSRData;
       pageHtml?: string;
       cookies?: string;
     }

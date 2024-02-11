@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { CombinedError, useQuery } from 'urql';
 import { graphql } from '../@generated';
 
 const ConfigQuery = graphql(`
@@ -24,9 +24,9 @@ const ConfigQuery = graphql(`
 `);
 
 export const useConfig = () => {
-  const config = useQuery(ConfigQuery);
+  const [config] = useQuery({ query: ConfigQuery });
   return {
-    ...config,
+    error: config.error as CombinedError | undefined,
     data: config.data?.config,
   };
 };

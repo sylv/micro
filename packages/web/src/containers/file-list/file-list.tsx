@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import type { FC } from 'react';
 import { Fragment } from 'react';
+import { useQuery } from 'urql';
 import { graphql } from '../../@generated';
 import { Breadcrumbs } from '../../components/breadcrumbs';
 import { Card } from '../../components/card';
@@ -51,9 +51,10 @@ const GetPastesQuery = graphql(`
 
 export const FileList: FC = () => {
   const [filter, setFilter] = useQueryState('filter', 'files');
-  const files = useQuery(GetFilesQuery, { skip: filter !== 'files' });
-  const pastes = useQuery(GetPastesQuery, { skip: filter !== 'pastes' });
+  const [files, filesFetchMore] = useQuery({ query: GetFilesQuery, pause: filter !== 'files' });
+  const [pastes, pastesFetchMore] = useQuery({ query: GetPastesQuery, pause: filter !== 'pastes' });
   const source = filter === 'files' ? files : pastes;
+  const fetchMore = filter === 'files' ? filesFetchMore : pastesFetchMore;
   if (source.error) {
     return <Error error={source.error} />;
   }
@@ -102,7 +103,7 @@ export const FileList: FC = () => {
             {pastes.data?.user.pastes.edges.map(({ node }) => <PasteCard key={node.id} paste={node} />)}
           </div>
         )}
-        {!source.loading && !hasContent && (
+        {!source.fetching && !hasContent && (
           <Card className="text-gray-500">
             You haven&apos;t uploaded anything yet. Once you upload something, it will appear here.
           </Card>
@@ -113,7 +114,7 @@ export const FileList: FC = () => {
           className="w-full bg-dark-200 px-2 py-2 text-gray-500 hover:bg-dark-300 transition"
           type="button"
           onClick={() => {
-            source.fetchMore({
+            fetchMore({
               variables: {
                 after: currentPageInfo.pageInfo.endCursor,
               },

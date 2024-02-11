@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from '@apollo/client';
 import { FC, useEffect } from 'react';
 import { graphql } from '../../../@generated';
 import { Container } from '../../../components/container';
@@ -14,6 +13,7 @@ import { navigate, prefetch } from '../../../helpers/routing';
 import { useAsync } from '../../../hooks/useAsync';
 import { useConfig } from '../../../hooks/useConfig';
 import { PageProps } from '../../../renderer/types';
+import { useQuery, useMutation } from 'urql';
 
 const GetInvite = graphql(`
   query GetInvite($inviteId: ID!) {
@@ -36,23 +36,21 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   const config = useConfig();
   const createToast = useToasts();
   const inviteToken = routeParams.inviteToken;
-  const invite = useQuery(GetInvite, { skip: !inviteToken, variables: { inviteId: inviteToken! } });
+  const [invite] = useQuery({ query: GetInvite, pause: !inviteToken, variables: { inviteId: inviteToken! } });
   const expiresAt = invite.data?.invite.expiresAt;
 
   useEffect(() => {
     prefetch('/login');
   }, []);
 
-  const [createUserMutation] = useMutation(CreateUser);
+  const [, createUserMutation] = useMutation(CreateUser);
   const [onSubmit] = useAsync(async (data: SignupData) => {
     try {
       if (!inviteToken) return;
       await createUserMutation({
-        variables: {
-          user: {
-            ...data,
-            invite: inviteToken,
-          },
+        user: {
+          ...data,
+          invite: inviteToken,
         },
       });
 

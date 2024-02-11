@@ -13,7 +13,7 @@ import { Link } from '../link';
 import { useToasts } from '../toast';
 import { HeaderUser } from './header-user';
 import { graphql } from '../../@generated';
-import { useMutation } from '@apollo/client';
+import { useMutation } from 'urql';
 
 const ResendVerificationEmail = graphql(`
   mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
@@ -40,7 +40,7 @@ export const Header = memo(() => {
     setShowEmailInput(false);
   });
 
-  const [resendMutation] = useMutation(ResendVerificationEmail);
+  const [, resendMutation] = useMutation(ResendVerificationEmail);
   const [resendVerification, sendingVerification] = useAsync(async () => {
     if (resent || !user.data) return;
     if (!user.data.email && !email) {
@@ -51,9 +51,7 @@ export const Header = memo(() => {
     const payload = !user.data.email && email ? { email } : null;
     try {
       await resendMutation({
-        variables: {
-          data: payload,
-        },
+        data: payload,
       });
 
       setShowEmailInput(false);

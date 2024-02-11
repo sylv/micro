@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 
 export interface BreadcrumbsProps {

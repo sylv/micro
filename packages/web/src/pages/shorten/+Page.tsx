@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from 'urql';
 import { Form, Formik } from 'formik';
 import { FC, useState } from 'react';
 import * as Yup from 'yup';
@@ -30,7 +30,7 @@ const Shorten = graphql(`
 `);
 
 export const Page: FC = () => {
-  const [shortenMutation] = useMutation(Shorten);
+  const [, shortenMutation] = useMutation(Shorten);
   const [result, setResult] = useState<string | null>(null);
   const config = useConfig();
 
@@ -48,10 +48,8 @@ export const Page: FC = () => {
           validationSchema={schema}
           onSubmit={async (values) => {
             const result = await shortenMutation({
-              variables: {
-                link: values.url,
-                host: values.host,
-              },
+              link: values.url,
+              host: values.host,
             });
 
             setResult(result.data!.createLink.urls.view);

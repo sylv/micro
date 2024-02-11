@@ -15,10 +15,12 @@ export default defineConfig({
     },
   ],
   optimizeDeps: {
-    include: ['preact', 'preact/devtools', 'preact/debug', 'preact/jsx-dev-runtime', 'preact/hooks'],
+    include: ['preact', 'preact/devtools', 'preact/debug', 'preact/jsx-dev-runtime', 'preact/hooks', 'urql'],
   },
   define: { 'process.env.NODE_ENV': '"production"' },
-  ssr: { noExternal: ['@apollo/client', 'prism-react-renderer', 'qrcode.react', 'formik', 'react-helmet-async'] },
+  ssr: {
+    noExternal: ['preact', 'urql', 'prism-react-renderer', 'qrcode.react', 'formik', 'react-helmet-async'],
+  },
   plugins: [
     preact(),
     ssr({ disableAutoFullBuild: true }),

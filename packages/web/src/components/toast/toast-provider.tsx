@@ -1,9 +1,9 @@
 import { nanoid } from 'nanoid';
 import type { FC, ReactNode } from 'react';
-import React, { Fragment, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ToastContext } from './context';
 import type { ToastProps } from './toast';
-import { Toast, TRANSITION_DURATION } from './toast';
+import { TRANSITION_DURATION, Toast } from './toast';
 
 // spread operators on arrays are to fix this
 // https://stackoverflow.com/questions/56266575/why-is-usestate-not-triggering-re-render

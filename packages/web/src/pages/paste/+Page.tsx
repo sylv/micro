@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { Form, Formik } from 'formik';
 import { FC } from 'react';
 import * as Yup from 'yup';
@@ -15,6 +14,7 @@ import { Title } from '../../components/title';
 import { encryptContent } from '../../helpers/encrypt.helper';
 import { useConfig } from '../../hooks/useConfig';
 import { useUser } from '../../hooks/useUser';
+import { useMutation } from 'urql';
 
 const EXPIRY_OPTIONS = [
   { name: '15 minutes', value: 15 },
@@ -98,7 +98,7 @@ const CreatePaste = graphql(`
 export const Page: FC = () => {
   const user = useUser();
   const config = useConfig();
-  const [pasteMutation] = useMutation(CreatePaste);
+  const [, pasteMutation] = useMutation(CreatePaste);
   if (user.error) {
     return <Error error={user.error} />;
   }
@@ -148,12 +148,9 @@ export const Page: FC = () => {
           }
 
           const paste = await pasteMutation({
-            variables: {
-              input: body,
-            },
+            input: body,
           });
 
-          if (paste.errors && paste.errors[0]) throw paste.errors[0];
           const url = new URL(paste.data!.createPaste.urls.view);
           if (body.burn) url.searchParams.set('burn_unless', user.data.id);
           if (encryptionKey) url.hash = `key=${encryptionKey}`;

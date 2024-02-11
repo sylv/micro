@@ -1,5 +1,5 @@
-import { TypedDocumentNode, useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { CombinedError, TypedDocumentNode, useMutation, useQuery } from 'urql';
 import { graphql } from '../@generated';
 import type { GetUserQuery, LoginMutationVariables, RegularUserFragment } from '../@generated/graphql';
 import { navigate, reload } from '../helpers/routing';
@@ -38,10 +38,10 @@ const LogoutMutation = graphql(`
 
 export const useLoginUser = () => {
   const [otp, setOtp] = useState(false);
-  const [loginMutation] = useMutation(LoginMutation);
+  const [, loginMutation] = useMutation(LoginMutation);
   const [login] = useAsync(async (variables: LoginMutationVariables) => {
     try {
-      await loginMutation({ variables });
+      await loginMutation(variables);
       navigate('/dashboard');
     } catch (error: any) {
       if (error.message.toLowerCase().includes('otp')) {
@@ -59,7 +59,7 @@ export const useLoginUser = () => {
 };
 
 export const useLogoutUser = () => {
-  const [logoutMutation] = useMutation(LogoutMutation);
+  const [, logoutMutation] = useMutation(LogoutMutation);
   const [logout] = useAsync(async () => {
     await logoutMutation({});
     reload();
@@ -69,27 +69,27 @@ export const useLogoutUser = () => {
 };
 
 export const useUserRedirect = (
-  query: { data: { user: RegularUserFragment } | null | undefined; loading: boolean; called: boolean },
+  query: { data?: { user: RegularUserFragment } | null | undefined; fetching: boolean },
   redirect: boolean | undefined,
 ) => {
   useEffect(() => {
-    if (!query.data && !query.loading && query.called && redirect) {
+    if (!query.data && !query.fetching && redirect) {
       navigate(`/login?to=${window.location.href}`);
     }
-  }, [redirect, query.data, query.loading, query.called]);
+  }, [redirect, query.data, query.fetching]);
 };
 
 export const useUser = <T extends TypedDocumentNode<GetUserQuery, any>>(redirect?: boolean, query?: T) => {
   const { login, otpRequired } = useLoginUser();
   const { logout } = useLogoutUser();
-  const { data, loading, called, error } = useQuery((query || UserQuery) as T);
+  const [{ data, fetching, error }] = useQuery({ query: (query || UserQuery) as T });
 
-  useUserRedirect({ data, loading, called }, redirect);
+  useUserRedirect({ data, fetching }, redirect);
 
   return {
     data: data?.user as RegularUserFragment | null | undefined,
-    loading: loading,
-    error: error,
+    fetching: fetching,
+    error: error as CombinedError | undefined,
     otpRequired: otpRequired,
     login: login,
     logout: logout,

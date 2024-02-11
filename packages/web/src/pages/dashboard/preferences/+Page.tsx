@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from '@apollo/client';
 import { FC, Fragment } from 'react';
+import { useMutation, useQuery } from 'urql';
 import { graphql } from '../../../@generated';
-import { GetUserDocument } from '../../../@generated/graphql';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
 import { Button } from '../../../components/button';
 import { Container } from '../../../components/container';
@@ -39,22 +38,20 @@ const UserQueryWithToken = graphql(`
 `);
 
 export const Page: FC = () => {
-  const user = useQuery(UserQueryWithToken);
+  const [user] = useQuery({ query: UserQueryWithToken });
   const { logout } = useLogoutUser();
-  const [refreshMutation] = useMutation(RefreshToken);
+  const [, refreshMutation] = useMutation(RefreshToken);
   const [refresh, refreshing] = useAsync(async () => {
     // eslint-disable-next-line no-alert
     const confirmation = confirm('Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.') // prettier-ignore
     if (!confirmation) return;
-    await refreshMutation();
+    await refreshMutation({});
     await logout();
   });
 
   useUserRedirect(user, true);
 
-  const [disableOTP, disableOTPMut] = useMutation(DisableOtp, {
-    refetchQueries: [{ query: GetUserDocument }],
-  });
+  const [disableOTPMut, disableOTP] = useMutation(DisableOtp);
 
   return (
     <Container>
@@ -125,11 +122,9 @@ export const Page: FC = () => {
         <div className="right flex items-center col-span-full md:col-span-1">
           {user.data && user.data.user.otpEnabled && (
             <OtpInput
-              loading={disableOTPMut.loading}
+              loading={disableOTPMut.fetching}
               onCode={(otpCode) => {
-                disableOTP({
-                  variables: { otpCode },
-                });
+                disableOTP({ otpCode });
               }}
             />
           )}

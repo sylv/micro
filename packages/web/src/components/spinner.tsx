@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import type { FC, HTMLAttributes } from 'react';
-import React from 'react';
 
 export interface SpinnerProps extends HTMLAttributes<SVGElement> {
   size?: 'small' | 'medium' | 'large';

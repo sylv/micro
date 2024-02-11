@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { FC, useEffect, useState } from 'react';
 import { FiBookOpen, FiClock, FiTrash } from 'react-icons/fi';
 import { graphql } from '../../../@generated';
@@ -14,6 +13,7 @@ import { hashToObject } from '../../../helpers/hash-to-object';
 import { navigate } from '../../../helpers/routing';
 import { useUser } from '../../../hooks/useUser';
 import { PageProps } from '../../../renderer/types';
+import { useQuery } from 'urql';
 
 const PasteQuery = graphql(`
   query GetPaste($pasteId: ID!) {
@@ -47,8 +47,9 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   const skipQuery =
     !pasteId || (!confirmedBurn && (burnUnless === undefined || (burnUnless ? burnUnless !== user.data?.id : false)));
 
-  const paste = useQuery(PasteQuery, {
-    skip: skipQuery,
+  const [paste] = useQuery({
+    query: PasteQuery,
+    pause: skipQuery,
     variables: {
       pasteId: pasteId!,
     },

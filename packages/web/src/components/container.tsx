@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import type { FC, ReactNode } from 'react';
-import React from 'react';
 
 export interface ContainerProps {
   centerX?: boolean;

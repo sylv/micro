@@ -1,9 +1,9 @@
-import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
 import copyToClipboard from 'copy-to-clipboard';
 import type { FC, ReactNode } from 'react';
 import { Fragment, useState } from 'react';
 import { FiDownload, FiShare, FiTrash } from 'react-icons/fi';
+import { useMutation, useQuery } from 'urql';
 import { graphql } from '../../../@generated';
 import { Container } from '../../../components/container';
 import { Embed } from '../../../components/embed/embed';
@@ -72,14 +72,15 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   const [deleteKey] = useQueryState<string | undefined>('deleteKey');
   const [confirm, setConfirm] = useState(false);
   const createToast = useToasts();
-  const file = useQuery(GetFile, {
-    skip: !fileId,
+  const [file] = useQuery({
+    query: GetFile,
+    pause: !fileId,
     variables: {
       fileId: fileId as string,
     },
   });
 
-  const [deleteMutation] = useMutation(DeleteFile);
+  const [, deleteMutation] = useMutation(DeleteFile);
   const copyLink = () => {
     copyToClipboard(file.data?.file.urls.view ?? window.location.href);
     createToast({
@@ -100,10 +101,8 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
     }
 
     await deleteMutation({
-      variables: {
-        fileId: file.data.file.id,
-        deleteKey: deleteKey,
-      },
+      fileId: file.data.file.id,
+      deleteKey: deleteKey,
     });
 
     createToast({ text: `Deleted "${file.data.file.displayName}"` });

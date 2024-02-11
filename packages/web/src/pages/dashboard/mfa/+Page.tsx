@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from 'urql';
 import clsx from 'clsx';
 import { QRCodeSVG } from 'qrcode.react';
 import { FC, Fragment, useCallback, useMemo } from 'react';
@@ -32,10 +32,10 @@ const ConfirmOTP = graphql(`
 `);
 
 export const Page: FC = () => {
-  const result = useQuery(GenerateOtp);
+  const [result] = useQuery({ query: GenerateOtp });
   const createToast = useToasts();
   const [currentStep, setCurrentStep] = useQueryState('step', 0, Number);
-  const [confirmOtp] = useMutation(ConfirmOTP);
+  const [, confirmOtp] = useMutation(ConfirmOTP);
 
   const copyable = useMemo(() => {
     if (!result.data) return;
@@ -64,7 +64,7 @@ export const Page: FC = () => {
 
   const [confirm, confirming] = useAsync(async (otpCode: string) => {
     try {
-      await confirmOtp({ variables: { otpCode } });
+      await confirmOtp({ otpCode });
       createToast({ text: 'Successfully enabled 2FA!' });
       navigate('/dashboard', { overwriteLastHistoryEntry: true });
     } catch (error: any) {
@@ -77,7 +77,7 @@ export const Page: FC = () => {
     }
   });
 
-  if (result.loading) return <PageLoader />;
+  if (result.fetching) return <PageLoader />;
   if (!result.data) return <Error error={result.error} />;
 
   return (

@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, type HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 
 export interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;
