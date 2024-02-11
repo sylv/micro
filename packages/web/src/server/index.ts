@@ -11,6 +11,7 @@ import { renderPage } from 'vike/server';
 import { PageContext } from 'vike/types';
 import { REWRITES } from './rewrites';
 import { fileURLToPath } from 'url';
+import url from 'url';
 
 const fileDir = dirname(fileURLToPath(import.meta.url));
 const staticDir = process.env.STATIC_DIR?.replace('{{FILE_DIR}}', fileDir) || resolve('dist/client');
@@ -39,7 +40,8 @@ async function startServer() {
   const instance = Fastify({
     rewriteUrl: (request) => {
       if (!request.url) throw new Error('No url');
-      const { pathname } = new URL(request.url, 'http://localhost');
+      const { pathname } = url.parse(request.url);
+      if (!pathname) return request.url;
 
       // if discord tries to request the html of an image, redirect it straight to the image
       // this means the image is embedded, not the opengraph data for the image.
