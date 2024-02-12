@@ -1,10 +1,7 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "css.validate": false,
-  "less.validate": false,
+  "typescript.preferences.importModuleSpecifier": "relative",
   "npm.scriptExplorerExclude": ["^((?!watch|generate:watch).)*$"],
-  "scss.validate": false,
   "eslint.workingDirectories": [
     {
       "pattern": "./{packages,apps}/*"
@@ -28,8 +25,5 @@
     // const class = 'value'
     // const selectedClass = 'value'
     ["const [a-zA-Z]+s = ['\"`]([^\"`'`]*)"]
-  ],
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": "file:///home/ryan/projects/micro/.github/workflows/build.yaml"
-  }
+  ]
 }

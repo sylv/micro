@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SSRData } from 'urql';
+import { SSRData } from '@urql/preact';
 
 // https://vike.dev/pageContext#typescript
 declare global {

@@ -14,7 +14,7 @@ import { Title } from '../../components/title';
 import { encryptContent } from '../../helpers/encrypt.helper';
 import { useConfig } from '../../hooks/useConfig';
 import { useUser } from '../../hooks/useUser';
-import { useMutation } from 'urql';
+import { useMutation } from '@urql/preact';
 
 const EXPIRY_OPTIONS = [
   { name: '15 minutes', value: 15 },
@@ -164,7 +164,7 @@ export const Page: FC = () => {
               id="content"
               autoComplete="off"
               autoCorrect="off"
-              spellCheck="false"
+              spellCheck={false}
               placeholder="Markdown, code or plain text"
             />
             <div className="flex gap-2 justify-end flex-wrap">

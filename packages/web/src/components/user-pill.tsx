@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import type { HTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 import { forwardRef } from 'react';
 import { Avatar } from './avatar';
 
-export interface UserPillProps extends HTMLAttributes<HTMLDivElement> {
+export interface UserPillProps extends ComponentProps<'div'> {
   userId: string;
   username: string;
 }

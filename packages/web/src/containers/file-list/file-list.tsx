@@ -1,15 +1,15 @@
+import { useQuery } from '@urql/preact';
 import type { FC } from 'react';
 import { Fragment } from 'react';
-import { useQuery } from 'urql';
 import { graphql } from '../../@generated';
 import { Breadcrumbs } from '../../components/breadcrumbs';
 import { Card } from '../../components/card';
 import { Error } from '../../components/error';
-import { SkeletonList } from '../../components/skeleton';
 import { Toggle } from '../../components/toggle';
 import { useQueryState } from '../../hooks/useQueryState';
-import { FileCard, FileCardSkeleton } from './cards/file-card';
+import { FileCard } from './cards/file-card';
 import { PasteCard } from './cards/paste-card';
+import { PageLoader } from '../../components/page-loader';
 
 const GetFilesQuery = graphql(`
   query GetFiles($after: String) {
@@ -88,11 +88,7 @@ export const FileList: FC = () => {
         </div>
       </div>
       <div className="pb-5">
-        {!source.data && (
-          <SkeletonList count={12} className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-            <FileCardSkeleton />
-          </SkeletonList>
-        )}
+        {!source.data && <PageLoader />}
         {filter === 'files' && (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
             {files.data?.user.files.edges.map(({ node }) => <FileCard key={node.id} file={node} />)}

@@ -13,7 +13,7 @@ import { Link } from '../link';
 import { useToasts } from '../toast';
 import { HeaderUser } from './header-user';
 import { graphql } from '../../@generated';
-import { useMutation } from 'urql';
+import { useMutation } from '@urql/preact';
 
 const ResendVerificationEmail = graphql(`
   mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
@@ -97,7 +97,7 @@ export const Header = memo(() => {
                   <div className="mt-3 flex gap-2 items-center">
                     <Input
                       value={email}
-                      onChange={(event) => setEmail(event.target.value)}
+                      onChange={(event) => setEmail(event.currentTarget.value)}
                       className="flex-grow"
                       placeholder="Email"
                       disabled={sendingVerification}

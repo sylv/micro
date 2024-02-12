@@ -4,7 +4,12 @@ import type { FC, HTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 import { Spinner } from './spinner';
 
-export interface ButtonProps extends Omit<HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, 'prefix' | 'style'> {
+type ButtonBaseProps = Omit<
+  HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>,
+  'prefix' | 'style' | 'as' | 'loading'
+>;
+
+export interface ButtonProps extends ButtonBaseProps {
   href?: string;
   disabled?: boolean;
   style?: ButtonStyle;

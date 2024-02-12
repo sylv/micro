@@ -48,7 +48,7 @@ export const SkeletonWrap = memo<{
   show: boolean;
   children: ReactNode;
 }>(({ show, children }) => {
-  if (!show) return children;
+  if (!show) return <Fragment>{children}</Fragment>;
 
   return (
     <span className="relative">

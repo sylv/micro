@@ -19,12 +19,12 @@ export const OtpInput: FC<OtpInputProps> = ({ loading, invalid, onCode }) => {
         isError={invalid}
         placeholder="123456"
         onChange={(event) => {
-          if (loading || !event.target.value) return;
+          if (loading || !event.currentTarget.value) return;
           if (
-            (event.target.value.length === TOTP_CODE_LENGTH && NUMBER_REGEX.test(event.target.value)) ||
-            event.target.value.length === RECOVERY_CODE_LENGTH
+            (event.currentTarget.value.length === TOTP_CODE_LENGTH && NUMBER_REGEX.test(event.currentTarget.value)) ||
+            event.currentTarget.value.length === RECOVERY_CODE_LENGTH
           ) {
-            onCode(event.target.value);
+            onCode(event.currentTarget.value);
           }
         }}
         onKeyDown={(event) => {

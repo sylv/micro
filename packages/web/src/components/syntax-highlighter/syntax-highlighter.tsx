@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import type { Language } from 'prism-react-renderer';
 import { Highlight } from 'prism-react-renderer';
-import type { HTMLProps } from 'react';
+import type { ComponentProps } from 'react';
 import { memo, useState } from 'react';
 import { theme } from './prism-theme';
 import { SyntaxHighlighterControls } from './syntax-highlighter-controls';
 
-export interface SyntaxHighlighterProps extends HTMLProps<HTMLPreElement> {
+export interface SyntaxHighlighterProps extends ComponentProps<'pre'> {
   children: string;
   language: Language;
   className?: string;

@@ -3,7 +3,7 @@ import copyToClipboard from 'copy-to-clipboard';
 import type { FC, ReactNode } from 'react';
 import { Fragment, useState } from 'react';
 import { FiDownload, FiShare, FiTrash } from 'react-icons/fi';
-import { useMutation, useQuery } from 'urql';
+import { useMutation, useQuery } from '@urql/preact';
 import { graphql } from '../../../@generated';
 import { Container } from '../../../components/container';
 import { Embed } from '../../../components/embed/embed';

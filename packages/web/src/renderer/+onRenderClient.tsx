@@ -1,6 +1,6 @@
-import { createClient, fetchExchange, ssrExchange } from 'urql';
-import { Provider as UrqlProvider } from 'urql';
-import { hydrateRoot } from 'react-dom/client';
+import { createClient, fetchExchange, ssrExchange } from '@urql/preact';
+import { Provider as UrqlProvider } from '@urql/preact';
+import { hydrate } from 'preact';
 import { HelmetProvider } from 'react-helmet-async';
 import { OnRenderClientAsync } from 'vike/types';
 import { App } from '../app';
@@ -27,8 +27,7 @@ export const onRenderClient: OnRenderClientAsync = async (pageContext) => {
     ssr.restoreData(pageContext.state);
   }
 
-  hydrateRoot(
-    document.getElementById('root')!,
+  hydrate(
     <PageContextProvider pageContext={pageContext}>
       <UrqlProvider value={client}>
         <HelmetProvider>
@@ -38,5 +37,6 @@ export const onRenderClient: OnRenderClientAsync = async (pageContext) => {
         </HelmetProvider>
       </UrqlProvider>
     </PageContextProvider>,
+    document.getElementById('root')!,
   );
 };

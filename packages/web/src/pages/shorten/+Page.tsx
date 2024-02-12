@@ -1,4 +1,4 @@
-import { useMutation } from 'urql';
+import { useMutation } from '@urql/preact';
 import { Form, Formik } from 'formik';
 import { FC, useState } from 'react';
 import * as Yup from 'yup';
@@ -82,7 +82,7 @@ export const Page: FC = () => {
             readOnly
             value={result}
             onFocus={(event) => {
-              event.target.select();
+              event.currentTarget.select();
             }}
           />
         </div>

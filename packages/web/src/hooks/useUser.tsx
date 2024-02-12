@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CombinedError, TypedDocumentNode, useMutation, useQuery } from 'urql';
+import { CombinedError, TypedDocumentNode, useMutation, useQuery } from '@urql/preact';
 import { graphql } from '../@generated';
 import type { GetUserQuery, LoginMutationVariables, RegularUserFragment } from '../@generated/graphql';
 import { navigate, reload } from '../helpers/routing';

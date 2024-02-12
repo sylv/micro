@@ -9,6 +9,10 @@ interface AppProps {
   children: React.ReactNode;
 }
 
+declare module 'react' {
+  export type SVGAttributes<T extends EventTarget> = import('preact').JSX.SVGAttributes<T>;
+}
+
 export const App: FC<AppProps> = ({ children }) => (
   <Fragment>
     <Title>Home</Title>

@@ -13,7 +13,7 @@ import { navigate, prefetch } from '../../../helpers/routing';
 import { useAsync } from '../../../hooks/useAsync';
 import { useConfig } from '../../../hooks/useConfig';
 import { PageProps } from '../../../renderer/types';
-import { useQuery, useMutation } from 'urql';
+import { useQuery, useMutation } from '@urql/preact';
 
 const GetInvite = graphql(`
   query GetInvite($inviteId: ID!) {

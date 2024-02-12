@@ -6,10 +6,16 @@
     "moduleResolution": "Bundler",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["vite/client"],
-    "jsx": "react-jsx",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "composite": true,
     "noUnusedLocals": true,
+
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "baseUrl": "./",
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"],
+    },
   },
 }

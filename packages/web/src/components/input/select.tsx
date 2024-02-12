@@ -1,11 +1,13 @@
 import clsx from 'clsx';
-import type { SelectHTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 import React from 'react';
+import { FiChevronDown } from 'react-icons/fi';
 import type { InputChildProps } from './container';
 import { InputContainer } from './container';
-import { FiChevronDown } from 'react-icons/fi';
 
-export interface SelectProps extends InputChildProps<SelectHTMLAttributes<HTMLSelectElement>> {}
+export interface SelectProps extends InputChildProps<ComponentProps<'select'>> {
+  className?: string;
+}
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ className, children, ...delegated }, ref) => {
   return (

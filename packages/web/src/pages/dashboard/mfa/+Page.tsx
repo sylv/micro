@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'urql';
+import { useMutation, useQuery } from '@urql/preact';
 import clsx from 'clsx';
 import { QRCodeSVG } from 'qrcode.react';
 import { FC, Fragment, useCallback, useMemo } from 'react';

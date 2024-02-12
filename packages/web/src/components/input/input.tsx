@@ -1,10 +1,10 @@
-import type { InputHTMLAttributes } from 'react';
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import type { InputChildProps } from './container';
 import { InputContainer } from './container';
 
-export interface InputProps extends InputChildProps<InputHTMLAttributes<HTMLInputElement>> {
+export interface InputProps extends InputChildProps<ComponentProps<'input'>> {
   isError?: boolean;
+  className?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, isError, ...delegated }, ref) => {

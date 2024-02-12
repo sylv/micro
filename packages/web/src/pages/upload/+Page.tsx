@@ -1,4 +1,4 @@
-import type { ChangeEventHandler, DragEventHandler, FC } from 'react';
+import type { ChangeEventHandler, FC, JSX } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import { Button } from '../../components/button';
@@ -35,7 +35,7 @@ export const Page: FC = () => {
   const config = useConfig();
 
   const onDragEvent =
-    (entering?: boolean): DragEventHandler =>
+    (entering?: boolean): JSX.DragEventHandler<HTMLDivElement> =>
     (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -43,12 +43,11 @@ export const Page: FC = () => {
       else if (entering === false) setHover(false);
     };
 
-  const onDrop: DragEventHandler = (event) => {
+  const onDrop: JSX.DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setHover(false);
-    const transfer = event.dataTransfer;
-    const file = transfer.files.item(0);
+    const file = event.dataTransfer?.files.item(0);
     if (file) {
       setFile(file);
     }
@@ -71,7 +70,7 @@ export const Page: FC = () => {
   const onFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     event.stopPropagation();
     event.preventDefault();
-    const file = event.target.files?.[0];
+    const file = event.currentTarget.files?.[0];
     if (file) {
       setFile(file);
     }
@@ -140,7 +139,7 @@ export const Page: FC = () => {
               prefix="Host"
               className="shrink-0 w-40 mr-2"
               value={selectedHost}
-              onChange={(event) => setSelectedHost(event.target.value)}
+              onChange={(event) => setSelectedHost(event.currentTarget.value)}
             >
               {config.data.hosts.map((host) => (
                 <option key={host.normalised} value={host.normalised} selected={host.normalised === selectedHost}>

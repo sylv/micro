@@ -1,6 +1,6 @@
 import { VNode } from 'preact';
 import renderToString from 'preact-render-to-string';
-import { Client } from 'urql';
+import { Client } from '@urql/preact';
 
 const MAX_DEPTH = 3;
 const isPromiseLike = (value: unknown): value is Promise<unknown> => {
@@ -10,9 +10,11 @@ const isPromiseLike = (value: unknown): value is Promise<unknown> => {
 
 /**
  * Enables urql suspense, then re-renders the tree until there are no suspense errors.
- * This is a hack workaround because both `react-ssr-prepass` and `preact-ssr-prepass` are not working, both have preact/react compat errors.
  */
 export const renderToStringWithData = async (client: Client, tree: VNode, depth = 0): Promise<string> => {
+  // todo: this should use preact-ssr-prepass, but that has issues with `useId()` and radix.
+  // i have absolutely no clue what that issue is, i can't find anything online and it's too vague
+  // to debug. whatever, apollo did it this way and it worked fine. so whatever. i didn't want performance anyway.
   try {
     client.suspense = true;
     const result = renderToString(tree);

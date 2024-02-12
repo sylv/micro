@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import type { FC, ReactNode } from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from 'preact/hooks';
+import { Fragment } from 'preact';
 import { ToastContext } from './context';
 import type { ToastProps } from './toast';
 import { TRANSITION_DURATION, Toast } from './toast';
@@ -47,7 +48,7 @@ export const ToastProvider: FC<{ children: ReactNode }> = (props) => {
 
   return (
     <ToastContext.Provider value={createToast}>
-      {props.children}
+      <Fragment>{props.children}</Fragment>
       <div className="fixed flex justify-end bottom-5 right-5 left-5">
         {toasts.map((toast) => (
           <Toast key={toast.id} removing={toast.removing} {...toast} />

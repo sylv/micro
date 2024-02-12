@@ -1,5 +1,5 @@
 import { FC, Fragment } from 'react';
-import { useMutation, useQuery } from 'urql';
+import { useMutation, useQuery } from '@urql/preact';
 import { graphql } from '../../../@generated';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
 import { Button } from '../../../components/button';
@@ -91,7 +91,7 @@ export const Page: FC = () => {
               readOnly
               value={user.data.user.token}
               onFocus={(event) => {
-                event.target.select();
+                event.currentTarget.select();
               }}
             />
           )}

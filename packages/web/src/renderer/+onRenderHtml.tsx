@@ -1,14 +1,13 @@
-import { createClient, fetchExchange, ssrExchange } from 'urql';
+import { cacheExchange } from '@urql/exchange-graphcache';
+import { Provider as UrqlProvider, createClient, fetchExchange, ssrExchange } from '@urql/preact';
 import { HelmetProvider, HelmetServerState } from 'react-helmet-async';
-import { Provider as UrqlProvider } from 'urql';
 import { dangerouslySkipEscape, escapeInject } from 'vike/server';
 import type { OnRenderHtmlAsync } from 'vike/types';
 import { App } from '../app';
+import { cacheOptions } from './cache';
 import { renderToStringWithData } from './prepass';
 import { PageProps } from './types';
 import { PageContextProvider } from './usePageContext';
-import { cacheExchange } from '@urql/exchange-graphcache';
-import { cacheOptions } from './cache';
 
 const GRAPHQL_URL = (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + '/graphql';
 

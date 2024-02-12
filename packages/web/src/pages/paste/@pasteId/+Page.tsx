@@ -13,7 +13,7 @@ import { hashToObject } from '../../../helpers/hash-to-object';
 import { navigate } from '../../../helpers/routing';
 import { useUser } from '../../../hooks/useUser';
 import { PageProps } from '../../../renderer/types';
-import { useQuery } from 'urql';
+import { useQuery } from '@urql/preact';
 
 const PasteQuery = graphql(`
   query GetPaste($pasteId: ID!) {

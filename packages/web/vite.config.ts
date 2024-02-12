@@ -14,12 +14,11 @@ export default defineConfig({
       },
     },
   ],
-  optimizeDeps: {
-    include: ['preact', 'preact/devtools', 'preact/debug', 'preact/jsx-dev-runtime', 'preact/hooks', 'urql'],
+  define: {
+    'process.env.NODE_ENV': '"production"',
   },
-  define: { 'process.env.NODE_ENV': '"production"' },
   ssr: {
-    noExternal: ['preact', 'urql', 'prism-react-renderer', 'qrcode.react', 'formik', 'react-helmet-async'],
+    noExternal: ['react-helmet-async', 'prism-react-renderer', 'qrcode.react', 'formik'],
   },
   plugins: [
     preact(),

@@ -1,4 +1,4 @@
-import { CombinedError, useQuery } from 'urql';
+import { CombinedError, useQuery } from '@urql/preact';
 import { graphql } from '../@generated';
 
 const ConfigQuery = graphql(`

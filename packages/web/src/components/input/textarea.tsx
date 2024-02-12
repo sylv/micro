@@ -1,10 +1,14 @@
 import clsx from 'clsx';
-import type { TextareaHTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 import React from 'react';
 import type { InputChildProps } from './container';
 import { InputContainer } from './container';
 
-export interface TextAreaProps extends InputChildProps<TextareaHTMLAttributes<HTMLTextAreaElement>> {}
+type TextAreaBaseProps = InputChildProps<ComponentProps<'textarea'>>;
+
+export interface TextAreaProps extends TextAreaBaseProps {
+  className?: string;
+}
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(({ className, ...delegated }, ref) => {
   return (

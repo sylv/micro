@@ -1,20 +1,13 @@
 import FastifyEarlyHints from '@fastify/early-hints';
 import FastifyProxy from '@fastify/http-proxy';
 import Fastify, { FastifyInstance } from 'fastify';
-import { createReadStream } from 'fs';
 import { IncomingMessage, ServerResponse } from 'http';
-import mime from 'mime';
-import { dirname, resolve } from 'path';
 import { compile, match } from 'path-to-regexp';
-import rrdir from 'readdirp';
+import url from 'url';
 import { renderPage } from 'vike/server';
 import { PageContext } from 'vike/types';
 import { REWRITES } from './rewrites';
-import { fileURLToPath } from 'url';
-import url from 'url';
 
-const fileDir = dirname(fileURLToPath(import.meta.url));
-const staticDir = process.env.STATIC_DIR?.replace('{{FILE_DIR}}', fileDir) || resolve('dist/client');
 const rewrites = REWRITES.map(({ source, destination }) => ({
   match: match(source),
   toPath: compile(destination),
@@ -65,7 +58,8 @@ async function startServer() {
       for (const { match, toPath } of rewrites) {
         const result = match(pathname);
         if (result) {
-          return toPath(result.params);
+          const replaced = toPath(result.params);
+          return replaced;
         }
       }
 
@@ -88,40 +82,14 @@ async function startServer() {
     },
   });
 
-  const files = new Set<string>();
-  const info = new Map<string, { type: string; size: number }>();
-  for await (const file of rrdir(staticDir, { type: 'files', alwaysStat: true })) {
-    const mimeType = mime.getType(file.fullPath) || 'application/octet-stream';
-
-    files.add(file.fullPath);
-    info.set(file.fullPath, {
-      type: mimeType,
-      size: file.stats!.size,
-    });
-  }
-
   instance.get('*', async (request, reply) => {
-    // check if its for a file on disk, and send that instead
-    const pathname = new URL(request.url, 'http://localhost').pathname;
-    const file = resolve(staticDir, pathname.slice(1));
-    if (files.has(file)) {
-      const extraInfo = info.get(file);
-      if (extraInfo) {
-        reply.header('Content-Type', extraInfo.type);
-        reply.header('Content-Length', extraInfo.size);
-      }
-
-      const stream = createReadStream(file);
-      return reply.send(stream);
-    }
-
     let cookies;
     if (request.headers.cookie && typeof request.headers.cookie === 'string') {
       cookies = request.headers.cookie;
     }
 
     const pageContextInit = {
-      urlOriginal: request.originalUrl,
+      urlOriginal: request.url,
       cookies: cookies,
     } satisfies Partial<PageContext>;
 

@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import type { FC, HTMLAttributes } from 'react';
+import type { ComponentProps, FC } from 'react';
 
-export interface SpinnerProps extends HTMLAttributes<SVGElement> {
+type SpinnerBaseProps = Omit<ComponentProps<'svg'>, 'size'>;
+
+export interface SpinnerProps extends SpinnerBaseProps {
   size?: 'small' | 'medium' | 'large';
 }
 

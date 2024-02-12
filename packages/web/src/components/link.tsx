@@ -1,6 +1,6 @@
-import { forwardRef, type HTMLAttributes } from 'react';
+import { ComponentProps, forwardRef } from 'react';
 
-export interface LinkProps extends HTMLAttributes<HTMLAnchorElement> {
+export interface LinkProps extends ComponentProps<'a'> {
   href: string;
 }
 
