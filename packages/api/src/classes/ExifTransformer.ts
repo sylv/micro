@@ -11,8 +11,8 @@ import { Transform } from 'stream';
 export class ExifTransformer extends Transform {
   private static readonly app1Marker = Buffer.from('ffe1', 'hex');
   private static readonly exifMarker = Buffer.from('457869660000', 'hex'); // Exif\0\0
-  private static readonly xmpMarker = Buffer.from('http://ns.adobe.com/xap', 'utf-8');
-  private static readonly flirMarker = Buffer.from('FLIR', 'utf-8');
+  private static readonly xmpMarker = Buffer.from('http://ns.adobe.com/xap', 'utf8');
+  private static readonly flirMarker = Buffer.from('FLIR', 'utf8');
   private static readonly maxMarkerLength = Math.max(
     ExifTransformer.exifMarker.length,
     ExifTransformer.xmpMarker.length,
@@ -48,7 +48,7 @@ export class ExifTransformer extends Transform {
       // no app1 in the current pendingChunk
       if (app1Start === -1) {
         // if last byte is ff, wait for more
-        if (!atEnd && pendingChunk[pendingChunk.length - 1] === ExifTransformer.app1Marker[0]) {
+        if (!atEnd && pendingChunk.at(-1) === ExifTransformer.app1Marker[0]) {
           if (chunk) this.pending.push(chunk);
           return;
         }

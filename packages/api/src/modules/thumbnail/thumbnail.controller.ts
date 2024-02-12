@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import type { FastifyReply, FastifyRequest } from 'fastify';
+import { type FastifyReply, type FastifyRequest } from 'fastify';
 import { ThumbnailService } from './thumbnail.service.js';
 
 @Controller()
@@ -10,7 +10,7 @@ export class ThumbnailController {
   async getThumbnailContent(
     @Param('fileId') fileId: string,
     @Req() request: FastifyRequest,
-    @Res() reply: FastifyReply
+    @Res() reply: FastifyReply,
   ) {
     return this.thumbnailService.sendThumbnail(fileId, request, reply);
   }

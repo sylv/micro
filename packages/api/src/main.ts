@@ -11,64 +11,56 @@ import { migrate } from './migrate.js';
 import { AppModule } from './modules/app.module.js';
 import { HostGuard } from './modules/host/host.guard.js';
 
-async function bootstrap() {
-  await migrate();
+await migrate();
 
-  const logger = new Logger('bootstrap');
-  const server = fastify({
-    trustProxy: process.env.TRUST_PROXY === 'true',
-    maxParamLength: 500,
-    bodyLimit: config.uploadLimit,
-  });
+const logger = new Logger('bootstrap');
+const server = fastify({
+  trustProxy: process.env.TRUST_PROXY === 'true',
+  maxParamLength: 500,
+  bodyLimit: config.uploadLimit,
+});
 
-  const adapter = new FastifyAdapter(server as any);
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
-  app.useGlobalGuards(new HostGuard());
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-      exceptionFactory(errors) {
-        // without this, nestjs won't include validation errors in the graphql response,
-        // just a blank bad request error, which is just a little confusing. thanks nestjs!
-        const formattedErrors = errors.map((error) => {
-          if (error.constraints) {
-            const constraints = Object.values(error.constraints);
-            if (constraints[0]) return constraints.join(', ');
-          }
+const adapter = new FastifyAdapter(server as any);
+const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
+app.useGlobalGuards(new HostGuard());
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    exceptionFactory(errors) {
+      // without this, nestjs won't include validation errors in the graphql response,
+      // just a blank bad request error, which is just a little confusing. thanks nestjs!
+      const formattedErrors = errors.map((error) => {
+        if (error.constraints) {
+          const constraints = Object.values(error.constraints);
+          if (constraints[0]) return constraints.join(', ');
+        }
 
-          return error.toString();
-        });
+        return error.toString();
+      });
 
-        return new BadRequestException(formattedErrors.join('\n'));
-      },
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    })
-  );
-
-  await app.register(fastifyCookie as any);
-  await app.register(fastifyHelmet.default as any);
-  await app.register(fastifyMultipart.default as any, {
-    limits: {
-      fieldNameSize: 100,
-      fieldSize: 100,
-      fields: 0,
-      files: 1,
-      headerPairs: 20,
+      return new BadRequestException(formattedErrors.join('\n'));
     },
-  });
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }),
+);
 
-  await app.listen(8080, '0.0.0.0', (error, address) => {
-    if (error) throw error;
-    logger.log(`Listening at ${address}`);
-  });
-}
+await app.register(fastifyCookie as any);
+await app.register(fastifyHelmet.default as any);
+await app.register(fastifyMultipart.default as any, {
+  limits: {
+    fieldNameSize: 100,
+    fieldSize: 100,
+    fields: 0,
+    files: 1,
+    headerPairs: 20,
+  },
+});
 
-// top-level await is not supported by ncc
-bootstrap().catch((error) => {
-  console.error(error);
-  process.exit(1);
+await app.listen(8080, '0.0.0.0', (error, address) => {
+  if (error) throw error;
+  logger.log(`Listening at ${address}`);
 });

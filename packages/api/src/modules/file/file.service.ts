@@ -118,8 +118,9 @@ export class FileService implements OnApplicationBootstrap {
           uploadStream = uploadStream.pipe(transformer).pipe(new PassThrough());
           break;
         }
-        default:
+        default: {
           throw new Error(`Unknown or unsupported conversion ${fromGroup} to ${toGroup}`);
+        }
       }
     }
 

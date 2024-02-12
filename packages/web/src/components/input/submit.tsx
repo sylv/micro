@@ -1,6 +1,7 @@
 import { useFormikContext } from 'formik';
 import type { FC } from 'react';
-import { Button, ButtonProps } from '../button';
+import type { ButtonProps } from '../button';
+import { Button } from '../button';
 
 /**
  * Wraps a button and disables when the form is not ready to be submitted.

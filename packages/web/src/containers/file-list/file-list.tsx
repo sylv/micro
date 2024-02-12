@@ -1,7 +1,7 @@
 import { useQuery } from '@urql/preact';
 import type { FC } from 'react';
 import { Fragment } from 'react';
-import { graphql } from '../../@generated';
+import { graphql } from '../../@generated/gql';
 import { Breadcrumbs } from '../../components/breadcrumbs';
 import { Card } from '../../components/card';
 import { Error } from '../../components/error';

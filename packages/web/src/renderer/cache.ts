@@ -1,10 +1,7 @@
-import { CacheExchangeOpts } from '@urql/exchange-graphcache';
+import type { CacheExchangeOpts } from '@urql/exchange-graphcache';
 import { relayPagination } from '@urql/exchange-graphcache/extras';
 
-import schema from '../@generated/introspection.json';
-
 export const cacheOptions: Partial<CacheExchangeOpts> = {
-  schema: schema,
   resolvers: {
     User: {
       files: relayPagination(),

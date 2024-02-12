@@ -25,7 +25,7 @@ export class AppResolver {
     return {
       inquiriesEmail: config.inquiries,
       uploadLimit: config.uploadLimit,
-      allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : [],
+      allowTypes: config.allowTypes ? [...config.allowTypes.values()] : [],
       requireEmails: !!config.email,
       rootHost: this.filterHost(rootHost),
       currentHost: this.filterHost(currentHost),

@@ -2,7 +2,7 @@ import { createClient, fetchExchange, ssrExchange } from '@urql/preact';
 import { Provider as UrqlProvider } from '@urql/preact';
 import { hydrate } from 'preact';
 import { HelmetProvider } from 'react-helmet-async';
-import { OnRenderClientAsync } from 'vike/types';
+import type { OnRenderClientAsync } from 'vike/types';
 import { App } from '../app';
 import { PageContextProvider } from './usePageContext';
 import { cacheOptions } from './cache';
@@ -37,6 +37,6 @@ export const onRenderClient: OnRenderClientAsync = async (pageContext) => {
         </HelmetProvider>
       </UrqlProvider>
     </PageContextProvider>,
-    document.getElementById('root')!,
+    document.querySelector('#root')!,
   );
 };

@@ -72,8 +72,13 @@ export class File extends Resource {
   }
 
   getDisplayName() {
+    if (this.name) return this.name;
     const extension = this.getExtension();
-    return this.name ? this.name : extension ? `${this.id}.${extension}` : this.id;
+    if (extension) {
+      return `${this.id}.${extension}`;
+    }
+
+    return this.id;
   }
 
   getPaths() {

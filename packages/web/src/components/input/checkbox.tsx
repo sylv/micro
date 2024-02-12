@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ComponentProps } from 'react';
 import React from 'react';
 import type { InputChildProps } from './container';

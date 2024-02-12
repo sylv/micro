@@ -8,8 +8,7 @@ export const useQueryState = <S>(key: string, initialState?: S, parser?: (input:
       // during SSR, we can grab query params from the page context
       const value = pageContext.urlParsed.search[key];
       if (value) {
-        const result = parser ? parser(value) : (value as any);
-        return result;
+        return parser ? parser(value) : (value as any);
       }
     }
 
@@ -18,8 +17,7 @@ export const useQueryState = <S>(key: string, initialState?: S, parser?: (input:
       const search = new URLSearchParams(window.location.search);
       const value = search.get(key);
       if (value) {
-        const result = parser ? parser(value) : (value as any);
-        return result;
+        return parser ? parser(value) : (value as any);
       }
     }
 

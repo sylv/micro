@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik';
 import type { FC } from 'react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { LoginMutationVariables } from '../@generated/graphql';
+import type { LoginMutationVariables } from '../@generated/graphql';
 import { Input } from '../components/input/input';
 import { OtpInput } from '../components/input/otp';
 import { Submit } from '../components/input/submit';

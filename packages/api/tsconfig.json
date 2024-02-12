@@ -4,10 +4,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "noUncheckedIndexedAccess": false,
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": false, // doesn't play nice with mikroorm/graphql decorators
     "noImplicitOverride": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es2021", "dom"]
-  }
+    "lib": ["es2021", "dom"],
+  },
 }

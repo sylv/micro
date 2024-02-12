@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { memo } from 'react';
-import { graphql } from '../../../@generated';
-import { PasteCardFragment } from '../../../@generated/graphql';
+import { graphql } from '../../../@generated/gql';
+import type { PasteCardFragment } from '../../../@generated/graphql';
 import { Link } from '../../../components/link';
 import { Time } from '../../../components/time';
 import { useUser } from '../../../hooks/useUser';

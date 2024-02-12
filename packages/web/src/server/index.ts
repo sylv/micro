@@ -1,11 +1,12 @@
 import FastifyEarlyHints from '@fastify/early-hints';
 import FastifyProxy from '@fastify/http-proxy';
-import Fastify, { FastifyInstance } from 'fastify';
-import { IncomingMessage, ServerResponse } from 'http';
+import type { FastifyInstance } from 'fastify';
+import Fastify from 'fastify';
+import type { IncomingMessage, ServerResponse } from 'http';
 import { compile, match } from 'path-to-regexp';
 import url from 'url';
 import { renderPage } from 'vike/server';
-import { PageContext } from 'vike/types';
+import type { PageContext } from 'vike/types';
 import { REWRITES } from './rewrites';
 
 const rewrites = REWRITES.map(({ source, destination }) => ({
@@ -58,8 +59,7 @@ async function startServer() {
       for (const { match, toPath } of rewrites) {
         const result = match(pathname);
         if (result) {
-          const replaced = toPath(result.params);
-          return replaced;
+          return toPath(result.params);
         }
       }
 
@@ -99,14 +99,14 @@ async function startServer() {
     }
 
     const { httpResponse } = pageContext;
-    if (!httpResponse) {
-      reply.status(500).send('Internal Server Error');
-    } else {
+    if (httpResponse) {
       const { body, statusCode, headers, earlyHints } = httpResponse;
       reply.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
-      headers.forEach(([name, value]) => reply.header(name, value));
+      for (const [name, value] of headers) reply.header(name, value);
       reply.status(statusCode);
       reply.send(body);
+    } else {
+      reply.status(500).send('Internal Server Error');
     }
   });
 
@@ -115,6 +115,7 @@ async function startServer() {
 }
 
 let fastify: FastifyInstance | undefined;
+// eslint-disable-next-line unicorn/prefer-top-level-await
 const fastifyHandlerPromise = startServer().catch((error) => {
   console.error(error);
   process.exit(1);

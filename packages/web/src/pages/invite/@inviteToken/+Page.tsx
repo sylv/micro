@@ -1,5 +1,6 @@
-import { FC, useEffect } from 'react';
-import { graphql } from '../../../@generated';
+import type { FC } from 'react';
+import { useEffect } from 'react';
+import { graphql } from '../../../@generated/gql';
 import { Container } from '../../../components/container';
 import { Error } from '../../../components/error';
 import { PageLoader } from '../../../components/page-loader';
@@ -12,7 +13,7 @@ import { getErrorMessage } from '../../../helpers/get-error-message.helper';
 import { navigate, prefetch } from '../../../helpers/routing';
 import { useAsync } from '../../../hooks/useAsync';
 import { useConfig } from '../../../hooks/useConfig';
-import { PageProps } from '../../../renderer/types';
+import type { PageProps } from '../../../renderer/types';
 import { useQuery, useMutation } from '@urql/preact';
 
 const GetInvite = graphql(`

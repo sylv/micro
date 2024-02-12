@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { FC, Fragment, ReactNode, memo } from 'react';
+import type { FC, ReactNode } from 'react';
+import { Fragment, memo } from 'react';
 import { BASE_BUTTON_CLASSES } from './button';
 import { BASE_INPUT_CLASSES, BASE_INPUT_MAX_HEIGHT } from './input/container';
 

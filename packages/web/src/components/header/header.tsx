@@ -12,7 +12,7 @@ import { Input } from '../input/input';
 import { Link } from '../link';
 import { useToasts } from '../toast';
 import { HeaderUser } from './header-user';
-import { graphql } from '../../@generated';
+import { graphql } from '../../@generated/gql';
 import { useMutation } from '@urql/preact';
 
 const ResendVerificationEmail = graphql(`

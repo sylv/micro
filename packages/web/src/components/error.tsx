@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { getErrorMessage } from '../helpers/get-error-message.helper';
 import { usePaths } from '../hooks/usePaths';
 import { Container } from './container';

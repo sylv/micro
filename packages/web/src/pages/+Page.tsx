@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Container } from '../components/container';
 import { useConfig } from '../hooks/useConfig';
 import { Spinner } from '../components/spinner';

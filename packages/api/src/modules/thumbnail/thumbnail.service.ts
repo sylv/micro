@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
@@ -23,7 +24,7 @@ export class ThumbnailService {
   private static readonly IMAGE_TYPES = new Set(
     Object.keys(sharp.format)
       .map((key) => mime.lookup(key))
-      .filter((key) => key && key.startsWith('image'))
+      .filter((key) => key && key.startsWith('image')),
   );
 
   private static readonly VIDEO_TYPES = new Set([
@@ -42,7 +43,7 @@ export class ThumbnailService {
     @InjectRepository('Thumbnail') private readonly thumbnailRepo: EntityRepository<Thumbnail>,
     @InjectRepository('File') private readonly fileRepo: EntityRepository<File>,
     private readonly storageService: StorageService,
-    private readonly fileService: FileService
+    private readonly fileService: FileService,
   ) {}
 
   async getThumbnail(fileId: string) {
@@ -111,8 +112,7 @@ export class ThumbnailService {
     // and it is so whatever. maybe there is a way to do this faster, but this is already pretty fast.
     const positions = ['5%', '10%', '20%', '40%'];
     const size = `${ThumbnailService.THUMBNAIL_SIZE}x?`;
-    for (let positionIndex = 0; positionIndex < positions.length; positionIndex++) {
-      const percent = positions[positionIndex];
+    for (const [positionIndex, percent] of positions.entries()) {
       const stream = ffmpeg(filePath).screenshot({
         count: 1,
         timemarks: [percent],

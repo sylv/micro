@@ -1,7 +1,8 @@
-import { FC } from 'react';
-import { SSRData } from '@urql/preact';
+import type { FC } from 'react';
+import type { SSRData } from '@urql/preact';
 
 // https://vike.dev/pageContext#typescript
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Vike {
     interface PageContext {

@@ -1,12 +1,13 @@
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { Provider as UrqlProvider, createClient, fetchExchange, ssrExchange } from '@urql/preact';
-import { HelmetProvider, HelmetServerState } from 'react-helmet-async';
+import type { HelmetServerState } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
 import { dangerouslySkipEscape, escapeInject } from 'vike/server';
 import type { OnRenderHtmlAsync } from 'vike/types';
 import { App } from '../app';
 import { cacheOptions } from './cache';
 import { renderToStringWithData } from './prepass';
-import { PageProps } from './types';
+import type { PageProps } from './types';
 import { PageContextProvider } from './usePageContext';
 
 const GRAPHQL_URL = (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + '/graphql';
@@ -43,7 +44,7 @@ export const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<O
   const helmet = helmetContext.helmet!;
   const documentHtml = escapeInject`<!DOCTYPE html>
     <html lang="en">
-      <Helmet>
+      <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         ${dangerouslySkipEscape(helmet.title.toString())}

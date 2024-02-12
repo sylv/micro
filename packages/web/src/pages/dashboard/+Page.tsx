@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 import { Container } from '../../components/container';
 import { Title } from '../../components/title';
 import { FileList } from '../../containers/file-list/file-list';

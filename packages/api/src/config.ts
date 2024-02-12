@@ -80,7 +80,7 @@ const enhanceHost = (host: z.infer<typeof schema>['hosts'][0]) => {
 };
 
 export const config = result.data as Omit<z.infer<typeof schema>, 'hosts'>;
-export const hosts = result.data.hosts.map(enhanceHost);
+export const hosts = result.data.hosts.map((host) => enhanceHost(host));
 export const rootHost = hosts[0];
 
 if (rootHost.isWildcard) {
@@ -92,9 +92,9 @@ if (disallowed.has(config.secret.toLowerCase())) {
   const token = randomBytes(24).toString('hex');
   throw new Error(
     dedent`
-    ${c.redBright.bold('Do not use the default secret.')}
-    Please generate a random, secure secret or you risk anyone being able to impersonate you.
-    If you're lazy, here is a random secret: ${c.underline(token)}
+      ${c.redBright.bold('Do not use the default secret.')}
+      Please generate a random, secure secret or you risk anyone being able to impersonate you.
+      If you're lazy, here is a random secret: ${c.underline(token)}
     `,
   );
 }

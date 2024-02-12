@@ -5,5 +5,7 @@ module.exports = {
   },
   rules: {
     'unicorn/no-abusive-eslint-disable': 'off',
+    'unicorn/filename-case': 'off',
+    'import/no-default-export': 'off',
   },
 };

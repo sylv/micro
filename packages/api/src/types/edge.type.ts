@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-keyword-prefix */
 import type { Type } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 

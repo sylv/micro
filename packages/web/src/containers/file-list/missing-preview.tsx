@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { IconType } from 'react-icons/lib';
+import type { IconType } from 'react-icons/lib';
 
 interface MissingPreviewProps {
   icon: IconType;

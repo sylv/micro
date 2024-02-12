@@ -1,9 +1,9 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import type { FastifyRequest } from 'fastify';
 import { config, hosts, rootHost } from '../config.js';
 import { UserId } from './auth/auth.decorators.js';
 import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard.js';
 import { UserService } from './user/user.service.js';
+import { type FastifyRequest } from 'fastify';
 
 @Controller()
 export class AppController {
@@ -23,7 +23,7 @@ export class AppController {
     return {
       inquiries: config.inquiries,
       uploadLimit: config.uploadLimit,
-      allowTypes: config.allowTypes ? [...config.allowTypes?.values()] : undefined,
+      allowTypes: config.allowTypes ? [...config.allowTypes.values()] : undefined,
       email: !!config.email,
       rootHost: {
         url: rootHost.url,

@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { FiBookOpen, FiClock, FiTrash } from 'react-icons/fi';
-import { graphql } from '../../../@generated';
+import { graphql } from '../../../@generated/gql';
 import { Button } from '../../../components/button';
 import { Container } from '../../../components/container';
 import { Embed } from '../../../components/embed/embed';
@@ -12,7 +13,7 @@ import { decryptContent } from '../../../helpers/encrypt.helper';
 import { hashToObject } from '../../../helpers/hash-to-object';
 import { navigate } from '../../../helpers/routing';
 import { useUser } from '../../../hooks/useUser';
-import { PageProps } from '../../../renderer/types';
+import type { PageProps } from '../../../renderer/types';
 import { useQuery } from '@urql/preact';
 
 const PasteQuery = graphql(`

@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from '@urql/preact';
 import clsx from 'clsx';
 import { QRCodeSVG } from 'qrcode.react';
-import { FC, Fragment, useCallback, useMemo } from 'react';
+import type { FC } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { FiChevronLeft, FiChevronRight, FiCopy, FiDownload } from 'react-icons/fi';
-import { graphql } from '../../../@generated';
+import { graphql } from '../../../@generated/gql';
 import { Button, ButtonStyle } from '../../../components/button';
 import { Container } from '../../../components/container';
 import { Error } from '../../../components/error';

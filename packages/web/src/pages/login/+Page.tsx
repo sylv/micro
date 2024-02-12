@@ -1,4 +1,5 @@
-import { FC, useEffect } from 'react';
+import type { FC } from 'react';
+import { useEffect } from 'react';
 import { Title } from '../../components/title';
 import { LoginForm } from '../../containers/login-form';
 import { Container } from '../../components/container';

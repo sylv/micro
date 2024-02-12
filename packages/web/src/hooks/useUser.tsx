@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { CombinedError, TypedDocumentNode, useMutation, useQuery } from '@urql/preact';
-import { graphql } from '../@generated';
-import type { GetUserQuery, LoginMutationVariables, RegularUserFragment } from '../@generated/graphql';
+import type { CombinedError, TypedDocumentNode } from '@urql/preact';
+import { useMutation, useQuery } from '@urql/preact';
+import { graphql } from '../@generated/gql';
+import type { GetUserQuery, LoginMutationVariables } from '../@generated/graphql';
 import { navigate, reload } from '../helpers/routing';
+import { type RegularUserFragment } from '../@generated/graphql';
 import { useAsync } from './useAsync';
 
 const RegularUserFragment = graphql(`

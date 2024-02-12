@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { FiFileMinus, FiTrash } from 'react-icons/fi';
-import { graphql } from '../../../@generated';
-import { FileCardFragment } from '../../../@generated/graphql';
+import { graphql } from '../../../@generated/gql';
+import type { FileCardFragment } from '../../../@generated/graphql';
 import { Link } from '../../../components/link';
 import { Skeleton } from '../../../components/skeleton';
 import { useConfig } from '../../../hooks/useConfig';

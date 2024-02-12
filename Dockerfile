@@ -5,6 +5,7 @@ RUN npm i -g pnpm
 
 WORKDIR /usr/src/micro
 
+COPY patches patches
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./ 
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm fetch

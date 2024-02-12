@@ -1,7 +1,8 @@
 import clsx from 'clsx';
-import { FC, Fragment, useState } from 'react';
+import type { FC } from 'react';
+import { Fragment, useState } from 'react';
 import { FiDownload } from 'react-icons/fi';
-import { RegularUserFragment } from '../../@generated/graphql';
+import type { RegularUserFragment } from '../../@generated/graphql';
 import { Container } from '../../components/container';
 import { Section } from '../../components/section';
 import { Skeleton, SkeletonList, SkeletonWrap } from '../../components/skeleton';

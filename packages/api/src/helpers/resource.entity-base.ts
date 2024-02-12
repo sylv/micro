@@ -1,5 +1,4 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-import type { IdentifiedReference } from '@mikro-orm/core';
+import type { Ref } from '@mikro-orm/core';
 import { BeforeCreate, Entity, Property, type EventArgs } from '@mikro-orm/core';
 import { ObjectType } from '@nestjs/graphql';
 import type { FastifyRequest } from 'fastify';
@@ -14,7 +13,7 @@ export abstract class Resource {
   @Property({ nullable: true })
   hostname?: string;
 
-  abstract owner?: IdentifiedReference<User>;
+  abstract owner?: Ref<User>;
   abstract getPaths(): ResourceLocations;
 
   getUrls() {

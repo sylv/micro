@@ -1,4 +1,5 @@
-import React, { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
+import React from 'react';
 import type { InputChildProps } from './container';
 import { InputContainer } from './container';
 

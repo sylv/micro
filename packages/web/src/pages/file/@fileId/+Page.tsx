@@ -4,7 +4,7 @@ import type { FC, ReactNode } from 'react';
 import { Fragment, useState } from 'react';
 import { FiDownload, FiShare, FiTrash } from 'react-icons/fi';
 import { useMutation, useQuery } from '@urql/preact';
-import { graphql } from '../../../@generated';
+import { graphql } from '../../../@generated/gql';
 import { Container } from '../../../components/container';
 import { Embed } from '../../../components/embed/embed';
 import { Error } from '../../../components/error';
@@ -16,7 +16,7 @@ import { downloadUrl } from '../../../helpers/download.helper';
 import { navigate } from '../../../helpers/routing';
 import { useAsync } from '../../../hooks/useAsync';
 import { useQueryState } from '../../../hooks/useQueryState';
-import { PageProps } from '../../../renderer/types';
+import type { PageProps } from '../../../renderer/types';
 
 const GetFile = graphql(`
   query GetFile($fileId: ID!) {

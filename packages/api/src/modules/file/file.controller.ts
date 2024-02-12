@@ -14,7 +14,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import type { FastifyReply, FastifyRequest } from 'fastify';
+import { type FastifyReply, type FastifyRequest } from 'fastify';
 import { rootHost } from '../../config.js';
 import { UserId } from '../auth/auth.decorators.js';
 import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';

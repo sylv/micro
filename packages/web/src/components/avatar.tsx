@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import clsx from 'clsx';
 import * as avatar from 'generate-avatar';
 import type { FC } from 'react';
@@ -14,7 +13,7 @@ export const Avatar: FC<AvatarProps> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const svg = useMemo(() => {
     const result = avatar.generateFromString(props.userId);
-    return result.replace(/(width|height)="(\d+)"/g, '$1="100%"');
+    return result.replaceAll(/(width|height)="(\d+)"/g, '$1="100%"');
   }, [props.userId]);
 
   return <div className={classes} dangerouslySetInnerHTML={{ __html: svg }} ref={containerRef} />;

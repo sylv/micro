@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import clsx from 'clsx';
 import type { FC, HTMLAttributes } from 'react';
 import { forwardRef } from 'react';

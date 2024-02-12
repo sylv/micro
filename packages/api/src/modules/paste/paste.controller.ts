@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Req } from '@nestjs/common';
-import type { FastifyRequest } from 'fastify';
+import { type FastifyRequest } from 'fastify';
 import { PasteService } from './paste.service.js';
 
 @Controller('paste')

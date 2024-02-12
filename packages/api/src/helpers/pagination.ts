@@ -18,8 +18,7 @@ export function parseCursor(cursor: string) {
 
 export function paginate<T>(items: T[], total: number, offset: number): Paginated<T> {
   const edges: Edge<T>[] = [];
-  for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-    const item = items[itemIndex];
+  for (const [itemIndex, item] of items.entries()) {
     const cursor = createCursor(offset + itemIndex);
     edges.push({
       cursor: cursor,
@@ -31,7 +30,7 @@ export function paginate<T>(items: T[], total: number, offset: number): Paginate
     edges: edges,
     totalCount: total,
     pageInfo: {
-      endCursor: edges[0] ? edges[edges.length - 1].cursor : undefined,
+      endCursor: edges[0] ? edges.at(-1)!.cursor : undefined,
       startCursor: edges[0] ? edges[0].cursor : undefined,
       hasPreviousPage: offset > 0,
       hasNextPage: offset + items.length < total,

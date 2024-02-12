@@ -1,8 +1,9 @@
 import { useMutation } from '@urql/preact';
 import { Form, Formik } from 'formik';
-import { FC, useState } from 'react';
+import type { FC } from 'react';
+import { useState } from 'react';
 import * as Yup from 'yup';
-import { graphql } from '../../@generated';
+import { graphql } from '../../@generated/gql';
 import { Button } from '../../components/button';
 import { Container } from '../../components/container';
 import { Input } from '../../components/input/input';

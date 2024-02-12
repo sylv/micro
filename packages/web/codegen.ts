@@ -1,4 +1,4 @@
-import { CodegenConfig } from '@graphql-codegen/cli';
+import type { CodegenConfig } from '@graphql-codegen/cli';
 
 export default {
   overwrite: true,
@@ -16,9 +16,6 @@ export default {
         // but this piece of shit? why. *why*.
         fragmentMasking: false,
       },
-    },
-    'src/@generated/introspection.json': {
-      plugins: ['introspection'],
     },
   },
   hooks: {

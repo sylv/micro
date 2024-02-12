@@ -1,6 +1,7 @@
-import { FC, Fragment } from 'react';
+import type { FC } from 'react';
+import { Fragment } from 'react';
 import { useMutation, useQuery } from '@urql/preact';
-import { graphql } from '../../../@generated';
+import { graphql } from '../../../@generated/gql';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
 import { Button } from '../../../components/button';
 import { Container } from '../../../components/container';
@@ -42,7 +43,6 @@ export const Page: FC = () => {
   const { logout } = useLogoutUser();
   const [, refreshMutation] = useMutation(RefreshToken);
   const [refresh, refreshing] = useAsync(async () => {
-    // eslint-disable-next-line no-alert
     const confirmation = confirm('Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.') // prettier-ignore
     if (!confirmation) return;
     await refreshMutation({});

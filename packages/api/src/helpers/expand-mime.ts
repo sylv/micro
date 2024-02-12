@@ -41,7 +41,7 @@ export const expandMime = (input: string | string[]) => {
   if (!Array.isArray(input)) input = [input];
   const output: string[] = [];
   for (const mimeType of input) {
-    const alias = MIME_MAP.get(mimeType.replace(WILDCARD_REGEX, ''));
+    const alias = MIME_MAP.get(mimeType.replaceAll(WILDCARD_REGEX, ''));
     if (alias) {
       output.push(...alias);
       continue;

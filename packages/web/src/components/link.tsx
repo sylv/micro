@@ -1,4 +1,5 @@
-import { ComponentProps, forwardRef } from 'react';
+import type { ComponentProps} from 'react';
+import { forwardRef } from 'react';
 
 export interface LinkProps extends ComponentProps<'a'> {
   href: string;

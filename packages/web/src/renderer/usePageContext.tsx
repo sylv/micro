@@ -14,6 +14,5 @@ export function PageContextProvider({
 }
 
 export function usePageContext() {
-  const pageContext = useContext(Context);
-  return pageContext;
+  return useContext(Context);
 }
