@@ -237,6 +237,9 @@ importers:
       '@fastify/http-proxy':
         specifier: ^9.4.0
         version: 9.4.0
+      '@graphql-codegen/cli':
+        specifier: ^5.0.2
+        version: 5.0.2(@parcel/watcher@2.4.0)(graphql@16.8.1)(typescript@5.3.3)
       '@graphql-codegen/client-preset':
         specifier: ^4.2.2
         version: 4.2.2(graphql@16.8.1)
@@ -350,7 +353,7 @@ importers:
         version: 0.4.161(vite@5.1.1)
       vite:
         specifier: ^5.1.1
-        version: 5.1.1
+        version: 5.1.1(@types/node@20.11.17)
       vite-plugin-eslint:
         specifier: ^1.8.1
         version: 1.8.1(eslint@8.56.0)(vite@5.1.1)
@@ -1386,7 +1389,7 @@ packages:
       '@fastify/reply-from': 9.7.0
       fast-querystring: 1.1.2
       fastify-plugin: 4.5.1
-      ws: 8.16.0
+      ws: 8.16.0(utf-8-validate@6.0.3)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -1780,7 +1783,7 @@ packages:
       graphql-ws: 5.14.3(graphql@16.8.1)
       isomorphic-ws: 5.0.0(ws@8.16.0)
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.16.0(utf-8-validate@6.0.3)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -1815,7 +1818,7 @@ packages:
       graphql: 16.8.1
       isomorphic-ws: 5.0.0(ws@8.16.0)
       tslib: 2.6.2
-      ws: 8.16.0
+      ws: 8.16.0(utf-8-validate@6.0.3)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -2041,7 +2044,7 @@ packages:
       isomorphic-ws: 5.0.0(ws@8.16.0)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.16.0
+      ws: 8.16.0(utf-8-validate@6.0.3)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -3096,7 +3099,7 @@ packages:
       magic-string: 0.30.5
       node-html-parser: 6.1.12
       resolve: 1.22.8
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     transitivePeerDependencies:
       - preact
       - supports-color
@@ -3130,7 +3133,7 @@ packages:
       '@prefresh/utils': 1.2.0
       '@rollup/pluginutils': 4.2.1
       preact: 10.19.4
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4248,7 +4251,7 @@ packages:
       vite: ^2.8.1 || 3 || 4 || 5
     dependencies:
       '@types/node': 20.11.17
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vavite/expose-vite-dev-server@4.0.3(vite@5.1.1):
@@ -4256,7 +4259,7 @@ packages:
     peerDependencies:
       vite: ^2.8.1 || 3 || 4 || 5
     dependencies:
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vavite/multibuild-cli@4.0.3(vite@5.1.1):
@@ -4269,7 +4272,7 @@ packages:
       '@vavite/multibuild': 4.0.3(vite@5.1.1)
       cac: 6.7.14
       picocolors: 1.0.0
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vavite/multibuild@4.0.3(vite@5.1.1):
@@ -4280,7 +4283,7 @@ packages:
       '@types/node': 20.11.17
       cac: 6.7.14
       picocolors: 1.0.0
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vavite/node-loader@4.0.3(vite@5.1.1):
@@ -4289,7 +4292,7 @@ packages:
     peerDependencies:
       vite: ^2.8.1 || 3 || 4 || 5
     dependencies:
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vavite/reloader@4.0.3(vite@5.1.1):
@@ -4297,7 +4300,7 @@ packages:
     peerDependencies:
       vite: ^2.8.1 || 3 || 4 || 5
     dependencies:
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /@vitest/expect@1.2.2:
@@ -7211,7 +7214,7 @@ packages:
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.16.0
+      ws: 8.16.0(utf-8-validate@6.0.3)
     dev: true
 
   /istextorbinary@9.5.0:
@@ -8353,7 +8356,6 @@ packages:
   /node-gyp-build@4.8.0:
     resolution: {integrity: sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==}
     hasBin: true
-    dev: false
 
   /node-html-parser@6.1.12:
     resolution: {integrity: sha512-/bT/Ncmv+fbMGX96XG9g05vFt43m/+SYKIs9oAemQVYyVcZmDAI2Xq/SbNcpOA35eF0Zk2av3Ksf+Xk8Vt8abA==}
@@ -10806,7 +10808,6 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.8.0
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -10863,7 +10864,7 @@ packages:
       '@vavite/reloader': 4.0.3(vite@5.1.1)
       cac: 6.7.14
       picocolors: 1.0.0
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /version-range@4.14.0:
@@ -10909,7 +10910,7 @@ packages:
       fast-glob: 3.3.2
       sirv: 2.0.4
       source-map-support: 0.5.21
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /vite-node@1.2.2(@types/node@20.11.17):
@@ -10943,7 +10944,7 @@ packages:
       '@types/eslint': 8.56.2
       eslint: 8.56.0
       rollup: 2.79.1
-      vite: 5.1.1
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /vite-plugin-graphql-codegen@3.3.6(@graphql-codegen/cli@5.0.2)(graphql@16.8.1)(vite@5.1.1):
@@ -10956,42 +10957,7 @@ packages:
       '@graphql-codegen/cli': 5.0.2(@parcel/watcher@2.4.0)(graphql@16.8.1)(typescript@5.3.3)
       '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.8.1)
       graphql: 16.8.1
-      vite: 5.1.1
-    dev: true
-
-  /vite@5.1.1:
-    resolution: {integrity: sha512-wclpAgY3F1tR7t9LL5CcHC41YPkQIpKUGeIuT8MdNwNZr6OqOTLs7JX5vIHAtzqLWXts0T+GDrh9pN2arneKqg==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.19.12
-      postcss: 8.4.35
-      rollup: 4.10.0
-    optionalDependencies:
-      fsevents: 2.3.3
+      vite: 5.1.1(@types/node@20.11.17)
     dev: true
 
   /vite@5.1.1(@types/node@20.11.17):
@@ -11258,19 +11224,6 @@ packages:
       utf-8-validate: 6.0.3
     dev: false
 
-  /ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: true
-
   /ws@8.16.0(utf-8-validate@6.0.3):
     resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
     engines: {node: '>=10.0.0'}
@@ -11284,7 +11237,6 @@ packages:
         optional: true
     dependencies:
       utf-8-validate: 6.0.3
-    dev: false
 
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
