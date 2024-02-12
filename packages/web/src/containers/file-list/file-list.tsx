@@ -1,6 +1,6 @@
 import { useQuery } from '@urql/preact';
 import type { FC } from 'react';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { graphql } from '../../@generated/gql';
 import { Breadcrumbs } from '../../components/breadcrumbs';
 import { Card } from '../../components/card';
@@ -51,10 +51,23 @@ const GetPastesQuery = graphql(`
 
 export const FileList: FC = () => {
   const [filter, setFilter] = useQueryState('filter', 'files');
-  const [files, filesFetchMore] = useQuery({ query: GetFilesQuery, pause: filter !== 'files' });
-  const [pastes, pastesFetchMore] = useQuery({ query: GetPastesQuery, pause: filter !== 'pastes' });
+
+  const [filesAfter, setFilesAfter] = useState<string | null>(null);
+  const [files] = useQuery({
+    query: GetFilesQuery,
+    pause: filter !== 'files',
+    variables: { after: filesAfter },
+  });
+
+  const [pastesAfter, setPastesAfter] = useState<string | null>(null);
+  const [pastes] = useQuery({
+    query: GetPastesQuery,
+    pause: filter !== 'pastes',
+    variables: { after: pastesAfter },
+  });
+
   const source = filter === 'files' ? files : pastes;
-  const fetchMore = filter === 'files' ? filesFetchMore : pastesFetchMore;
+  const setAfter = filter === 'files' ? setFilesAfter : setPastesAfter;
   if (source.error) {
     return <Error error={source.error} />;
   }
@@ -110,11 +123,8 @@ export const FileList: FC = () => {
           className="w-full bg-dark-200 px-2 py-2 text-gray-500 hover:bg-dark-300 transition"
           type="button"
           onClick={() => {
-            fetchMore({
-              variables: {
-                after: currentPageInfo.pageInfo.endCursor,
-              },
-            });
+            if (!currentPageInfo.pageInfo.endCursor) return;
+            setAfter(currentPageInfo.pageInfo.endCursor);
           }}
         >
           Load More
