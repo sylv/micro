@@ -30,7 +30,7 @@ export class UserResolver {
     @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>,
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    private readonly inviteService: InviteService
+    private readonly inviteService: InviteService,
   ) {}
 
   @Query(() => User)
@@ -51,7 +51,7 @@ export class UserResolver {
     @UserId() userId: string,
     @Parent() user: User,
     @Args('first', { nullable: true }) limit: number = 0,
-    @Args('after', { nullable: true }) cursor?: string
+    @Args('after', { nullable: true }) cursor?: string,
   ): Promise<FilePage> {
     if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
@@ -74,7 +74,7 @@ export class UserResolver {
     @UserId() userId: string,
     @Parent() user: User,
     @Args('first', { nullable: true }) limit: number = 0,
-    @Args('after', { nullable: true }) cursor?: string
+    @Args('after', { nullable: true }) cursor?: string,
   ): Promise<PastePage> {
     if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
@@ -121,9 +121,20 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JWTAuthGuard)
+  async changePassword(
+    @UserId() userId: string,
+    @Args('currentPassword') currentPassword: string,
+    @Args('newPassword') newPassword: string,
+  ) {
+    await this.userService.changePassword(userId, currentPassword, newPassword);
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JWTAuthGuard)
   async resendVerificationEmail(
     @UserId() userId: string,
-    @Args('data', { nullable: true }) body?: ResendVerificationEmailDto
+    @Args('data', { nullable: true }) body?: ResendVerificationEmailDto,
   ) {
     const user = await this.userService.getUser(userId, false);
     const latestVerification = await this.verificationRepo.findOne(
@@ -137,7 +148,7 @@ export class UserResolver {
         orderBy: {
           expiresAt: 'DESC',
         },
-      }
+      },
     );
 
     if (latestVerification && latestVerification.expiresAt.getTime() > Date.now() + UserResolver.MIN_RESEND_INTERVAL) {

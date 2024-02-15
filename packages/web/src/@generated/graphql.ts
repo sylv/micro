@@ -118,6 +118,7 @@ export type Link = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changePassword: Scalars['Boolean']['output'];
   confirmOTP: Scalars['Boolean']['output'];
   createInvite: Invite;
   createLink: Link;
@@ -129,6 +130,11 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   refreshToken: User;
   resendVerificationEmail: Scalars['Boolean']['output'];
+};
+
+export type MutationChangePasswordArgs = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 };
 
 export type MutationConfirmOtpArgs = {
@@ -457,6 +463,13 @@ export type UserQueryWithTokenQuery = {
     verifiedEmail: boolean;
   };
 };
+
+export type ChangePasswordMutationVariables = Exact<{
+  oldPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+}>;
+
+export type ChangePasswordMutation = { __typename?: 'Mutation'; changePassword: boolean };
 
 export type GetFileQueryVariables = Exact<{
   fileId: Scalars['ID']['input'];
@@ -1250,6 +1263,49 @@ export const UserQueryWithTokenDocument = {
     },
   ],
 } as unknown as DocumentNode<UserQueryWithTokenQuery, UserQueryWithTokenQueryVariables>;
+export const ChangePasswordDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'ChangePassword' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'oldPassword' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'newPassword' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'changePassword' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'currentPassword' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'oldPassword' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'newPassword' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'newPassword' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const GetFileDocument = {
   kind: 'Document',
   definitions: [

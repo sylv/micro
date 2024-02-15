@@ -2,7 +2,6 @@ import { preact } from '@preact/preset-vite';
 import { vavite } from 'vavite';
 import ssr from 'vike/plugin';
 import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
 import codegen from 'vite-plugin-graphql-codegen';
 
 export default defineConfig({
@@ -25,7 +24,6 @@ export default defineConfig({
   },
   plugins: [
     codegen(),
-    eslint({ cache: true }),
     preact(),
     ssr({ disableAutoFullBuild: true }),
     vavite({

@@ -102,6 +102,7 @@ type Link {
 }
 
 type Mutation {
+  changePassword(currentPassword: String!, newPassword: String!): Boolean!
   confirmOTP(otpCode: String!): Boolean!
   createInvite: Invite!
   createLink(destination: String!, host: String): Link!

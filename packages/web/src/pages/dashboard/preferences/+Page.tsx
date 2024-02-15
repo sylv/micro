@@ -1,6 +1,6 @@
+import { useMutation, useQuery } from '@urql/preact';
 import type { FC } from 'react';
 import { Fragment } from 'react';
-import { useMutation, useQuery } from '@urql/preact';
 import { graphql } from '../../../@generated/gql';
 import { Breadcrumbs } from '../../../components/breadcrumbs';
 import { Button } from '../../../components/button';
@@ -96,6 +96,32 @@ export const Page: FC = () => {
             />
           )}
           {!user.data && <InputSkeleton />}
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-8">
+        <div className="left col-span-full md:col-span-1">
+          {user.data && (
+            <Fragment>
+              <div className="font-bold text-xl">Change Password</div>
+              <p className="text-sm mt-2 text-gray-400">
+                Change your account password. This will not sign out other devices.
+              </p>
+            </Fragment>
+          )}
+          {!user.data && (
+            <Fragment>
+              <Skeleton className="w-1/2 mb-1" />
+              <Skeleton className="w-3/4" />
+            </Fragment>
+          )}
+        </div>
+        <div className="right flex items-center col-span-full md:col-span-1">
+          {user.data && (
+            <Button className="w-auto ml-auto" onClick={() => navigate(`/dashboard/preferences/change-password`)}>
+              Change
+            </Button>
+          )}
+          {!user.data && <ButtonSkeleton className="ml-auto" />}
         </div>
       </div>
       <div className="mt-10">

@@ -125,7 +125,7 @@ export class UserService {
       throw new ConflictException('You must provide an email address to create a user.');
     }
 
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const hashedPassword = await bcrypt.hash(data.password, 12);
     const user = this.userRepo.create({
       id: generateContentId(),
       secret: nanoid(),
@@ -188,6 +188,17 @@ export class UserService {
     if (existingByLowerEmail) {
       throw new ConflictException('Username or email already exists.');
     }
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await this.userRepo.findOneOrFail(userId);
+    const passwordMatches = await bcrypt.compare(currentPassword, user.password);
+    if (!passwordMatches) {
+      throw new BadRequestException('Invalid password');
+    }
+
+    user.password = await bcrypt.hash(newPassword, 12);
+    await this.userRepo.persistAndFlush(user);
   }
 
   @Cron(CronExpression.EVERY_HOUR)

@@ -39,11 +39,9 @@ export const LoginForm: FC = () => {
       setLoginInfo(values);
       setInvalidOTP(false);
       await user.login(values);
-      console.log('ball');
       setError(null);
       redirect();
     } catch (error: any) {
-      console.log(error);
       if (user.otpRequired && error.message.toLowerCase().includes('invalid otp')) {
         setInvalidOTP(true);
         return;

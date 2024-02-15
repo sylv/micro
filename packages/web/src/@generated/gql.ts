@@ -38,6 +38,8 @@ const documents = {
   '\n  mutation DisableOTP($otpCode: String!) {\n    disableOTP(otpCode: $otpCode)\n  }\n': types.DisableOtpDocument,
   '\n  query UserQueryWithToken {\n    user {\n      ...RegularUser\n      token\n      otpEnabled\n    }\n  }\n':
     types.UserQueryWithTokenDocument,
+  '\n  mutation ChangePassword($oldPassword: String!, $newPassword: String!) {\n    changePassword(currentPassword: $oldPassword, newPassword: $newPassword)\n  }\n':
+    types.ChangePasswordDocument,
   '\n  query GetFile($fileId: ID!) {\n    file(fileId: $fileId) {\n      id\n      type\n      displayName\n      size\n      sizeFormatted\n      textContent\n      isOwner\n      metadata {\n        height\n        width\n      }\n      paths {\n        view\n        thumbnail\n        direct\n      }\n      urls {\n        view\n      }\n    }\n  }\n':
     types.GetFileDocument,
   '\n  mutation DeleteFile($fileId: ID!, $deleteKey: String) {\n    deleteFile(fileId: $fileId, key: $deleteKey)\n  }\n':
@@ -158,6 +160,12 @@ export function graphql(
 export function graphql(
   source: '\n  query UserQueryWithToken {\n    user {\n      ...RegularUser\n      token\n      otpEnabled\n    }\n  }\n',
 ): (typeof documents)['\n  query UserQueryWithToken {\n    user {\n      ...RegularUser\n      token\n      otpEnabled\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation ChangePassword($oldPassword: String!, $newPassword: String!) {\n    changePassword(currentPassword: $oldPassword, newPassword: $newPassword)\n  }\n',
+): (typeof documents)['\n  mutation ChangePassword($oldPassword: String!, $newPassword: String!) {\n    changePassword(currentPassword: $oldPassword, newPassword: $newPassword)\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

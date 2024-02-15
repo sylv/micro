@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
 import type { CombinedError, TypedDocumentNode } from '@urql/preact';
 import { useMutation, useQuery } from '@urql/preact';
+import { useEffect, useState } from 'react';
 import { graphql } from '../@generated/gql';
 import type { GetUserQuery, LoginMutationVariables } from '../@generated/graphql';
-import { navigate, reload } from '../helpers/routing';
 import { type RegularUserFragment } from '../@generated/graphql';
+import { navigate } from '../helpers/routing';
 import { useAsync } from './useAsync';
 
 const RegularUserFragment = graphql(`
@@ -42,15 +42,16 @@ export const useLoginUser = () => {
   const [otp, setOtp] = useState(false);
   const [, loginMutation] = useMutation(LoginMutation);
   const [login] = useAsync(async (variables: LoginMutationVariables) => {
-    try {
-      await loginMutation(variables);
+    const result = await loginMutation(variables);
+    if (result.data) {
       navigate('/dashboard');
-    } catch (error: any) {
-      if (error.message.toLowerCase().includes('otp')) {
+    } else if (result.error) {
+      if (result.error.message.toLowerCase().includes('otp')) {
         setOtp(true);
+        return;
       }
 
-      throw error;
+      throw result.error;
     }
   });
 
@@ -64,7 +65,7 @@ export const useLogoutUser = () => {
   const [, logoutMutation] = useMutation(LogoutMutation);
   const [logout] = useAsync(async () => {
     await logoutMutation({});
-    reload();
+    navigate('/');
   });
 
   return { logout };
