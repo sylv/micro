@@ -56,7 +56,7 @@ export const LoginForm: FC = () => {
 
   if (user.otpRequired && loginInfo) {
     return (
-      <div>
+      <div className="w-full">
         <OtpInput
           loading={loggingIn}
           invalid={invalidOTP}

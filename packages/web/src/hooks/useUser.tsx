@@ -48,7 +48,6 @@ export const useLoginUser = () => {
     } else if (result.error) {
       if (result.error.message.toLowerCase().includes('otp')) {
         setOtp(true);
-        return;
       }
 
       throw result.error;
