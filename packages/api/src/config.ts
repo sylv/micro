@@ -1,5 +1,4 @@
 import { loadConfig } from '@ryanke/venera';
-import bytes from 'bytes';
 import c from 'chalk';
 import { randomBytes } from 'crypto';
 import dedent from 'dedent';
@@ -9,6 +8,7 @@ import z, { any, array, boolean, number, record, strictObject, string, union } f
 import { fromZodError } from 'zod-validation-error';
 import { expandMime } from './helpers/expand-mime.js';
 import { HostService } from './modules/host/host.service.js';
+import { parseBytes } from './helpers/parse-bytes.js';
 
 export type MicroHost = ReturnType<typeof enhanceHost>;
 
@@ -16,7 +16,7 @@ const schema = strictObject({
   databaseUrl: string().startsWith('postgresql://'),
   secret: string().min(6),
   inquiries: string().email(),
-  uploadLimit: string().transform(bytes.parse),
+  uploadLimit: string().transform(parseBytes),
   maxPasteLength: number().default(500000),
   allowTypes: z
     .union([array(string()), string()])
@@ -25,7 +25,7 @@ const schema = strictObject({
   storagePath: string(),
   restrictFilesToHost: boolean().default(true),
   purge: strictObject({
-    overLimit: string().transform(bytes.parse),
+    overLimit: string().transform(parseBytes),
     afterTime: string().transform(ms),
   }).optional(),
   email: strictObject({
@@ -36,7 +36,7 @@ const schema = strictObject({
     strictObject({
       from: union([array(string()), string()]).transform((value) => new Set(expandMime(value))),
       to: string(),
-      minSize: string().transform(bytes.parse).optional(),
+      minSize: string().transform(parseBytes).optional(),
     }),
   ).optional(),
   hosts: array(
