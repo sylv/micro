@@ -80,5 +80,9 @@ export class User {
   @Property({ nullable: true, hidden: true, type: ArrayType })
   otpRecoveryCodes?: string[];
 
+  @Exclude()
+  @Property({ hidden: true, nullable: true })
+  disabledReason?: string;
+
   [OptionalProps]: 'permissions' | 'tags' | 'verifiedEmail';
 }

@@ -4,6 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { Permission } from '../../../constants.js';
 import { getRequest } from '../../../helpers/get-request.js';
 import { UserService } from '../../user/user.service.js';
+import { AccountDisabledError } from '../account-disabled.error.js';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -17,6 +18,10 @@ export class PermissionGuard implements CanActivate {
     const userId = request.user.id;
     const user = await this.userService.getUser(userId, false);
     if (!user) return false;
+    if (user.disabledReason) {
+      throw new AccountDisabledError(user.disabledReason)
+    }
+
     if (this.userService.checkPermissions(user.permissions, Permission.ADMINISTRATOR)) return true;
     if (!this.userService.checkPermissions(user.permissions, requiredPermissions)) return false;
     return true;

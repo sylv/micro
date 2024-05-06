@@ -1,15 +1,32 @@
 import clsx from 'clsx';
-import type { FC, ReactNode } from 'react';
-import { FiInfo } from 'react-icons/fi';
+import { useMemo, type FC, type ReactNode } from 'react';
+import { FiInfo, FiXOctagon } from 'react-icons/fi';
 
-export const Warning: FC<{ children: ReactNode; className?: string }> = ({ children, className }) => {
-  const classes = clsx(
-    'bg-purple-400 bg-opacity-40 border border-purple-400 px-2 py-1 rounded text-sm flex items-center gap-2',
-    className,
-  );
+export enum WarningType {
+  Info = 'bg-purple-400 border-purple-400',
+  Error = 'bg-red-500 border-red-500',
+}
+
+export const Warning: FC<{ children: ReactNode; type?: WarningType; className?: string }> = ({
+  children,
+  type = WarningType.Info,
+  className,
+}) => {
+  const classes = clsx('bg-opacity-40 border px-2 py-1 rounded text-sm flex items-center gap-2', className, type);
+  const icon = useMemo(() => {
+    switch (type) {
+      case WarningType.Error: {
+        return <FiXOctagon className="text-red-400 h-5 w-5" />;
+      }
+      case WarningType.Info: {
+        return <FiInfo className="text-purple-400 h-5 w-5" />;
+      }
+    }
+  }, [type]);
+
   return (
     <div className={classes} role="alert">
-      <FiInfo className="text-purple-400 h-5 w-5" />
+      {icon}
       {children}
     </div>
   );

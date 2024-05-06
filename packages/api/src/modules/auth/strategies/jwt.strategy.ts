@@ -7,6 +7,7 @@ import { Strategy } from 'passport-jwt';
 import { config } from '../../../config.js';
 import { User } from '../../user/user.entity.js';
 import { TokenType } from '../auth.service.js';
+import { AccountDisabledError } from '../account-disabled.error.js';
 
 export interface JWTPayloadUser {
   id: string;
@@ -33,6 +34,10 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     if (!payload.secret) throw new UnauthorizedException('Outdated JWT - try refresh your session');
     const user = await this.userRepo.findOne({ secret: payload.secret });
     if (!user) throw new UnauthorizedException('Invalid token secret');
+    if (user.disabledReason) {
+      throw new AccountDisabledError(user.disabledReason)
+    }
+
     return user;
   }
 }

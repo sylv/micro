@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import { authenticator } from 'otplib';
 import { User } from '../user/user.entity.js';
 import type { OTPEnabledDto } from './dto/otp-enabled.dto.js';
+import { AccountDisabledError } from './account-disabled.error.js';
 
 export enum TokenType {
   USER = 'USER',
@@ -66,6 +67,10 @@ export class AuthService {
     if (user.otpEnabled) {
       // account has otp enabled, check if the code is valid
       await this.validateOTPCode(otpCode, user);
+    }
+
+    if (user.disabledReason) {
+      throw new AccountDisabledError(user.disabledReason)
     }
 
     return user;

@@ -116,6 +116,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "array"
+        },
+        "disabled_reason": {
+          "name": "disabled_reason",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
         }
       },
       "name": "users",
@@ -285,7 +294,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "created_at": {
@@ -295,7 +304,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "owner_id": {
@@ -385,7 +394,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "owner_id": {
@@ -472,7 +481,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "skip_verification": {
@@ -492,7 +501,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         }
       },
@@ -595,6 +604,15 @@
           "nullable": false,
           "mappedType": "string"
         },
+        "is_utf8": {
+          "name": "is_utf8",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "boolean"
+        },
         "metadata_height": {
           "name": "metadata_height",
           "type": "int",
@@ -647,7 +665,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         },
         "owner_id": {
@@ -792,7 +810,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         }
       },
@@ -853,7 +871,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 6,
+          "length": 0,
           "mappedType": "datetime"
         }
       },

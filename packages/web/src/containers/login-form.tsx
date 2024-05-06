@@ -10,17 +10,32 @@ import { Submit } from '../components/input/submit';
 import { navigate } from '../helpers/routing';
 import { useAsync } from '../hooks/useAsync';
 import { useUser } from '../hooks/useUser';
+import { useMutation } from '@urql/preact';
+import { graphql } from '../@generated';
+import { getErrorMessage } from '../helpers/get-error-message.helper';
+import { Warning, WarningType } from '../components/warning';
 
 const schema = Yup.object().shape({
   username: Yup.string().required().min(2),
   password: Yup.string().required().min(5),
 });
 
+const LoginMutation = graphql(`
+  mutation Login($username: String!, $password: String!, $otp: String) {
+    login(username: $username, password: $password, otpCode: $otp) {
+      ...RegularUser
+    }
+  }
+`);
+
 export const LoginForm: FC = () => {
   const user = useUser();
   const [loginInfo, setLoginInfo] = useState<LoginMutationVariables | null>(null);
   const [invalidOTP, setInvalidOTP] = useState(false);
+  const [disabledReason, setDisabledReason] = useState<string | null>(null);
+  const [otpRequired, setOtpRequired] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [, loginMutation] = useMutation(LoginMutation);
   const redirect = useCallback(() => {
     const url = new URL(window.location.href);
     const to = url.searchParams.get('to') ?? '/dashboard';
@@ -35,26 +50,51 @@ export const LoginForm: FC = () => {
   }, [user, redirect]);
 
   const [login, loggingIn] = useAsync(async (values: LoginMutationVariables) => {
-    try {
-      setLoginInfo(values);
-      setInvalidOTP(false);
-      await user.login(values);
-      setError(null);
-      redirect();
-    } catch (error: any) {
-      if (user.otpRequired && error.message.toLowerCase().includes('invalid otp')) {
-        setInvalidOTP(true);
-        return;
-      } else if (error.message.toLowerCase().includes('unauthorized')) {
-        setError('Invalid username or password');
-        return;
+    setLoginInfo(values);
+    setInvalidOTP(false);
+
+    // i truly do not understand why this doesn't just throw.
+    const result = await loginMutation(values);
+    if (result.error) {
+      if (result.error.message.toLowerCase().includes('otp')) {
+        setOtpRequired(true);
       }
 
-      throw error;
+      if (otpRequired && result.error.message.toLowerCase().includes('invalid otp')) {
+        setInvalidOTP(true);
+      } else if (result.error.message.includes('ACCOUNT_DISABLED')) {
+        const index = result.error.message.indexOf(':');
+        const message = result.error.message.slice(index + 1);
+        setDisabledReason(message);
+      } else if (result.error.message.toLowerCase().includes('unauthorized')) {
+        setError('Invalid username or password');
+      } else if (result.error.message.startsWith('ACCOUNT_DISABLED:')) {
+        const message = result.error.message.replace('ACCOUNT_DISABLED: ', '');
+        setError(message);
+      } else {
+        const message = getErrorMessage(result.error);
+        setError(message || 'An unknown error occured.');
+      }
+
+      return;
     }
+
+    setError(null);
+    redirect();
   });
 
-  if (user.otpRequired && loginInfo) {
+  if (disabledReason) {
+    return (
+      <Warning type={WarningType.Error} className="w-full">
+        <div>
+          <h3>Your account is disabled</h3>
+          <p className="font-mono">{disabledReason}</p>
+        </div>
+      </Warning>
+    );
+  }
+
+  if (otpRequired && loginInfo) {
     return (
       <div className="w-full">
         <OtpInput

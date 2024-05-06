@@ -23,13 +23,13 @@ const documents = {
     types.GetFilesDocument,
   '\n  query GetPastes($after: String) {\n    user {\n      pastes(first: 24, after: $after) {\n        pageInfo {\n          endCursor\n          hasNextPage\n        }\n        edges {\n          node {\n            id\n            ...PasteCard\n          }\n        }\n      }\n    }\n  }\n':
     types.GetPastesDocument,
+  '\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n':
+    types.LoginDocument,
   '\n  query Config {\n    config {\n      allowTypes\n      inquiriesEmail\n      requireEmails\n      uploadLimit\n      currentHost {\n        normalised\n        redirect\n      }\n      rootHost {\n        normalised\n        url\n      }\n      hosts {\n        normalised\n      }\n    }\n  }\n':
     types.ConfigDocument,
   '\n  fragment RegularUser on User {\n    id\n    username\n    email\n    verifiedEmail\n  }\n':
     types.RegularUserFragmentDoc,
   '\n  query GetUser {\n    user {\n      ...RegularUser\n    }\n  }\n': types.GetUserDocument,
-  '\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n':
-    types.LoginDocument,
   '\n  mutation Logout {\n    logout\n  }\n': types.LogoutDocument,
   '\n  query GenerateOTP {\n    generateOTP {\n      recoveryCodes\n      qrauthUrl\n      secret\n    }\n  }\n':
     types.GenerateOtpDocument,
@@ -104,6 +104,12 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+  source: '\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n',
+): (typeof documents)['\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
   source: '\n  query Config {\n    config {\n      allowTypes\n      inquiriesEmail\n      requireEmails\n      uploadLimit\n      currentHost {\n        normalised\n        redirect\n      }\n      rootHost {\n        normalised\n        url\n      }\n      hosts {\n        normalised\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query Config {\n    config {\n      allowTypes\n      inquiriesEmail\n      requireEmails\n      uploadLimit\n      currentHost {\n        normalised\n        redirect\n      }\n      rootHost {\n        normalised\n        url\n      }\n      hosts {\n        normalised\n      }\n    }\n  }\n'];
 /**
@@ -118,12 +124,6 @@ export function graphql(
 export function graphql(
   source: '\n  query GetUser {\n    user {\n      ...RegularUser\n    }\n  }\n',
 ): (typeof documents)['\n  query GetUser {\n    user {\n      ...RegularUser\n    }\n  }\n'];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n',
-): (typeof documents)['\n  mutation Login($username: String!, $password: String!, $otp: String) {\n    login(username: $username, password: $password, otpCode: $otp) {\n      ...RegularUser\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
