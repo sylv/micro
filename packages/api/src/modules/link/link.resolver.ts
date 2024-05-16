@@ -7,25 +7,25 @@ import { UserId } from "../auth/auth.decorators.js";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
 import { HostService } from "../host/host.service.js";
 import { UserService } from "../user/user.service.js";
-import { Link } from "./link.entity.js";
+import { LinkEntity } from "./link.entity.js";
 import { EntityManager } from "@mikro-orm/core";
 
-@Resolver(() => Link)
+@Resolver(() => LinkEntity)
 export class LinkResolver {
-  @InjectRepository(Link) private readonly linkRepo: EntityRepository<Link>;
+  @InjectRepository(LinkEntity) private linkRepo: EntityRepository<LinkEntity>;
 
   constructor(
-    private readonly userService: UserService,
-    private readonly hostService: HostService,
+    private userService: UserService,
+    private hostService: HostService,
     private readonly em: EntityManager,
   ) {}
 
-  @Query(() => Link)
+  @Query(() => LinkEntity)
   async link(@Args("linkId", { type: () => ID }) linkId: string) {
     return this.linkRepo.findOneOrFail(linkId);
   }
 
-  @Mutation(() => Link)
+  @Mutation(() => LinkEntity)
   @UseGuards(JWTAuthGuard)
   async createLink(
     @UserId() userId: string,
@@ -45,12 +45,12 @@ export class LinkResolver {
   }
 
   @ResolveField(() => ResourceLocations)
-  paths(@Parent() link: Link) {
+  paths(@Parent() link: LinkEntity) {
     return link.getPaths();
   }
 
   @ResolveField(() => ResourceLocations)
-  urls(@Parent() link: Link) {
+  urls(@Parent() link: LinkEntity) {
     return link.getUrls();
   }
 }

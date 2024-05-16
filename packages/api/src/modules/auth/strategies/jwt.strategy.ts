@@ -5,7 +5,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import type { FastifyRequest } from "fastify";
 import { Strategy } from "passport-jwt";
 import { config } from "../../../config.js";
-import { User } from "../../user/user.entity.js";
+import { UserEntity } from "../../user/user.entity.js";
 import { TokenType } from "../auth.service.js";
 import { AccountDisabledError } from "../account-disabled.error.js";
 
@@ -17,7 +17,7 @@ export interface JWTPayloadUser {
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy) {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
 
   constructor() {
     super({

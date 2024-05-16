@@ -10,39 +10,40 @@ import { UserId } from "../auth/auth.decorators.js";
 import { AuthService, TokenType } from "../auth/auth.service.js";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
 import type { JWTPayloadUser } from "../auth/strategies/jwt.strategy.js";
-import { File, FilePage } from "../file/file.entity.js";
+import { FileEntity, FilePage } from "../file/file.entity.js";
 import { InviteService } from "../invite/invite.service.js";
-import { Paste, PastePage } from "../paste/paste.entity.js";
+import { PasteEntity, PastePage } from "../paste/paste.entity.js";
 import { CreateUserDto } from "./dto/create-user.dto.js";
 import { ResendVerificationEmailDto } from "./dto/resend-verification-email.dto.js";
-import { UserVerification } from "./user-verification.entity.js";
-import { User } from "./user.entity.js";
+import { UserVerificationEntity } from "./user-verification.entity.js";
+import { UserEntity } from "./user.entity.js";
 import { UserService } from "./user.service.js";
 
-@Resolver(() => User)
+@Resolver(() => UserEntity)
 export class UserResolver {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
-  @InjectRepository(File) private readonly fileRepo: EntityRepository<File>;
-  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
-  @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
+  @InjectRepository(FileEntity) private fileRepo: EntityRepository<FileEntity>;
+  @InjectRepository(PasteEntity) private pasteRepo: EntityRepository<PasteEntity>;
+  @InjectRepository(UserVerificationEntity)
+  private verificationRepo: EntityRepository<UserVerificationEntity>;
 
   private static readonly MIN_RESEND_INTERVAL = ms("5m");
 
   constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-    private readonly inviteService: InviteService,
+    private authService: AuthService,
+    private userService: UserService,
+    private inviteService: InviteService,
     private readonly em: EntityManager,
   ) {}
 
-  @Query(() => User)
+  @Query(() => UserEntity)
   @UseGuards(JWTAuthGuard)
   async user(@UserId() userId: string) {
     return this.userRepo.findOneOrFail(userId);
   }
 
   @ResolveField(() => Number)
-  async aggregateFileSize(@UserId() userId: string, @Parent() user: User) {
+  async aggregateFileSize(@UserId() userId: string, @Parent() user: UserEntity) {
     if (userId !== user.id) throw new UnauthorizedException();
     const result = await this.fileRepo
       .createQueryBuilder()
@@ -56,14 +57,14 @@ export class UserResolver {
   @ResolveField(() => FilePage)
   async files(
     @UserId() userId: string,
-    @Parent() user: User,
+    @Parent() user: UserEntity,
     @Args("first", { nullable: true }) limit: number = 0,
     @Args("after", { nullable: true }) cursor?: string,
   ): Promise<FilePage> {
     if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
     if (limit <= 0) limit = 10;
-    const query: FilterQuery<File> = { owner: user.id };
+    const query: FilterQuery<FileEntity> = { owner: user.id };
     const offset = cursor ? parseCursor(cursor) : 0;
     const [files, count] = await this.fileRepo.findAndCount(query, {
       offset: offset,
@@ -79,14 +80,14 @@ export class UserResolver {
   @ResolveField(() => PastePage)
   async pastes(
     @UserId() userId: string,
-    @Parent() user: User,
+    @Parent() user: UserEntity,
     @Args("first", { nullable: true }) limit: number = 0,
     @Args("after", { nullable: true }) cursor?: string,
   ): Promise<PastePage> {
     if (userId !== user.id) throw new UnauthorizedException();
     if (limit > 100) limit = 100;
     if (limit <= 0) limit = 10;
-    const query: FilterQuery<Paste> = { owner: user.id };
+    const query: FilterQuery<PasteEntity> = { owner: user.id };
     const offset = cursor ? parseCursor(cursor) : 0;
     const [pastes, count] = await this.pasteRepo.findAndCount(query, {
       offset: offset,
@@ -100,7 +101,7 @@ export class UserResolver {
   }
 
   @ResolveField(() => String)
-  async token(@UserId() userId: string, @Parent() user: User) {
+  async token(@UserId() userId: string, @Parent() user: UserEntity) {
     if (userId !== user.id) throw new UnauthorizedException();
     return this.authService.signToken<JWTPayloadUser>(TokenType.USER, {
       name: user.username,
@@ -109,7 +110,7 @@ export class UserResolver {
     });
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserEntity)
   @UseGuards(JWTAuthGuard)
   async refreshToken(@UserId() userId: string) {
     const secret = nanoid();
@@ -119,7 +120,7 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserEntity)
   async createUser(@Args("data") data: CreateUserDto) {
     const invite = await this.inviteService.get(data.invite);
     if (!invite) throw new UnauthorizedException("Invalid invite.");

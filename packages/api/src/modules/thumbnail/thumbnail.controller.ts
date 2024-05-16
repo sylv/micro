@@ -1,14 +1,14 @@
-import { Controller, Get, Param, Req, Res } from '@nestjs/common';
-import { type FastifyReply, type FastifyRequest } from 'fastify';
-import { ThumbnailService } from './thumbnail.service.js';
+import { Controller, Get, Param, Req, Res } from "@nestjs/common";
+import { type FastifyReply, type FastifyRequest } from "fastify";
+import { ThumbnailService } from "./thumbnail.service.js";
 
 @Controller()
 export class ThumbnailController {
-  constructor(private readonly thumbnailService: ThumbnailService) {}
+  constructor(private thumbnailService: ThumbnailService) {}
 
-  @Get('thumbnail/:fileId')
+  @Get("thumbnail/:fileId")
   async getThumbnailContent(
-    @Param('fileId') fileId: string,
+    @Param("fileId") fileId: string,
     @Req() request: FastifyRequest,
     @Res() reply: FastifyReply,
   ) {

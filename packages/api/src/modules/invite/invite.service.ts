@@ -3,8 +3,8 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import type { OnApplicationBootstrap } from "@nestjs/common";
 import { Injectable, Logger } from "@nestjs/common";
 import { Permission } from "../../constants.js";
-import { User } from "../user/user.entity.js";
-import { Invite } from "./invite.entity.js";
+import { UserEntity } from "../user/user.entity.js";
+import { InviteEntity } from "./invite.entity.js";
 
 export interface JWTPayloadInvite {
   id: string;
@@ -14,8 +14,8 @@ export interface JWTPayloadInvite {
 
 @Injectable()
 export class InviteService implements OnApplicationBootstrap {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
-  @InjectRepository(Invite) private readonly inviteRepo: EntityRepository<Invite>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
+  @InjectRepository(InviteEntity) private inviteRepo: EntityRepository<InviteEntity>;
 
   private readonly logger = new Logger(InviteService.name);
   constructor(
@@ -23,7 +23,7 @@ export class InviteService implements OnApplicationBootstrap {
     private em: EntityManager,
   ) {}
 
-  async create(inviterId: string | null, permissions: Permission | null, extra?: Partial<Invite>) {
+  async create(inviterId: string | null, permissions: Permission | null, extra?: Partial<InviteEntity>) {
     const invite = this.inviteRepo.create({
       inviter: inviterId || undefined,
       permissions: permissions || undefined,
@@ -37,7 +37,7 @@ export class InviteService implements OnApplicationBootstrap {
     return this.inviteRepo.findOne(inviteId);
   }
 
-  async consume(invite: Invite, user: User) {
+  async consume(invite: InviteEntity, user: UserEntity) {
     invite.invited = ref(user);
     if (invite.skipVerification) {
       user.verifiedEmail = true;

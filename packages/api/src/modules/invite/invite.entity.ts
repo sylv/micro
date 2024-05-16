@@ -1,12 +1,12 @@
-import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { rootHost } from '../../config.js';
-import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
-import { User } from '../user/user.entity.js';
+import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { rootHost } from "../../config.js";
+import { generateDeleteKey } from "../../helpers/generate-delete-key.helper.js";
+import { UserEntity } from "../user/user.entity.js";
 
-@Entity({ tableName: 'invites' })
-@ObjectType()
-export class Invite {
+@Entity({ tableName: "invites" })
+@ObjectType("Invite")
+export class InviteEntity {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateDeleteKey();
@@ -15,11 +15,11 @@ export class Invite {
   @Field({ nullable: true })
   permissions?: number;
 
-  @ManyToOne({ entity: () => User, ref: true, nullable: true })
-  inviter?: Ref<User>;
+  @ManyToOne({ entity: () => UserEntity, ref: true, nullable: true })
+  inviter?: Ref<UserEntity>;
 
-  @OneToOne({ entity: () => User, ref: true, nullable: true })
-  invited?: Ref<User>;
+  @OneToOne({ entity: () => UserEntity, ref: true, nullable: true })
+  invited?: Ref<UserEntity>;
 
   @Property()
   @Field()
@@ -59,5 +59,5 @@ export class Invite {
     return url;
   }
 
-  [OptionalProps]: 'url' | 'path' | 'consumed' | 'expired' | 'createdAt' | 'skipVerification';
+  [OptionalProps]: "url" | "path" | "consumed" | "expired" | "createdAt" | "skipVerification";
 }

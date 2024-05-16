@@ -5,20 +5,20 @@ import { Args, ID, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Permission } from "../../constants.js";
 import { RequirePermissions, UserId } from "../auth/auth.decorators.js";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
-import { Invite } from "./invite.entity.js";
+import { InviteEntity } from "./invite.entity.js";
 import { EntityManager } from "@mikro-orm/core";
 
-@Resolver(() => Invite)
+@Resolver(() => InviteEntity)
 export class InviteResolver {
-  @InjectRepository(Invite) private readonly inviteRepo: EntityRepository<Invite>;
+  @InjectRepository(InviteEntity) private inviteRepo: EntityRepository<InviteEntity>;
   constructor(private em: EntityManager) {}
 
-  @Query(() => Invite)
+  @Query(() => InviteEntity)
   async invite(@Args("inviteId", { type: () => ID }) inviteId: string) {
     return this.inviteRepo.findOneOrFail(inviteId);
   }
 
-  @Mutation(() => Invite)
+  @Mutation(() => InviteEntity)
   @RequirePermissions(Permission.CREATE_INVITE)
   @UseGuards(JWTAuthGuard)
   async createInvite(@UserId() inviterId: string) {

@@ -3,16 +3,16 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Exclude } from "class-transformer";
 import mimeType from "mime-types";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper.js";
-import { Resource } from "../../helpers/resource.entity-base.js";
+import { ResourceEntity } from "../../helpers/resource.entity-base.js";
 import { Paginated } from "../../types/paginated.type.js";
-import { Thumbnail } from "../thumbnail/thumbnail.entity.js";
+import { ThumbnailEntity } from "../thumbnail/thumbnail.entity.js";
 import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
-import { User } from "../user/user.entity.js";
+import { UserEntity } from "../user/user.entity.js";
 import { FileMetadata } from "./file-metadata.embeddable.js";
 
 @Entity({ tableName: "files" })
-@ObjectType()
-export class File extends Resource {
+@ObjectType("File")
+export class FileEntity extends ResourceEntity {
   @PrimaryKey()
   @Field(() => ID)
   id: string;
@@ -53,17 +53,21 @@ export class File extends Resource {
   @Property({ nullable: true })
   externalError?: string;
 
-  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED })
-  @Field(() => Thumbnail, { nullable: true })
-  thumbnail?: Ref<Thumbnail>;
+  @Field(() => ThumbnailEntity, { nullable: true })
+  @OneToOne(
+    () => ThumbnailEntity,
+    (thumbnail) => thumbnail.file,
+    { nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED },
+  )
+  thumbnail?: Ref<ThumbnailEntity>;
 
   @Property({ nullable: true })
   thumbnailError?: string;
 
-  @ManyToOne(() => User, { ref: true, hidden: true })
+  @ManyToOne(() => UserEntity, { ref: true, hidden: true })
   @Exclude()
   @Index()
-  owner: Ref<User>;
+  owner: Ref<UserEntity>;
 
   @Property()
   @Field()
@@ -99,8 +103,8 @@ export class File extends Resource {
     };
   }
 
-  [OptionalProps]: "createdAt" | "views" | "isExternal";
+  [OptionalProps]: "createdAt" | "views" | "external";
 }
 
 @ObjectType()
-export class FilePage extends Paginated(File) {}
+export class FilePage extends Paginated(FileEntity) {}

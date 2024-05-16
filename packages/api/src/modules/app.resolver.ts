@@ -1,15 +1,15 @@
-import { UseGuards } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
-import { config, hosts, rootHost, type MicroHost } from '../config.js';
-import type { ConfigHost } from '../types/config.type.js';
-import { Config } from '../types/config.type.js';
-import { CurrentHost, UserId } from './auth/auth.decorators.js';
-import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard.js';
-import { UserService } from './user/user.service.js';
+import { UseGuards } from "@nestjs/common";
+import { Query, Resolver } from "@nestjs/graphql";
+import { config, hosts, rootHost, type MicroHost } from "../config.js";
+import type { ConfigHost } from "../types/config.type.js";
+import { Config } from "../types/config.type.js";
+import { CurrentHost, UserId } from "./auth/auth.decorators.js";
+import { OptionalJWTAuthGuard } from "./auth/guards/optional-jwt.guard.js";
+import { UserService } from "./user/user.service.js";
 
 @Resolver(() => Config)
 export class AppResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Query(() => Config)
   @UseGuards(OptionalJWTAuthGuard)

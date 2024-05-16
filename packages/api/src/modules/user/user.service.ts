@@ -16,14 +16,14 @@ import { config, rootHost } from "../../config.js";
 import type { Permission } from "../../constants.js";
 import { generateContentId } from "../../helpers/generate-content-id.helper.js";
 import { sendMail } from "../../helpers/send-mail.helper.js";
-import { File } from "../file/file.entity.js";
-import type { Invite } from "../invite/invite.entity.js";
+import { FileEntity } from "../file/file.entity.js";
+import type { InviteEntity } from "../invite/invite.entity.js";
 import { InviteService } from "../invite/invite.service.js";
-import { Paste } from "../paste/paste.entity.js";
+import { PasteEntity } from "../paste/paste.entity.js";
 import type { CreateUserDto } from "./dto/create-user.dto.js";
 import type { Pagination } from "./dto/pagination.dto.js";
-import { UserVerification } from "./user-verification.entity.js";
-import { User } from "./user.entity.js";
+import { UserVerificationEntity } from "./user-verification.entity.js";
+import { UserEntity } from "./user.entity.js";
 
 const EMAIL_TEMPLATE_SOURCE = dedent`
   <body>
@@ -35,16 +35,17 @@ const EMAIL_TEMPLATE_SOURCE = dedent`
 
 @Injectable()
 export class UserService {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
-  @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>;
-  @InjectRepository(File) private readonly fileRepo: EntityRepository<File>;
-  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
+  @InjectRepository(UserVerificationEntity)
+  private verificationRepo: EntityRepository<UserVerificationEntity>;
+  @InjectRepository(FileEntity) private fileRepo: EntityRepository<FileEntity>;
+  @InjectRepository(PasteEntity) private pasteRepo: EntityRepository<PasteEntity>;
 
   private static readonly VERIFICATION_EXPIRY = ms("6 hours");
   private static readonly EMAIL_TEMPLATE = handlebars.compile<{ verifyUrl: string }>(EMAIL_TEMPLATE_SOURCE);
 
   constructor(
-    private readonly inviteService: InviteService,
+    private inviteService: InviteService,
     private readonly em: EntityManager,
   ) {}
 
@@ -107,7 +108,7 @@ export class UserService {
   /**
    * @warning you must persist the user on your own after calling this
    */
-  async sendVerificationEmail(user: User) {
+  async sendVerificationEmail(user: UserEntity) {
     if (!user.email) {
       throw new BadRequestException("User has no email address");
     }
@@ -127,7 +128,7 @@ export class UserService {
     });
   }
 
-  async createUser(data: CreateUserDto, invite: Invite) {
+  async createUser(data: CreateUserDto, invite: InviteEntity) {
     if (!data.email && config.email) {
       throw new ConflictException("You must provide an email address to create a user.");
     }

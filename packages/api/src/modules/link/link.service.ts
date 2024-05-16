@@ -2,13 +2,13 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import type { FastifyRequest } from "fastify";
-import { Link } from "./link.entity.js";
+import { LinkEntity } from "./link.entity.js";
 import type { MicroHost } from "../../config.js";
 import { EntityManager } from "@mikro-orm/core";
 
 @Injectable()
 export class LinkService {
-  @InjectRepository(Link) private readonly linkRepo: EntityRepository<Link>;
+  @InjectRepository(LinkEntity) private linkRepo: EntityRepository<LinkEntity>;
   constructor(private em: EntityManager) {}
 
   async getLink(id: string, request: FastifyRequest) {
@@ -40,7 +40,7 @@ export class LinkService {
     await this.em.removeAndFlush(link);
   }
 
-  getLinkUrls(link: Pick<Link, "id">) {
+  getLinkUrls(link: Pick<LinkEntity, "id">) {
     const direct = `/s/${link.id}`;
     const metadata = `/api/link/${link.id}`;
     return { direct, metadata };

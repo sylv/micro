@@ -3,11 +3,11 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import type { FastifyRequest } from "fastify";
-import { Paste } from "./paste.entity.js";
+import { PasteEntity } from "./paste.entity.js";
 
 @Injectable()
 export class PasteService {
-  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+  @InjectRepository(PasteEntity) private pasteRepo: EntityRepository<PasteEntity>;
   private readonly log = new Logger("PasteService");
   constructor(private em: EntityManager) {}
 

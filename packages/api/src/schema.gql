@@ -65,20 +65,20 @@ type File {
   urls: ResourceLocations!
 }
 
+type FileEntityPageEdge {
+  cursor: String!
+  node: File!
+}
+
 type FileMetadata {
   height: Float
   width: Float
 }
 
 type FilePage {
-  edges: [FilePageEdge!]!
+  edges: [FileEntityPageEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
-}
-
-type FilePageEdge {
-  cursor: String!
-  node: File!
 }
 
 type Invite {
@@ -145,15 +145,15 @@ type Paste {
   urls: ResourceLocations!
 }
 
-type PastePage {
-  edges: [PastePageEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PastePageEdge {
+type PasteEntityPageEdge {
   cursor: String!
   node: Paste!
+}
+
+type PastePage {
+  edges: [PasteEntityPageEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type Query {

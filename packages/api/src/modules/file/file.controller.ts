@@ -20,19 +20,19 @@ import { UserId } from "../auth/auth.decorators.js";
 import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
 import { HostService } from "../host/host.service.js";
 import { LinkService } from "../link/link.service.js";
-import { Paste } from "../paste/paste.entity.js";
+import { PasteEntity } from "../paste/paste.entity.js";
 import { UserService } from "../user/user.service.js";
 import { FileService } from "./file.service.js";
 
 @Controller()
 export class FileController {
-  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+  @InjectRepository(PasteEntity) private pasteRepo: EntityRepository<PasteEntity>;
 
   constructor(
-    private readonly fileService: FileService,
-    private readonly userService: UserService,
-    private readonly hostService: HostService,
-    private readonly linkService: LinkService,
+    private fileService: FileService,
+    private userService: UserService,
+    private hostService: HostService,
+    private linkService: LinkService,
     private readonly em: EntityManager,
   ) {}
 

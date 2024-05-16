@@ -9,27 +9,27 @@ import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
 import { OptionalJWTAuthGuard } from "../auth/guards/optional-jwt.guard.js";
 import { HostService } from "../host/host.service.js";
 import { UserService } from "../user/user.service.js";
-import { CreatePasteDto, Paste } from "./paste.entity.js";
+import { CreatePasteDto, PasteEntity } from "./paste.entity.js";
 import { resolveSelections, hasFields } from "@jenyus-org/graphql-utils";
 import { EntityManager } from "@mikro-orm/core";
 
-@Resolver(() => Paste)
+@Resolver(() => PasteEntity)
 export class PasteResolver {
-  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+  @InjectRepository(PasteEntity) private pasteRepo: EntityRepository<PasteEntity>;
 
   constructor(
-    private readonly userService: UserService,
-    private readonly hostService: HostService,
+    private userService: UserService,
+    private hostService: HostService,
     private em: EntityManager,
   ) {}
 
-  @Query(() => Paste)
+  @Query(() => PasteEntity)
   @UseGuards(OptionalJWTAuthGuard)
   async paste(
     @UserId() userId: string,
     @Info() info: any,
     @Args("pasteId", { type: () => ID }) pasteId: string,
-  ): Promise<Paste> {
+  ): Promise<PasteEntity> {
     const populate = resolveSelections([{ field: "urls", selector: "owner" }, "content"], info) as any[];
     const paste = await this.pasteRepo.findOneOrFail(pasteId, { populate });
 
@@ -45,7 +45,7 @@ export class PasteResolver {
     return paste;
   }
 
-  @Mutation(() => Paste)
+  @Mutation(() => PasteEntity)
   @UseGuards(JWTAuthGuard)
   async createPaste(@UserId() userId: string, @Args("partial") body: CreatePasteDto) {
     const user = await this.userService.getUser(userId, true);
@@ -70,17 +70,17 @@ export class PasteResolver {
   }
 
   @ResolveField(() => String)
-  type(@Parent() paste: Paste) {
+  type(@Parent() paste: PasteEntity) {
     return paste.getType();
   }
 
   @ResolveField(() => ResourceLocations)
-  paths(@Parent() paste: Paste) {
+  paths(@Parent() paste: PasteEntity) {
     return paste.getPaths();
   }
 
   @ResolveField(() => ResourceLocations)
-  urls(@Parent() paste: Paste) {
+  urls(@Parent() paste: PasteEntity) {
     return paste.getUrls();
   }
 }

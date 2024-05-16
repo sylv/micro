@@ -1,25 +1,14 @@
-import {
-  ArrayType,
-  Collection,
-  Entity,
-  Index,
-  OneToMany,
-  OneToOne,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  type Ref,
-} from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Exclude } from 'class-transformer';
-import { generateContentId } from '../../helpers/generate-content-id.helper.js';
-import { File } from '../file/file.entity.js';
-import { Invite } from '../invite/invite.entity.js';
-import { UserVerification } from './user-verification.entity.js';
+import { ArrayType, Collection, Entity, Index, OneToMany, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Exclude } from "class-transformer";
+import { generateContentId } from "../../helpers/generate-content-id.helper.js";
+import { FileEntity } from "../file/file.entity.js";
+import { InviteEntity } from "../invite/invite.entity.js";
+import { UserVerificationEntity } from "./user-verification.entity.js";
 
-@Entity({ tableName: 'users' })
-@ObjectType()
-export class User {
+@Entity({ tableName: "users" })
+@ObjectType("User")
+export class UserEntity {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateContentId();
@@ -49,24 +38,32 @@ export class User {
   @Index()
   secret: string;
 
-  @OneToOne({ entity: () => Invite, nullable: true, ref: true })
-  invite?: Ref<Invite>;
+  @OneToOne({ entity: () => InviteEntity, nullable: true, ref: true })
+  invite?: Ref<InviteEntity>;
 
   @Property()
   @Field(() => [String])
   tags: string[] = [];
 
-  @OneToMany(() => File, (file) => file.owner, { orphanRemoval: true, hidden: true })
+  @OneToMany(
+    () => FileEntity,
+    (file) => file.owner,
+    { orphanRemoval: true, hidden: true },
+  )
   @Exclude()
-  files = new Collection<File>(this);
+  files = new Collection<FileEntity>(this);
 
   @Exclude()
-  @OneToMany(() => UserVerification, (verification) => verification.user, {
-    orphanRemoval: true,
-    persist: true,
-    hidden: true,
-  })
-  verifications = new Collection<UserVerification>(this);
+  @OneToMany(
+    () => UserVerificationEntity,
+    (verification) => verification.user,
+    {
+      orphanRemoval: true,
+      persist: true,
+      hidden: true,
+    },
+  )
+  verifications = new Collection<UserVerificationEntity>(this);
 
   @Exclude()
   @Property({ nullable: true, hidden: true })
@@ -84,5 +81,5 @@ export class User {
   @Property({ hidden: true, nullable: true })
   disabledReason?: string;
 
-  [OptionalProps]: 'permissions' | 'tags' | 'verifiedEmail';
+  [OptionalProps]: "permissions" | "tags" | "verifiedEmail";
 }

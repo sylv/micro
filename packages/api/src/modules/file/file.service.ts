@@ -23,16 +23,17 @@ import { generateContentId } from "../../helpers/generate-content-id.helper.js";
 import { getStreamType } from "../../helpers/get-stream-type.helper.js";
 import { HostService } from "../host/host.service.js";
 import { StorageService } from "../storage/storage.service.js";
-import type { User } from "../user/user.entity.js";
-import type { File } from "./file.entity.js";
+import type { UserEntity } from "../user/user.entity.js";
+import { FileEntity } from "./file.entity.js";
 
 @Injectable()
 export class FileService implements OnApplicationBootstrap {
-  @InjectRepository("File") private readonly fileRepo: EntityRepository<File>;
+  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
+
   private readonly logger = new Logger(FileService.name);
   constructor(
-    private readonly storageService: StorageService,
-    private readonly hostService: HostService,
+    private storageService: StorageService,
+    private hostService: HostService,
     protected readonly orm: MikroORM,
     private em: EntityManager,
   ) {}
@@ -49,9 +50,9 @@ export class FileService implements OnApplicationBootstrap {
   async createFile(
     multipart: MultipartFile,
     request: FastifyRequest,
-    owner: User,
+    owner: UserEntity,
     host: MicroHost | undefined,
-  ): Promise<File> {
+  ): Promise<FileEntity> {
     if (host) this.hostService.checkUserCanUploadTo(host, owner);
     if (!request.headers["content-length"]) throw new BadRequestException('Missing "Content-Length" header.');
     const contentLength = Number(request.headers["content-length"]);

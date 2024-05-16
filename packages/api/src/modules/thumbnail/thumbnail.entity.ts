@@ -1,10 +1,13 @@
 import { BlobType, Entity, OneToOne, OptionalProps, Property, type Ref } from "@mikro-orm/core";
 import { Field, ObjectType } from "@nestjs/graphql";
-import { File } from "../file/file.entity.js";
+import { FileEntity } from "../file/file.entity.js";
 
 @Entity({ tableName: "thumbnails" })
-@ObjectType()
-export class Thumbnail {
+@ObjectType("Thumbnail")
+export class ThumbnailEntity {
+  @OneToOne({ entity: () => FileEntity, inversedBy: "thumbnail", primary: true, ref: true, deleteRule: "CASCADE" })
+  file: Ref<FileEntity>;
+
   @Property()
   @Field()
   size: number;
@@ -27,9 +30,6 @@ export class Thumbnail {
 
   @Property({ type: BlobType, lazy: true, ref: true, hidden: true })
   data: Ref<Buffer>;
-
-  @OneToOne({ entity: () => File, owner: true, primary: true, ref: true, deleteRule: "CASCADE" })
-  file: Ref<File>;
 
   @Property()
   @Field()

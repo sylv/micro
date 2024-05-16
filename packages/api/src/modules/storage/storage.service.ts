@@ -3,7 +3,7 @@ import type { EntityRepository } from "@mikro-orm/postgresql";
 import { CreateRequestContext, EntityManager, type FilterQuery } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable, Logger } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
+import { Cron, CronExpression, Interval } from "@nestjs/schedule";
 import crypto from "crypto";
 import { once } from "events";
 import fs, { existsSync, mkdirSync, rmdirSync } from "fs";
@@ -12,7 +12,7 @@ import path from "path";
 import type { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import { config } from "../../config.js";
-import { File } from "../file/file.entity.js";
+import { FileEntity } from "../file/file.entity.js";
 import { ExifTransformer } from "./exif.transformer.js";
 import { SizeTransform } from "./size.transformer.js";
 import sharp from "sharp";
@@ -23,7 +23,7 @@ import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
 
 @Injectable()
 export class StorageService {
-  @InjectRepository("File") private fileRepo: EntityRepository<File>;
+  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
 
   private readonly createdPaths = new Set();
   private readonly logger = new Logger(StorageService.name);
@@ -147,13 +147,13 @@ export class StorageService {
     }
   }
 
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Interval(ms("5s"))
   @CreateRequestContext()
   @dedupe()
   async uploadToExternalStorage(): Promise<void> {
     if (!config.externalStorage || !this.s3Client) return;
 
-    const filter: FilterQuery<File>[] = [];
+    const filter: FilterQuery<FileEntity>[] = [];
     if (config.externalStorage.filter.maxSize) {
       filter.push({ size: { $lte: config.externalStorage.filter.maxSize } });
     }
@@ -178,7 +178,10 @@ export class StorageService {
       ],
     });
 
-    if (!file) return;
+    if (!file) {
+      await setTimeout(ms("5m"));
+      return;
+    }
 
     try {
       const stream = await this.createReadStream(file, null);
@@ -199,9 +202,6 @@ export class StorageService {
 
       this.logger.log(`Finished uploading ${file.id} to external store`);
       await fs.promises.unlink(this.getPathFromHash(file.hash));
-
-      this.em.clear();
-      return this.uploadToExternalStorage();
     } catch (error: any) {
       file.externalError = error.message;
       await this.em.persistAndFlush(file);

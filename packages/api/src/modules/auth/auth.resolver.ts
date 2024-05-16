@@ -5,16 +5,16 @@ import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import type { FastifyReply } from "fastify";
 import ms from "ms";
 import { rootHost } from "../../config.js";
-import { User } from "../user/user.entity.js";
+import { UserEntity } from "../user/user.entity.js";
 import { UserId } from "./auth.decorators.js";
 import { AuthService, TokenType } from "./auth.service.js";
 import { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
 import { JWTAuthGuard } from "./guards/jwt.guard.js";
 import type { JWTPayloadUser } from "./strategies/jwt.strategy.js";
 
-@Resolver(() => User)
+@Resolver(() => UserEntity)
 export class AuthResolver {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
 
   private static readonly ONE_YEAR = ms("1y");
   private static readonly COOKIE_OPTIONS = {
@@ -24,9 +24,9 @@ export class AuthResolver {
     secure: rootHost.url.startsWith("https"),
   };
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Mutation(() => User)
+  @Mutation(() => UserEntity)
   async login(
     @Context() ctx: any,
     @Args("username") username: string,

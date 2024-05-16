@@ -1,26 +1,26 @@
-import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import { Exclude } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString, Length } from 'class-validator';
-import mime from 'mime-types';
-import { config } from '../../config.js';
-import { generateContentId } from '../../helpers/generate-content-id.helper.js';
-import { Resource } from '../../helpers/resource.entity-base.js';
-import { Paginated } from '../../types/paginated.type.js';
-import { User } from '../user/user.entity.js';
+import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
+import { Exclude } from "class-transformer";
+import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";
+import mime from "mime-types";
+import { config } from "../../config.js";
+import { generateContentId } from "../../helpers/generate-content-id.helper.js";
+import { ResourceEntity } from "../../helpers/resource.entity-base.js";
+import { Paginated } from "../../types/paginated.type.js";
+import { UserEntity } from "../user/user.entity.js";
 
-@Entity({ tableName: 'pastes' })
-@ObjectType({ isAbstract: true })
-export class Paste extends Resource {
+@Entity({ tableName: "pastes" })
+@ObjectType("Paste", { isAbstract: true })
+export class PasteEntity extends ResourceEntity {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateContentId();
 
-  @Property({ type: 'varchar', length: 128, nullable: true })
+  @Property({ type: "varchar", length: 128, nullable: true })
   @Field({ nullable: true })
   title?: string;
 
-  @Property({ type: 'varchar', length: 500000, lazy: true })
+  @Property({ type: "varchar", length: 500000, lazy: true })
   @Field()
   content: string;
 
@@ -45,8 +45,8 @@ export class Paste extends Resource {
   createdAt: Date = new Date();
 
   @Exclude()
-  @ManyToOne(() => User, { hidden: true, nullable: true, ref: true })
-  owner?: Ref<User>;
+  @ManyToOne(() => UserEntity, { hidden: true, nullable: true, ref: true })
+  owner?: Ref<UserEntity>;
 
   @Field({ nullable: true })
   @Property({ persist: false })
@@ -64,10 +64,10 @@ export class Paste extends Resource {
   }
 
   getType() {
-    return (this.extension && mime.lookup(this.extension)) || 'text/plain';
+    return (this.extension && mime.lookup(this.extension)) || "text/plain";
   }
 
-  [OptionalProps]: 'createdAt' | 'expiresAt';
+  [OptionalProps]: "createdAt" | "expiresAt";
 }
 
 @InputType()
@@ -115,4 +115,4 @@ export class CreatePasteDto {
 }
 
 @ObjectType()
-export class PastePage extends Paginated(Paste) {}
+export class PastePage extends Paginated(PasteEntity) {}

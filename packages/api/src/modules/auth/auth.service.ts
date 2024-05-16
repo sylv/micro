@@ -5,7 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { authenticator } from "otplib";
-import { User } from "../user/user.entity.js";
+import { UserEntity } from "../user/user.entity.js";
 import type { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
 import { AccountDisabledError } from "./account-disabled.error.js";
 import { EntityManager } from "@mikro-orm/core";
@@ -26,10 +26,10 @@ const NUMBER_REGEX = /^\d{6}$/u;
 
 @Injectable()
 export class AuthService {
-  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+  @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;
 
   constructor(
-    private readonly jwtService: JwtService,
+    private jwtService: JwtService,
     private readonly em: EntityManager,
   ) {}
 
@@ -87,7 +87,7 @@ export class AuthService {
    * Adds OTP codes to a user, without enabling OTP.
    * This is the first step in enabling OTP, next will be to get the user to verify the code using enableOTP().
    */
-  async generateOTP(user: User): Promise<OTPEnabledDto> {
+  async generateOTP(user: UserEntity): Promise<OTPEnabledDto> {
     if (user.otpEnabled) {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
@@ -118,7 +118,7 @@ export class AuthService {
    * Enable OTP after the user has verified the code.
    * Start by calling generateOTP() to get the code.
    */
-  async confirmOTP(user: User, otpCode: string) {
+  async confirmOTP(user: UserEntity, otpCode: string) {
     if (user.otpEnabled) {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
@@ -136,7 +136,7 @@ export class AuthService {
    * Disable OTP for a user.
    * @param otpCode Either a recovery code or an OTP code.
    */
-  async disableOTP(user: User, otpCode: string) {
+  async disableOTP(user: UserEntity, otpCode: string) {
     await this.validateOTPCode(otpCode, user);
     user.otpSecret = undefined;
     user.otpRecoveryCodes = undefined;
@@ -149,7 +149,7 @@ export class AuthService {
    * Supports recovery codes.g
    * @throws if the user does not have OTP enabled, check beforehand.
    */
-  private async validateOTPCode(otpCode: string | undefined, user: User) {
+  private async validateOTPCode(otpCode: string | undefined, user: UserEntity) {
     if (!user.otpEnabled || !user.otpSecret) {
       throw new Error("User does not have OTP enabled.");
     }

@@ -1,12 +1,12 @@
-import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import normalizeUrl from 'normalize-url';
-import { hosts, rootHost, type MicroHost } from '../../config.js';
-import { randomItem } from '../../helpers/random-item.helper.js';
-import type { User } from '../user/user.entity.js';
+import { BadRequestException, ForbiddenException } from "@nestjs/common";
+import normalizeUrl from "normalize-url";
+import { hosts, rootHost, type MicroHost } from "../../config.js";
+import { randomItem } from "../../helpers/random-item.helper.js";
+import type { UserEntity } from "../user/user.entity.js";
 
 export class HostService {
   formatHostUrl(url: string, username: string, path?: string | null) {
-    const formatted = url.replace('{{username}}', username);
+    const formatted = url.replace("{{username}}", username);
     if (path) return formatted + path;
     return formatted;
   }
@@ -25,7 +25,7 @@ export class HostService {
       if (tags && host.tags) {
         const hasTags = host.tags.every((tag) => tags.includes(tag));
         if (!hasTags) {
-          throw new ForbiddenException('Missing host authorisation.');
+          throw new ForbiddenException("Missing host authorisation.");
         }
       }
 
@@ -35,9 +35,9 @@ export class HostService {
     throw new BadRequestException(`Invalid host URL "${url}".`);
   }
 
-  checkUserCanUploadTo(host: MicroHost, user: User) {
+  checkUserCanUploadTo(host: MicroHost, user: UserEntity) {
     if (host.tags && !host.tags.every((tag) => user.tags.includes(tag))) {
-      throw new ForbiddenException('You are not allowed to upload to that host.');
+      throw new ForbiddenException("You are not allowed to upload to that host.");
     }
 
     return true;
@@ -47,7 +47,7 @@ export class HostService {
    * Resolve the x-micro-host header for content creation.
    * Validates the user can upload to the host, and if so returns the host.
    */
-  resolveUploadHost(input: string, user: User) {
+  resolveUploadHost(input: string, user: UserEntity) {
     const possibleHosts = input.split(/, ?/gu);
     const hostUrl = randomItem(possibleHosts);
     const host = this.getHostFrom(hostUrl, user.tags);

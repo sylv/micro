@@ -1,28 +1,29 @@
 import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { Interval } from "@nestjs/schedule";
 import { randomUUID } from "crypto";
 import { once } from "events";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import ffmpeg from "fluent-ffmpeg";
-import { readdir, readFile, rm, stat } from "fs/promises";
+import { readFile, readdir, rm, stat } from "fs/promises";
 import { DateTime } from "luxon";
 import mime from "mime-types";
+import ms from "ms";
 import { tmpdir } from "os";
 import { join } from "path";
 import sharp from "sharp";
-import type { File } from "../file/file.entity.js";
+import { setTimeout } from "timers/promises";
+import { dedupe } from "../../helpers/dedupe.js";
+import type { FileEntity } from "../file/file.entity.js";
 import { FileService } from "../file/file.service.js";
 import { StorageService } from "../storage/storage.service.js";
-import type { Thumbnail } from "./thumbnail.entity.js";
-import { Cron, CronExpression } from "@nestjs/schedule";
-import { dedupe } from "../../helpers/dedupe.js";
-import { setTimeout } from "timers/promises";
+import type { ThumbnailEntity } from "./thumbnail.entity.js";
 
 @Injectable()
 export class ThumbnailService {
-  @InjectRepository("Thumbnail") private thumbnailRepo: EntityRepository<Thumbnail>;
-  @InjectRepository("File") private fileRepo: EntityRepository<File>;
+  @InjectRepository("ThumbnailEntity") private thumbnailRepo: EntityRepository<ThumbnailEntity>;
+  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
 
   private static readonly THUMBNAIL_SIZE = 200;
   private static readonly THUMBNAIL_TYPE = "image/webp";
@@ -45,8 +46,8 @@ export class ThumbnailService {
   private readonly log = new Logger(ThumbnailService.name);
 
   constructor(
-    private readonly storageService: StorageService,
-    private readonly fileService: FileService,
+    private storageService: StorageService,
+    private fileService: FileService,
     private readonly em: EntityManager,
   ) {}
 
@@ -56,7 +57,7 @@ export class ThumbnailService {
     });
   }
 
-  async createThumbnail(file: File) {
+  async createThumbnail(file: FileEntity) {
     if (file.thumbnailError) {
       throw new BadRequestException("Thumbnail creation has already failed.");
     }
@@ -97,16 +98,16 @@ export class ThumbnailService {
     }
   }
 
-  private async createImageThumbnail(file: File) {
+  private async createImageThumbnail(file: FileEntity) {
     const supported = ThumbnailService.IMAGE_TYPES.has(file.type);
     if (!supported) throw new Error("Unsupported image type.");
     this.log.debug(`Generating thumbnail for ${file.id} (${file.type})`);
     const fileStream = await this.storageService.createReadStream(file);
-    const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).toFormat("webp");
+    const transformer = sharp().resize(ThumbnailService.THUMBNAIL_SIZE).webp();
     return fileStream.pipe(transformer).toBuffer();
   }
 
-  private async createVideoThumbnail(file: File) {
+  private async createVideoThumbnail(file: FileEntity) {
     const supported = ThumbnailService.VIDEO_TYPES.has(file.type);
     if (!supported) throw new Error("Unsupported video type.");
 
@@ -178,7 +179,7 @@ export class ThumbnailService {
       .send(thumbnail.data.unwrap());
   }
 
-  @Cron(CronExpression.EVERY_SECOND)
+  @Interval(ms("5s"))
   @CreateRequestContext()
   @dedupe()
   async generateThumbnail(): Promise<void> {
@@ -192,7 +193,7 @@ export class ThumbnailService {
     });
 
     if (!file) {
-      await setTimeout(5000);
+      await setTimeout(ms("30s"));
       return;
     }
 

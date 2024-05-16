@@ -1,15 +1,15 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { config, hosts, rootHost } from '../config.js';
-import { UserId } from './auth/auth.decorators.js';
-import { OptionalJWTAuthGuard } from './auth/guards/optional-jwt.guard.js';
-import { UserService } from './user/user.service.js';
-import { type FastifyRequest } from 'fastify';
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { config, hosts, rootHost } from "../config.js";
+import { UserId } from "./auth/auth.decorators.js";
+import { OptionalJWTAuthGuard } from "./auth/guards/optional-jwt.guard.js";
+import { UserService } from "./user/user.service.js";
+import { type FastifyRequest } from "fastify";
 
 @Controller()
 export class AppController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-  @Get('config')
+  @Get("config")
   @UseGuards(OptionalJWTAuthGuard)
   async getConfig(@Req() request: FastifyRequest, @UserId() userId?: string) {
     let tags: string[] = [];

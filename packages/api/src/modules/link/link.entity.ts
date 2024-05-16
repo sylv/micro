@@ -1,13 +1,13 @@
-import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Exclude } from 'class-transformer';
-import { generateContentId } from '../../helpers/generate-content-id.helper.js';
-import { Resource } from '../../helpers/resource.entity-base.js';
-import { User } from '../user/user.entity.js';
+import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Exclude } from "class-transformer";
+import { generateContentId } from "../../helpers/generate-content-id.helper.js";
+import { ResourceEntity } from "../../helpers/resource.entity-base.js";
+import { UserEntity } from "../user/user.entity.js";
 
-@Entity({ tableName: 'links' })
-@ObjectType()
-export class Link extends Resource {
+@Entity({ tableName: "links" })
+@ObjectType("Link")
+export class LinkEntity extends ResourceEntity {
   @PrimaryKey()
   @Field(() => ID)
   id: string = generateContentId();
@@ -24,9 +24,9 @@ export class Link extends Resource {
   @Field()
   createdAt: Date = new Date();
 
-  @ManyToOne(() => User, { ref: true, hidden: true })
+  @ManyToOne(() => UserEntity, { ref: true, hidden: true })
   @Exclude()
-  owner: Ref<User>;
+  owner: Ref<UserEntity>;
 
   getPaths() {
     return {
@@ -35,5 +35,5 @@ export class Link extends Resource {
     };
   }
 
-  [OptionalProps]: 'createdAt' | 'clicks';
+  [OptionalProps]: "createdAt" | "clicks";
 }

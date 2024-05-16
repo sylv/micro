@@ -694,15 +694,6 @@
           "nullable": true,
           "mappedType": "string"
         },
-        "thumbnail_file_id": {
-          "name": "thumbnail_file_id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
         "thumbnail_error": {
           "name": "thumbnail_error",
           "type": "varchar(255)",
@@ -737,16 +728,6 @@
       "indexes": [
         {
           "columnNames": [
-            "thumbnail_file_id"
-          ],
-          "composite": false,
-          "keyName": "files_thumbnail_file_id_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
             "owner_id"
           ],
           "composite": false,
@@ -768,19 +749,6 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "files_thumbnail_file_id_foreign": {
-          "constraintName": "files_thumbnail_file_id_foreign",
-          "columnNames": [
-            "thumbnail_file_id"
-          ],
-          "localTableName": "public.files",
-          "referencedColumnNames": [
-            "file_id"
-          ],
-          "referencedTableName": "public.thumbnails",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
         "files_owner_id_foreign": {
           "constraintName": "files_owner_id_foreign",
           "columnNames": [

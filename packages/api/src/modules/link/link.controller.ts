@@ -6,7 +6,7 @@ import { LinkService } from "./link.service.js";
 @Controller()
 export class LinkController {
   constructor(
-    private readonly linkService: LinkService,
+    private linkService: LinkService,
     private readonly em: EntityManager,
   ) {}
 
