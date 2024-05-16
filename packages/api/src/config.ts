@@ -68,7 +68,7 @@ const schema = strictObject({
   ),
 });
 
-const data = loadConfig("micro");
+const data = loadConfig("micro", { pathHints: ["micro.yaml"] });
 const result = schema.safeParse(data);
 if (!result.success) {
   console.dir({ data, error: result.error }, { depth: null });

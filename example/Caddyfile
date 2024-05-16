@@ -1,6 +1,0 @@
-# *.example.com for wildcard domains (in the config that would be "{{username}}.example.com")
-# i.example.com for a specific domain
-i.example.com, *.example.net {
-    encode gzip
-    reverse_proxy micro:3000
-}

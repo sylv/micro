@@ -1,0 +1,9 @@
+tunnel: YOUR_TUNNEL_ID
+
+ingress:
+  - hostname: "*.example.net"
+    service: http://micro:3000
+  - hostname: "example.net"
+    service: http://micro:3000
+
+  - service: http_status:404

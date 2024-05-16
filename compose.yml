@@ -1,6 +1,6 @@
 # THIS FILE IS FOR DEVELOPMENT ONLY.
+# PERSISTENCE IS NOT ENABLED, `docker compose down` WILL DELETE ALL DATA.
 # If you want complete examples on how to host micro, see the /examples directory.
-# Persistence is not setup for this postgres instance.
 version: "3"
 services:
   postgres:

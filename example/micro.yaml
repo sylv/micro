@@ -1,5 +1,5 @@
 # you can pass in most config options through environment variables, 
-# for example `DATABASE_URL` will override the databaseUrl in this config file.
+# for example `MICRO_DATABASE_URL` will override the databaseUrl in this config file.
 # remove the .yaml extension or change it to .json to use JSON-with-comments
 # ref: https://github.com/sylv/venera#sources
 
