@@ -675,8 +675,8 @@
           "default": "0",
           "mappedType": "integer"
         },
-        "is_external": {
-          "name": "is_external",
+        "external": {
+          "name": "external",
           "type": "boolean",
           "unsigned": false,
           "autoincrement": false,
@@ -685,8 +685,26 @@
           "default": "false",
           "mappedType": "boolean"
         },
+        "external_error": {
+          "name": "external_error",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "thumbnail_file_id": {
           "name": "thumbnail_file_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "thumbnail_error": {
+          "name": "thumbnail_error",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

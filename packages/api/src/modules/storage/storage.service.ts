@@ -18,6 +18,8 @@ import { SizeTransform } from "./size.transformer.js";
 import sharp from "sharp";
 import { setTimeout } from "timers/promises";
 import ms from "ms";
+import { dedupe } from "../../helpers/dedupe.js";
+import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
 
 @Injectable()
 export class StorageService {
@@ -25,7 +27,6 @@ export class StorageService {
 
   private readonly createdPaths = new Set();
   private readonly logger = new Logger(StorageService.name);
-  private uploadingFile = false;
   private s3Client?: S3Client;
   private tempUploadDir = path.join(config.storagePath, ".tmp");
 
@@ -102,10 +103,10 @@ export class StorageService {
   }
 
   async createReadStream(
-    file: { hash: string; isExternal: boolean },
+    file: { hash: string; external: boolean },
     range?: { start?: number | null; end?: number | null } | null,
   ) {
-    if (file.isExternal) {
+    if (file.external) {
       if (!this.s3Client || !config.externalStorage)
         throw new Error("File is external but external storage is not configured");
 
@@ -130,11 +131,11 @@ export class StorageService {
     return stream;
   }
 
-  getPathFromHash(hash: string) {
+  private getPathFromHash(hash: string) {
     return path.join(config.storagePath, this.getFolderFromHash(hash));
   }
 
-  getFolderFromHash(hash: string) {
+  private getFolderFromHash(hash: string) {
     return path.join(hash[0], hash[1], hash);
   }
 
@@ -148,12 +149,11 @@ export class StorageService {
 
   @Cron(CronExpression.EVERY_5_MINUTES)
   @CreateRequestContext()
-  async uploadToExternalStorage() {
+  @dedupe()
+  async uploadToExternalStorage(): Promise<void> {
     if (!config.externalStorage || !this.s3Client) return;
-    if (this.uploadingFile) return;
-    this.uploadingFile = true;
 
-    const filter: FilterQuery<File>[] = [{ isExternal: false }];
+    const filter: FilterQuery<File>[] = [];
     if (config.externalStorage.filter.maxSize) {
       filter.push({ size: { $lte: config.externalStorage.filter.maxSize } });
     }
@@ -165,7 +165,19 @@ export class StorageService {
       filter.push({ createdAt: { $lte: decayDate } });
     }
 
-    const file = await this.fileRepo.findOne({ $and: filter });
+    const file = await this.fileRepo.findOne({
+      external: false,
+      externalError: null,
+      $and: filter,
+      // we want to generate thumbnails while the file is not external, because it
+      // saves s3 calls which may cost money.
+      $or: [
+        { thumbnail: { $ne: null } },
+        { thumbnailError: { $ne: null } },
+        { type: { $nin: [...ThumbnailService.IMAGE_TYPES, ...ThumbnailService.VIDEO_TYPES] } },
+      ],
+    });
+
     if (!file) return;
 
     try {
@@ -182,18 +194,22 @@ export class StorageService {
         }),
       );
 
-      file.isExternal = true;
+      file.external = true;
       await this.em.persistAndFlush(file);
 
       this.logger.log(`Finished uploading ${file.id} to external store`);
       await fs.promises.unlink(this.getPathFromHash(file.hash));
-    } catch (error) {
+
+      this.em.clear();
+      return this.uploadToExternalStorage();
+    } catch (error: any) {
+      file.externalError = error.message;
+      await this.em.persistAndFlush(file);
+
       this.logger.error(`Failed to upload ${file.id} to external store`, error);
       this.logger.error("This is a bug, report it on github!");
       this.logger.warn("Retrying external store uploads in 30 minutes");
       await setTimeout(ms("30m"));
-    } finally {
-      this.uploadingFile = false;
     }
   }
 }

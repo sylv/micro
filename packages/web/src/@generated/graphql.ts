@@ -60,9 +60,9 @@ export type File = {
   __typename?: 'File';
   createdAt: Scalars['DateTime']['output'];
   displayName: Scalars['String']['output'];
+  external: Scalars['Boolean']['output'];
   hash: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  isExternal: Scalars['Boolean']['output'];
   isOwner: Scalars['Boolean']['output'];
   metadata?: Maybe<FileMetadata>;
   name?: Maybe<Scalars['String']['output']>;

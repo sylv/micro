@@ -25,10 +25,10 @@ export class Thumbnail {
   @Field()
   height: number;
 
-  @Property({ type: BlobType, lazy: true, hidden: true })
-  data: Buffer;
+  @Property({ type: BlobType, lazy: true, ref: true, hidden: true })
+  data: Ref<Buffer>;
 
-  @OneToOne({ entity: () => File, primary: true, ref: true, deleteRule: "CASCADE" })
+  @OneToOne({ entity: () => File, owner: true, primary: true, ref: true, deleteRule: "CASCADE" })
   file: Ref<File>;
 
   @Property()

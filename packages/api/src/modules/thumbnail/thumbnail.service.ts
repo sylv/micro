@@ -1,4 +1,4 @@
-import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { randomUUID } from "crypto";
@@ -15,20 +15,24 @@ import type { File } from "../file/file.entity.js";
 import { FileService } from "../file/file.service.js";
 import { StorageService } from "../storage/storage.service.js";
 import type { Thumbnail } from "./thumbnail.entity.js";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { dedupe } from "../../helpers/dedupe.js";
+import { setTimeout } from "timers/promises";
 
 @Injectable()
 export class ThumbnailService {
-  @InjectRepository("Thumbnail") private readonly thumbnailRepo: EntityRepository<Thumbnail>;
+  @InjectRepository("Thumbnail") private thumbnailRepo: EntityRepository<Thumbnail>;
+  @InjectRepository("File") private fileRepo: EntityRepository<File>;
 
   private static readonly THUMBNAIL_SIZE = 200;
   private static readonly THUMBNAIL_TYPE = "image/webp";
-  private static readonly IMAGE_TYPES = new Set(
+  static readonly IMAGE_TYPES = new Set(
     Object.keys(sharp.format)
       .map((key) => mime.lookup(key))
       .filter((key) => key && key.startsWith("image")),
-  );
+  ) as Set<string>;
 
-  private static readonly VIDEO_TYPES = new Set([
+  static readonly VIDEO_TYPES = new Set([
     "video/mp4",
     "video/webm",
     "video/ogg",
@@ -53,31 +57,44 @@ export class ThumbnailService {
   }
 
   async createThumbnail(file: File) {
-    const start = Date.now();
+    if (file.thumbnailError) {
+      throw new BadRequestException("Thumbnail creation has already failed.");
+    }
 
-    let data: Buffer;
-    if (ThumbnailService.IMAGE_TYPES.has(file.type)) {
-      data = await this.createImageThumbnail(file);
-    } else if (ThumbnailService.VIDEO_TYPES.has(file.type)) {
-      data = await this.createVideoThumbnail(file);
-    } else {
+    const isImage = ThumbnailService.IMAGE_TYPES.has(file.type);
+    const isVideo = ThumbnailService.VIDEO_TYPES.has(file.type);
+    if (!isImage && !isVideo) {
       throw new BadRequestException("That file type does not support thumbnails.");
     }
 
-    const thumbnailMetadata = await sharp(data).metadata();
-    const duration = Date.now() - start;
-    const thumbnail = this.thumbnailRepo.create({
-      data: data,
-      duration: duration,
-      size: data.length,
-      type: ThumbnailService.THUMBNAIL_TYPE,
-      width: thumbnailMetadata.width!,
-      height: thumbnailMetadata.height!,
-      file: file,
-    });
+    try {
+      const start = Date.now();
+      let data: Buffer;
+      if (isImage) {
+        data = await this.createImageThumbnail(file);
+      } else {
+        data = await this.createVideoThumbnail(file);
+      }
 
-    await this.em.persistAndFlush([file, thumbnail]);
-    return thumbnail;
+      const thumbnailMetadata = await sharp(data).metadata();
+      const duration = Date.now() - start;
+      const thumbnail = this.thumbnailRepo.create({
+        data: data,
+        duration: duration,
+        size: data.length,
+        type: ThumbnailService.THUMBNAIL_TYPE,
+        width: thumbnailMetadata.width!,
+        height: thumbnailMetadata.height!,
+        file: file,
+      });
+
+      await this.em.persistAndFlush([file, thumbnail]);
+      return thumbnail;
+    } catch (error: any) {
+      file.thumbnailError = error.message;
+      await this.em.persistAndFlush(file);
+      throw error;
+    }
   }
 
   private async createImageThumbnail(file: File) {
@@ -95,7 +112,7 @@ export class ThumbnailService {
 
     const tempId = randomUUID();
     const tempDir = join(tmpdir(), `.thumbnail-workspace-${tempId}`);
-    const filePath = this.storageService.getPathFromHash(file.hash);
+    const fileStream = await this.storageService.createReadStream(file);
     this.log.debug(`Generating video thumbnail at "${tempDir}"`);
 
     // i have no clue why but the internet told me that doing it in multiple invocations is faster
@@ -103,7 +120,7 @@ export class ThumbnailService {
     const positions = ["5%", "10%", "20%", "40%"];
     const size = `${ThumbnailService.THUMBNAIL_SIZE}x?`;
     for (const [positionIndex, percent] of positions.entries()) {
-      const stream = ffmpeg(filePath).screenshot({
+      const stream = ffmpeg(fileStream).screenshot({
         count: 1,
         timemarks: [percent],
         folder: tempDir,
@@ -149,7 +166,7 @@ export class ThumbnailService {
         .header("Cache-Control", "public, max-age=31536000")
         .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
         .header("X-Content-Type-Options", "nosniff")
-        .send(existing.data);
+        .send(existing.data.unwrap());
     }
 
     const file = await this.fileService.getFile(fileId, request);
@@ -158,6 +175,27 @@ export class ThumbnailService {
       .header("X-Micro-Generated", "true")
       .header("X-Micro-Duration", thumbnail.duration)
       .header("Content-Type", ThumbnailService.THUMBNAIL_TYPE)
-      .send(thumbnail.data);
+      .send(thumbnail.data.unwrap());
+  }
+
+  @Cron(CronExpression.EVERY_SECOND)
+  @CreateRequestContext()
+  @dedupe()
+  async generateThumbnail(): Promise<void> {
+    const file = await this.fileRepo.findOne({
+      thumbnail: null,
+      thumbnailError: null,
+      external: false,
+      type: {
+        $in: [...ThumbnailService.IMAGE_TYPES, ...ThumbnailService.VIDEO_TYPES],
+      },
+    });
+
+    if (!file) {
+      await setTimeout(5000);
+      return;
+    }
+
+    await this.createThumbnail(file);
   }
 }

@@ -48,11 +48,17 @@ export class File extends Resource {
 
   @Property()
   @Field()
-  isExternal: boolean = false;
+  external: boolean = false;
+
+  @Property({ nullable: true })
+  externalError?: string;
 
   @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED })
   @Field(() => Thumbnail, { nullable: true })
   thumbnail?: Ref<Thumbnail>;
+
+  @Property({ nullable: true })
+  thumbnailError?: string;
 
   @ManyToOne(() => User, { ref: true, hidden: true })
   @Exclude()
