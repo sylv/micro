@@ -182,7 +182,7 @@ export class ThumbnailService {
   @Interval(ms("5s"))
   @CreateRequestContext()
   @dedupe()
-  async generateThumbnail(): Promise<void> {
+  protected async generateThumbnail(): Promise<void> {
     const file = await this.fileRepo.findOne({
       thumbnail: null,
       thumbnailError: null,

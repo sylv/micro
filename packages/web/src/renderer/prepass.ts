@@ -1,6 +1,6 @@
-import type { VNode } from "preact";
-import renderToString, { renderToStringAsync } from "preact-render-to-string";
 import type { Client } from "@urql/preact";
+import type { VNode } from "preact";
+import { renderToStringAsync } from "preact-render-to-string";
 
 const MAX_DEPTH = 3;
 const isPromiseLike = (value: unknown): value is Promise<unknown> => {

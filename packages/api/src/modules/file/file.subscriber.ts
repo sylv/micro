@@ -16,7 +16,7 @@ export class FileSubscriber implements EventSubscriber<FileEntity> {
     const filesWithHash = await em.count(FileEntity, { hash: entity.hash });
     if (filesWithHash === 0) {
       this.log.debug(`Deleting file on disk with hash ${entity.hash} (${entity.id})`);
-      await this.storageService.delete(entity.hash);
+      await this.storageService.delete(entity);
     }
   }
 }

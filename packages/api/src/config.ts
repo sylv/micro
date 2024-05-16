@@ -43,6 +43,7 @@ const schema = strictObject({
   purge: strictObject({
     overLimit: string().transform(parseBytes),
     afterTime: string().transform(ms),
+    underViews: number().optional(),
   }).optional(),
   email: strictObject({
     from: string().email(),

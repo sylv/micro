@@ -30,6 +30,7 @@ restrictFilesToHost: true
 # purge:
 #   overLimit: 1MB # files over this size will be purged
 #   afterTime: 1d # after this many days
+#   underViews: 5 # only delete files with <5 views
 
 # # allowTypes is a list of file types that can be uploaded.
 # # a prefix will be expanded into known types, so `video` becomes `video/mp4`, `video/webm`, etc.

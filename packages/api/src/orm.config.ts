@@ -1,5 +1,4 @@
 import { FlushMode } from "@mikro-orm/core";
-import type { MikroOrmModuleSyncOptions } from "@mikro-orm/nestjs";
 import { Logger, NotFoundException } from "@nestjs/common";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

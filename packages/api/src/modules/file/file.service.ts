@@ -1,7 +1,6 @@
 import type { MultipartFile } from "@fastify/multipart";
-import { CreateRequestContext, EntityManager, EntityRepository, MikroORM } from "@mikro-orm/core";
+import { EntityManager, EntityRepository, MikroORM } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
-import type { OnApplicationBootstrap } from "@nestjs/common";
 import {
   BadRequestException,
   Injectable,
@@ -9,7 +8,6 @@ import {
   NotFoundException,
   PayloadTooLargeException,
 } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import bytes from "bytes";
 import * as contentRange from "content-range";
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -27,7 +25,7 @@ import type { UserEntity } from "../user/user.entity.js";
 import { FileEntity } from "./file.entity.js";
 
 @Injectable()
-export class FileService implements OnApplicationBootstrap {
+export class FileService {
   @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
 
   private readonly logger = new Logger(FileService.name);
@@ -189,39 +187,5 @@ export class FileService implements OnApplicationBootstrap {
       .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
       .header("X-Content-Type-Options", "nosniff")
       .send(stream);
-  }
-
-  @Cron(CronExpression.EVERY_HOUR)
-  @CreateRequestContext()
-  async purgeFiles() {
-    if (!config.purge) return;
-    const createdBefore = new Date(Date.now() - config.purge.afterTime);
-    const files = await this.fileRepo.find({
-      size: {
-        $gte: config.purge.overLimit,
-      },
-      createdAt: {
-        $lte: createdBefore,
-      },
-    });
-
-    for (const file of files) {
-      const size = bytes.format(file.size);
-      const age = DateTime.fromJSDate(file.createdAt).toRelative();
-      await this.em.removeAndFlush(file);
-      this.logger.log(`Purging ${file.id} (${size}, ${age})`);
-    }
-
-    if (files[0]) {
-      this.logger.log(`Purged ${files.length} files`);
-    }
-  }
-
-  onApplicationBootstrap() {
-    if (config.purge) {
-      const size = bytes.format(config.purge.overLimit);
-      const age = DateTime.local().minus(config.purge.afterTime).toRelative();
-      this.logger.warn(`Purging files is enabled for files over ${size} uploaded more than ${age}.`);
-    }
   }
 }
