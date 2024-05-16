@@ -1,5 +1,4 @@
-/* eslint-disable unicorn/prefer-code-point */
-const ENCRYPTION_ALGORITHM = 'AES-GCM';
+const ENCRYPTION_ALGORITHM = "AES-GCM";
 const ENCRYPTION_LENGTH = 256;
 
 interface EncryptionResult {
@@ -8,7 +7,7 @@ interface EncryptionResult {
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
-  let binary = '';
+  let binary = "";
   const bytes = new Uint8Array(buffer);
   const len = bytes.byteLength;
   for (let i = 0; i < len; i++) {
@@ -37,7 +36,7 @@ export async function encryptContent(content: string): Promise<EncryptionResult>
       length: ENCRYPTION_LENGTH,
     },
     true,
-    ['encrypt', 'decrypt'],
+    ["encrypt", "decrypt"],
   );
 
   const encryptedContent = await crypto.subtle.encrypt(
@@ -54,22 +53,22 @@ export async function encryptContent(content: string): Promise<EncryptionResult>
   const withIV = `${ivString}:${encryptedString}`;
 
   return {
-    key: arrayBufferToBase64(await crypto.subtle.exportKey('raw', key)),
+    key: arrayBufferToBase64(await crypto.subtle.exportKey("raw", key)),
     encryptedContent: withIV,
   };
 }
 
 export async function decryptContent(data: EncryptionResult): Promise<string> {
   try {
-    const [iv, encryptedContent] = data.encryptedContent.split(':');
+    const [iv, encryptedContent] = data.encryptedContent.split(":");
     const key = await crypto.subtle.importKey(
-      'raw',
+      "raw",
       base64ToArrayBuffer(data.key),
       {
         name: ENCRYPTION_ALGORITHM,
       },
       true,
-      ['encrypt', 'decrypt'],
+      ["encrypt", "decrypt"],
     );
 
     const decryptedContent = await crypto.subtle.decrypt(
@@ -84,6 +83,6 @@ export async function decryptContent(data: EncryptionResult): Promise<string> {
     return new TextDecoder().decode(decryptedContent);
   } catch (error) {
     console.error(error);
-    throw new Error('Failed to decrypt content. You might not have the correct decryption key.');
+    throw new Error("Failed to decrypt content. You might not have the correct decryption key.");
   }
 }

@@ -1,13 +1,15 @@
 {
-  "extends": "@atlasbot/configs/tsconfig/esm.json",
+  "extends": "@atlasbot/configs/tsconfig",
   "include": ["src"],
   "compilerOptions": {
-    "outDir": "dist",
     "noUncheckedIndexedAccess": false,
-    "strictPropertyInitialization": false, // doesn't play nice with mikroorm/graphql decorators
+    "strictPropertyInitialization": false,
     "noImplicitOverride": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["es2021", "dom"],
-  },
+    "lib": ["es2023", "dom"],
+    "paths": {
+      "istextorbinary": ["./node_modules/istextorbinary/edition-types/index.d.ts"]
+    }
+  }
 }

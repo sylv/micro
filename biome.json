@@ -1,0 +1,6 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.6.1/schema.json",
+    "extends": [
+        "@atlasbot/configs/biome"
+    ]
+}

@@ -1,18 +1,18 @@
-import { useMutation, useQuery } from '@urql/preact';
-import type { FC } from 'react';
-import { Fragment } from 'react';
-import { graphql } from '../../../@generated/gql';
-import { Breadcrumbs } from '../../../components/breadcrumbs';
-import { Button } from '../../../components/button';
-import { Container } from '../../../components/container';
-import { Input } from '../../../components/input/input';
-import { OtpInput } from '../../../components/input/otp';
-import { ButtonSkeleton, InputSkeleton, Skeleton } from '../../../components/skeleton';
-import { Title } from '../../../components/title';
-import { ConfigGenerator } from '../../../containers/config-generator/config-generator';
-import { navigate } from '../../../helpers/routing';
-import { useAsync } from '../../../hooks/useAsync';
-import { useLogoutUser, useUserRedirect } from '../../../hooks/useUser';
+import { useMutation, useQuery } from "@urql/preact";
+import type { FC } from "react";
+import { Fragment } from "react";
+import { graphql } from "../../../@generated/gql";
+import { Breadcrumbs } from "../../../components/breadcrumbs";
+import { Button } from "../../../components/button";
+import { Container } from "../../../components/container";
+import { Input } from "../../../components/input/input";
+import { OtpInput } from "../../../components/input/otp";
+import { ButtonSkeleton, InputSkeleton, Skeleton } from "../../../components/skeleton";
+import { Title } from "../../../components/title";
+import { ConfigGenerator } from "../../../containers/config-generator/config-generator";
+import { navigate } from "../../../helpers/routing";
+import { useAsync } from "../../../hooks/useAsync";
+import { useLogoutUser, useUserRedirect } from "../../../hooks/useUser";
 
 const RefreshToken = graphql(`
   mutation RefreshToken {
@@ -43,7 +43,9 @@ export const Page: FC = () => {
   const { logout } = useLogoutUser();
   const [, refreshMutation] = useMutation(RefreshToken);
   const [refresh, refreshing] = useAsync(async () => {
-    const confirmation = confirm('Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.') // prettier-ignore
+    const confirmation = confirm(
+      "Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.",
+    );
     if (!confirmation) return;
     await refreshMutation({});
     await logout();
@@ -65,7 +67,7 @@ export const Page: FC = () => {
             <Fragment>
               <div className="font-bold text-xl">Upload Token</div>
               <p className="text-sm mt-2 text-gray-400">
-                This token is used when uploading files.{' '}
+                This token is used when uploading files.{" "}
                 <button
                   type="button"
                   className="text-purple-400 hover:underline"
@@ -73,7 +75,7 @@ export const Page: FC = () => {
                   disabled={refreshing}
                 >
                   Click here
-                </button>{' '}
+                </button>{" "}
                 to reset your token and invalidate all existing ShareX configurations.
               </p>
             </Fragment>
@@ -117,7 +119,10 @@ export const Page: FC = () => {
         </div>
         <div className="right flex items-center col-span-full md:col-span-1">
           {user.data && (
-            <Button className="w-auto ml-auto" onClick={() => navigate(`/dashboard/preferences/change-password`)}>
+            <Button
+              className="w-auto ml-auto"
+              onClick={() => navigate("/dashboard/preferences/change-password")}
+            >
               Change
             </Button>
           )}
@@ -133,8 +138,8 @@ export const Page: FC = () => {
             <Fragment>
               <div className="font-bold text-xl">2-factor Authentication</div>
               <p className="text-sm mt-2 text-gray-400">
-                2-factor authentication is currently {user.data.user.otpEnabled ? 'enabled' : 'disabled'}.{' '}
-                {user.data.user.otpEnabled ? `Enter an authenticator code to disable it.` : 'Click to setup.'}
+                2-factor authentication is currently {user.data.user.otpEnabled ? "enabled" : "disabled"}.{" "}
+                {user.data.user.otpEnabled ? "Enter an authenticator code to disable it." : "Click to setup."}
               </p>
             </Fragment>
           )}
@@ -155,7 +160,7 @@ export const Page: FC = () => {
             />
           )}
           {user.data && !user.data.user.otpEnabled && (
-            <Button className="w-auto ml-auto" onClick={() => navigate(`/dashboard/mfa`)}>
+            <Button className="w-auto ml-auto" onClick={() => navigate("/dashboard/mfa")}>
               Enable 2FA
             </Button>
           )}

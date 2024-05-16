@@ -52,6 +52,7 @@ type File {
   displayName: String!
   hash: String!
   id: ID!
+  isExternal: Boolean!
   isOwner: Boolean!
   metadata: FileMetadata
   name: String

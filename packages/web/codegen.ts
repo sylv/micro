@@ -1,13 +1,13 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
+import type { CodegenConfig } from "@graphql-codegen/cli";
 
 export default {
   overwrite: true,
-  schema: '../api/src/schema.gql',
-  documents: ['src/**/*.tsx'],
+  schema: "../api/src/schema.gql",
+  documents: ["src/**/*.tsx"],
   errorsOnly: true,
   generates: {
-    'src/@generated/': {
-      preset: 'client',
+    "src/@generated/": {
+      preset: "client",
       config: {
         useTypeImports: true,
       },
@@ -17,8 +17,5 @@ export default {
         fragmentMasking: false,
       },
     },
-  },
-  hooks: {
-    afterAllFileWrite: ['prettier --write'],
   },
 } satisfies CodegenConfig;

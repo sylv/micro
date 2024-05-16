@@ -1,13 +1,13 @@
-import FastifyEarlyHints from '@fastify/early-hints';
-import FastifyProxy from '@fastify/http-proxy';
-import type { FastifyInstance } from 'fastify';
-import Fastify from 'fastify';
-import type { IncomingMessage, ServerResponse } from 'http';
-import { compile, match } from 'path-to-regexp';
-import url from 'url';
-import { renderPage } from 'vike/server';
-import type { PageContext } from 'vike/types';
-import { REWRITES } from './rewrites';
+import FastifyEarlyHints from "@fastify/early-hints";
+import FastifyProxy from "@fastify/http-proxy";
+import type { FastifyInstance } from "fastify";
+import Fastify from "fastify";
+import type { IncomingMessage, ServerResponse } from "http";
+import { compile, match } from "path-to-regexp";
+import url from "url";
+import { renderPage } from "vike/server";
+import type { PageContext } from "vike/types";
+import { REWRITES } from "./rewrites";
 
 const rewrites = REWRITES.map(({ source, destination }) => ({
   match: match(source),
@@ -16,24 +16,24 @@ const rewrites = REWRITES.map(({ source, destination }) => ({
 
 const redirectUrlRegex = /\/(i|v)\/(?<id>[\dA-z]+)($|\?|#)/iu;
 const redirectUserAgents = [
-  'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)', // Discord
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 11.6; rv:92.0) Gecko/20100101 Firefox/92.0', // Discord
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0', // Discord
-  'wget/',
-  'curl/',
+  "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)", // Discord
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 11.6; rv:92.0) Gecko/20100101 Firefox/92.0", // Discord
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0", // Discord
+  "wget/",
+  "curl/",
 ];
 
 export function shouldRedirectBasedOnAccept(acceptHeader: string | null) {
   if (!acceptHeader) return false;
-  if (acceptHeader.includes('image/*')) return true;
-  if (acceptHeader.includes('video/*')) return true;
+  if (acceptHeader.includes("image/*")) return true;
+  if (acceptHeader.includes("video/*")) return true;
   return false;
 }
 
 async function startServer() {
   const instance = Fastify({
     rewriteUrl: (request) => {
-      if (!request.url) throw new Error('No url');
+      if (!request.url) throw new Error("No url");
       const { pathname } = url.parse(request.url);
       if (!pathname) return request.url;
 
@@ -42,7 +42,7 @@ async function startServer() {
       // also supports some other user agents that do the same thing
       const isPathToRedirect = redirectUrlRegex.exec(pathname);
       if (isPathToRedirect) {
-        const userAgent = request.headers['user-agent'];
+        const userAgent = request.headers["user-agent"];
         const accept = request.headers.accept;
         const isUserAgentToRedirect = redirectUserAgents.some((ua) => userAgent?.startsWith(ua));
         const isAcceptToRedirect = accept && shouldRedirectBasedOnAccept(accept);
@@ -72,19 +72,19 @@ async function startServer() {
   });
 
   instance.register(FastifyProxy, {
-    prefix: '/api',
-    upstream: process.env.BACKEND_API_URL || 'http://localhost:8080',
+    prefix: "/api",
+    upstream: process.env.BACKEND_API_URL || "http://localhost:8080",
     replyOptions: {
       rewriteRequestHeaders: (originalReq, headers) => ({
         ...headers,
-        'x-forwarded-host': originalReq.headers.host,
+        "x-forwarded-host": originalReq.headers.host,
       }),
     },
   });
 
-  instance.get('*', async (request, reply) => {
-    let cookies;
-    if (request.headers.cookie && typeof request.headers.cookie === 'string') {
+  instance.get("*", async (request, reply) => {
+    let cookies: string | undefined;
+    if (request.headers.cookie && typeof request.headers.cookie === "string") {
       cookies = request.headers.cookie;
     }
 
@@ -106,7 +106,7 @@ async function startServer() {
       reply.status(statusCode);
       reply.send(body);
     } else {
-      reply.status(500).send('Internal Server Error');
+      reply.status(500).send("Internal Server Error");
     }
   });
 
@@ -115,7 +115,6 @@ async function startServer() {
 }
 
 let fastify: FastifyInstance | undefined;
-// eslint-disable-next-line unicorn/prefer-top-level-await
 const fastifyHandlerPromise = startServer().catch((error) => {
   console.error(error);
   process.exit(1);
@@ -126,5 +125,5 @@ export default async function handler(request: IncomingMessage, reply: ServerRes
     await fastifyHandlerPromise;
   }
 
-  fastify!.server.emit('request', request, reply);
+  fastify!.server.emit("request", request, reply);
 }

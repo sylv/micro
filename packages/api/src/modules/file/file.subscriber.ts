@@ -1,11 +1,9 @@
-import type { EventArgs, EventSubscriber } from '@mikro-orm/core';
-import { Subscriber } from '@mikro-orm/core';
-import { Injectable, Logger } from '@nestjs/common';
-import { StorageService } from '../storage/storage.service.js';
-import { File } from './file.entity.js';
+import type { EventArgs, EventSubscriber } from "@mikro-orm/core";
+import { Injectable, Logger } from "@nestjs/common";
+import { StorageService } from "../storage/storage.service.js";
+import { File } from "./file.entity.js";
 
 @Injectable()
-@Subscriber()
 export class FileSubscriber implements EventSubscriber<File> {
   private readonly log = new Logger(FileSubscriber.name);
   constructor(private readonly storageService: StorageService) {}

@@ -1,16 +1,16 @@
-import { fileTypeFromBuffer } from 'file-type';
-import * as mimeType from 'mime-types';
-import path from 'path';
-import type { PassThrough } from 'stream';
-import { isBinary } from 'istextorbinary';
+import { fileTypeFromBuffer } from "file-type";
+import * as mimeType from "mime-types";
+import path from "path";
+import type { PassThrough } from "stream";
+import { isBinary } from "istextorbinary";
 
-const DEFAULT_TYPE = 'application/octet-stream';
+const DEFAULT_TYPE = "application/octet-stream";
 // is-binary scans the first 1kb
 // file-type scans the first 4.2kb
 const SCAN_BYTE_COUNT = 4200;
 // overrides for types that are poorly mapped by sharex
-const EXT_TEXT_MAP = new Set(['ts', 'tsx', 'jsx', 'ejs', 'cjs', 'mjs']);
-const EXT_TEXT_TYPE = 'text/plain';
+const EXT_TEXT_MAP = new Set(["ts", "tsx", "jsx", "ejs", "cjs", "mjs"]);
+const EXT_TEXT_TYPE = "text/plain";
 
 async function readFirstBytes(stream: PassThrough) {
   let count = 0;

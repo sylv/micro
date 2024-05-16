@@ -1,27 +1,16 @@
-import {
-  Embedded,
-  Entity,
-  Index,
-  LoadStrategy,
-  ManyToOne,
-  OneToOne,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-  type Ref,
-} from '@mikro-orm/core';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Exclude } from 'class-transformer';
-import mimeType from 'mime-types';
-import { generateDeleteKey } from '../../helpers/generate-delete-key.helper.js';
-import { Resource } from '../../helpers/resource.entity-base.js';
-import { Paginated } from '../../types/paginated.type.js';
-import { Thumbnail } from '../thumbnail/thumbnail.entity.js';
-import { ThumbnailService } from '../thumbnail/thumbnail.service.js';
-import { User } from '../user/user.entity.js';
-import { FileMetadata } from './file-metadata.embeddable.js';
+import { Embedded, Entity, Index, LoadStrategy, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Exclude } from "class-transformer";
+import mimeType from "mime-types";
+import { generateDeleteKey } from "../../helpers/generate-delete-key.helper.js";
+import { Resource } from "../../helpers/resource.entity-base.js";
+import { Paginated } from "../../types/paginated.type.js";
+import { Thumbnail } from "../thumbnail/thumbnail.entity.js";
+import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
+import { User } from "../user/user.entity.js";
+import { FileMetadata } from "./file-metadata.embeddable.js";
 
-@Entity({ tableName: 'files' })
+@Entity({ tableName: "files" })
 @ObjectType()
 export class File extends Resource {
   @PrimaryKey()
@@ -54,21 +43,28 @@ export class File extends Resource {
   @Field({ nullable: true })
   name?: string;
 
-  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED })
-  @Field(() => Thumbnail, { nullable: true })
-  thumbnail?: Ref<Thumbnail>;
+  @Property()
+  views: number = 0;
 
   @Property()
   @Field()
-  createdAt: Date = new Date();
+  isExternal: boolean = false;
+
+  @OneToOne({ entity: () => Thumbnail, nullable: true, eager: true, ref: true, strategy: LoadStrategy.JOINED })
+  @Field(() => Thumbnail, { nullable: true })
+  thumbnail?: Ref<Thumbnail>;
 
   @ManyToOne(() => User, { ref: true, hidden: true })
   @Exclude()
   @Index()
   owner: Ref<User>;
 
+  @Property()
+  @Field()
+  createdAt: Date = new Date();
+
   getExtension() {
-    return mimeType.extension(this.type) || 'bin';
+    return mimeType.extension(this.type) || "bin";
   }
 
   getDisplayName() {
@@ -83,7 +79,7 @@ export class File extends Resource {
 
   getPaths() {
     const extension = this.getExtension();
-    const prefix = this.type.startsWith('video') ? '/v' : this.type.startsWith('image') ? '/i' : '/f';
+    const prefix = this.type.startsWith("video") ? "/v" : this.type.startsWith("image") ? "/i" : "/f";
     const viewPath = `${prefix}/${this.id}`;
     const directPath = `${prefix}/${this.id}.${extension}`;
     const thumbnailUrl = ThumbnailService.checkSupport(this.type) ? `/t/${this.id}` : undefined;
@@ -97,7 +93,7 @@ export class File extends Resource {
     };
   }
 
-  [OptionalProps]: 'createdAt';
+  [OptionalProps]: "createdAt" | "views" | "isExternal";
 }
 
 @ObjectType()

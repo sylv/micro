@@ -13,3 +13,15 @@ services:
       - POSTGRES_USER=micro
       - POSTGRES_PASSWORD=youshallnotpass
       - POSTGRES_DB=micro
+
+  minio:
+    image: minio/minio
+    container_name: micro_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - 127.0.0.1:9000:9000 
+      - 127.0.0.1:9001:9001
+    environment:
+      MINIO_ROOT_USER: test
+      MINIO_ROOT_PASSWORD: testtest

@@ -1,10 +1,10 @@
-import type { VNode } from 'preact';
-import renderToString from 'preact-render-to-string';
-import type { Client } from '@urql/preact';
+import type { VNode } from "preact";
+import renderToString, { renderToStringAsync } from "preact-render-to-string";
+import type { Client } from "@urql/preact";
 
 const MAX_DEPTH = 3;
 const isPromiseLike = (value: unknown): value is Promise<unknown> => {
-  if (value && typeof (value as Promise<unknown>).then === 'function') return true;
+  if (value && typeof (value as Promise<unknown>).then === "function") return true;
   return false;
 };
 
@@ -17,7 +17,7 @@ export const renderToStringWithData = async (client: Client, tree: VNode, depth 
   // to debug. whatever, apollo did it this way and it worked fine. so whatever. i didn't want performance anyway.
   try {
     client.suspense = true;
-    const result = renderToString(tree);
+    const result = await renderToStringAsync(tree);
     client.suspense = false;
     return result;
   } catch (error) {

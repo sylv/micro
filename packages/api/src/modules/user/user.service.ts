@@ -1,24 +1,29 @@
-import { EntityRepository, QueryOrder, UniqueConstraintViolationException } from '@mikro-orm/core';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { BadRequestException, ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import bcrypt from 'bcryptjs';
-import dedent from 'dedent';
-import handlebars from 'handlebars';
-import ms from 'ms';
-import { nanoid } from 'nanoid';
-import { config, rootHost } from '../../config.js';
-import type { Permission } from '../../constants.js';
-import { generateContentId } from '../../helpers/generate-content-id.helper.js';
-import { sendMail } from '../../helpers/send-mail.helper.js';
-import { File } from '../file/file.entity.js';
-import type { Invite } from '../invite/invite.entity.js';
-import { InviteService } from '../invite/invite.service.js';
-import { Paste } from '../paste/paste.entity.js';
-import type { CreateUserDto } from './dto/create-user.dto.js';
-import type { Pagination } from './dto/pagination.dto.js';
-import { UserVerification } from './user-verification.entity.js';
-import { User } from './user.entity.js';
+import {
+  EntityManager,
+  EntityRepository,
+  QueryOrder,
+  UniqueConstraintViolationException,
+} from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import bcrypt from "bcryptjs";
+import dedent from "dedent";
+import handlebars from "handlebars";
+import ms from "ms";
+import { nanoid } from "nanoid";
+import { config, rootHost } from "../../config.js";
+import type { Permission } from "../../constants.js";
+import { generateContentId } from "../../helpers/generate-content-id.helper.js";
+import { sendMail } from "../../helpers/send-mail.helper.js";
+import { File } from "../file/file.entity.js";
+import type { Invite } from "../invite/invite.entity.js";
+import { InviteService } from "../invite/invite.service.js";
+import { Paste } from "../paste/paste.entity.js";
+import type { CreateUserDto } from "./dto/create-user.dto.js";
+import type { Pagination } from "./dto/pagination.dto.js";
+import { UserVerification } from "./user-verification.entity.js";
+import { User } from "./user.entity.js";
 
 const EMAIL_TEMPLATE_SOURCE = dedent`
   <body>
@@ -30,21 +35,23 @@ const EMAIL_TEMPLATE_SOURCE = dedent`
 
 @Injectable()
 export class UserService {
-  private static readonly VERIFICATION_EXPIRY = ms('6 hours');
+  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+  @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>;
+  @InjectRepository(File) private readonly fileRepo: EntityRepository<File>;
+  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+
+  private static readonly VERIFICATION_EXPIRY = ms("6 hours");
   private static readonly EMAIL_TEMPLATE = handlebars.compile<{ verifyUrl: string }>(EMAIL_TEMPLATE_SOURCE);
 
   constructor(
-    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
-    @InjectRepository(UserVerification) private readonly verificationRepo: EntityRepository<UserVerification>,
-    @InjectRepository(File) private readonly fileRepo: EntityRepository<File>,
-    @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>,
     private readonly inviteService: InviteService,
+    private readonly em: EntityManager,
   ) {}
 
   async getUser(id: string, verified: boolean) {
     const user = await this.userRepo.findOneOrFail(id);
     if (verified && config.email && !user.verifiedEmail) {
-      throw new ForbiddenException('You must verify your email first.');
+      throw new ForbiddenException("You must verify your email first.");
     }
 
     return user;
@@ -82,7 +89,7 @@ export class UserService {
 
   async deleteUser(id: string) {
     const user = this.userRepo.getReference(id);
-    await this.userRepo.removeAndFlush(user);
+    await this.em.removeAndFlush(user);
   }
 
   checkPermissions(permissions: Permission | number, permission: Permission | number) {
@@ -102,7 +109,7 @@ export class UserService {
    */
   async sendVerificationEmail(user: User) {
     if (!user.email) {
-      throw new BadRequestException('User has no email address');
+      throw new BadRequestException("User has no email address");
     }
 
     const verification = this.verificationRepo.create({
@@ -115,14 +122,14 @@ export class UserService {
     const html = UserService.EMAIL_TEMPLATE({ verifyUrl });
     await sendMail({
       to: user.email,
-      subject: 'Verify your account | micro',
+      subject: "Verify your account | micro",
       html: html,
     });
   }
 
   async createUser(data: CreateUserDto, invite: Invite) {
     if (!data.email && config.email) {
-      throw new ConflictException('You must provide an email address to create a user.');
+      throw new ConflictException("You must provide an email address to create a user.");
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
@@ -144,11 +151,11 @@ export class UserService {
 
     try {
       await this.inviteService.consume(invite, user);
-      await this.userRepo.flush();
+      await this.em.flush();
       return user;
     } catch (error) {
       if (error instanceof UniqueConstraintViolationException) {
-        throw new ConflictException('Username or email already exists');
+        throw new ConflictException("Username or email already exists");
       }
 
       throw error;
@@ -164,15 +171,15 @@ export class UserService {
           $gt: new Date(),
         },
       },
-      { populate: ['user'] },
+      { populate: ["user"] },
     );
 
     if (!verification) {
-      throw new BadRequestException('Invalid or expired verification code');
+      throw new BadRequestException("Invalid or expired verification code");
     }
 
     verification.user.$.verifiedEmail = true;
-    await this.userRepo.persistAndFlush(verification.user);
+    await this.em.persistAndFlush(verification.user);
     await this.verificationRepo.nativeDelete({
       user: userId,
     });
@@ -186,7 +193,7 @@ export class UserService {
     });
 
     if (existingByLowerEmail) {
-      throw new ConflictException('Username or email already exists.');
+      throw new ConflictException("Username or email already exists.");
     }
   }
 
@@ -194,11 +201,11 @@ export class UserService {
     const user = await this.userRepo.findOneOrFail(userId);
     const passwordMatches = await bcrypt.compare(currentPassword, user.password);
     if (!passwordMatches) {
-      throw new BadRequestException('Invalid password');
+      throw new BadRequestException("Invalid password");
     }
 
     user.password = await bcrypt.hash(newPassword, 12);
-    await this.userRepo.persistAndFlush(user);
+    await this.em.persistAndFlush(user);
   }
 
   @Cron(CronExpression.EVERY_HOUR)

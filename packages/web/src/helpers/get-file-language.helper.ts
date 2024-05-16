@@ -1,10 +1,10 @@
-import languages from '../data/languages.json';
+import languages from "../data/languages.json";
 
-export type Language = typeof languages[number];
+export type Language = (typeof languages)[number];
 
 export function getFileLanguage(fileName?: string): Language | undefined {
   if (!fileName) return;
-  const extensionIndex = fileName.lastIndexOf('.');
+  const extensionIndex = fileName.lastIndexOf(".");
   if (extensionIndex !== -1) {
     const extension = fileName.slice(extensionIndex + 1);
     for (const language of languages) {

@@ -1,24 +1,27 @@
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
-import { UseGuards } from '@nestjs/common';
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { ResourceLocations } from '../../types/resource-locations.type.js';
-import { UserId } from '../auth/auth.decorators.js';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
-import { HostService } from '../host/host.service.js';
-import { UserService } from '../user/user.service.js';
-import { Link } from './link.entity.js';
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
+import { UseGuards } from "@nestjs/common";
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { ResourceLocations } from "../../types/resource-locations.type.js";
+import { UserId } from "../auth/auth.decorators.js";
+import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
+import { HostService } from "../host/host.service.js";
+import { UserService } from "../user/user.service.js";
+import { Link } from "./link.entity.js";
+import { EntityManager } from "@mikro-orm/core";
 
 @Resolver(() => Link)
 export class LinkResolver {
+  @InjectRepository(Link) private readonly linkRepo: EntityRepository<Link>;
+
   constructor(
-    @InjectRepository(Link) private readonly linkRepo: EntityRepository<Link>,
     private readonly userService: UserService,
-    private readonly hostService: HostService
+    private readonly hostService: HostService,
+    private readonly em: EntityManager,
   ) {}
 
   @Query(() => Link)
-  async link(@Args('linkId', { type: () => ID }) linkId: string) {
+  async link(@Args("linkId", { type: () => ID }) linkId: string) {
     return this.linkRepo.findOneOrFail(linkId);
   }
 
@@ -26,8 +29,8 @@ export class LinkResolver {
   @UseGuards(JWTAuthGuard)
   async createLink(
     @UserId() userId: string,
-    @Args('destination') destination: string,
-    @Args('host', { nullable: true }) host?: string
+    @Args("destination") destination: string,
+    @Args("host", { nullable: true }) host?: string,
   ) {
     const user = await this.userService.getUser(userId, true);
     const resolvedHost = host ? this.hostService.resolveUploadHost(host, user) : undefined;
@@ -37,7 +40,7 @@ export class LinkResolver {
       hostname: resolvedHost?.normalised,
     });
 
-    await this.linkRepo.persistAndFlush(link);
+    await this.em.persistAndFlush(link);
     return link;
   }
 

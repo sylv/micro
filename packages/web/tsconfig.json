@@ -1,21 +1,15 @@
 {
-  "extends": "@atlasbot/configs/tsconfig/esm.json",
+  "extends": "@atlasbot/configs/tsconfig",
   "compilerOptions": {
-    "module": "ES2022",
-    "target": "ES2022",
-    "moduleResolution": "Bundler",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["vite/client"],
-    "esModuleInterop": true,
-    "noUncheckedIndexedAccess": false,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
+    "noUncheckedIndexedAccess": false,
     "baseUrl": "./",
     "paths": {
       "react": ["./node_modules/preact/compat/"],
-      "react-dom": ["./node_modules/preact/compat/"],
-      // todo: https://github.com/gxmari007/vite-plugin-eslint/issues/74
-      "vite-plugin-eslint": ["./node_modules/vite-plugin-eslint/dist/index.d.ts"],
-    },
-  },
+      "react-dom": ["./node_modules/preact/compat/"]
+    }
+  }
 }

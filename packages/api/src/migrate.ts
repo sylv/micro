@@ -1,14 +1,14 @@
-import type { Options } from '@mikro-orm/core';
-import { MikroORM } from '@mikro-orm/core';
-import type { EntityManager } from '@mikro-orm/postgresql';
-import { Logger } from '@nestjs/common';
-import mikroOrmConfig, { MIGRATIONS_TABLE_NAME, ORM_LOGGER } from './orm.config.js';
+import type { Options } from "@mikro-orm/core";
+import { MikroORM } from "@mikro-orm/core";
+import { EntityManager } from "@mikro-orm/postgresql";
+import { Logger } from "@nestjs/common";
+import mikroOrmConfig, { MIGRATIONS_TABLE_NAME, ORM_LOGGER } from "./orm.config.js";
 
-const logger = new Logger('migrate');
+const logger = new Logger("migrate");
 
 export const migrate = async (
   config: Options = mikroOrmConfig,
-  skipLock = process.env.SKIP_MIGRATION_LOCK === 'true',
+  skipLock = process.env.SKIP_MIGRATION_LOCK === "true",
 ) => {
   logger.debug(`Checking for and running migrations`);
 

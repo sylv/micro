@@ -1,6 +1,6 @@
-import type { MultipartFile } from '@fastify/multipart';
-import { EntityRepository } from '@mikro-orm/core';
-import { InjectRepository } from '@mikro-orm/nestjs';
+import type { MultipartFile } from "@fastify/multipart";
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
 import {
   BadRequestException,
   Controller,
@@ -13,48 +13,50 @@ import {
   Request,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { type FastifyReply, type FastifyRequest } from 'fastify';
-import { rootHost } from '../../config.js';
-import { UserId } from '../auth/auth.decorators.js';
-import { JWTAuthGuard } from '../auth/guards/jwt.guard.js';
-import { HostService } from '../host/host.service.js';
-import { LinkService } from '../link/link.service.js';
-import { Paste } from '../paste/paste.entity.js';
-import { UserService } from '../user/user.service.js';
-import { FileService } from './file.service.js';
+} from "@nestjs/common";
+import { type FastifyReply, type FastifyRequest } from "fastify";
+import { rootHost } from "../../config.js";
+import { UserId } from "../auth/auth.decorators.js";
+import { JWTAuthGuard } from "../auth/guards/jwt.guard.js";
+import { HostService } from "../host/host.service.js";
+import { LinkService } from "../link/link.service.js";
+import { Paste } from "../paste/paste.entity.js";
+import { UserService } from "../user/user.service.js";
+import { FileService } from "./file.service.js";
 
 @Controller()
 export class FileController {
+  @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>;
+
   constructor(
-    @InjectRepository(Paste) private readonly pasteRepo: EntityRepository<Paste>,
     private readonly fileService: FileService,
     private readonly userService: UserService,
     private readonly hostService: HostService,
     private readonly linkService: LinkService,
+    private readonly em: EntityManager,
   ) {}
 
-  @Get('file/:fileId')
+  @Get("file/:fileId")
   async getFileContent(
     @Res() reply: FastifyReply,
-    @Param('fileId') fileId: string,
+    @Param("fileId") fileId: string,
     @Request() request: FastifyRequest,
   ) {
     return this.fileService.sendFile(fileId, request, reply);
   }
 
-  @Post('file')
+  @Post("file")
   @UseGuards(JWTAuthGuard)
   async createFile(
     @UserId() userId: string,
     @Req() request: FastifyRequest,
-    @Headers('X-Micro-Paste-Shortcut') shortcut: string,
-    @Headers('x-micro-host') hosts = rootHost.url,
-    @Query('input') input?: string,
+    @Headers("X-Micro-Paste-Shortcut") shortcut: string,
+    @Headers("x-micro-host") hosts = rootHost.url,
+    @Query("input") input?: string,
   ) {
     const user = await this.userService.getUser(userId, true);
     const host = this.hostService.resolveUploadHost(hosts, user);
-    if (input && input.startsWith('http')) {
+    if (input && input.startsWith("http")) {
       // sharex will send urls to shorten as the "input" query param
       const link = await this.linkService.createLink(input, user.id, host);
       return {
@@ -67,10 +69,10 @@ export class FileController {
 
     const upload = (await request.file()) as MultipartFile | undefined;
     if (!upload) {
-      throw new BadRequestException('Missing upload.');
+      throw new BadRequestException("Missing upload.");
     }
 
-    if (shortcut === 'true' && upload.mimetype === 'text/plain') {
+    if (shortcut === "true" && upload.mimetype === "text/plain") {
       // shortcut text uploads to a paste
       const content = await upload.toBuffer();
       const paste = this.pasteRepo.create({
@@ -78,11 +80,11 @@ export class FileController {
         burn: false,
         encrypted: false,
         owner: userId,
-        extension: 'txt',
+        extension: "txt",
         hostname: host?.normalised,
       });
 
-      await this.pasteRepo.persistAndFlush(paste);
+      await this.em.persistAndFlush(paste);
       return {
         id: paste.id,
         hostname: paste.hostname,

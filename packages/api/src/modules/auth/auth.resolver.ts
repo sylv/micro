@@ -1,45 +1,44 @@
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
-import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import type { FastifyReply } from 'fastify';
-import ms from 'ms';
-import { rootHost } from '../../config.js';
-import { User } from '../user/user.entity.js';
-import { UserId } from './auth.decorators.js';
-import { AuthService, TokenType } from './auth.service.js';
-import { OTPEnabledDto } from './dto/otp-enabled.dto.js';
-import { JWTAuthGuard } from './guards/jwt.guard.js';
-import type { JWTPayloadUser } from './strategies/jwt.strategy.js';
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
+import { UseGuards } from "@nestjs/common";
+import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
+import type { FastifyReply } from "fastify";
+import ms from "ms";
+import { rootHost } from "../../config.js";
+import { User } from "../user/user.entity.js";
+import { UserId } from "./auth.decorators.js";
+import { AuthService, TokenType } from "./auth.service.js";
+import { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
+import { JWTAuthGuard } from "./guards/jwt.guard.js";
+import type { JWTPayloadUser } from "./strategies/jwt.strategy.js";
 
 @Resolver(() => User)
 export class AuthResolver {
-  private static readonly ONE_YEAR = ms('1y');
+  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+
+  private static readonly ONE_YEAR = ms("1y");
   private static readonly COOKIE_OPTIONS = {
-    path: '/',
+    path: "/",
     httpOnly: true,
-    domain: rootHost.normalised.split(':').shift(),
-    secure: rootHost.url.startsWith('https'),
+    domain: rootHost.normalised.split(":").shift(),
+    secure: rootHost.url.startsWith("https"),
   };
 
-  constructor(
-    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => User)
   async login(
     @Context() ctx: any,
-    @Args('username') username: string,
-    @Args('password') password: string,
-    @Args('otpCode', { nullable: true }) otpCode?: string,
+    @Args("username") username: string,
+    @Args("password") password: string,
+    @Args("otpCode", { nullable: true }) otpCode?: string,
   ) {
     const reply = ctx.reply as FastifyReply;
     const user = await this.authService.authenticateUser(username, password, otpCode);
     const payload: JWTPayloadUser = { name: user.username, id: user.id, secret: user.secret };
     const expiresAt = Date.now() + AuthResolver.ONE_YEAR;
-    const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, payload, '1y');
-    void reply.setCookie('token', token, {
+    const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, payload, "1y");
+    void reply.setCookie("token", token, {
       ...AuthResolver.COOKIE_OPTIONS,
       expires: new Date(expiresAt),
     });
@@ -52,7 +51,7 @@ export class AuthResolver {
   @Mutation(() => Boolean)
   async logout(@Context() ctx: any) {
     const reply = ctx.reply as FastifyReply;
-    void reply.setCookie('token', '', {
+    void reply.setCookie("token", "", {
       ...AuthResolver.COOKIE_OPTIONS,
       expires: new Date(),
     });
@@ -69,7 +68,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JWTAuthGuard)
-  async confirmOTP(@UserId() userId: string, @Args('otpCode') otpCode: string) {
+  async confirmOTP(@UserId() userId: string, @Args("otpCode") otpCode: string) {
     const user = await this.userRepo.findOneOrFail(userId);
     await this.authService.confirmOTP(user, otpCode);
     return true;
@@ -77,7 +76,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JWTAuthGuard)
-  async disableOTP(@UserId() userId: string, @Args('otpCode') otpCode: string) {
+  async disableOTP(@UserId() userId: string, @Args("otpCode") otpCode: string) {
     const user = await this.userRepo.findOneOrFail(userId);
     await this.authService.disableOTP(user, otpCode);
     return true;

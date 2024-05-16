@@ -1,10 +1,10 @@
-import { EntityRepository, MikroORM, ref, UseRequestContext } from '@mikro-orm/core';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import type { OnApplicationBootstrap } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { Permission } from '../../constants.js';
-import { User } from '../user/user.entity.js';
-import { Invite } from './invite.entity.js';
+import { EntityManager, EntityRepository, MikroORM, ref, CreateRequestContext } from "@mikro-orm/core";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import type { OnApplicationBootstrap } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { Permission } from "../../constants.js";
+import { User } from "../user/user.entity.js";
+import { Invite } from "./invite.entity.js";
 
 export interface JWTPayloadInvite {
   id: string;
@@ -14,11 +14,13 @@ export interface JWTPayloadInvite {
 
 @Injectable()
 export class InviteService implements OnApplicationBootstrap {
+  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+  @InjectRepository(Invite) private readonly inviteRepo: EntityRepository<Invite>;
+
   private readonly logger = new Logger(InviteService.name);
   constructor(
-    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
-    @InjectRepository(Invite) private readonly inviteRepo: EntityRepository<Invite>,
-    protected orm: MikroORM
+    protected orm: MikroORM,
+    private em: EntityManager,
   ) {}
 
   async create(inviterId: string | null, permissions: Permission | null, extra?: Partial<Invite>) {
@@ -27,7 +29,7 @@ export class InviteService implements OnApplicationBootstrap {
       permissions: permissions || undefined,
     });
 
-    await this.inviteRepo.persistAndFlush(invite);
+    await this.em.persistAndFlush(invite);
     return invite;
   }
 
@@ -39,13 +41,13 @@ export class InviteService implements OnApplicationBootstrap {
     invite.invited = ref(user);
     if (invite.skipVerification) {
       user.verifiedEmail = true;
-      this.inviteRepo.persist(user);
+      this.em.persist(user);
     }
 
-    await this.inviteRepo.persistAndFlush(invite);
+    await this.em.persistAndFlush(invite);
   }
 
-  @UseRequestContext()
+  @CreateRequestContext()
   async onApplicationBootstrap() {
     const users = await this.userRepo.count();
     if (users >= 1) return;

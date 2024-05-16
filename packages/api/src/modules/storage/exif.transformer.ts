@@ -1,6 +1,5 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-import type { TransformOptions, TransformCallback } from 'stream';
-import { Transform } from 'stream';
+import type { TransformOptions, TransformCallback } from "stream";
+import { Transform } from "stream";
 
 // note: this is pretty much just a copy/paste of https://github.com/joshbuddy/exif-be-gone
 // for some reason typescript refuses to load this module during `pnpm build` and will
@@ -9,10 +8,10 @@ import { Transform } from 'stream';
 // exif-be-gone is published and i'm not gonna bother when i can just copy/paste it and call it
 // a day.
 export class ExifTransformer extends Transform {
-  private static readonly app1Marker = Buffer.from('ffe1', 'hex');
-  private static readonly exifMarker = Buffer.from('457869660000', 'hex'); // Exif\0\0
-  private static readonly xmpMarker = Buffer.from('http://ns.adobe.com/xap', 'utf8');
-  private static readonly flirMarker = Buffer.from('FLIR', 'utf8');
+  private static readonly app1Marker = Buffer.from("ffe1", "hex");
+  private static readonly exifMarker = Buffer.from("457869660000", "hex"); // Exif\0\0
+  private static readonly xmpMarker = Buffer.from("http://ns.adobe.com/xap", "utf8");
+  private static readonly flirMarker = Buffer.from("FLIR", "utf8");
   private static readonly maxMarkerLength = Math.max(
     ExifTransformer.exifMarker.length,
     ExifTransformer.xmpMarker.length,
@@ -65,7 +64,10 @@ export class ExifTransformer extends Transform {
           return;
           // we have enough, so lets read the length
         }
-        const candidateMarker = pendingChunk.slice(app1Start + 4, app1Start + ExifTransformer.maxMarkerLength + 4);
+        const candidateMarker = pendingChunk.slice(
+          app1Start + 4,
+          app1Start + ExifTransformer.maxMarkerLength + 4,
+        );
         if (
           ExifTransformer.exifMarker.compare(candidateMarker, 0, ExifTransformer.exifMarker.length) === 0 ||
           ExifTransformer.xmpMarker.compare(candidateMarker, 0, ExifTransformer.xmpMarker.length) === 0 ||

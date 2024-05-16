@@ -136,6 +136,7 @@
           ],
           "composite": false,
           "keyName": "users_email_index",
+          "constraint": false,
           "primary": false,
           "unique": false
         },
@@ -145,6 +146,7 @@
           ],
           "composite": false,
           "keyName": "users_email_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -154,6 +156,7 @@
           ],
           "composite": false,
           "keyName": "users_username_index",
+          "constraint": false,
           "primary": false,
           "unique": false
         },
@@ -163,6 +166,7 @@
           ],
           "composite": false,
           "keyName": "users_username_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -172,6 +176,7 @@
           ],
           "composite": false,
           "keyName": "users_secret_index",
+          "constraint": false,
           "primary": false,
           "unique": false
         },
@@ -181,6 +186,7 @@
           ],
           "composite": false,
           "keyName": "users_invite_id_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -190,6 +196,7 @@
             "username"
           ],
           "composite": false,
+          "constraint": false,
           "primary": false,
           "unique": false
         },
@@ -199,6 +206,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -218,7 +226,8 @@
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -289,22 +298,22 @@
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         },
         "owner_id": {
@@ -326,6 +335,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -345,7 +355,8 @@
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -389,12 +400,12 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         },
         "owner_id": {
@@ -416,6 +427,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -434,7 +446,8 @@
           "referencedTableName": "public.users",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -476,12 +489,12 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         },
         "skip_verification": {
@@ -496,12 +509,12 @@
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         }
       },
@@ -514,6 +527,7 @@
           ],
           "composite": false,
           "keyName": "invites_invited_id_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -523,6 +537,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -555,7 +570,8 @@
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -649,6 +665,26 @@
           "nullable": true,
           "mappedType": "string"
         },
+        "views": {
+          "name": "views",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "is_external": {
+          "name": "is_external",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "false",
+          "mappedType": "boolean"
+        },
         "thumbnail_file_id": {
           "name": "thumbnail_file_id",
           "type": "varchar(255)",
@@ -658,16 +694,6 @@
           "nullable": true,
           "mappedType": "string"
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "mappedType": "datetime"
-        },
         "owner_id": {
           "name": "owner_id",
           "type": "varchar(255)",
@@ -676,6 +702,16 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
         }
       },
       "name": "files",
@@ -687,6 +723,7 @@
           ],
           "composite": false,
           "keyName": "files_thumbnail_file_id_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -696,6 +733,7 @@
           ],
           "composite": false,
           "keyName": "files_owner_id_index",
+          "constraint": false,
           "primary": false,
           "unique": false
         },
@@ -705,6 +743,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -736,7 +775,8 @@
           "referencedTableName": "public.users",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -805,12 +845,12 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         }
       },
@@ -823,6 +863,7 @@
             "file_id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -842,7 +883,8 @@
           "deleteRule": "CASCADE",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     },
     {
       "columns": {
@@ -866,12 +908,12 @@
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamptz(0)",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 0,
+          "length": 6,
           "mappedType": "datetime"
         }
       },
@@ -884,6 +926,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -903,7 +946,9 @@
           "deleteRule": "CASCADE",
           "updateRule": "cascade"
         }
-      }
+      },
+      "nativeEnums": {}
     }
-  ]
+  ],
+  "nativeEnums": {}
 }

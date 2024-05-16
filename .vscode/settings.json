@@ -2,11 +2,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "relative",
   "npm.scriptExplorerExclude": ["^((?!watch|generate:watch).)*$"],
-  "eslint.workingDirectories": [
-    {
-      "pattern": "./packages/*"
-    }
-  ],
   "files.associations": {
     ".microrc": "jsonc",
     ".microrc.example": "jsonc",
@@ -25,5 +20,13 @@
     // const class = 'value'
     // const selectedClass = 'value'
     ["const [a-zA-Z]+s = ['\"`]([^\"`'`]*)"]
-  ]
+  ],
+
+  /// BIOME
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "never"
+  }
 }

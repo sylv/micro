@@ -1,18 +1,19 @@
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import { authenticator } from 'otplib';
-import { User } from '../user/user.entity.js';
-import type { OTPEnabledDto } from './dto/otp-enabled.dto.js';
-import { AccountDisabledError } from './account-disabled.error.js';
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { EntityRepository } from "@mikro-orm/postgresql";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { authenticator } from "otplib";
+import { User } from "../user/user.entity.js";
+import type { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
+import { AccountDisabledError } from "./account-disabled.error.js";
+import { EntityManager } from "@mikro-orm/core";
 
 export enum TokenType {
-  USER = 'USER',
-  DELETION = 'DELETION',
-  INVITE = 'INVITE',
+  USER = "USER",
+  DELETION = "DELETION",
+  INVITE = "INVITE",
 }
 
 export interface TokenPayload {
@@ -25,12 +26,18 @@ const NUMBER_REGEX = /^\d{6}$/u;
 
 @Injectable()
 export class AuthService {
+  @InjectRepository(User) private readonly userRepo: EntityRepository<User>;
+
   constructor(
-    @InjectRepository(User) private readonly userRepo: EntityRepository<User>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly em: EntityManager,
   ) {}
 
-  signToken<PayloadType extends Record<string, any>>(type: TokenType, payload: PayloadType, expiresIn = '1y') {
+  signToken<PayloadType extends Record<string, any>>(
+    type: TokenType,
+    payload: PayloadType,
+    expiresIn = "1y",
+  ) {
     return this.jwtService.signAsync(payload, {
       audience: type,
       expiresIn: expiresIn,
@@ -39,14 +46,14 @@ export class AuthService {
 
   async verifyToken<Payload extends Record<string, any>>(
     type: TokenType,
-    token: string
+    token: string,
   ): Promise<Payload & TokenPayload> {
     try {
       return await this.jwtService.verifyAsync<Payload & TokenPayload>(token, {
         audience: type,
       });
     } catch {
-      throw new BadRequestException('Token validation failed.');
+      throw new BadRequestException("Token validation failed.");
     }
   }
 
@@ -70,7 +77,7 @@ export class AuthService {
     }
 
     if (user.disabledReason) {
-      throw new AccountDisabledError(user.disabledReason)
+      throw new AccountDisabledError(user.disabledReason);
     }
 
     return user;
@@ -82,7 +89,7 @@ export class AuthService {
    */
   async generateOTP(user: User): Promise<OTPEnabledDto> {
     if (user.otpEnabled) {
-      throw new UnauthorizedException('User already has OTP enabled.');
+      throw new UnauthorizedException("User already has OTP enabled.");
     }
 
     const recoveryCodes = [];
@@ -91,19 +98,19 @@ export class AuthService {
     for (let i = 0; i < 8; i++) {
       const code = crypto
         .randomBytes(8)
-        .toString('hex')
+        .toString("hex")
         .match(/.{1,4}/gu)!
-        .join('-');
-      const hashedCode = crypto.createHash('sha256').update(code).digest('hex');
+        .join("-");
+      const hashedCode = crypto.createHash("sha256").update(code).digest("hex");
       user.otpRecoveryCodes.push(hashedCode);
       recoveryCodes.push(code);
     }
 
-    await this.userRepo.persistAndFlush(user);
+    await this.em.persistAndFlush(user);
     return {
       recoveryCodes,
       secret: user.otpSecret,
-      qrauthUrl: authenticator.keyuri(user.username, 'Micro', user.otpSecret),
+      qrauthUrl: authenticator.keyuri(user.username, "Micro", user.otpSecret),
     };
   }
 
@@ -113,16 +120,16 @@ export class AuthService {
    */
   async confirmOTP(user: User, otpCode: string) {
     if (user.otpEnabled) {
-      throw new UnauthorizedException('User already has OTP enabled.');
+      throw new UnauthorizedException("User already has OTP enabled.");
     }
 
     if (!user.otpSecret || !user.otpRecoveryCodes || !user.otpRecoveryCodes[0]) {
-      throw new Error('User does not have 2FA codes.');
+      throw new Error("User does not have 2FA codes.");
     }
 
     user.otpEnabled = true;
     await this.validateOTPCode(otpCode, user);
-    await this.userRepo.persistAndFlush(user);
+    await this.em.persistAndFlush(user);
   }
 
   /**
@@ -134,7 +141,7 @@ export class AuthService {
     user.otpSecret = undefined;
     user.otpRecoveryCodes = undefined;
     user.otpEnabled = false;
-    await this.userRepo.persistAndFlush(user);
+    await this.em.persistAndFlush(user);
   }
 
   /**
@@ -144,34 +151,34 @@ export class AuthService {
    */
   private async validateOTPCode(otpCode: string | undefined, user: User) {
     if (!user.otpEnabled || !user.otpSecret) {
-      throw new Error('User does not have OTP enabled.');
+      throw new Error("User does not have OTP enabled.");
     }
 
     if (!otpCode) {
-      throw new UnauthorizedException('OTP code is required.');
+      throw new UnauthorizedException("OTP code is required.");
     }
 
     if (this.isOTPCode(otpCode)) {
       // user gave us an otp code
       const isValid = authenticator.check(otpCode, user.otpSecret);
       if (!isValid) {
-        throw new UnauthorizedException('Invalid OTP code.');
+        throw new UnauthorizedException("Invalid OTP code.");
       }
     } else {
       // user likely gave us a recovery code, or garbage
-      const hashedRecoveryCode = crypto.createHash('sha256').update(otpCode.toLowerCase()).digest('hex');
+      const hashedRecoveryCode = crypto.createHash("sha256").update(otpCode.toLowerCase()).digest("hex");
       if (!user.otpRecoveryCodes) {
-        throw new Error('User has no recovery codes.');
+        throw new Error("User has no recovery codes.");
       }
 
       const codeIndex = user.otpRecoveryCodes.indexOf(hashedRecoveryCode);
       if (codeIndex === -1) {
-        throw new UnauthorizedException('Invalid or already used recovery code.');
+        throw new UnauthorizedException("Invalid or already used recovery code.");
       }
 
       // remove recovery code
       user.otpRecoveryCodes.splice(codeIndex, 1);
-      await this.userRepo.persistAndFlush(user);
+      await this.em.persistAndFlush(user);
     }
   }
 

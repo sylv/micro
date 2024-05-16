@@ -1,19 +1,19 @@
-import { loadConfig } from '@ryanke/venera';
-import c from 'chalk';
-import { randomBytes } from 'crypto';
-import dedent from 'dedent';
-import escapeStringRegexp from 'escape-string-regexp';
-import ms from 'ms';
-import z, { any, array, boolean, number, record, strictObject, string, union } from 'zod';
-import { fromZodError } from 'zod-validation-error';
-import { expandMime } from './helpers/expand-mime.js';
-import { HostService } from './modules/host/host.service.js';
-import { parseBytes } from './helpers/parse-bytes.js';
+import { loadConfig } from "@ryanke/venera";
+import c from "chalk";
+import { randomBytes } from "crypto";
+import dedent from "dedent";
+import escapeStringRegexp from "escape-string-regexp";
+import ms from "ms";
+import z, { any, array, boolean, literal, number, record, strictObject, string, union } from "zod";
+import { fromZodError } from "zod-validation-error";
+import { expandMime } from "./helpers/expand-mime.js";
+import { HostService } from "./modules/host/host.service.js";
+import { parseBytes } from "./helpers/parse-bytes.js";
 
 export type MicroHost = ReturnType<typeof enhanceHost>;
 
 const schema = strictObject({
-  databaseUrl: string().startsWith('postgresql://'),
+  databaseUrl: string().startsWith("postgresql://"),
   secret: string().min(6),
   inquiries: string().email(),
   uploadLimit: string().transform(parseBytes),
@@ -23,6 +23,23 @@ const schema = strictObject({
     .optional()
     .transform((value) => (value ? new Set(expandMime(value)) : null)),
   storagePath: string(),
+  externalStorage: strictObject({
+    type: literal("s3"),
+
+    bucket: string(),
+    region: string(),
+    endpoint: string().url().optional(),
+    forcePathStyle: boolean().optional(),
+    credentials: strictObject({
+      accessKeyId: string(),
+      secretAccessKey: string(),
+    }),
+    filter: strictObject({
+      decayDuration: string().transform(ms), // how long before local files are uploaded
+      maxSize: string().transform(parseBytes).optional(),
+      minSize: string().transform(parseBytes).optional(),
+    }),
+  }).optional(),
   restrictFilesToHost: boolean().default(true),
   purge: strictObject({
     overLimit: string().transform(parseBytes),
@@ -44,14 +61,14 @@ const schema = strictObject({
       url: z
         .string()
         .url()
-        .transform((value) => value.replace(/\/$/, '')),
+        .transform((value) => value.replace(/\/$/, "")),
       tags: array(string()).optional(),
       redirect: string().url().optional(),
     }),
   ),
 });
 
-const data = loadConfig('micro');
+const data = loadConfig("micro");
 const result = schema.safeParse(data);
 if (!result.success) {
   console.dir({ data, error: result.error }, { depth: null });
@@ -62,12 +79,12 @@ if (!result.success) {
 const getWildcardPattern = (url: string) => {
   const normalised = HostService.normaliseHostUrl(url);
   const escaped = escapeStringRegexp(normalised);
-  const pattern = escaped.replace('\\{\\{username\\}\\}', '(?<username>[a-z0-9-{}]+?)');
-  return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`, 'u');
+  const pattern = escaped.replace("\\{\\{username\\}\\}", "(?<username>[a-z0-9-{}]+?)");
+  return new RegExp(`^(https?:\\/\\/)?${pattern}\\/?`, "u");
 };
 
-const enhanceHost = (host: z.infer<typeof schema>['hosts'][0]) => {
-  const isWildcard = host.url.includes('{{username}}');
+const enhanceHost = (host: z.infer<typeof schema>["hosts"][0]) => {
+  const isWildcard = host.url.includes("{{username}}");
   const normalised = HostService.normaliseHostUrl(host.url);
   const pattern = getWildcardPattern(host.url);
 
@@ -79,20 +96,20 @@ const enhanceHost = (host: z.infer<typeof schema>['hosts'][0]) => {
   };
 };
 
-export const config = result.data as Omit<z.infer<typeof schema>, 'hosts'>;
+export const config = result.data as Omit<z.infer<typeof schema>, "hosts">;
 export const hosts = result.data.hosts.map((host) => enhanceHost(host));
 export const rootHost = hosts[0];
 
 if (rootHost.isWildcard) {
-  throw new Error(`Root host cannot be a wildcard domain.`);
+  throw new Error("Root host cannot be a wildcard domain.");
 }
 
-const disallowed = new Set(['youshallnotpass', 'you_shall_not_pass', 'secret', 'test']);
+const disallowed = new Set(["youshallnotpass", "you_shall_not_pass", "secret", "test"]);
 if (disallowed.has(config.secret.toLowerCase())) {
-  const token = randomBytes(24).toString('hex');
+  const token = randomBytes(24).toString("hex");
   throw new Error(
     dedent`
-      ${c.redBright.bold('Do not use the default secret.')}
+      ${c.redBright.bold("Do not use the default secret.")}
       Please generate a random, secure secret or you risk anyone being able to impersonate you.
       If you're lazy, here is a random secret: ${c.underline(token)}
     `,

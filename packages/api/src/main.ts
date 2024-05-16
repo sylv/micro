@@ -1,21 +1,21 @@
-import fastifyCookie from '@fastify/cookie';
-import fastifyHelmet from '@fastify/helmet';
-import fastifyMultipart from '@fastify/multipart';
-import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import type { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { fastify } from 'fastify';
-import { config } from './config.js';
-import { migrate } from './migrate.js';
-import { AppModule } from './modules/app.module.js';
-import { HostGuard } from './modules/host/host.guard.js';
+import fastifyCookie from "@fastify/cookie";
+import fastifyHelmet from "@fastify/helmet";
+import fastifyMultipart from "@fastify/multipart";
+import { BadRequestException, Logger, ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import type { NestFastifyApplication } from "@nestjs/platform-fastify";
+import { FastifyAdapter } from "@nestjs/platform-fastify";
+import { fastify } from "fastify";
+import { config } from "./config.js";
+import { migrate } from "./migrate.js";
+import { AppModule } from "./modules/app.module.js";
+import { HostGuard } from "./modules/host/host.guard.js";
 
 await migrate();
 
-const logger = new Logger('bootstrap');
+const logger = new Logger("bootstrap");
 const server = fastify({
-  trustProxy: process.env.TRUST_PROXY === 'true',
+  trustProxy: process.env.TRUST_PROXY === "true",
   maxParamLength: 500,
   bodyLimit: config.uploadLimit,
 });
@@ -34,13 +34,13 @@ app.useGlobalPipes(
       const formattedErrors = errors.map((error) => {
         if (error.constraints) {
           const constraints = Object.values(error.constraints);
-          if (constraints[0]) return constraints.join(', ');
+          if (constraints[0]) return constraints.join(", ");
         }
 
         return error.toString();
       });
 
-      return new BadRequestException(formattedErrors.join('\n'));
+      return new BadRequestException(formattedErrors.join("\n"));
     },
     transformOptions: {
       enableImplicitConversion: true,
@@ -49,8 +49,8 @@ app.useGlobalPipes(
 );
 
 await app.register(fastifyCookie as any);
-await app.register(fastifyHelmet.default as any);
-await app.register(fastifyMultipart.default as any, {
+await app.register(fastifyHelmet as any);
+await app.register(fastifyMultipart as any, {
   limits: {
     fieldNameSize: 100,
     fieldSize: 100,
@@ -60,7 +60,7 @@ await app.register(fastifyMultipart.default as any, {
   },
 });
 
-await app.listen(8080, '0.0.0.0', (error, address) => {
+await app.listen(8080, "0.0.0.0", (error, address) => {
   if (error) throw error;
   logger.log(`Listening at ${address}`);
 });
