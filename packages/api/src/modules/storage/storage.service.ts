@@ -146,7 +146,7 @@ export class StorageService implements OnApplicationBootstrap {
     return stream;
   }
 
-  private getPathFromHash(hash: string) {
+  public getPathFromHash(hash: string) {
     return path.join(config.storagePath, this.getFolderFromHash(hash));
   }
 
@@ -162,7 +162,7 @@ export class StorageService implements OnApplicationBootstrap {
     }
   }
 
-  @Interval(ms("5s"))
+  @Interval(1000)
   @CreateRequestContext()
   @dedupe()
   protected async uploadToExternalStorage(): Promise<void> {
@@ -233,7 +233,7 @@ export class StorageService implements OnApplicationBootstrap {
     }
   }
 
-  @Interval(ms("5s"))
+  @Interval(1000)
   @CreateRequestContext()
   @dedupe()
   protected async purgeFiles() {
@@ -273,7 +273,7 @@ export class StorageService implements OnApplicationBootstrap {
     if (files[0]) {
       this.logger.log(`Purged ${files.length} files`);
     } else {
-      await setTimeout(ms("5m"));
+      await setTimeout(ms("10m"));
     }
   }
 

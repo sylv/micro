@@ -108,12 +108,15 @@ export class ThumbnailService {
   }
 
   private async createVideoThumbnail(file: FileEntity) {
+    if (file.external) throw new Error("Cannot generate thumbnails for external videos.");
+
     const supported = ThumbnailService.VIDEO_TYPES.has(file.type);
     if (!supported) throw new Error("Unsupported video type.");
 
     const tempId = randomUUID();
     const tempDir = join(tmpdir(), `.thumbnail-workspace-${tempId}`);
-    const fileStream = await this.storageService.createReadStream(file);
+    // const fileStream = await this.storageService.createReadStream(file);
+    const filePath = this.storageService.getPathFromHash(file.hash);
     this.log.debug(`Generating video thumbnail at "${tempDir}"`);
 
     // i have no clue why but the internet told me that doing it in multiple invocations is faster
@@ -121,7 +124,7 @@ export class ThumbnailService {
     const positions = ["5%", "10%", "20%", "40%"];
     const size = `${ThumbnailService.THUMBNAIL_SIZE}x?`;
     for (const [positionIndex, percent] of positions.entries()) {
-      const stream = ffmpeg(fileStream).screenshot({
+      const stream = ffmpeg(filePath).screenshot({
         count: 1,
         timemarks: [percent],
         folder: tempDir,
@@ -179,7 +182,7 @@ export class ThumbnailService {
       .send(thumbnail.data.unwrap());
   }
 
-  @Interval(ms("5s"))
+  @Interval(1000)
   @CreateRequestContext()
   @dedupe()
   protected async generateThumbnail(): Promise<void> {
