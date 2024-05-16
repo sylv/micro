@@ -88,3 +88,20 @@ conversions:
   - from: image/gif # This could also be a list of types, just a category like "image", or both.
     to: video/webm
     minSize: 1MB # Required size before conversion, files uploaded under this limit are ignored
+
+# # externalStorage lets you offload files to S3 to free up space locally.
+# # you should prefer local storage over external storage, as external storage is usually very slow.
+# # the benefit is that external storage is unlimited, local disk space is not. 
+# externalStorage:
+#   type: s3
+#   bucket: my-bucket
+#   region: us-west-1
+#   endpoint: s3.us-west-1.amazonaws.com # optional
+#   forcePathStyle: false # optional
+#   credentials:
+#     accessKeyId: my-access-key
+#     secretAccessKey: my-secret-key
+#   filter:
+#     decayDuration: 7d # how long before files are moved to external storage
+#     minSize: 1MB # files under this size will not be moved
+#     maxSize: 1GB # files over this size will be moved

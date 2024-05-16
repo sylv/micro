@@ -25,7 +25,6 @@ const schema = strictObject({
   storagePath: string(),
   externalStorage: strictObject({
     type: literal("s3"),
-
     bucket: string(),
     region: string(),
     endpoint: string().url().optional(),
