@@ -94,7 +94,7 @@ export class ThumbnailService {
     } catch (error: any) {
       file.thumbnailError = error.message;
       await this.em.persistAndFlush(file);
-      throw error;
+      return null;
     }
   }
 
@@ -175,6 +175,10 @@ export class ThumbnailService {
 
     const file = await this.fileService.getFile(fileId, request);
     const thumbnail = await this.createThumbnail(file);
+    if (!thumbnail) {
+      throw new BadRequestException("Failed to generate thumbnail.");
+    }
+
     return reply
       .header("X-Micro-Generated", "true")
       .header("X-Micro-Duration", thumbnail.duration)
