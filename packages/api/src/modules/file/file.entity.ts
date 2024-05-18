@@ -50,7 +50,7 @@ export class FileEntity extends ResourceEntity {
   @Field()
   external: boolean = false;
 
-  @Property({ nullable: true })
+  @Property({ type: "text", nullable: true })
   externalError?: string;
 
   @Field(() => ThumbnailEntity, { nullable: true })
@@ -61,7 +61,7 @@ export class FileEntity extends ResourceEntity {
   )
   thumbnail?: Ref<ThumbnailEntity>;
 
-  @Property({ nullable: true })
+  @Property({ type: "text", nullable: true })
   thumbnailError?: string;
 
   @ManyToOne(() => UserEntity, { ref: true, hidden: true })
