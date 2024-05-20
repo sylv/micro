@@ -55,9 +55,9 @@ export abstract class ResourceEntity {
       return true;
     }
 
-    const hostname = getHostFromRequest(request);
     if (!config.restrictFilesToHost) return true;
 
+    const hostname = getHostFromRequest(request);
     // root host can send all files
     if (hostname === rootHost.normalised) return true;
     if (this.hostname === hostname) return true;

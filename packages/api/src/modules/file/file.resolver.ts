@@ -1,18 +1,19 @@
 import { resolveSelections } from "@jenyus-org/graphql-utils";
+import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
-import { ForbiddenException, UseGuards } from "@nestjs/common";
-import { Args, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { ForbiddenException, NotFoundException, UseGuards } from "@nestjs/common";
+import { Args, Context, ID, Info, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import prettyBytes from "pretty-bytes";
+import isValidUtf8 from "utf-8-validate";
+import { getRequestFromGraphQLContext } from "../../helpers/get-request.js";
+import { isLikelyBinary } from "../../helpers/is-likely-binary.js";
 import { ResourceLocations } from "../../types/resource-locations.type.js";
 import { UserId } from "../auth/auth.decorators.js";
 import { OptionalJWTAuthGuard } from "../auth/guards/optional-jwt.guard.js";
-import { FileEntity } from "./file.entity.js";
 import { StorageService } from "../storage/storage.service.js";
-import isValidUtf8 from "utf-8-validate";
-import { isLikelyBinary } from "../../helpers/is-likely-binary.js";
-import { EntityManager } from "@mikro-orm/core";
 import { ThumbnailEntity } from "../thumbnail/thumbnail.entity.js";
+import { FileEntity } from "./file.entity.js";
 
 @Resolver(() => FileEntity)
 export class FileResolver {
@@ -26,11 +27,18 @@ export class FileResolver {
 
   @Query(() => FileEntity)
   @UseGuards(OptionalJWTAuthGuard)
-  async file(@Args("fileId", { type: () => ID }) fileId: string, @Info() info: any) {
+  async file(@Context() context: any, @Args("fileId", { type: () => ID }) fileId: string, @Info() info: any) {
     const populate = resolveSelections([{ field: "urls", selector: "owner" }], info) as any[];
-    return this.fileRepo.findOneOrFail(fileId, {
+    const file = await this.fileRepo.findOneOrFail(fileId, {
       populate,
     });
+
+    const request = getRequestFromGraphQLContext(context);
+    if (!file.canSendTo(request)) {
+      throw new NotFoundException("Your file is in another castle.");
+    }
+
+    return file;
   }
 
   @Mutation(() => Boolean)

@@ -88,9 +88,17 @@ async function startServer() {
       cookies = request.headers.cookie;
     }
 
+    let forwardedFor: string | undefined;
+    if (request.headers["x-forwarded-for"] && typeof request.headers["x-forwarded-for"] === "string") {
+      forwardedFor = request.headers["x-forwarded-for"];
+    } else if (request.headers.host) {
+      forwardedFor = request.headers.host;
+    }
+
     const pageContextInit = {
       urlOriginal: request.url,
       cookies: cookies,
+      forwardedHost: forwardedFor,
     } satisfies Partial<PageContext>;
 
     const pageContext = await renderPage(pageContextInit);

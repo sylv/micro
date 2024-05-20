@@ -1,29 +1,33 @@
-import { cacheExchange } from '@urql/exchange-graphcache';
-import { Provider as UrqlProvider, createClient, fetchExchange, ssrExchange } from '@urql/preact';
-import type { HelmetServerState } from 'react-helmet-async';
-import { HelmetProvider } from 'react-helmet-async';
-import { dangerouslySkipEscape, escapeInject } from 'vike/server';
-import type { OnRenderHtmlAsync } from 'vike/types';
-import { App } from '../app';
-import { cacheOptions } from './cache';
-import { renderToStringWithData } from './prepass';
-import type { PageProps } from './types';
-import { PageContextProvider } from './usePageContext';
+import { cacheExchange } from "@urql/exchange-graphcache";
+import { Provider as UrqlProvider, createClient, fetchExchange, ssrExchange } from "@urql/preact";
+import type { HelmetServerState } from "react-helmet-async";
+import { HelmetProvider } from "react-helmet-async";
+import { dangerouslySkipEscape, escapeInject } from "vike/server";
+import type { OnRenderHtmlAsync } from "vike/types";
+import { App } from "../app";
+import { cacheOptions } from "./cache";
+import { renderToStringWithData } from "./prepass";
+import type { PageProps } from "./types";
+import { PageContextProvider } from "./usePageContext";
 
-const GRAPHQL_URL = (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + '/graphql';
+const GRAPHQL_URL =
+  (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + "/graphql";
 
 export const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRenderHtmlAsync> => {
   const { Page } = pageContext;
   const pageProps: PageProps = { routeParams: pageContext.routeParams };
 
-  const headers = pageContext.cookies ? { Cookie: pageContext.cookies } : undefined;
+  const headers: Record<string, string> = {};
+  if (pageContext.cookies) headers.Cookie = pageContext.cookies;
+  if (pageContext.forwardedHost) headers["x-forwarded-host"] = pageContext.forwardedHost;
+
   const ssr = ssrExchange({ isClient: false });
   const client = createClient({
     url: GRAPHQL_URL,
     exchanges: [ssr, cacheExchange(cacheOptions), fetchExchange],
     fetchOptions: {
+      credentials: "same-origin",
       headers: headers,
-      credentials: 'same-origin',
     },
   });
 

@@ -9,6 +9,7 @@ declare global {
       state?: SSRData;
       pageHtml?: string;
       cookies?: string;
+      forwardedHost?: string;
     }
   }
 }

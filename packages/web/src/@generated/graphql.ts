@@ -75,6 +75,12 @@ export type File = {
   urls: ResourceLocations;
 };
 
+export type FileEntityPageEdge = {
+  __typename?: 'FileEntityPageEdge';
+  cursor: Scalars['String']['output'];
+  node: File;
+};
+
 export type FileMetadata = {
   __typename?: 'FileMetadata';
   height?: Maybe<Scalars['Float']['output']>;
@@ -83,15 +89,9 @@ export type FileMetadata = {
 
 export type FilePage = {
   __typename?: 'FilePage';
-  edges: Array<FilePageEdge>;
+  edges: Array<FileEntityPageEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
-};
-
-export type FilePageEdge = {
-  __typename?: 'FilePageEdge';
-  cursor: Scalars['String']['output'];
-  node: File;
 };
 
 export type Invite = {
@@ -214,17 +214,17 @@ export type Paste = {
   urls: ResourceLocations;
 };
 
-export type PastePage = {
-  __typename?: 'PastePage';
-  edges: Array<PastePageEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type PastePageEdge = {
-  __typename?: 'PastePageEdge';
+export type PasteEntityPageEdge = {
+  __typename?: 'PasteEntityPageEdge';
   cursor: Scalars['String']['output'];
   node: Paste;
+};
+
+export type PastePage = {
+  __typename?: 'PastePage';
+  edges: Array<PasteEntityPageEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type Query = {
@@ -323,14 +323,14 @@ export type GetFilesQueryVariables = Exact<{
 }>;
 
 
-export type GetFilesQuery = { __typename?: 'Query', user: { __typename?: 'User', files: { __typename?: 'FilePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'FilePageEdge', node: { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type GetFilesQuery = { __typename?: 'Query', user: { __typename?: 'User', files: { __typename?: 'FilePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'FileEntityPageEdge', node: { __typename?: 'File', id: string, type: string, displayName: string, sizeFormatted: string, thumbnail?: { __typename?: 'Thumbnail', width: number, height: number } | null, paths: { __typename?: 'ResourceLocations', thumbnail?: string | null }, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
 
 export type GetPastesQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetPastesQuery = { __typename?: 'Query', user: { __typename?: 'User', pastes: { __typename?: 'PastePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'PastePageEdge', node: { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
+export type GetPastesQuery = { __typename?: 'Query', user: { __typename?: 'User', pastes: { __typename?: 'PastePage', pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean }, edges: Array<{ __typename?: 'PasteEntityPageEdge', node: { __typename?: 'Paste', id: string, title?: string | null, encrypted: boolean, burn: boolean, type: string, createdAt: any, expiresAt?: any | null, urls: { __typename?: 'ResourceLocations', view: string } } }> } } };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];

@@ -15,9 +15,9 @@ await migrate();
 
 const logger = new Logger("bootstrap");
 const server = fastify({
-  trustProxy: process.env.TRUST_PROXY === "true",
   maxParamLength: 500,
   bodyLimit: config.uploadLimit,
+  trustProxy: config.trustProxy || process.env.TRUST_PROXY === "true", // legacy
 });
 
 const adapter = new FastifyAdapter(server as any);
