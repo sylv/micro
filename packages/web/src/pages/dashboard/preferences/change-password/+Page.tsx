@@ -4,12 +4,12 @@ import type { ChangePasswordMutationVariables } from "../../../../@generated/gra
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { Container } from "../../../../components/container";
 import { Title } from "../../../../components/title";
-import { useToasts } from "../../../../components/toast";
 import { PasswordForm } from "../../../../containers/password-form";
 import { navigate, prefetch } from "../../../../helpers/routing";
 import { useAsync } from "../../../../hooks/useAsync";
 import { useErrorMutation } from "../../../../hooks/useErrorMutation";
 import { useUser } from "../../../../hooks/useUser";
+import { createToast } from "../../../../components/toast/store";
 
 const ChangePassword = graphql(`
   mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
@@ -18,20 +18,19 @@ const ChangePassword = graphql(`
 `);
 
 export const Page: FC = () => {
-  const createToast = useToasts();
   const [, changeInner] = useErrorMutation(ChangePassword, false);
   const [change] = useAsync(async (values: ChangePasswordMutationVariables) => {
     prefetch("/dashboard/preferences");
     try {
       await changeInner(values);
-      createToast({ text: "Your password has been changed." });
+      createToast({ message: "Your password has been changed." });
       navigate("/dashboard/preferences");
     } catch (error: any) {
       if (error.message.toLowerCase().includes("unauthorized")) {
-        createToast({ text: "Invalid password." });
+        createToast({ message: "Invalid password." });
         return;
       } else {
-        createToast({ text: "An error occurred changing your password." });
+        createToast({ message: "An error occurred changing your password." });
       }
     }
   });

@@ -1,21 +1,19 @@
-import type { FC } from 'react';
-import { useEffect } from 'react';
-import { Title } from '../../components/title';
-import { LoginForm } from '../../containers/login-form';
-import { Container } from '../../components/container';
-import { useToasts } from '../../components/toast';
+import type { FC } from "react";
+import { useEffect } from "react";
+import { Title } from "../../components/title";
+import { LoginForm } from "../../containers/login-form";
+import { Container } from "../../components/container";
+import { createToast } from "../../components/toast/store";
 
 export const Page: FC = () => {
-  const createToast = useToasts();
-
   useEffect(() => {
     // show a verification toast if the user has
     // completed verification
     const url = new URL(window.location.href);
-    const verified = url.searchParams.get('verified');
+    const verified = url.searchParams.get("verified");
     if (verified) {
       createToast({
-        text: 'Your account has been verified.',
+        message: "Your account has been verified.",
       });
     }
   }, [createToast]);

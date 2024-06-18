@@ -7,14 +7,14 @@ import {
 } from "@urql/preact";
 import { useCallback } from "preact/hooks";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
-import { useToasts } from "../components/toast";
+import { createToast } from "../components/toast/store";
+import { ToastStyle } from "../components/toast/toast";
 
 export const useErrorMutation = <Data = any, Variables extends AnyVariables = AnyVariables>(
   query: DocumentInput<Data, Variables>,
   handleErrors?: boolean,
 ): UseMutationResponse<Data, Variables> => {
   const [data, mutation] = useMutation(query);
-  const createToast = useToasts();
   const wrappedMutation = useCallback(
     async (variables: Variables, context?: Partial<OperationContext> | undefined) => {
       const result = await mutation(variables, context);
@@ -22,7 +22,7 @@ export const useErrorMutation = <Data = any, Variables extends AnyVariables = An
         if (handleErrors !== false) {
           const message = getErrorMessage(result.error);
           if (message) {
-            createToast({ text: message, error: true });
+            createToast({ message: message, style: ToastStyle.Error });
           }
         }
 
@@ -31,7 +31,7 @@ export const useErrorMutation = <Data = any, Variables extends AnyVariables = An
 
       return result;
     },
-    [mutation, createToast],
+    [mutation],
   );
 
   return [data, wrappedMutation];

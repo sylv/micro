@@ -1,8 +1,10 @@
 import clsx from "clsx";
 import { Fragment, memo, useRef, useState } from "react";
 import { FiCrop } from "react-icons/fi";
+import { graphql } from "../../@generated/gql";
 import { useAsync } from "../../hooks/useAsync";
 import { useConfig } from "../../hooks/useConfig";
+import { useErrorMutation } from "../../hooks/useErrorMutation";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import { usePaths } from "../../hooks/usePaths";
 import { useUser } from "../../hooks/useUser";
@@ -10,10 +12,9 @@ import { Button, ButtonStyle } from "../button";
 import { Container } from "../container";
 import { Input } from "../input/input";
 import { Link } from "../link";
-import { useToasts } from "../toast";
+import { createToast } from "../toast/store";
+import { ToastStyle } from "../toast/toast";
 import { HeaderUser } from "./header-user";
-import { graphql } from "../../@generated/gql";
-import { useErrorMutation } from "../../hooks/useErrorMutation";
 
 const ResendVerificationEmail = graphql(`
   mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
@@ -28,7 +29,6 @@ export const Header = memo(() => {
   const [showEmailInput, setShowEmailInput] = useState(false);
   const emailInputRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
-  const createToast = useToasts();
   const [resent, setResent] = useState(false);
   const classes = clsx(
     "relative z-20 flex items-center justify-between h-16 my-auto transition",
@@ -59,8 +59,9 @@ export const Header = memo(() => {
     } catch (error: any) {
       if (error.message.includes("You can only") || error.message.includes("You have already")) {
         createToast({
-          text: "You have already requested a verification email. Please check your inbox, or try resend in 5 minutes.",
-          error: true,
+          style: ToastStyle.Error,
+          message:
+            "You have already requested a verification email. Please check your inbox, or try resend in 5 minutes.",
         });
         return;
       }

@@ -1,11 +1,11 @@
-import clsx from 'clsx';
-import type { FC, HTMLAttributes } from 'react';
-import { forwardRef } from 'react';
-import { Spinner } from './spinner';
+import clsx from "clsx";
+import type { FC, HTMLAttributes } from "react";
+import { forwardRef } from "react";
+import { Spinner } from "./spinner";
 
 type ButtonBaseProps = Omit<
   HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>,
-  'prefix' | 'style' | 'as' | 'loading'
+  "prefix" | "style" | "as" | "loading"
 >;
 
 export interface ButtonProps extends ButtonBaseProps {
@@ -13,23 +13,24 @@ export interface ButtonProps extends ButtonBaseProps {
   disabled?: boolean;
   style?: ButtonStyle;
   loading?: boolean;
-  type?: 'submit' | 'reset' | 'button';
-  as?: FC | 'button' | 'a';
+  type?: "submit" | "reset" | "button";
+  as?: FC | "button" | "a";
 }
 
 export enum ButtonStyle {
-  Primary = 'bg-purple-500 hover:bg-purple-400',
-  Secondary = 'bg-dark-600 hover:bg-dark-900',
-  Disabled = 'bg-dark-300 hover:bg-dark-400 cursor-not-allowed',
+  Primary = "bg-purple-500 hover:bg-purple-400",
+  Secondary = "bg-dark-600 hover:bg-dark-900",
+  Disabled = "bg-dark-300 hover:bg-dark-400 cursor-not-allowed",
+  Transparent = "bg-transparent hover:bg-dark-900",
 }
 
 export const BASE_BUTTON_CLASSES =
-  'flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition rounded truncate max-h-[2.65em]';
+  "flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition rounded truncate max-h-[2.65em]";
 
 export const Button = forwardRef<any, ButtonProps>(
   (
     {
-      as: As = 'button',
+      as: As = "button",
       disabled,
       className,
       type,
@@ -54,7 +55,7 @@ export const Button = forwardRef<any, ButtonProps>(
         disabled={disabled}
         onClick={onClickWrap}
         onKeyDown={onKeyDownWrap}
-        style={{ height: '2.5rem' }}
+        style={{ height: "2.5rem" }}
         {...rest}
         ref={ref}
       >

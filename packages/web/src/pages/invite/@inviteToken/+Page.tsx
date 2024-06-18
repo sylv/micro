@@ -6,7 +6,6 @@ import { Error } from "../../../components/error";
 import { PageLoader } from "../../../components/page-loader";
 import { Time } from "../../../components/time";
 import { Title } from "../../../components/title";
-import { useToasts } from "../../../components/toast";
 import type { SignupData } from "../../../containers/signup-form";
 import { SignupForm } from "../../../containers/signup-form";
 import { navigate, prefetch } from "../../../helpers/routing";
@@ -15,6 +14,7 @@ import { useConfig } from "../../../hooks/useConfig";
 import type { PageProps } from "../../../renderer/types";
 import { useQuery } from "@urql/preact";
 import { useErrorMutation } from "../../../hooks/useErrorMutation";
+import { createToast } from "../../../components/toast/store";
 
 const GetInvite = graphql(`
   query GetInvite($inviteId: ID!) {
@@ -35,7 +35,6 @@ const CreateUser = graphql(`
 
 export const Page: FC<PageProps> = ({ routeParams }) => {
   const config = useConfig();
-  const createToast = useToasts();
   const inviteToken = routeParams.inviteToken;
   const [invite] = useQuery({ query: GetInvite, pause: !inviteToken, variables: { inviteId: inviteToken! } });
   const expiresAt = invite.data?.invite.expiresAt;
@@ -55,7 +54,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
     });
 
     navigate("/login");
-    createToast({ text: "Account created successfully. Please sign in." });
+    createToast({ message: "Account created successfully. Please sign in." });
   });
 
   if (invite.error || config.error) {

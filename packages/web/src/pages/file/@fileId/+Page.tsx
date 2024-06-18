@@ -11,13 +11,13 @@ import { Error } from "../../../components/error";
 import { Skeleton, SkeletonList } from "../../../components/skeleton";
 import { Spinner } from "../../../components/spinner";
 import { Title } from "../../../components/title";
-import { useToasts } from "../../../components/toast";
 import { downloadUrl } from "../../../helpers/download.helper";
 import { navigate } from "../../../helpers/routing";
 import { useAsync } from "../../../hooks/useAsync";
 import { useQueryState } from "../../../hooks/useQueryState";
 import type { PageProps } from "../../../renderer/types";
 import { useErrorMutation } from "../../../hooks/useErrorMutation";
+import { createToast } from "../../../components/toast/store";
 
 const GetFile = graphql(`
   query GetFile($fileId: ID!) {
@@ -72,7 +72,6 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   const fileId = routeParams.fileId;
   const [deleteKey] = useQueryState<string | undefined>("deleteKey");
   const [confirm, setConfirm] = useState(false);
-  const createToast = useToasts();
   const [file] = useQuery({
     query: GetFile,
     pause: !fileId,
@@ -85,7 +84,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   const copyLink = () => {
     copyToClipboard(file.data?.file.urls.view ?? window.location.href);
     createToast({
-      text: "Copied link to clipboard",
+      message: "Copied link to clipboard",
     });
   };
 
@@ -106,7 +105,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
       deleteKey: deleteKey,
     });
 
-    createToast({ text: `Deleted "${file.data.file.displayName}"` });
+    createToast({ message: `Deleted "${file.data.file.displayName}"` });
     navigate("/dashboard", { overwriteLastHistoryEntry: true });
   });
 

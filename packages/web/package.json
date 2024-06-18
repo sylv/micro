@@ -58,5 +58,10 @@
     "vite": "^5.2.11",
     "vite-plugin-graphql-codegen": "^3.3.6",
     "yup": "^1.4.0"
+  },
+  "dependencies": {
+    "framer-motion": "^11.2.10",
+    "immer": "^10.1.1",
+    "zustand": "^4.5.2"
   }
 }

@@ -1,20 +1,21 @@
-import type { ChangeEventHandler, FC, JSX } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { FiUpload } from 'react-icons/fi';
-import { Button } from '../../components/button';
-import { Card } from '../../components/card';
-import { Container } from '../../components/container';
-import { Select } from '../../components/input/select';
-import { PageLoader } from '../../components/page-loader';
-import { Spinner } from '../../components/spinner';
-import { Title } from '../../components/title';
-import { useToasts } from '../../components/toast';
-import { getErrorMessage } from '../../helpers/get-error-message.helper';
-import { http } from '../../helpers/http.helper';
-import { replaceUsername } from '../../helpers/replace-username.helper';
-import { navigate } from '../../helpers/routing';
-import { useConfig } from '../../hooks/useConfig';
-import { useUser } from '../../hooks/useUser';
+import type { ChangeEventHandler, FC, JSX } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FiUpload } from "react-icons/fi";
+import { Button } from "../../components/button";
+import { Card } from "../../components/card";
+import { Container } from "../../components/container";
+import { Select } from "../../components/input/select";
+import { PageLoader } from "../../components/page-loader";
+import { Spinner } from "../../components/spinner";
+import { Title } from "../../components/title";
+import { getErrorMessage } from "../../helpers/get-error-message.helper";
+import { http } from "../../helpers/http.helper";
+import { replaceUsername } from "../../helpers/replace-username.helper";
+import { navigate } from "../../helpers/routing";
+import { useConfig } from "../../hooks/useConfig";
+import { useUser } from "../../hooks/useUser";
+import { createToast } from "../../components/toast/store";
+import { ToastStyle } from "../../components/toast/toast";
 
 interface CreateFileResponse {
   id: string;
@@ -30,7 +31,6 @@ export const Page: FC = () => {
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [hover, setHover] = useState(false);
-  const createToast = useToasts();
   const [selectedHost, setSelectedHost] = useState<string | undefined>();
   const config = useConfig();
 
@@ -61,9 +61,9 @@ export const Page: FC = () => {
       }
     };
 
-    document.addEventListener('paste', onPaste);
+    document.addEventListener("paste", onPaste);
     return () => {
-      document.removeEventListener('paste', onPaste);
+      document.removeEventListener("paste", onPaste);
     };
   }, []);
 
@@ -83,9 +83,9 @@ export const Page: FC = () => {
       const form = new FormData();
       form.append(file.name, file);
       const headers: HeadersInit = {};
-      if (selectedHost) headers['X-Micro-Host'] = selectedHost;
-      const response = await http(`file`, {
-        method: 'POST',
+      if (selectedHost) headers["X-Micro-Host"] = selectedHost;
+      const response = await http("file", {
+        method: "POST",
         body: form,
         headers: headers,
       });
@@ -100,8 +100,8 @@ export const Page: FC = () => {
       location.href = body.urls.view;
       setFile(null);
     } catch (error: unknown) {
-      const message = getErrorMessage(error) ?? 'An unknown error occured.';
-      createToast({ error: true, text: message });
+      const message = getErrorMessage(error) ?? "An unknown error occured.";
+      createToast({ style: ToastStyle.Error, message: message });
     } finally {
       setUploading(false);
     }
@@ -142,7 +142,11 @@ export const Page: FC = () => {
               onChange={(event) => setSelectedHost(event.currentTarget.value)}
             >
               {config.data.hosts.map((host) => (
-                <option key={host.normalised} value={host.normalised} selected={host.normalised === selectedHost}>
+                <option
+                  key={host.normalised}
+                  value={host.normalised}
+                  selected={host.normalised === selectedHost}
+                >
                   {replaceUsername(host.normalised, user.data!.username)}
                 </option>
               ))}
@@ -150,6 +154,7 @@ export const Page: FC = () => {
             <Button onClick={handleUpload}>Upload</Button>
           </div>
           <button
+            type="button"
             className="mt-4 cursor-pointer text-primary"
             onClick={() => {
               setFile(null);

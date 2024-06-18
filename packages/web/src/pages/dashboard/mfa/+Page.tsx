@@ -11,11 +11,11 @@ import { Error } from "../../../components/error";
 import { OtpInput } from "../../../components/input/otp";
 import { PageLoader } from "../../../components/page-loader";
 import { Steps } from "../../../components/steps";
-import { useToasts } from "../../../components/toast";
 import { navigate } from "../../../helpers/routing";
 import { useAsync } from "../../../hooks/useAsync";
 import { useQueryState } from "../../../hooks/useQueryState";
 import { useErrorMutation } from "../../../hooks/useErrorMutation";
+import { createToast } from "../../../components/toast/store";
 
 const GenerateOtp = graphql(`
   query GenerateOTP {
@@ -35,7 +35,6 @@ const ConfirmOTP = graphql(`
 
 export const Page: FC = () => {
   const [result] = useQuery({ query: GenerateOtp });
-  const createToast = useToasts();
   const [currentStep, setCurrentStep] = useQueryState("step", 0, Number);
   const [, confirmOtp] = useErrorMutation(ConfirmOTP);
 
@@ -61,13 +60,13 @@ export const Page: FC = () => {
     if (!copyable) return;
     navigator.clipboard.writeText(copyable);
     createToast({
-      text: "Copied recovery codes!",
+      message: "Copied recovery codes!",
     });
   }, [createToast, copyable]);
 
   const [confirm, confirming] = useAsync(async (otpCode: string) => {
     await confirmOtp({ otpCode });
-    createToast({ text: "Successfully enabled 2FA!" });
+    createToast({ message: "Successfully enabled 2FA!" });
     navigate("/dashboard", { overwriteLastHistoryEntry: true });
   });
 

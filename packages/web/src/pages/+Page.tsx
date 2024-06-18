@@ -1,7 +1,7 @@
-import type { FC } from 'react';
-import { Container } from '../components/container';
-import { useConfig } from '../hooks/useConfig';
-import { Spinner } from '../components/spinner';
+import type { FC } from "react";
+import { Container } from "../components/container";
+import { useConfig } from "../hooks/useConfig";
+import { Spinner } from "../components/spinner";
 
 export const Page: FC = () => {
   const config = useConfig();
@@ -13,8 +13,8 @@ export const Page: FC = () => {
       <div className="pt-16">
         <h1 className="mb-2 text-4xl font-bold">Micro</h1>
         <p className="mb-2 text-gray-400">
-          An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint. Sign in to
-          download a generated ShareX configuration. You can view the source code{' '}
+          An invite-only file sharing and paste service with vanity domains and a ShareX compatible endpoint.
+          Sign in to download a generated ShareX configuration. You can view the source code{" "}
           <a className="text-primary" href="https://github.com/sylv/micro" target="_blank" rel="noreferrer">
             here.
           </a>
@@ -27,7 +27,7 @@ export const Page: FC = () => {
         {!config.data && <Spinner />}
         {config.data && (
           <p className="text-gray-400">
-            To get an account or get a file taken down, email{' '}
+            To get an account or get a file taken down, email{" "}
             <a href={`mailto:${config.data.inquiriesEmail}`} className="text-primary">
               {config.data.inquiriesEmail}
             </a>
