@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Response } from "@nestjs/common";
 import { type FastifyReply } from "fastify";
 import { UserService } from "./user.service.js";
+import { rootHost } from "../../config.js";
 
 @Controller()
 export class UserController {
@@ -13,6 +14,6 @@ export class UserController {
     @Response() reply: FastifyReply,
   ) {
     await this.userService.verifyUser(userId, verifyId);
-    return reply.redirect(302, "/login?verified=true");
+    return reply.redirect(302, rootHost.url + "/login?verified=true");
   }
 }
