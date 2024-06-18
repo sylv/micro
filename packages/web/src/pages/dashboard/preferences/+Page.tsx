@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@urql/preact";
+import { useQuery } from "@urql/preact";
 import type { FC } from "react";
 import { Fragment } from "react";
 import { graphql } from "../../../@generated/gql";
@@ -12,6 +12,7 @@ import { Title } from "../../../components/title";
 import { ConfigGenerator } from "../../../containers/config-generator/config-generator";
 import { navigate } from "../../../helpers/routing";
 import { useAsync } from "../../../hooks/useAsync";
+import { useErrorMutation } from "../../../hooks/useErrorMutation";
 import { useLogoutUser, useUserRedirect } from "../../../hooks/useUser";
 
 const RefreshToken = graphql(`
@@ -41,7 +42,7 @@ const UserQueryWithToken = graphql(`
 export const Page: FC = () => {
   const [user] = useQuery({ query: UserQueryWithToken });
   const { logout } = useLogoutUser();
-  const [, refreshMutation] = useMutation(RefreshToken);
+  const [, refreshMutation] = useErrorMutation(RefreshToken);
   const [refresh, refreshing] = useAsync(async () => {
     const confirmation = confirm(
       "Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.",
@@ -53,7 +54,7 @@ export const Page: FC = () => {
 
   useUserRedirect(user, true);
 
-  const [disableOTPMut, disableOTP] = useMutation(DisableOtp);
+  const [disableOTPMut, disableOTP] = useErrorMutation(DisableOtp);
 
   return (
     <Container>

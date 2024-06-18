@@ -1,76 +1,76 @@
-import { Form, Formik } from 'formik';
-import type { FC } from 'react';
-import * as Yup from 'yup';
-import { graphql } from '../../@generated/gql';
-import type { CreatePasteDto } from '../../@generated/graphql';
-import { Button } from '../../components/button';
-import { Container } from '../../components/container';
-import { Error } from '../../components/error';
-import { Checkbox } from '../../components/input/checkbox';
-import { Input } from '../../components/input/input';
-import { Select } from '../../components/input/select';
-import { TextArea } from '../../components/input/textarea';
-import { Title } from '../../components/title';
-import { encryptContent } from '../../helpers/encrypt.helper';
-import { useConfig } from '../../hooks/useConfig';
-import { useUser } from '../../hooks/useUser';
-import { useMutation } from '@urql/preact';
+import { Form, Formik } from "formik";
+import type { FC } from "react";
+import * as Yup from "yup";
+import { graphql } from "../../@generated/gql";
+import type { CreatePasteDto } from "../../@generated/graphql";
+import { Button } from "../../components/button";
+import { Container } from "../../components/container";
+import { Error } from "../../components/error";
+import { Checkbox } from "../../components/input/checkbox";
+import { Input } from "../../components/input/input";
+import { Select } from "../../components/input/select";
+import { TextArea } from "../../components/input/textarea";
+import { Title } from "../../components/title";
+import { encryptContent } from "../../helpers/encrypt.helper";
+import { useConfig } from "../../hooks/useConfig";
+import { useErrorMutation } from "../../hooks/useErrorMutation";
+import { useUser } from "../../hooks/useUser";
 
 const EXPIRY_OPTIONS = [
-  { name: '15 minutes', value: 15 },
-  { name: '30 minutes', value: 30 },
-  { name: '1 hour', value: 60 },
-  { name: '2 hours', value: 120 },
-  { name: '4 hours', value: 240 },
-  { name: '8 hours', value: 480 },
-  { name: '1 day', value: 1440 },
-  { name: '2 days', value: 2880 },
-  { name: '4 days', value: 4320 },
-  { name: '1 week', value: 10080 },
-  { name: '2 weeks', value: 20160 },
-  { name: '1 month', value: 43200 },
-  { name: '1 year', value: 525600 },
+  { name: "15 minutes", value: 15 },
+  { name: "30 minutes", value: 30 },
+  { name: "1 hour", value: 60 },
+  { name: "2 hours", value: 120 },
+  { name: "4 hours", value: 240 },
+  { name: "8 hours", value: 480 },
+  { name: "1 day", value: 1440 },
+  { name: "2 days", value: 2880 },
+  { name: "4 days", value: 4320 },
+  { name: "1 week", value: 10080 },
+  { name: "2 weeks", value: 20160 },
+  { name: "1 month", value: 43200 },
+  { name: "1 year", value: 525600 },
 ];
 
 const TEXT_TYPES = [
-  { name: 'Markdown', ext: 'md', type: 'text/markdown' },
-  { name: 'Plain Text', ext: 'txt', type: 'text/plain' },
-  { name: 'HTML', ext: 'html', type: 'text/html' },
-  { name: 'JSON', ext: 'json', type: 'application/json' },
-  { name: 'XML', ext: 'xml', type: 'application/xml' },
-  { name: 'SQL', ext: 'sql', type: 'text/x-sql' },
-  { name: 'JavaScript', ext: 'js', type: 'application/javascript' },
-  { name: 'TypeScript', ext: 'ts', type: 'application/typescript' },
-  { name: 'JSX', ext: 'jsx', type: 'text/jsx' },
-  { name: 'TSX', ext: 'tsx', type: 'text/typescript-jsx' },
-  { name: 'CSS', ext: 'css', type: 'text/css' },
-  { name: 'SCSS', ext: 'scss', type: 'text/x-scss' },
-  { name: 'SASS', ext: 'sass', type: 'text/x-sass' },
-  { name: 'LESS', ext: 'less', type: 'text/x-less' },
-  { name: 'GraphQL', ext: 'graphql', type: 'application/graphql' },
-  { name: 'C', ext: 'c', type: 'text/x-c' },
-  { name: 'C++', ext: 'cpp', type: 'text/x-c++' },
-  { name: 'C#', ext: 'cs', type: 'text/x-csharp' },
-  { name: 'Python', ext: 'py', type: 'text/x-python' },
-  { name: 'R', ext: 'r', type: 'text/x-r' },
-  { name: 'Ruby', ext: 'rb', type: 'text/x-ruby' },
-  { name: 'Shell', ext: 'sh', type: 'text/x-shellscript' },
-  { name: 'Java', ext: 'java', type: 'text/x-java' },
-  { name: 'Kotlin', ext: 'kt', type: 'text/x-kotlin' },
-  { name: 'Go', ext: 'go', type: 'text/x-go' },
-  { name: 'Swift', ext: 'swift', type: 'text/x-swift' },
-  { name: 'Rust', ext: 'rs', type: 'text/x-rust' },
-  { name: 'YAML', ext: 'yaml', type: 'text/x-yaml' },
-  { name: 'PHP', ext: 'php', type: 'text/x-php' },
-  { name: 'Perl', ext: 'pl', type: 'text/x-perl' },
-  { name: 'PowerShell', ext: 'ps1', type: 'text/x-powershell' },
-  { name: 'Batch', ext: 'bat', type: 'text/x-batch' },
-  { name: 'CoffeeScript', ext: 'coffee', type: 'text/x-coffeescript' },
-  { name: 'Haskell', ext: 'hs', type: 'text/x-haskell' },
-  { name: 'Julia', ext: 'jl', type: 'text/x-julia' },
-  { name: 'Lua', ext: 'lua', type: 'text/x-lua' },
-  { name: 'Matlab', ext: 'matlab', type: 'text/x-matlab' },
-  { name: 'Pascal', ext: 'pas', type: 'text/x-pascal' },
+  { name: "Markdown", ext: "md", type: "text/markdown" },
+  { name: "Plain Text", ext: "txt", type: "text/plain" },
+  { name: "HTML", ext: "html", type: "text/html" },
+  { name: "JSON", ext: "json", type: "application/json" },
+  { name: "XML", ext: "xml", type: "application/xml" },
+  { name: "SQL", ext: "sql", type: "text/x-sql" },
+  { name: "JavaScript", ext: "js", type: "application/javascript" },
+  { name: "TypeScript", ext: "ts", type: "application/typescript" },
+  { name: "JSX", ext: "jsx", type: "text/jsx" },
+  { name: "TSX", ext: "tsx", type: "text/typescript-jsx" },
+  { name: "CSS", ext: "css", type: "text/css" },
+  { name: "SCSS", ext: "scss", type: "text/x-scss" },
+  { name: "SASS", ext: "sass", type: "text/x-sass" },
+  { name: "LESS", ext: "less", type: "text/x-less" },
+  { name: "GraphQL", ext: "graphql", type: "application/graphql" },
+  { name: "C", ext: "c", type: "text/x-c" },
+  { name: "C++", ext: "cpp", type: "text/x-c++" },
+  { name: "C#", ext: "cs", type: "text/x-csharp" },
+  { name: "Python", ext: "py", type: "text/x-python" },
+  { name: "R", ext: "r", type: "text/x-r" },
+  { name: "Ruby", ext: "rb", type: "text/x-ruby" },
+  { name: "Shell", ext: "sh", type: "text/x-shellscript" },
+  { name: "Java", ext: "java", type: "text/x-java" },
+  { name: "Kotlin", ext: "kt", type: "text/x-kotlin" },
+  { name: "Go", ext: "go", type: "text/x-go" },
+  { name: "Swift", ext: "swift", type: "text/x-swift" },
+  { name: "Rust", ext: "rs", type: "text/x-rust" },
+  { name: "YAML", ext: "yaml", type: "text/x-yaml" },
+  { name: "PHP", ext: "php", type: "text/x-php" },
+  { name: "Perl", ext: "pl", type: "text/x-perl" },
+  { name: "PowerShell", ext: "ps1", type: "text/x-powershell" },
+  { name: "Batch", ext: "bat", type: "text/x-batch" },
+  { name: "CoffeeScript", ext: "coffee", type: "text/x-coffeescript" },
+  { name: "Haskell", ext: "hs", type: "text/x-haskell" },
+  { name: "Julia", ext: "jl", type: "text/x-julia" },
+  { name: "Lua", ext: "lua", type: "text/x-lua" },
+  { name: "Matlab", ext: "matlab", type: "text/x-matlab" },
+  { name: "Pascal", ext: "pas", type: "text/x-pascal" },
 ];
 
 const schema = Yup.object().shape({
@@ -98,7 +98,7 @@ const CreatePaste = graphql(`
 export const Page: FC = () => {
   const user = useUser();
   const config = useConfig();
-  const [, pasteMutation] = useMutation(CreatePaste);
+  const [, pasteMutation] = useErrorMutation(CreatePaste);
   if (user.error) {
     return <Error error={user.error} />;
   }
@@ -114,9 +114,9 @@ export const Page: FC = () => {
         validationSchema={schema}
         initialValues={{
           title: undefined,
-          content: '',
+          content: "",
           encrypt: false,
-          extension: 'txt',
+          extension: "txt",
           burn: false,
           paranoid: false,
           hostname: undefined,
@@ -152,7 +152,7 @@ export const Page: FC = () => {
           });
 
           const url = new URL(paste.data!.createPaste.urls.view);
-          if (body.burn) url.searchParams.set('burn_unless', user.data.id);
+          if (body.burn) url.searchParams.set("burn_unless", user.data.id);
           if (encryptionKey) url.hash = `key=${encryptionKey}`;
           window.location.href = url.href;
         }}

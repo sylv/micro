@@ -1,19 +1,19 @@
-import clsx from 'clsx';
-import { Form, Formik } from 'formik';
-import type { FC } from 'react';
-import { Fragment, useCallback, useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import type { LoginMutationVariables } from '../@generated/graphql';
-import { Input } from '../components/input/input';
-import { OtpInput } from '../components/input/otp';
-import { Submit } from '../components/input/submit';
-import { navigate } from '../helpers/routing';
-import { useAsync } from '../hooks/useAsync';
-import { useUser } from '../hooks/useUser';
-import { useMutation } from '@urql/preact';
-import { graphql } from '../@generated';
-import { getErrorMessage } from '../helpers/get-error-message.helper';
-import { Warning, WarningType } from '../components/warning';
+import clsx from "clsx";
+import { Form, Formik } from "formik";
+import type { FC } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import * as Yup from "yup";
+import type { LoginMutationVariables } from "../@generated/graphql";
+import { Input } from "../components/input/input";
+import { OtpInput } from "../components/input/otp";
+import { Submit } from "../components/input/submit";
+import { navigate } from "../helpers/routing";
+import { useAsync } from "../hooks/useAsync";
+import { useUser } from "../hooks/useUser";
+import { graphql } from "../@generated";
+import { getErrorMessage } from "../helpers/get-error-message.helper";
+import { Warning, WarningType } from "../components/warning";
+import { useErrorMutation } from "../hooks/useErrorMutation";
 
 const schema = Yup.object().shape({
   username: Yup.string().required().min(2),
@@ -35,10 +35,9 @@ export const LoginForm: FC = () => {
   const [disabledReason, setDisabledReason] = useState<string | null>(null);
   const [otpRequired, setOtpRequired] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [, loginMutation] = useMutation(LoginMutation);
   const redirect = useCallback(() => {
     const url = new URL(window.location.href);
-    const to = url.searchParams.get('to') ?? '/dashboard';
+    const to = url.searchParams.get("to") ?? "/dashboard";
     navigate(to);
   }, []);
 
@@ -49,38 +48,36 @@ export const LoginForm: FC = () => {
     }
   }, [user, redirect]);
 
+  const [, loginMutation] = useErrorMutation(LoginMutation);
   const [login, loggingIn] = useAsync(async (values: LoginMutationVariables) => {
     setLoginInfo(values);
     setInvalidOTP(false);
 
-    // i truly do not understand why this doesn't just throw.
-    const result = await loginMutation(values);
-    if (result.error) {
-      if (result.error.message.toLowerCase().includes('otp')) {
+    try {
+      await loginMutation(values);
+      setError(null);
+      redirect();
+    } catch (error: any) {
+      if (error.message.toLowerCase().includes("otp")) {
         setOtpRequired(true);
       }
 
-      if (otpRequired && result.error.message.toLowerCase().includes('invalid otp')) {
+      if (otpRequired && error.message.toLowerCase().includes("invalid otp")) {
         setInvalidOTP(true);
-      } else if (result.error.message.includes('ACCOUNT_DISABLED')) {
-        const index = result.error.message.indexOf(':');
-        const message = result.error.message.slice(index + 1);
+      } else if (error.message.includes("ACCOUNT_DISABLED")) {
+        const index = error.message.indexOf(":");
+        const message = error.message.slice(index + 1);
         setDisabledReason(message);
-      } else if (result.error.message.toLowerCase().includes('unauthorized')) {
-        setError('Invalid username or password');
-      } else if (result.error.message.startsWith('ACCOUNT_DISABLED:')) {
-        const message = result.error.message.replace('ACCOUNT_DISABLED: ', '');
+      } else if (error.message.toLowerCase().includes("unauthorized")) {
+        setError("Invalid username or password");
+      } else if (error.message.startsWith("ACCOUNT_DISABLED:")) {
+        const message = error.message.replace("ACCOUNT_DISABLED: ", "");
         setError(message);
       } else {
-        const message = getErrorMessage(result.error);
-        setError(message || 'An unknown error occured.');
+        const message = getErrorMessage(error);
+        setError(message || "An unknown error occured.");
       }
-
-      return;
     }
-
-    setError(null);
-    redirect();
   });
 
   if (disabledReason) {
@@ -105,9 +102,12 @@ export const LoginForm: FC = () => {
           }}
         />
         <span
-          className={clsx(`absolute mt-2 text-xs text-center font-mono`, invalidOTP ? 'text-red-400' : 'text-gray-600')}
+          className={clsx(
+            "absolute mt-2 text-xs text-center font-mono",
+            invalidOTP ? "text-red-400" : "text-gray-600",
+          )}
         >
-          {invalidOTP ? 'Invalid OTP code' : 'Enter the OTP code from your authenticator app'}
+          {invalidOTP ? "Invalid OTP code" : "Enter the OTP code from your authenticator app"}
         </span>
       </div>
     );
@@ -116,14 +116,20 @@ export const LoginForm: FC = () => {
   return (
     <Fragment>
       <Formik
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ username: "", password: "" }}
         validationSchema={schema}
         onSubmit={async (values) => {
           await login(values);
         }}
       >
         <Form>
-          <Input id="username" type="username" placeholder="Username or email" autoComplete="username" autoFocus />
+          <Input
+            id="username"
+            type="username"
+            placeholder="Username or email"
+            autoComplete="username"
+            autoFocus
+          />
           <Input
             id="password"
             type="password"

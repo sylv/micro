@@ -1,22 +1,23 @@
-import clsx from 'clsx';
-import copyToClipboard from 'copy-to-clipboard';
-import type { FC, ReactNode } from 'react';
-import { Fragment, useState } from 'react';
-import { FiDownload, FiShare, FiTrash } from 'react-icons/fi';
-import { useMutation, useQuery } from '@urql/preact';
-import { graphql } from '../../../@generated/gql';
-import { Container } from '../../../components/container';
-import { Embed } from '../../../components/embed/embed';
-import { Error } from '../../../components/error';
-import { Skeleton, SkeletonList } from '../../../components/skeleton';
-import { Spinner } from '../../../components/spinner';
-import { Title } from '../../../components/title';
-import { useToasts } from '../../../components/toast';
-import { downloadUrl } from '../../../helpers/download.helper';
-import { navigate } from '../../../helpers/routing';
-import { useAsync } from '../../../hooks/useAsync';
-import { useQueryState } from '../../../hooks/useQueryState';
-import type { PageProps } from '../../../renderer/types';
+import clsx from "clsx";
+import copyToClipboard from "copy-to-clipboard";
+import type { FC, ReactNode } from "react";
+import { Fragment, useState } from "react";
+import { FiDownload, FiShare, FiTrash } from "react-icons/fi";
+import { useQuery } from "@urql/preact";
+import { graphql } from "../../../@generated/gql";
+import { Container } from "../../../components/container";
+import { Embed } from "../../../components/embed/embed";
+import { Error } from "../../../components/error";
+import { Skeleton, SkeletonList } from "../../../components/skeleton";
+import { Spinner } from "../../../components/spinner";
+import { Title } from "../../../components/title";
+import { useToasts } from "../../../components/toast";
+import { downloadUrl } from "../../../helpers/download.helper";
+import { navigate } from "../../../helpers/routing";
+import { useAsync } from "../../../hooks/useAsync";
+import { useQueryState } from "../../../hooks/useQueryState";
+import type { PageProps } from "../../../renderer/types";
+import { useErrorMutation } from "../../../hooks/useErrorMutation";
 
 const GetFile = graphql(`
   query GetFile($fileId: ID!) {
@@ -56,12 +57,12 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
   onClick,
 }) => {
   const classes = clsx(
-    'flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300',
+    "flex items-center gap-2 shrink-0 transition-colors duration-100 hover:text-gray-300",
     className,
   );
 
   return (
-    <button className={classes} onClick={onClick}>
+    <button className={classes} onClick={onClick} type="button">
       {children}
     </button>
   );
@@ -69,7 +70,7 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
 
 export const Page: FC<PageProps> = ({ routeParams }) => {
   const fileId = routeParams.fileId;
-  const [deleteKey] = useQueryState<string | undefined>('deleteKey');
+  const [deleteKey] = useQueryState<string | undefined>("deleteKey");
   const [confirm, setConfirm] = useState(false);
   const createToast = useToasts();
   const [file] = useQuery({
@@ -80,11 +81,11 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
     },
   });
 
-  const [, deleteMutation] = useMutation(DeleteFile);
+  const [, deleteMutation] = useErrorMutation(DeleteFile);
   const copyLink = () => {
     copyToClipboard(file.data?.file.urls.view ?? window.location.href);
     createToast({
-      text: `Copied link to clipboard`,
+      text: "Copied link to clipboard",
     });
   };
 
@@ -106,7 +107,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
     });
 
     createToast({ text: `Deleted "${file.data.file.displayName}"` });
-    navigate('/dashboard', { overwriteLastHistoryEntry: true });
+    navigate("/dashboard", { overwriteLastHistoryEntry: true });
   });
 
   if (file.error) {
@@ -122,7 +123,9 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
         <div className="flex items-end col-span-5 overflow-hidden whitespace-nowrap pb-1">
           {file.data && (
             <Fragment>
-              <h1 className="mr-2 text-xl font-bold md:text-4xl md:break-all">{file.data.file.displayName}</h1>
+              <h1 className="mr-2 text-xl font-bold md:text-4xl md:break-all">
+                {file.data.file.displayName}
+              </h1>
               <span className="text-xs text-gray-500">{file.data.file.sizeFormatted}</span>
             </Fragment>
           )}
@@ -157,7 +160,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
                 {canDelete && (
                   <FileOption onClick={deleteFile} className="text-red-400 hover:text-red-500">
                     <FiTrash className="h-4 mr-1" />
-                    {deletingFile ? <Spinner size="small" /> : confirm ? 'Are you sure?' : 'Delete'}
+                    {deletingFile ? <Spinner size="small" /> : confirm ? "Are you sure?" : "Delete"}
                   </FileOption>
                 )}
               </Fragment>

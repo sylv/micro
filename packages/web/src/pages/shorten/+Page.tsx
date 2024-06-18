@@ -1,21 +1,21 @@
-import { useMutation } from '@urql/preact';
-import { Form, Formik } from 'formik';
-import type { FC } from 'react';
-import { useState } from 'react';
-import * as Yup from 'yup';
-import { graphql } from '../../@generated/gql';
-import { Button } from '../../components/button';
-import { Container } from '../../components/container';
-import { Input } from '../../components/input/input';
-import { Select } from '../../components/input/select';
-import { Title } from '../../components/title';
-import { useConfig } from '../../hooks/useConfig';
-import { useUser } from '../../hooks/useUser';
+import { Form, Formik } from "formik";
+import type { FC } from "react";
+import { useState } from "react";
+import * as Yup from "yup";
+import { graphql } from "../../@generated/gql";
+import { Button } from "../../components/button";
+import { Container } from "../../components/container";
+import { Input } from "../../components/input/input";
+import { Select } from "../../components/input/select";
+import { Title } from "../../components/title";
+import { useConfig } from "../../hooks/useConfig";
+import { useErrorMutation } from "../../hooks/useErrorMutation";
+import { useUser } from "../../hooks/useUser";
 
 const schema = Yup.object().shape({
   host: Yup.string().optional(),
   url: Yup.string()
-    .matches(/^(http|https):\/\/[^ "]+$/u, 'Not a well-formed URL')
+    .matches(/^(http|https):\/\/[^ "]+$/u, "Not a well-formed URL")
     .required(),
 });
 
@@ -31,7 +31,7 @@ const Shorten = graphql(`
 `);
 
 export const Page: FC = () => {
-  const [, shortenMutation] = useMutation(Shorten);
+  const [, shortenMutation] = useErrorMutation(Shorten);
   const [result, setResult] = useState<string | null>(null);
   const config = useConfig();
 
@@ -45,7 +45,7 @@ export const Page: FC = () => {
       {result && <p className="text-sm text-gray-500 mb-2">Your shortened link is below.</p>}
       {!result && (
         <Formik
-          initialValues={{ host: undefined, url: '' }}
+          initialValues={{ host: undefined, url: "" }}
           validationSchema={schema}
           onSubmit={async (values) => {
             const result = await shortenMutation({

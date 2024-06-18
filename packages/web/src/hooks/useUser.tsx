@@ -1,11 +1,12 @@
-import type { CombinedError, TypedDocumentNode } from '@urql/preact';
-import { useMutation, useQuery } from '@urql/preact';
-import { useEffect } from 'react';
-import { graphql } from '../@generated/gql';
-import type { GetUserQuery } from '../@generated/graphql';
-import { type RegularUserFragment } from '../@generated/graphql';
-import { navigate } from '../helpers/routing';
-import { useAsync } from './useAsync';
+import type { CombinedError, TypedDocumentNode } from "@urql/preact";
+import { useQuery } from "@urql/preact";
+import { useEffect } from "react";
+import { graphql } from "../@generated/gql";
+import type { GetUserQuery } from "../@generated/graphql";
+import { type RegularUserFragment } from "../@generated/graphql";
+import { navigate } from "../helpers/routing";
+import { useAsync } from "./useAsync";
+import { useErrorMutation } from "./useErrorMutation";
 
 const RegularUserFragment = graphql(`
   fragment RegularUser on User {
@@ -31,10 +32,10 @@ const LogoutMutation = graphql(`
 `);
 
 export const useLogoutUser = () => {
-  const [, logoutMutation] = useMutation(LogoutMutation);
+  const [, logoutMutation] = useErrorMutation(LogoutMutation);
   const [logout] = useAsync(async () => {
     await logoutMutation({});
-    navigate('/');
+    navigate("/");
   });
 
   return { logout };
