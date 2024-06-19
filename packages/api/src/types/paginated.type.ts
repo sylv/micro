@@ -1,6 +1,6 @@
-import type { Type } from '@nestjs/common';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Edge } from './edge.type.js';
+import type { Type } from "@nestjs/common";
+import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Edge } from "./edge.type.js";
 
 export interface Paginated<T> {
   totalCount: number;
@@ -9,7 +9,7 @@ export interface Paginated<T> {
 }
 
 @ObjectType()
-export class PageInfo {
+class PageInfo {
   @Field(() => String, { nullable: true })
   startCursor?: string;
 

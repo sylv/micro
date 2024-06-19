@@ -1,17 +1,18 @@
-import { useQuery } from '@urql/preact';
-import type { FC } from 'react';
-import { Fragment, useState } from 'react';
-import { graphql } from '../../@generated/gql';
-import { Breadcrumbs } from '../../components/breadcrumbs';
-import { Card } from '../../components/card';
-import { Error } from '../../components/error';
-import { Toggle } from '../../components/toggle';
-import { useQueryState } from '../../hooks/useQueryState';
-import { FileCard } from './cards/file-card';
-import { PasteCard } from './cards/paste-card';
-import { PageLoader } from '../../components/page-loader';
+import { useQuery } from "urql";
+import type { FC } from "react";
+import { Fragment, useState } from "react";
+import { Breadcrumbs } from "../../components/breadcrumbs";
+import { Card } from "../../components/card";
+import { Error } from "../../components/error";
+import { Toggle } from "../../components/toggle";
+import { useQueryState } from "../../hooks/useQueryState";
+import { FileCard, FileCardFrag } from "./cards/file-card";
+import { PasteCard, PasteCardFrag } from "./cards/paste-card";
+import { PageLoader } from "../../components/page-loader";
+import { graphql } from "../../graphql";
 
-const GetFilesQuery = graphql(`
+const GetFilesQuery = graphql(
+  `
   query GetFiles($after: String) {
     user {
       files(first: 24, after: $after) {
@@ -28,9 +29,12 @@ const GetFilesQuery = graphql(`
       }
     }
   }
-`);
+`,
+  [FileCardFrag],
+);
 
-const GetPastesQuery = graphql(`
+const GetPastesQuery = graphql(
+  `
   query GetPastes($after: String) {
     user {
       pastes(first: 24, after: $after) {
@@ -47,32 +51,34 @@ const GetPastesQuery = graphql(`
       }
     }
   }
-`);
+`,
+  [PasteCardFrag],
+);
 
 export const FileList: FC = () => {
-  const [filter, setFilter] = useQueryState('filter', 'files');
+  const [filter, setFilter] = useQueryState("filter", "files");
 
   const [filesAfter, setFilesAfter] = useState<string | null>(null);
   const [files] = useQuery({
     query: GetFilesQuery,
-    pause: filter !== 'files',
+    pause: filter !== "files",
     variables: { after: filesAfter },
   });
 
   const [pastesAfter, setPastesAfter] = useState<string | null>(null);
   const [pastes] = useQuery({
     query: GetPastesQuery,
-    pause: filter !== 'pastes',
+    pause: filter !== "pastes",
     variables: { after: pastesAfter },
   });
 
-  const source = filter === 'files' ? files : pastes;
-  const setAfter = filter === 'files' ? setFilesAfter : setPastesAfter;
+  const source = filter === "files" ? files : pastes;
+  const setAfter = filter === "files" ? setFilesAfter : setPastesAfter;
   if (source.error) {
     return <Error error={source.error} />;
   }
 
-  const currentPageInfo = filter === 'files' ? files.data?.user.files : pastes.data?.user.pastes;
+  const currentPageInfo = filter === "files" ? files.data?.user.files : pastes.data?.user.pastes;
   const hasContent = currentPageInfo?.edges[0];
   const hasNextPage = currentPageInfo?.pageInfo.hasNextPage;
 
@@ -89,12 +95,12 @@ export const FileList: FC = () => {
             onChange={({ value }) => setFilter(value)}
             options={[
               {
-                label: 'Files',
-                value: 'files',
+                label: "Files",
+                value: "files",
               },
               {
-                label: 'Pastes',
-                value: 'pastes',
+                label: "Pastes",
+                value: "pastes",
               },
             ]}
           />
@@ -102,14 +108,18 @@ export const FileList: FC = () => {
       </div>
       <div className="pb-5">
         {!source.data && <PageLoader />}
-        {filter === 'files' && (
+        {filter === "files" && (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {files.data?.user.files.edges.map(({ node }) => <FileCard key={node.id} file={node} />)}
+            {files.data?.user.files.edges.map(({ node }) => (
+              <FileCard key={node.id} file={node} />
+            ))}
           </div>
         )}
-        {filter === 'pastes' && (
+        {filter === "pastes" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {pastes.data?.user.pastes.edges.map(({ node }) => <PasteCard key={node.id} paste={node} />)}
+            {pastes.data?.user.pastes.edges.map(({ node }) => (
+              <PasteCard key={node.id} paste={node} />
+            ))}
           </div>
         )}
         {!source.fetching && !hasContent && (

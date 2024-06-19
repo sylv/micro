@@ -1,20 +1,19 @@
 import type { FC } from "react";
 import { useEffect } from "react";
-import { graphql } from "../../../@generated/gql";
 import { Container } from "../../../components/container";
 import { Error } from "../../../components/error";
 import { PageLoader } from "../../../components/page-loader";
 import { Time } from "../../../components/time";
-import { Title } from "../../../components/title";
 import type { SignupData } from "../../../containers/signup-form";
 import { SignupForm } from "../../../containers/signup-form";
-import { navigate, prefetch } from "../../../helpers/routing";
+import { navigate, prefetch } from "vike/client/router";
 import { useAsync } from "../../../hooks/useAsync";
 import { useConfig } from "../../../hooks/useConfig";
-import type { PageProps } from "../../../renderer/types";
-import { useQuery } from "@urql/preact";
+import { useQuery } from "urql";
 import { useErrorMutation } from "../../../hooks/useErrorMutation";
 import { createToast } from "../../../components/toast/store";
+import { graphql } from "../../../graphql";
+import { usePageContext } from "vike-react/usePageContext";
 
 const GetInvite = graphql(`
   query GetInvite($inviteId: ID!) {
@@ -33,9 +32,12 @@ const CreateUser = graphql(`
   }
 `);
 
-export const Page: FC<PageProps> = ({ routeParams }) => {
+export const title = "You're invited — micro";
+
+export const Page: FC = () => {
   const config = useConfig();
-  const inviteToken = routeParams.inviteToken;
+  const { routeParams } = usePageContext();
+  const inviteToken = routeParams!.inviteToken;
   const [invite] = useQuery({ query: GetInvite, pause: !inviteToken, variables: { inviteId: inviteToken! } });
   const expiresAt = invite.data?.invite.expiresAt;
 
@@ -62,12 +64,11 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
   }
 
   if (!invite.data || !config.data) {
-    return <PageLoader title="You're Invited" />;
+    return <PageLoader />;
   }
 
   return (
     <Container centerY>
-      <Title>You&apos;re Invited</Title>
       <h1 className="text-4xl font-bold text-center mb-6 md:hidden">Sign Up</h1>
       {expiresAt && (
         <p className="mt-2 mb-2 text-xs text-center text-gray-600 md:hidden">

@@ -1,21 +1,20 @@
-import { useQuery } from "@urql/preact";
 import clsx from "clsx";
 import { QRCodeSVG } from "qrcode.react";
 import type { FC } from "react";
-import { Fragment, useCallback, useMemo } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiCopy, FiDownload } from "react-icons/fi";
-import { graphql } from "../../../@generated/gql";
-import { Button, ButtonStyle } from "../../../components/button";
-import { Container } from "../../../components/container";
-import { Error } from "../../../components/error";
-import { OtpInput } from "../../../components/input/otp";
-import { PageLoader } from "../../../components/page-loader";
-import { Steps } from "../../../components/steps";
-import { navigate } from "../../../helpers/routing";
-import { useAsync } from "../../../hooks/useAsync";
-import { useQueryState } from "../../../hooks/useQueryState";
-import { useErrorMutation } from "../../../hooks/useErrorMutation";
-import { createToast } from "../../../components/toast/store";
+import { useQuery } from "urql";
+import { navigate } from "vike/client/router";
+import { Button, ButtonStyle } from "../../../../components/button";
+import { Container } from "../../../../components/container";
+import { Error } from "../../../../components/error";
+import { OtpInput } from "../../../../components/input/otp";
+import { PageLoader } from "../../../../components/page-loader";
+import { Steps } from "../../../../components/steps";
+import { createToast } from "../../../../components/toast/store";
+import { useAsync } from "../../../../hooks/useAsync";
+import { useErrorMutation } from "../../../../hooks/useErrorMutation";
+import { graphql } from "../../../../graphql";
 
 const GenerateOtp = graphql(`
   query GenerateOTP {
@@ -28,14 +27,16 @@ const GenerateOtp = graphql(`
 `);
 
 const ConfirmOTP = graphql(`
-  mutation ConfirmOTP($otpCode: String!) {
-    confirmOTP(otpCode: $otpCode)
+  mutation ConfirmOTP($code: String!, $recoveryCodes: [String!]!, $secret: String!) {
+    confirmOTP(code: $code, recoveryCodes: $recoveryCodes, secret: $secret)
   }
 `);
 
+export const title = "Enable 2FA — micro";
+
 export const Page: FC = () => {
   const [result] = useQuery({ query: GenerateOtp });
-  const [currentStep, setCurrentStep] = useQueryState("step", 0, Number);
+  const [currentStep, setCurrentStep] = useState(0);
   const [, confirmOtp] = useErrorMutation(ConfirmOTP);
 
   const copyable = useMemo(() => {
@@ -65,7 +66,13 @@ export const Page: FC = () => {
   }, [createToast, copyable]);
 
   const [confirm, confirming] = useAsync(async (otpCode: string) => {
-    await confirmOtp({ otpCode });
+    if (!result.data) return;
+    await confirmOtp({
+      code: otpCode,
+      recoveryCodes: result.data.generateOTP.recoveryCodes,
+      secret: result.data.generateOTP.secret,
+    });
+
     createToast({ message: "Successfully enabled 2FA!" });
     navigate("/dashboard", { overwriteLastHistoryEntry: true });
   });

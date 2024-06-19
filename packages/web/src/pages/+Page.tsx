@@ -1,7 +1,9 @@
 import type { FC } from "react";
 import { Container } from "../components/container";
-import { useConfig } from "../hooks/useConfig";
 import { Spinner } from "../components/spinner";
+import { useConfig } from "../hooks/useConfig";
+
+export const title = "micro";
 
 export const Page: FC = () => {
   const config = useConfig();

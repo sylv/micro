@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-import * as avatar from 'generate-avatar';
-import type { FC } from 'react';
-import { useMemo, useRef } from 'react';
+import clsx from "clsx";
+import * as avatar from "generate-avatar";
+import type { FC } from "react";
+import { useMemo, useRef } from "react";
 
 export interface AvatarProps {
   userId: string;
@@ -9,7 +9,7 @@ export interface AvatarProps {
 }
 
 export const Avatar: FC<AvatarProps> = (props) => {
-  const classes = clsx('overflow-hidden rounded-full select-none', props.className);
+  const classes = clsx("overflow-hidden rounded-full select-none", props.className);
   const containerRef = useRef<HTMLDivElement>(null);
   const svg = useMemo(() => {
     const result = avatar.generateFromString(props.userId);

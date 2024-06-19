@@ -1,8 +1,8 @@
-import type { FC } from 'react';
-import { Input } from './input';
-import { Spinner } from '../spinner';
+import type { FC } from "react";
+import { Input } from "./input";
+import { Spinner } from "../spinner";
 
-export interface OtpInputProps {
+interface OtpInputProps {
   loading: boolean;
   invalid?: boolean;
   onCode: (code: string) => void;
@@ -21,7 +21,8 @@ export const OtpInput: FC<OtpInputProps> = ({ loading, invalid, onCode }) => {
         onChange={(event) => {
           if (loading || !event.currentTarget.value) return;
           if (
-            (event.currentTarget.value.length === TOTP_CODE_LENGTH && NUMBER_REGEX.test(event.currentTarget.value)) ||
+            (event.currentTarget.value.length === TOTP_CODE_LENGTH &&
+              NUMBER_REGEX.test(event.currentTarget.value)) ||
             event.currentTarget.value.length === RECOVERY_CODE_LENGTH
           ) {
             onCode(event.currentTarget.value);
@@ -29,7 +30,7 @@ export const OtpInput: FC<OtpInputProps> = ({ loading, invalid, onCode }) => {
         }}
         onKeyDown={(event) => {
           if (loading || !event.currentTarget.value) return;
-          if (event.key === 'Enter') {
+          if (event.key === "Enter") {
             onCode(event.currentTarget.value);
           }
         }}

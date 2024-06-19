@@ -1,4 +1,4 @@
-export interface GenerateConfigOptions {
+interface GenerateConfigOptions {
   hosts: string[];
   token: string;
   direct: boolean;

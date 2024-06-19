@@ -1,9 +1,9 @@
-import clsx from 'clsx';
-import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
-import type { Embeddable } from '../embeddable';
+import clsx from "clsx";
+import { BASE_EMBED_CLASSES, MAX_HEIGHT } from "../embed";
+import type { Embeddable } from "../embeddable";
 
 export const EmbedVideo = ({ file }: { file: Embeddable }) => {
-  const classes = clsx('outline-none', BASE_EMBED_CLASSES, MAX_HEIGHT);
+  const classes = clsx("outline-none", BASE_EMBED_CLASSES, MAX_HEIGHT);
   return (
     <video
       controls
@@ -21,9 +21,9 @@ export const EmbedVideo = ({ file }: { file: Embeddable }) => {
 
 EmbedVideo.embeddable = (data: Embeddable) => {
   switch (data.type) {
-    case 'video/mp4':
-    case 'video/webm':
-    case 'video/ogg': {
+    case "video/mp4":
+    case "video/webm":
+    case "video/ogg": {
       return true;
     }
     default: {

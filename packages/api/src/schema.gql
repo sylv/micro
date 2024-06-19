@@ -104,7 +104,7 @@ type Link {
 
 type Mutation {
   changePassword(currentPassword: String!, newPassword: String!): Boolean!
-  confirmOTP(otpCode: String!): Boolean!
+  confirmOTP(code: String!, recoveryCodes: [String!]!, secret: String!): Boolean!
   createInvite: Invite!
   createLink(destination: String!, host: String): Link!
   createPaste(partial: CreatePasteDto!): Paste!
@@ -115,12 +115,6 @@ type Mutation {
   logout: Boolean!
   refreshToken: User!
   resendVerificationEmail(data: ResendVerificationEmailDto): Boolean!
-}
-
-type OTPEnabledDto {
-  qrauthUrl: String!
-  recoveryCodes: [String!]!
-  secret: String!
 }
 
 type PageInfo {
@@ -156,10 +150,16 @@ type PastePage {
   totalCount: Int!
 }
 
+type PendingOTP {
+  qrauthUrl: String!
+  recoveryCodes: [String!]!
+  secret: String!
+}
+
 type Query {
   config: Config!
   file(fileId: ID!): File!
-  generateOTP: OTPEnabledDto!
+  generateOTP: PendingOTP!
   invite(inviteId: ID!): Invite!
   link(linkId: ID!): Link!
   paste(pasteId: ID!): Paste!

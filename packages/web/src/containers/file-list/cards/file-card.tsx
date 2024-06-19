@@ -1,11 +1,8 @@
-import { memo, useEffect, useMemo, useState } from 'react';
-import { FiFileMinus, FiTrash } from 'react-icons/fi';
-import { graphql } from '../../../@generated/gql';
-import type { FileCardFragment } from '../../../@generated/graphql';
-import { Link } from '../../../components/link';
-import { Skeleton } from '../../../components/skeleton';
-import { useConfig } from '../../../hooks/useConfig';
-import { MissingPreview } from '../missing-preview';
+import { useEffect, useMemo, useState, type FC } from "react";
+import { FiFileMinus, FiTrash } from "react-icons/fi";
+import { graphql, unmask, type FragmentOf } from "../../../graphql";
+import { useConfig } from "../../../hooks/useConfig";
+import { MissingPreview } from "../missing-preview";
 
 export const FileCardFrag = graphql(`
   fragment FileCard on File {
@@ -26,11 +23,12 @@ export const FileCardFrag = graphql(`
   }
 `);
 
-export interface FileCardProps {
-  file: FileCardFragment;
+interface FileCardProps {
+  file: FragmentOf<typeof FileCardFrag>;
 }
 
-export const FileCard = memo<{ file: FileCardFragment }>(({ file }) => {
+export const FileCard: FC<FileCardProps> = ({ file: _file }) => {
+  const file = unmask(FileCardFrag, _file);
   const [loadFailed, setLoadFailed] = useState(false);
   const config = useConfig();
   const url = useMemo(() => {
@@ -51,7 +49,7 @@ export const FileCard = memo<{ file: FileCardFragment }>(({ file }) => {
   }, [file.id]);
 
   return (
-    <Link href={url}>
+    <a href={url}>
       <div className="h-44 flex flex-col transition-colors rounded-lg shadow bg-dark-200 hover:bg-dark-400 group overflow-hidden">
         <div className="flex-grow overflow-hidden">
           {file.paths.thumbnail && !loadFailed && (
@@ -76,8 +74,6 @@ export const FileCard = memo<{ file: FileCardFragment }>(({ file }) => {
           <span className="text-gray-700 text-xs ">{file.sizeFormatted}</span>
         </div>
       </div>
-    </Link>
+    </a>
   );
-});
-
-export const FileCardSkeleton = () => <Skeleton className="h-44" />;
+};

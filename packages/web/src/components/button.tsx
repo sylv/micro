@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import type { FC, HTMLAttributes } from "react";
-import { forwardRef } from "react";
 import { Spinner } from "./spinner";
 
 type ButtonBaseProps = Omit<
@@ -27,40 +26,34 @@ export enum ButtonStyle {
 export const BASE_BUTTON_CLASSES =
   "flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium transition rounded truncate max-h-[2.65em]";
 
-export const Button = forwardRef<any, ButtonProps>(
-  (
-    {
-      as: As = "button",
-      disabled,
-      className,
-      type,
-      children,
-      loading,
-      style = ButtonStyle.Primary,
-      onClick,
-      onKeyDown,
-      ...rest
-    },
-    ref,
-  ) => {
-    if (disabled) style = ButtonStyle.Disabled;
-    const onClickWrap = disabled || loading ? undefined : onClick;
-    const onKeyDownWrap = disabled || loading ? undefined : onKeyDown;
-    const classes = clsx(BASE_BUTTON_CLASSES, className, style);
+export const Button: FC<ButtonProps> = ({
+  as: As = "button",
+  disabled,
+  className,
+  type,
+  children,
+  loading,
+  style = ButtonStyle.Primary,
+  onClick,
+  onKeyDown,
+  ...rest
+}) => {
+  if (disabled) style = ButtonStyle.Disabled;
+  const onClickWrap = disabled || loading ? undefined : onClick;
+  const onKeyDownWrap = disabled || loading ? undefined : onKeyDown;
+  const classes = clsx(BASE_BUTTON_CLASSES, className, style);
 
-    return (
-      <As
-        type={type}
-        className={classes}
-        disabled={disabled}
-        onClick={onClickWrap}
-        onKeyDown={onKeyDownWrap}
-        style={{ height: "2.5rem" }}
-        {...rest}
-        ref={ref}
-      >
-        {children} {loading && <Spinner size="small" />}
-      </As>
-    );
-  },
-);
+  return (
+    <As
+      type={type}
+      className={classes}
+      disabled={disabled}
+      onClick={onClickWrap}
+      onKeyDown={onKeyDownWrap}
+      style={{ height: "2.5rem" }}
+      {...rest}
+    >
+      {children} {loading && <Spinner size="small" />}
+    </As>
+  );
+};

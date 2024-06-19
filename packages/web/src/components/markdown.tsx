@@ -1,23 +1,23 @@
-import clsx from 'clsx';
-import type { Language } from 'prism-react-renderer';
-import { Children, Fragment, memo } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { SyntaxHighlighter } from './syntax-highlighter/syntax-highlighter';
+import clsx from "clsx";
+import type { Language } from "prism-react-renderer";
+import { Children, Fragment, type FC } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { SyntaxHighlighter } from "./syntax-highlighter/syntax-highlighter";
 
 const LANGUAGE_REGEX = /(^| )language-(?<language>.+)$/u;
 
-export const Markdown = memo<{ children: string; className?: string }>(({ children, className }) => {
+export const Markdown: FC<{ children: string; className?: string }> = ({ children, className }) => {
   const classes = clsx(
-    'prose prose-invert max-w-none',
+    "prose prose-invert max-w-none",
     // remove "" quotes from blockquotes
-    'prose-p:before:content-none prose-p:after:content-none',
+    "prose-p:before:content-none prose-p:after:content-none",
     // make links purple
-    'prose-a:text-primary hover:prose-a:underline prose-a:no-underline',
+    "prose-a:text-primary hover:prose-a:underline prose-a:no-underline",
     // remove italics from blockquotes
-    'prose-blockquote:font-normal prose-blockquote:not-italic',
+    "prose-blockquote:font-normal prose-blockquote:not-italic",
     // make inline `code` blocks purple
-    'prose-code:text-primary',
+    "prose-code:text-primary",
     className,
   );
 
@@ -30,14 +30,15 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
           pre({ children }) {
             // the code block is wrapped in a pre tag, but we already do that in the
             // prism syntax highlighter. so this just doesnt render the pre tag.
+            // biome-ignore lint/complexity/noUselessFragments: <explanation>
             return <Fragment>{children}</Fragment>;
           },
           code({ className, children, ...rest }) {
             const languageMatch = className && LANGUAGE_REGEX.exec(className);
             const text = languageMatch
               ? Children.toArray(children)
-                  .filter((child) => typeof child === 'string')
-                  .join(' ')
+                  .filter((child) => typeof child === "string")
+                  .join(" ")
               : null;
 
             if (!languageMatch || !text) {
@@ -61,4 +62,4 @@ export const Markdown = memo<{ children: string; className?: string }>(({ childr
       </ReactMarkdown>
     </div>
   );
-});
+};

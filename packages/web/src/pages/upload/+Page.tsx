@@ -1,21 +1,20 @@
-import type { ChangeEventHandler, FC, JSX } from "react";
+import type { ChangeEventHandler, DragEventHandler, FC } from "react";
 import { useEffect, useRef, useState } from "react";
 import { FiUpload } from "react-icons/fi";
+import { navigate } from "vike/client/router";
 import { Button } from "../../components/button";
 import { Card } from "../../components/card";
 import { Container } from "../../components/container";
 import { Select } from "../../components/input/select";
 import { PageLoader } from "../../components/page-loader";
 import { Spinner } from "../../components/spinner";
-import { Title } from "../../components/title";
+import { createToast } from "../../components/toast/store";
+import { ToastStyle } from "../../components/toast/toast";
 import { getErrorMessage } from "../../helpers/get-error-message.helper";
 import { http } from "../../helpers/http.helper";
 import { replaceUsername } from "../../helpers/replace-username.helper";
-import { navigate } from "../../helpers/routing";
 import { useConfig } from "../../hooks/useConfig";
 import { useUser } from "../../hooks/useUser";
-import { createToast } from "../../components/toast/store";
-import { ToastStyle } from "../../components/toast/toast";
 
 interface CreateFileResponse {
   id: string;
@@ -24,6 +23,8 @@ interface CreateFileResponse {
     view: string;
   };
 }
+
+export const title = "Upload File — micro";
 
 export const Page: FC = () => {
   const user = useUser(true);
@@ -35,7 +36,7 @@ export const Page: FC = () => {
   const config = useConfig();
 
   const onDragEvent =
-    (entering?: boolean): JSX.DragEventHandler<HTMLDivElement> =>
+    (entering?: boolean): DragEventHandler<HTMLDivElement> =>
     (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -43,7 +44,7 @@ export const Page: FC = () => {
       else if (entering === false) setHover(false);
     };
 
-  const onDrop: JSX.DragEventHandler<HTMLDivElement> = (event) => {
+  const onDrop: DragEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
     setHover(false);
@@ -113,13 +114,12 @@ export const Page: FC = () => {
   };
 
   if (!user.data || !config.data) {
-    return <PageLoader title="Upload" />;
+    return <PageLoader />;
   }
 
   if (uploading) {
     return (
       <Container center>
-        <Title>Uploading</Title>
         <Card className="flex flex-col items-center justify-center w-full h-2/4">
           <Spinner />
           <p className="text-gray-400 select-none">Uploading</p>
@@ -131,7 +131,6 @@ export const Page: FC = () => {
   if (file) {
     return (
       <Container center>
-        <Title>Upload {file.name}</Title>
         <Card className="flex flex-col items-center justify-center w-full h-2/4">
           <h1 className="mb-4 text-2xl">{file.name}</h1>
           <div className="flex items-center justify-center">
@@ -169,7 +168,6 @@ export const Page: FC = () => {
 
   return (
     <Container center>
-      <Title>Upload</Title>
       <Card
         className="flex flex-col items-center justify-center w-full h-2/4"
         onDrop={onDrop}

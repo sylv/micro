@@ -4,12 +4,15 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["vite/client"],
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
     "noUncheckedIndexedAccess": false,
     "baseUrl": "./",
-    "paths": {
-      "react": ["./node_modules/preact/compat/"],
-      "react-dom": ["./node_modules/preact/compat/"]
-    }
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "../api/src/schema.gql",
+        "tadaOutputLocation": "./src/graphql-gen.d.ts",
+        "shouldCheckForColocatedFragments": false
+      }
+    ]
   }
 }

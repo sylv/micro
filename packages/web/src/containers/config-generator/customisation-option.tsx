@@ -1,6 +1,6 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from "react";
 
-export interface CustomisationOptionProps {
+interface CustomisationOptionProps {
   title: string;
   description: string;
   children: ReactNode;

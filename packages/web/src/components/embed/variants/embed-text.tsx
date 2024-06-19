@@ -1,11 +1,11 @@
-import type { Language } from 'prism-react-renderer';
-import { useEffect, useState } from 'react';
-import { getFileLanguage } from '../../../helpers/get-file-language.helper';
-import { SyntaxHighlighter } from '../../syntax-highlighter/syntax-highlighter';
-import { BASE_EMBED_CLASSES } from '../embed';
-import type { Embeddable } from '../embeddable';
+import type { Language } from "prism-react-renderer";
+import { useEffect, useState } from "react";
+import { getFileLanguage } from "../../../helpers/get-file-language.helper";
+import { SyntaxHighlighter } from "../../syntax-highlighter/syntax-highlighter";
+import { BASE_EMBED_CLASSES } from "../embed";
+import type { Embeddable } from "../embeddable";
 
-const DEFAULT_LANGUAGE = getFileLanguage('diff')!;
+const DEFAULT_LANGUAGE = getFileLanguage("diff")!;
 const MAX_SIZE = 1_000_000; // 1mb
 
 export const EmbedText = ({ data }: { data: Embeddable }) => {
@@ -17,7 +17,7 @@ export const EmbedText = ({ data }: { data: Embeddable }) => {
   }, [data.displayName]);
 
   if (!data.textContent) {
-    throw new Error('EmbedText requires textContent');
+    throw new Error("EmbedText requires textContent");
   }
 
   return (

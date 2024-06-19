@@ -1,18 +1,19 @@
-import clsx from 'clsx';
-import { forwardRef } from 'react';
-import { FiArrowLeft } from 'react-icons/fi';
+import clsx from "clsx";
+import type { FC, RefObject } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 
-export interface BreadcrumbsProps {
+interface BreadcrumbsProps {
   href: string;
   children: string;
+  ref?: RefObject<HTMLAnchorElement>;
   className?: string;
 }
 
-export const Breadcrumbs = forwardRef<HTMLAnchorElement, BreadcrumbsProps>(({ href, children, className }, ref) => {
-  const classes = clsx('text-sm text-gray-500 flex items-center gap-1 hover:underline', className);
+export const Breadcrumbs: FC<BreadcrumbsProps> = ({ href, children, className, ref }) => {
+  const classes = clsx("text-sm text-gray-500 flex items-center gap-1 hover:underline", className);
   return (
     <a href={href} className={classes} ref={ref}>
       <FiArrowLeft className="h-4 w-4" /> {children}
     </a>
   );
-});
+};

@@ -1,8 +1,6 @@
 import { Form, Formik } from "formik";
 import type { FC } from "react";
 import * as Yup from "yup";
-import { graphql } from "../../@generated/gql";
-import type { CreatePasteDto } from "../../@generated/graphql";
 import { Button } from "../../components/button";
 import { Container } from "../../components/container";
 import { Error } from "../../components/error";
@@ -10,11 +8,11 @@ import { Checkbox } from "../../components/input/checkbox";
 import { Input } from "../../components/input/input";
 import { Select } from "../../components/input/select";
 import { TextArea } from "../../components/input/textarea";
-import { Title } from "../../components/title";
 import { encryptContent } from "../../helpers/encrypt.helper";
 import { useConfig } from "../../hooks/useConfig";
 import { useErrorMutation } from "../../hooks/useErrorMutation";
 import { useUser } from "../../hooks/useUser";
+import { graphql, type VariablesOf } from "../../graphql";
 
 const EXPIRY_OPTIONS = [
   { name: "15 minutes", value: 15 },
@@ -95,6 +93,8 @@ const CreatePaste = graphql(`
   }
 `);
 
+export const title = "New Paste — micro";
+
 export const Page: FC = () => {
   const user = useUser();
   const config = useConfig();
@@ -105,7 +105,6 @@ export const Page: FC = () => {
 
   return (
     <Container>
-      <Title>New Paste</Title>
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold mb-4">New Paste</h1>
         <div className="flex items-center gap-2" />
@@ -124,7 +123,7 @@ export const Page: FC = () => {
         }}
         onSubmit={async (values) => {
           if (!user.data) return;
-          const body: CreatePasteDto = {
+          const body: VariablesOf<typeof CreatePaste>["input"] = {
             burn: values.burn,
             content: values.content,
             encrypted: false,

@@ -4,8 +4,8 @@ import {
   type DocumentInput,
   type OperationContext,
   type UseMutationResponse,
-} from "@urql/preact";
-import { useCallback } from "preact/hooks";
+} from "urql";
+import { useCallback } from "react";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { createToast } from "../components/toast/store";
 import { ToastStyle } from "../components/toast/toast";

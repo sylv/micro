@@ -3,47 +3,21 @@ import copyToClipboard from "copy-to-clipboard";
 import type { FC, ReactNode } from "react";
 import { Fragment, useState } from "react";
 import { FiDownload, FiShare, FiTrash } from "react-icons/fi";
-import { useQuery } from "@urql/preact";
-import { graphql } from "../../../@generated/gql";
+import { useQuery } from "urql";
+import { usePageContext } from "vike-react/usePageContext";
+import { navigate } from "vike/client/router";
 import { Container } from "../../../components/container";
 import { Embed } from "../../../components/embed/embed";
 import { Error } from "../../../components/error";
 import { Skeleton, SkeletonList } from "../../../components/skeleton";
 import { Spinner } from "../../../components/spinner";
-import { Title } from "../../../components/title";
-import { downloadUrl } from "../../../helpers/download.helper";
-import { navigate } from "../../../helpers/routing";
-import { useAsync } from "../../../hooks/useAsync";
-import { useQueryState } from "../../../hooks/useQueryState";
-import type { PageProps } from "../../../renderer/types";
-import { useErrorMutation } from "../../../hooks/useErrorMutation";
 import { createToast } from "../../../components/toast/store";
-
-const GetFile = graphql(`
-  query GetFile($fileId: ID!) {
-    file(fileId: $fileId) {
-      id
-      type
-      displayName
-      size
-      sizeFormatted
-      textContent
-      isOwner
-      metadata {
-        height
-        width
-      }
-      paths {
-        view
-        thumbnail
-        direct
-      }
-      urls {
-        view
-      }
-    }
-  }
-`);
+import { graphql } from "../../../graphql";
+import { downloadUrl } from "../../../helpers/download.helper";
+import { useAsync } from "../../../hooks/useAsync";
+import { useErrorMutation } from "../../../hooks/useErrorMutation";
+import { useQueryState } from "../../../hooks/useQueryState";
+import { GetFile } from "./+data";
 
 const DeleteFile = graphql(`
   mutation DeleteFile($fileId: ID!, $deleteKey: String) {
@@ -68,8 +42,9 @@ const FileOption: FC<{ children: ReactNode; className?: string; onClick: () => v
   );
 };
 
-export const Page: FC<PageProps> = ({ routeParams }) => {
-  const fileId = routeParams.fileId;
+export const Page: FC = () => {
+  const { routeParams } = usePageContext();
+  const fileId = routeParams!.fileId;
   const [deleteKey] = useQueryState<string | undefined>("deleteKey");
   const [confirm, setConfirm] = useState(false);
   const [file] = useQuery({
@@ -117,7 +92,6 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
 
   return (
     <Container className="mt-5 md-2 md:mb-5">
-      {file.data && <Title>{file.data.file.displayName}</Title>}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6 pb-1">
         <div className="flex items-end col-span-5 overflow-hidden whitespace-nowrap pb-1">
           {file.data && (

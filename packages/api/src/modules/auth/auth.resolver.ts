@@ -7,8 +7,7 @@ import ms from "ms";
 import { rootHost } from "../../config.js";
 import { UserEntity } from "../user/user.entity.js";
 import { UserId } from "./auth.decorators.js";
-import { AuthService, TokenType } from "./auth.service.js";
-import { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
+import { AuthService, PendingOTP, TokenType } from "./auth.service.js";
 import { JWTAuthGuard } from "./guards/jwt.guard.js";
 import type { JWTPayloadUser } from "./strategies/jwt.strategy.js";
 
@@ -59,7 +58,7 @@ export class AuthResolver {
     return true;
   }
 
-  @Query(() => OTPEnabledDto)
+  @Query(() => PendingOTP)
   @UseGuards(JWTAuthGuard)
   async generateOTP(@UserId() userId: string) {
     const user = await this.userRepo.findOneOrFail(userId);
@@ -68,9 +67,14 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JWTAuthGuard)
-  async confirmOTP(@UserId() userId: string, @Args("otpCode") otpCode: string) {
+  async confirmOTP(
+    @UserId() userId: string,
+    @Args({ name: "secret", type: () => String }) secret: string,
+    @Args({ name: "code", type: () => String }) code: string,
+    @Args({ name: "recoveryCodes", type: () => [String] }) recoveryCodes: string[],
+  ) {
     const user = await this.userRepo.findOneOrFail(userId);
-    await this.authService.confirmOTP(user, otpCode);
+    await this.authService.confirmOTP(user, { code, recoveryCodes, secret });
     return true;
   }
 

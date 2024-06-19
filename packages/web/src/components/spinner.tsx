@@ -1,17 +1,17 @@
-import clsx from 'clsx';
-import type { ComponentProps, FC } from 'react';
+import clsx from "clsx";
+import type { ComponentProps, FC } from "react";
 
-type SpinnerBaseProps = Omit<ComponentProps<'svg'>, 'size'>;
+type SpinnerBaseProps = Omit<ComponentProps<"svg">, "size">;
 
-export interface SpinnerProps extends SpinnerBaseProps {
-  size?: 'small' | 'medium' | 'large';
+interface SpinnerProps extends SpinnerBaseProps {
+  size?: "small" | "medium" | "large";
 }
 
 export const Spinner: FC<SpinnerProps> = ({ size, className, ...rest }) => {
-  const classes = clsx('animate-spin', className, {
-    'w-4': size === 'small',
-    'w-6': !size || size === 'medium',
-    'w-9': size === 'large',
+  const classes = clsx("animate-spin", className, {
+    "w-4": size === "small",
+    "w-6": !size || size === "medium",
+    "w-9": size === "large",
   });
 
   return (

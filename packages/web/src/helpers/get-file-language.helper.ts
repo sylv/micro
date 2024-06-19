@@ -1,6 +1,6 @@
 import languages from "../data/languages.json";
 
-export type Language = (typeof languages)[number];
+type Language = (typeof languages)[number];
 
 export function getFileLanguage(fileName?: string): Language | undefined {
   if (!fileName) return;

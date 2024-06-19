@@ -1,8 +1,8 @@
-import clsx from 'clsx';
-import type { FormikContextType } from 'formik';
-import { FormikContext } from 'formik';
-import type { ReactNode } from 'react';
-import { Fragment, useContext } from 'react';
+import clsx from "clsx";
+import type { FormikContextType } from "formik";
+import { FormikContext } from "formik";
+import type { ReactNode } from "react";
+import { Fragment, useContext } from "react";
 
 interface InputChildPropsBase {
   label?: string;
@@ -14,11 +14,11 @@ interface InputChildPropsBase {
 export type InputChildProps<Extending> = Omit<Extending, keyof InputChildPropsBase> & InputChildPropsBase;
 
 export enum InputStyle {
-  Default = 'bg-black border-dark-600 placeholder-gray-600 focus:border-purple-400',
-  Error = 'bg-red-500/20 border-red-400 placeholder-red-400 focus:ring-1 focus:ring-red-400',
+  Default = "bg-black border-dark-600 placeholder-gray-600 focus:border-purple-400",
+  Error = "bg-red-500/20 border-red-400 placeholder-red-400 focus:ring-1 focus:ring-red-400",
 }
 
-export interface InputContainerProps<T> {
+interface InputContainerProps<T> {
   maxHeight?: boolean;
   className?: string;
   style?: InputStyle;
@@ -45,7 +45,7 @@ export function InputContainer<T extends InputChildPropsBase>({
 
   if (formik) {
     if (!id) {
-      throw new Error('InputContainer with formik requires an id');
+      throw new Error("InputContainer with formik requires an id");
     }
 
     // add formik props like value and onFocus to the child
@@ -70,5 +70,6 @@ export function InputContainer<T extends InputChildPropsBase>({
   );
 }
 
-export const BASE_INPUT_CLASSES = 'w-full h-full px-3 py-2 rounded outline-none border transition duration-75';
-export const BASE_INPUT_MAX_HEIGHT = 'max-h-[calc(2.65em-2px)]';
+export const BASE_INPUT_CLASSES =
+  "w-full h-full px-3 py-2 rounded outline-none border transition duration-75";
+export const BASE_INPUT_MAX_HEIGHT = "max-h-[calc(2.65em-2px)]";

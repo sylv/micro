@@ -1,12 +1,12 @@
-import clsx from 'clsx';
-import { BASE_EMBED_CLASSES, MAX_HEIGHT } from '../embed';
-import type { Embeddable } from '../embeddable';
+import clsx from "clsx";
+import { BASE_EMBED_CLASSES, MAX_HEIGHT } from "../embed";
+import type { Embeddable } from "../embeddable";
 
 export const EmbedDefault = ({ data }: { data: Embeddable }) => {
   const classes = clsx(
-    'flex flex-col items-center justify-center w-full select-none h-44',
+    "flex flex-col items-center justify-center w-full select-none h-44",
     BASE_EMBED_CLASSES,
-    MAX_HEIGHT
+    MAX_HEIGHT,
   );
 
   return (

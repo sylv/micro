@@ -1,10 +1,9 @@
-import type { FC } from 'react';
-import { Fragment } from 'react';
-import { usePaths } from '../../hooks/usePaths';
-import { useUser } from '../../hooks/useUser';
-import { Link } from '../link';
-import { UserPill } from '../user-pill';
-import { Dropdown, DropdownDivider, DropdownTab } from '../dropdown';
+import type { FC } from "react";
+import { Fragment } from "react";
+import { usePaths } from "../../hooks/usePaths";
+import { useUser } from "../../hooks/useUser";
+import { UserPill } from "../user-pill";
+import { Dropdown, DropdownDivider, DropdownTab } from "../dropdown";
 
 export interface HeaderUserProps {
   username: string;
@@ -17,16 +16,20 @@ export const HeaderUser: FC<HeaderUserProps> = (props) => {
 
   return (
     <Fragment>
-      <Link href="/shorten" className="mr-2 text-gray-500 transition hover:text-gray-400">
+      <a href="/shorten" className="mr-2 text-gray-500 transition hover:text-gray-400">
         Shorten
-      </Link>
-      <Link href="/paste" className="mr-2 text-gray-500 transition hover:text-gray-400">
+      </a>
+      <a href="/paste" className="mr-2 text-gray-500 transition hover:text-gray-400">
         Paste
-      </Link>
-      <Link href="/upload" className="mr-2 text-gray-500 transition hover:text-gray-400">
+      </a>
+      <a href="/upload" className="mr-2 text-gray-500 transition hover:text-gray-400">
         Upload
-      </Link>
-      <Dropdown className="w-36" trigger={<UserPill username={props.username} userId={props.userId} />}>
+      </a>
+      <Dropdown
+        className="w-36"
+        trigger={<UserPill username={props.username} userId={props.userId} />}
+        align="end"
+      >
         <DropdownTab href={paths.files}>Uploads</DropdownTab>
         <DropdownTab href={paths.preferences}>Preferences</DropdownTab>
         <DropdownDivider />

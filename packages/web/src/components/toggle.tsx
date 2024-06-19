@@ -1,11 +1,11 @@
-import clsx from 'clsx';
+import clsx from "clsx";
 
-export interface ToggleOption<T = unknown> {
+interface ToggleOption<T = unknown> {
   label: string;
   value: T;
 }
 
-export interface ToggleProps<T> {
+interface ToggleProps<T> {
   selected: T;
   options: ToggleOption<T>[];
   backgroundColour?: string;
@@ -13,7 +13,7 @@ export interface ToggleProps<T> {
 }
 
 export function Toggle<T extends string | number | boolean>({
-  backgroundColour = 'bg-purple-500',
+  backgroundColour = "bg-purple-500",
   options,
   selected,
   onChange,
@@ -23,9 +23,9 @@ export function Toggle<T extends string | number | boolean>({
       {options.map((item) => {
         const active = item.value === selected;
         const classes = clsx(
-          'rounded-full px-4 py-1 text-sm cursor-pointer h-full',
-          active ? 'text-white' : 'hover:bg-dark-200',
-          active && backgroundColour
+          "rounded-full px-4 py-1 text-sm cursor-pointer h-full",
+          active ? "text-white" : "hover:bg-dark-200",
+          active && backgroundColour,
         );
 
         return (

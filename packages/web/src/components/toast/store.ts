@@ -6,7 +6,7 @@ import { ToastStyle, type ToastProps } from "./toast";
 const TRANSITION_INTERVAL = 150;
 let currentToastId = 0;
 
-export interface ToastOptions {
+interface ToastOptions {
   id: number;
   message: ReactNode;
   className?: string;

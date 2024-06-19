@@ -1,27 +1,29 @@
-import { useQuery } from "@urql/preact";
+import { useQuery } from "urql";
 import type { FC } from "react";
-import { Fragment } from "react";
-import { graphql } from "../../../@generated/gql";
+import { Fragment, useState } from "react";
 import { Breadcrumbs } from "../../../components/breadcrumbs";
 import { Button } from "../../../components/button";
 import { Container } from "../../../components/container";
 import { Input } from "../../../components/input/input";
 import { OtpInput } from "../../../components/input/otp";
 import { ButtonSkeleton, InputSkeleton, Skeleton } from "../../../components/skeleton";
-import { Title } from "../../../components/title";
 import { ConfigGenerator } from "../../../containers/config-generator/config-generator";
-import { navigate } from "../../../helpers/routing";
+import { navigate } from "vike/client/router";
 import { useAsync } from "../../../hooks/useAsync";
 import { useErrorMutation } from "../../../hooks/useErrorMutation";
-import { useLogoutUser, useUserRedirect } from "../../../hooks/useUser";
+import { RegularUser, useLogoutUser, useUserRedirect } from "../../../hooks/useUser";
+import { graphql } from "../../../graphql";
 
-const RefreshToken = graphql(`
+const RefreshToken = graphql(
+  `
   mutation RefreshToken {
     refreshToken {
       ...RegularUser
     }
   }
-`);
+`,
+  [RegularUser],
+);
 
 const DisableOtp = graphql(`
   mutation DisableOTP($otpCode: String!) {
@@ -29,20 +31,26 @@ const DisableOtp = graphql(`
   }
 `);
 
-const UserQueryWithToken = graphql(`
+const UserQueryWithToken = graphql(
+  `
   query UserQueryWithToken {
-    user {
+    user { 
       ...RegularUser
       token
       otpEnabled
     }
   }
-`);
+`,
+  [RegularUser],
+);
+
+export const title = "Preferences — micro";
 
 export const Page: FC = () => {
   const [user] = useQuery({ query: UserQueryWithToken });
   const { logout } = useLogoutUser();
   const [, refreshMutation] = useErrorMutation(RefreshToken);
+  const [isTokenFocused, setIsTokenFocused] = useState(false);
   const [refresh, refreshing] = useAsync(async () => {
     const confirmation = confirm(
       "Are you sure? This will invalidate all existing configs and sessions and will sign you out of the dashboard.",
@@ -58,7 +66,6 @@ export const Page: FC = () => {
 
   return (
     <Container>
-      <Title>Preferences</Title>
       <Breadcrumbs href="/dashboard" className="mb-4">
         Dashboard
       </Breadcrumbs>
@@ -92,9 +99,13 @@ export const Page: FC = () => {
           {user.data && (
             <Input
               readOnly
+              autoComplete="off"
+              type={isTokenFocused ? "text" : "password"}
               value={user.data.user.token}
+              onBlur={() => setIsTokenFocused(false)}
               onFocus={(event) => {
                 event.currentTarget.select();
+                setIsTokenFocused(true);
               }}
             />
           )}
@@ -161,7 +172,7 @@ export const Page: FC = () => {
             />
           )}
           {user.data && !user.data.user.otpEnabled && (
-            <Button className="w-auto ml-auto" onClick={() => navigate("/dashboard/mfa")}>
+            <Button className="w-auto ml-auto" onClick={() => navigate("/dashboard/preferences/mfa")}>
               Enable 2FA
             </Button>
           )}

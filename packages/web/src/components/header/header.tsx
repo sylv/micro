@@ -1,7 +1,6 @@
 import clsx from "clsx";
-import { Fragment, memo, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { FiCrop } from "react-icons/fi";
-import { graphql } from "../../@generated/gql";
 import { useAsync } from "../../hooks/useAsync";
 import { useConfig } from "../../hooks/useConfig";
 import { useErrorMutation } from "../../hooks/useErrorMutation";
@@ -11,10 +10,10 @@ import { useUser } from "../../hooks/useUser";
 import { Button, ButtonStyle } from "../button";
 import { Container } from "../container";
 import { Input } from "../input/input";
-import { Link } from "../link";
 import { createToast } from "../toast/store";
 import { ToastStyle } from "../toast/toast";
 import { HeaderUser } from "./header-user";
+import { graphql } from "../../graphql";
 
 const ResendVerificationEmail = graphql(`
   mutation ResendVerificationEmail($data: ResendVerificationEmailDto) {
@@ -22,7 +21,7 @@ const ResendVerificationEmail = graphql(`
   }
 `);
 
-export const Header = memo(() => {
+export const Header = () => {
   const user = useUser();
   const paths = usePaths();
   const config = useConfig();
@@ -32,7 +31,7 @@ export const Header = memo(() => {
   const [resent, setResent] = useState(false);
   const classes = clsx(
     "relative z-20 flex items-center justify-between h-16 my-auto transition",
-    paths.loading && "pointer-events-none invisible",
+    paths.loading && "pointer-events-none opacity-0",
   );
 
   useOnClickOutside(emailInputRef, () => {
@@ -116,21 +115,21 @@ export const Header = memo(() => {
       <Container>
         <nav className={classes}>
           <div className="flex items-center">
-            <Link href={paths.home} className="flex">
+            <a href={paths.home} className="flex">
               <FiCrop className="w-[24px] h-[24px] mr-2 text-primary" /> micro
-            </Link>
+            </a>
           </div>
           <div className="flex items-center">
             {user.data ? (
               <HeaderUser userId={user.data.id} username={user.data.username} />
             ) : (
-              <Link href={paths.login}>
+              <a href={paths.login}>
                 <Button style={ButtonStyle.Secondary}>Sign In</Button>
-              </Link>
+              </a>
             )}
           </div>
         </nav>
       </Container>
     </Fragment>
   );
-});
+};

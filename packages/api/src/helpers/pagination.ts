@@ -1,13 +1,13 @@
-import { BadRequestException } from '@nestjs/common';
-import type { Edge } from '../types/edge.type.js';
-import type { Paginated } from '../types/paginated.type.js';
+import { BadRequestException } from "@nestjs/common";
+import type { Edge } from "../types/edge.type.js";
+import type { Paginated } from "../types/paginated.type.js";
 
-export function createCursor(offset: number) {
-  return Buffer.from(`${offset}`, 'utf8').toString('base64');
+function createCursor(offset: number) {
+  return Buffer.from(`${offset}`, "utf8").toString("base64");
 }
 
 export function parseCursor(cursor: string) {
-  const decoded = Buffer.from(cursor, 'base64').toString('utf8');
+  const decoded = Buffer.from(cursor, "base64").toString("utf8");
   const offset = Number(decoded);
   if (Number.isNaN(offset)) {
     throw new BadRequestException(`Invalid cursor "${cursor}"`);

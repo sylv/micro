@@ -1,26 +1,10 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
   "typescript.preferences.importModuleSpecifier": "relative",
   "npm.scriptExplorerExclude": ["^((?!watch|generate:watch).)*$"],
-  "files.associations": {
-    ".microrc": "jsonc",
-    ".microrc.example": "jsonc",
-    ".microrc.development": "jsonc"
-  },
-  "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "'([^']*)'", "\"([^']*)\""],
-    [":\\s*?[\"'`]([^\"'`]*).*?,"],
-    ["baseStyle.=.[\"'`]([^\"'`]*)"],
-    // Enum = 'value'
-    ["[A-Z][a-z]+ = ['\"]([^\"'`]*)"],
-    // const style = 'value'
-    // const someStyle = 'value'
-    ["const [a-zA-Z]+tyle = ['\"`]([^\"`'`]*)"],
-    // const classes = 'value'
-    // const class = 'value'
-    // const selectedClass = 'value'
-    ["const [a-zA-Z]+s = ['\"`]([^\"`'`]*)"]
-  ],
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]],
 
   /// BIOME
   "editor.defaultFormatter": "biomejs.biome",

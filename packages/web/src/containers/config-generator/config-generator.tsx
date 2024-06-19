@@ -1,18 +1,18 @@
-import clsx from 'clsx';
-import type { FC } from 'react';
-import { Fragment, useState } from 'react';
-import { FiDownload } from 'react-icons/fi';
-import type { RegularUserFragment } from '../../@generated/graphql';
-import { Container } from '../../components/container';
-import { Section } from '../../components/section';
-import { Skeleton, SkeletonList, SkeletonWrap } from '../../components/skeleton';
-import { Toggle } from '../../components/toggle';
-import { downloadFile } from '../../helpers/download.helper';
-import { generateConfig } from '../../helpers/generate-config.helper';
-import { useConfig } from '../../hooks/useConfig';
-import { CustomisationOption } from './customisation-option';
+import clsx from "clsx";
+import type { FC } from "react";
+import { Fragment, useState } from "react";
+import { FiDownload } from "react-icons/fi";
+import { Container } from "../../components/container";
+import { Section } from "../../components/section";
+import { Skeleton, SkeletonList, SkeletonWrap } from "../../components/skeleton";
+import { Toggle } from "../../components/toggle";
+import { downloadFile } from "../../helpers/download.helper";
+import { generateConfig } from "../../helpers/generate-config.helper";
+import { useConfig } from "../../hooks/useConfig";
+import { CustomisationOption } from "./customisation-option";
+import type { RegularUserFragment } from "../../hooks/useUser";
 
-export interface ConfigGeneratorProps {
+interface ConfigGeneratorProps {
   user?: RegularUserFragment & { token: string };
 }
 
@@ -32,7 +32,7 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
       token: user.token,
     });
 
-    const cleanName = name.split('{{username}}').join(user.username);
+    const cleanName = name.split("{{username}}").join(user.username);
     downloadFile(cleanName, content);
   };
 
@@ -44,8 +44,9 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
             <SkeletonWrap show={!config.data}>
               <div className="font-bold text-xl">Config Generator</div>
               <p className="text-sm text-gray-400">
-                Pick the hosts you want with the options you think will suit you best. These options are saved in the
-                config file and are not persisted between sessions. Changing them will not affect existing config files.
+                Pick the hosts you want with the options you think will suit you best. These options are saved
+                in the config file and are not persisted between sessions. Changing them will not affect
+                existing config files.
               </p>
             </SkeletonWrap>
             <div className="flex flex-col gap-2 mt-6">
@@ -60,11 +61,11 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
                     onChange={({ value }) => setEmbedded(value)}
                     options={[
                       {
-                        label: 'Embedded',
+                        label: "Embedded",
                         value: true,
                       },
                       {
-                        label: 'Direct',
+                        label: "Direct",
                         value: false,
                       },
                     ]}
@@ -82,11 +83,11 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
                     onChange={({ value }) => setPasteShortcut(value)}
                     options={[
                       {
-                        label: 'Paste',
+                        label: "Paste",
                         value: true,
                       },
                       {
-                        label: 'Upload as File',
+                        label: "Upload as File",
                         value: false,
                       },
                     ]}
@@ -100,9 +101,9 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
                   config.data.hosts.map((host) => {
                     const isSelected = selectedHosts.includes(host.normalised);
                     const classes = clsx(
-                      'rounded px-2 py-1 truncate transition border border-transparent',
-                      isSelected && 'bg-purple-600 text-white',
-                      !isSelected && 'text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white',
+                      "rounded px-2 py-1 truncate transition border border-transparent",
+                      isSelected && "bg-purple-600 text-white",
+                      !isSelected && "text-gray-400 bg-dark-100 hover:bg-dark-200 hover:text-white",
                     );
 
                     return (
@@ -118,7 +119,7 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
                           }
                         }}
                       >
-                        {user ? host.normalised.replace('{{username}}', user.username) : host.normalised}
+                        {user ? host.normalised.replace("{{username}}", user.username) : host.normalised}
                       </button>
                     );
                   })}
@@ -135,8 +136,8 @@ export const ConfigGenerator: FC<ConfigGeneratorProps> = ({ user }) => {
           type="submit"
           onClick={download}
           className={clsx(
-            'mt-8 ml-auto flex items-center gap-1',
-            downloadable ? 'text-purple-400 hover:underline' : 'text-gray-700 cursor-not-allowed',
+            "mt-8 ml-auto flex items-center gap-1",
+            downloadable ? "text-purple-400 hover:underline" : "text-gray-700 cursor-not-allowed",
           )}
         >
           <SkeletonWrap show={!config.data}>

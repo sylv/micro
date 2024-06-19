@@ -53,6 +53,7 @@ export class FileResolver {
       throw new ForbiddenException("You are not allowed to delete this file");
     }
 
+    await this.storageService.delete(file);
     await this.em.removeAndFlush(file);
     return true;
   }

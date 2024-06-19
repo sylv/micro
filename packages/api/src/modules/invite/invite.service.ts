@@ -6,12 +6,6 @@ import { Permission } from "../../constants.js";
 import { UserEntity } from "../user/user.entity.js";
 import { InviteEntity } from "./invite.entity.js";
 
-export interface JWTPayloadInvite {
-  id: string;
-  inviter?: string;
-  permissions?: number;
-}
-
 @Injectable()
 export class InviteService implements OnApplicationBootstrap {
   @InjectRepository(UserEntity) private userRepo: EntityRepository<UserEntity>;

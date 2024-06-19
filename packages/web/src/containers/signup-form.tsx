@@ -1,10 +1,10 @@
-import { Form, Formik } from 'formik';
-import type { FC } from 'react';
-import { Fragment, useMemo } from 'react';
-import * as Yup from 'yup';
-import { Input } from '../components/input/input';
-import { Submit } from '../components/input/submit';
-import { useConfig } from '../hooks/useConfig';
+import { Form, Formik } from "formik";
+import type { FC } from "react";
+import { Fragment, useMemo } from "react";
+import * as Yup from "yup";
+import { Input } from "../components/input/input";
+import { Submit } from "../components/input/submit";
+import { useConfig } from "../hooks/useConfig";
 
 export interface SignupData {
   email?: string;
@@ -12,7 +12,7 @@ export interface SignupData {
   password: string;
 }
 
-export interface SignupFormProps {
+interface SignupFormProps {
   onSubmit: (data: SignupData) => Promise<void> | void;
 }
 
@@ -32,9 +32,9 @@ export const SignupForm: FC<SignupFormProps> = ({ onSubmit }) => {
       <Formik
         validationSchema={schema}
         initialValues={{
-          username: '',
-          password: '',
-          email: '' as string | undefined,
+          username: "",
+          password: "",
+          email: "" as string | undefined,
         }}
         onSubmit={async (values) => {
           if (!config.data?.requireEmails) delete values.email;
@@ -42,8 +42,16 @@ export const SignupForm: FC<SignupFormProps> = ({ onSubmit }) => {
         }}
       >
         <Form className="space-y-2">
-          {config.data?.requireEmails && <Input id="email" type="email" placeholder="Email" autoFocus />}
-          <Input id="username" type="username" placeholder="Username" autoComplete="username" />
+          {config.data?.requireEmails && (
+            <Input id="email" type="email" placeholder="Email" autoComplete="email" autoFocus />
+          )}
+          <Input
+            id="username"
+            type="username"
+            placeholder="Username"
+            autoComplete="username"
+            autoFocus={!config.data?.requireEmails}
+          />
           <Input id="password" type="password" placeholder="Password" autoComplete="new-password" />
           <Submit className="mt-4 w-full" type="submit">
             Sign Up

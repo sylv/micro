@@ -123,7 +123,7 @@ export class UserService {
     const html = UserService.EMAIL_TEMPLATE({ verifyUrl });
     await sendMail({
       to: user.email,
-      subject: "Verify your account | micro",
+      subject: "Verify your account — micro",
       html: html,
     });
   }

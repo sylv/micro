@@ -3,34 +3,36 @@ import { Form, Formik } from "formik";
 import type { FC } from "react";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
-import type { LoginMutationVariables } from "../@generated/graphql";
 import { Input } from "../components/input/input";
 import { OtpInput } from "../components/input/otp";
 import { Submit } from "../components/input/submit";
-import { navigate } from "../helpers/routing";
 import { useAsync } from "../hooks/useAsync";
-import { useUser } from "../hooks/useUser";
-import { graphql } from "../@generated";
+import { RegularUser, useUser } from "../hooks/useUser";
 import { getErrorMessage } from "../helpers/get-error-message.helper";
 import { Warning, WarningType } from "../components/warning";
 import { useErrorMutation } from "../hooks/useErrorMutation";
+import { navigate } from "vike/client/router";
+import { graphql, type VariablesOf } from "../graphql";
 
 const schema = Yup.object().shape({
   username: Yup.string().required().min(2),
   password: Yup.string().required().min(5),
 });
 
-const LoginMutation = graphql(`
+const LoginMutation = graphql(
+  `
   mutation Login($username: String!, $password: String!, $otp: String) {
     login(username: $username, password: $password, otpCode: $otp) {
       ...RegularUser
     }
   }
-`);
+`,
+  [RegularUser],
+);
 
 export const LoginForm: FC = () => {
   const user = useUser();
-  const [loginInfo, setLoginInfo] = useState<LoginMutationVariables | null>(null);
+  const [loginInfo, setLoginInfo] = useState<VariablesOf<typeof LoginMutation> | null>(null);
   const [invalidOTP, setInvalidOTP] = useState(false);
   const [disabledReason, setDisabledReason] = useState<string | null>(null);
   const [otpRequired, setOtpRequired] = useState(false);
@@ -48,8 +50,8 @@ export const LoginForm: FC = () => {
     }
   }, [user, redirect]);
 
-  const [, loginMutation] = useErrorMutation(LoginMutation);
-  const [login, loggingIn] = useAsync(async (values: LoginMutationVariables) => {
+  const [, loginMutation] = useErrorMutation(LoginMutation, false);
+  const [login, loggingIn] = useAsync(async (values: VariablesOf<typeof LoginMutation>) => {
     setLoginInfo(values);
     setInvalidOTP(false);
 

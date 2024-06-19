@@ -1,20 +1,20 @@
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
-import { FiBookOpen, FiClock, FiTrash } from 'react-icons/fi';
-import { graphql } from '../../../@generated/gql';
-import { Button } from '../../../components/button';
-import { Container } from '../../../components/container';
-import { Embed } from '../../../components/embed/embed';
-import { Error, Lenny } from '../../../components/error';
-import { PageLoader } from '../../../components/page-loader';
-import { Time } from '../../../components/time';
-import { Warning } from '../../../components/warning';
-import { decryptContent } from '../../../helpers/encrypt.helper';
-import { hashToObject } from '../../../helpers/hash-to-object';
-import { navigate } from '../../../helpers/routing';
-import { useUser } from '../../../hooks/useUser';
-import type { PageProps } from '../../../renderer/types';
-import { useQuery } from '@urql/preact';
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { FiBookOpen, FiClock, FiTrash } from "react-icons/fi";
+import { Button } from "../../../components/button";
+import { Container } from "../../../components/container";
+import { Embed } from "../../../components/embed/embed";
+import { Error, Lenny } from "../../../components/error";
+import { PageLoader } from "../../../components/page-loader";
+import { Time } from "../../../components/time";
+import { Warning } from "../../../components/warning";
+import { decryptContent } from "../../../helpers/encrypt.helper";
+import { hashToObject } from "../../../helpers/hash-to-object";
+import { navigate } from "vike/client/router";
+import { useUser } from "../../../hooks/useUser";
+import { useQuery } from "urql";
+import { graphql } from "../../../graphql";
+import { usePageContext } from "vike-react/usePageContext";
 
 const PasteQuery = graphql(`
   query GetPaste($pasteId: ID!) {
@@ -36,17 +36,19 @@ const PasteQuery = graphql(`
   }
 `);
 
-export const Page: FC<PageProps> = ({ routeParams }) => {
+export const Page: FC = () => {
+  const { routeParams } = usePageContext();
   const user = useUser();
   const [burnUnless, setBurnUnless] = useState<string | null | undefined>();
   const [confirmedBurn, setConfirmedBurn] = useState(false);
   const [content, setContent] = useState<string | null>(null);
   const [error, setError] = useState<any>(null);
   const [missingKey, setMissingKey] = useState(false);
-  const pasteId = routeParams.pasteId;
+  const pasteId = routeParams!.pasteId;
 
   const skipQuery =
-    !pasteId || (!confirmedBurn && (burnUnless === undefined || (burnUnless ? burnUnless !== user.data?.id : false)));
+    !pasteId ||
+    (!confirmedBurn && (burnUnless === undefined || (burnUnless ? burnUnless !== user.data?.id : false)));
 
   const [paste] = useQuery({
     query: PasteQuery,
@@ -58,21 +60,21 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
 
   useEffect(() => {
     const url = new URL(window.location.href);
-    const burnUnless = url.searchParams.get('burn_unless');
+    const burnUnless = url.searchParams.get("burn_unless");
     if (!burnUnless) {
       setBurnUnless(null);
       return;
     }
 
     setBurnUnless(burnUnless);
-    url.searchParams.delete('burn_unless');
+    url.searchParams.delete("burn_unless");
     navigate(url.href, { overwriteLastHistoryEntry: true });
   }, []);
 
   useEffect(() => {
     // handle decrypting encrypted pastes
     if (!paste.data?.paste.content) {
-      if (content) setContent('');
+      if (content) setContent("");
       return;
     }
 
@@ -96,7 +98,7 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
         setContent(content);
       })
       .catch((error) => {
-        setContent('');
+        setContent("");
         setError(error);
       });
   }, [content, paste.data]);
@@ -144,11 +146,13 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
         </Warning>
       )}
       {paste.data.paste.title && (
-        <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all mb-4">{paste.data.paste.title}</h1>
+        <h1 className="mr-2 text-xl font-bold truncate md:text-4xl md:break-all mb-4">
+          {paste.data.paste.title}
+        </h1>
       )}
       <Embed
         data={{
-          type: 'text/plain',
+          type: "text/plain",
           size: paste.data.paste.content.length,
           displayName: paste.data.paste.title ?? `${paste.data.paste.id}.${paste.data.paste.extension}`,
           textContent: paste.data.paste.content,
@@ -163,14 +167,14 @@ export const Page: FC<PageProps> = ({ routeParams }) => {
           <FiBookOpen className="h-4 w-4" /> {content?.length ?? 0} characters
         </span>
         <span className="flex items-center gap-2">
-          <FiClock className="h-4 w-4" />{' '}
+          <FiClock className="h-4 w-4" />{" "}
           <span>
             Created <Time date={paste.data.paste.createdAt} />
           </span>
         </span>
         {paste.data.paste.expiresAt && !confirmedBurn && (
           <span className="flex items-center gap-2">
-            <FiTrash className="h-4 w-4" />{' '}
+            <FiTrash className="h-4 w-4" />{" "}
             <span>
               Expires <Time date={paste.data.paste.expiresAt} />
             </span>

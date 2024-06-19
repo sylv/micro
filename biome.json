@@ -6,7 +6,11 @@
     "linter": {
         "rules": {
             "suspicious": {
-                "noShadowRestrictedNames": "off"
+                "noShadowRestrictedNames": "off",
+                "noArrayIndexKey": "off"
+            },
+            "a11y": {
+                "useMediaCaption": "off"
             }
         }
     }

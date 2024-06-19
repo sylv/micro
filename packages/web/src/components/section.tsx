@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactNode } from "react";
 
 export const Section: FC<{ className?: string; children: ReactNode }> = ({ className, children }) => {
   return (

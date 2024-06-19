@@ -1,14 +1,14 @@
+import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import crypto, { randomUUID } from "crypto";
 import { authenticator } from "otplib";
 import { UserEntity } from "../user/user.entity.js";
-import type { OTPEnabledDto } from "./dto/otp-enabled.dto.js";
 import { AccountDisabledError } from "./account-disabled.error.js";
-import { EntityManager } from "@mikro-orm/core";
 
 export enum TokenType {
   USER = "USER",
@@ -16,10 +16,34 @@ export enum TokenType {
   INVITE = "INVITE",
 }
 
-export interface TokenPayload {
+interface TokenPayload {
   aud: TokenType;
   exp: number;
   iat: number;
+}
+
+@ObjectType()
+export class PendingOTP {
+  @Field()
+  secret: string;
+
+  @Field(() => [String])
+  recoveryCodes: string[];
+
+  @Field()
+  qrauthUrl: string;
+}
+
+@ArgsType()
+export class ConfirmedOTP {
+  @Field()
+  code: string;
+
+  @Field()
+  secret: string;
+
+  @Field(() => [String])
+  recoveryCodes: string[];
 }
 
 const NUMBER_REGEX = /^\d{6}$/u;
@@ -84,33 +108,24 @@ export class AuthService {
   }
 
   /**
-   * Adds OTP codes to a user, without enabling OTP.
-   * This is the first step in enabling OTP, next will be to get the user to verify the code using enableOTP().
+   * Generates an OTP configuration for a user
+   * Doesn't enable OTP or even persist it to the user until confirmOTP()
    */
-  async generateOTP(user: UserEntity): Promise<OTPEnabledDto> {
+  generateOTP(user: UserEntity): PendingOTP {
     if (user.otpEnabled) {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
 
+    const otpSecret = authenticator.generateSecret();
     const recoveryCodes = [];
-    user.otpSecret = authenticator.generateSecret();
-    user.otpRecoveryCodes = [];
     for (let i = 0; i < 8; i++) {
-      const code = crypto
-        .randomBytes(8)
-        .toString("hex")
-        .match(/.{1,4}/gu)!
-        .join("-");
-      const hashedCode = crypto.createHash("sha256").update(code).digest("hex");
-      user.otpRecoveryCodes.push(hashedCode);
-      recoveryCodes.push(code);
+      recoveryCodes.push(randomUUID());
     }
 
-    await this.em.persistAndFlush(user);
     return {
       recoveryCodes,
-      secret: user.otpSecret,
-      qrauthUrl: authenticator.keyuri(user.username, "Micro", user.otpSecret),
+      secret: otpSecret,
+      qrauthUrl: authenticator.keyuri(user.username, "Micro", otpSecret),
     };
   }
 
@@ -118,17 +133,22 @@ export class AuthService {
    * Enable OTP after the user has verified the code.
    * Start by calling generateOTP() to get the code.
    */
-  async confirmOTP(user: UserEntity, otpCode: string) {
+  async confirmOTP(user: UserEntity, confirmation: ConfirmedOTP) {
     if (user.otpEnabled) {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
 
-    if (!user.otpSecret || !user.otpRecoveryCodes || !user.otpRecoveryCodes[0]) {
-      throw new Error("User does not have 2FA codes.");
+    const isValid = authenticator.check(confirmation.code, confirmation.secret);
+    if (!isValid) {
+      throw new UnauthorizedException("Invalid OTP code");
     }
 
     user.otpEnabled = true;
-    await this.validateOTPCode(otpCode, user);
+    user.otpSecret = confirmation.secret;
+    user.otpRecoveryCodes = confirmation.recoveryCodes.map((code) => {
+      return crypto.createHash("sha256").update(code).digest("hex");
+    });
+
     await this.em.persistAndFlush(user);
   }
 

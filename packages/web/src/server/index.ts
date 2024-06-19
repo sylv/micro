@@ -5,6 +5,7 @@ import Fastify from "fastify";
 import type { IncomingMessage, ServerResponse } from "http";
 import { compile, match } from "path-to-regexp";
 import url from "url";
+import { ssrExchange } from "urql";
 import { renderPage } from "vike/server";
 import type { PageContext } from "vike/types";
 import { REWRITES } from "./rewrites";
@@ -83,11 +84,6 @@ async function startServer() {
   });
 
   instance.get("*", async (request, reply) => {
-    let cookies: string | undefined;
-    if (request.headers.cookie && typeof request.headers.cookie === "string") {
-      cookies = request.headers.cookie;
-    }
-
     let forwardedFor: string | undefined;
     if (request.headers["x-forwarded-for"] && typeof request.headers["x-forwarded-for"] === "string") {
       forwardedFor = request.headers["x-forwarded-for"];
@@ -97,22 +93,21 @@ async function startServer() {
 
     const pageContextInit = {
       urlOriginal: request.url,
-      cookies: cookies,
-      forwardedHost: forwardedFor,
+      ssrExchange: ssrExchange({ isClient: false }),
+      headersOriginal: {
+        ...request.headers,
+        ["x-forwarded-host"]: forwardedFor,
+      },
     } satisfies Partial<PageContext>;
 
     const pageContext = await renderPage(pageContextInit);
-    if (pageContext.errorWhileRendering) {
-      // todo: do something with the error
-    }
-
     const { httpResponse } = pageContext;
     if (httpResponse) {
-      const { body, statusCode, headers, earlyHints } = httpResponse;
+      const { pipe, statusCode, headers, earlyHints } = httpResponse;
       reply.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
       for (const [name, value] of headers) reply.header(name, value);
       reply.status(statusCode);
-      reply.send(body);
+      return pipe(reply.raw);
     } else {
       reply.status(500).send("Internal Server Error");
     }

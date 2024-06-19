@@ -2,15 +2,14 @@ import { Form, Formik } from "formik";
 import type { FC } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
-import { graphql } from "../../@generated/gql";
 import { Button } from "../../components/button";
 import { Container } from "../../components/container";
 import { Input } from "../../components/input/input";
 import { Select } from "../../components/input/select";
-import { Title } from "../../components/title";
 import { useConfig } from "../../hooks/useConfig";
 import { useErrorMutation } from "../../hooks/useErrorMutation";
 import { useUser } from "../../hooks/useUser";
+import { graphql } from "../../graphql";
 
 const schema = Yup.object().shape({
   host: Yup.string().optional(),
@@ -30,6 +29,8 @@ const Shorten = graphql(`
   }
 `);
 
+export const title = "Shorten URL";
+
 export const Page: FC = () => {
   const [, shortenMutation] = useErrorMutation(Shorten);
   const [result, setResult] = useState<string | null>(null);
@@ -39,7 +40,6 @@ export const Page: FC = () => {
 
   return (
     <Container centerX centerY>
-      <Title>Shorten URL</Title>
       <h1 className="leading-10 font-bold text-2xl">Shorten URL</h1>
       {!result && <p className="text-sm text-gray-500 mb-2">Enter a link below and get a short URL</p>}
       {result && <p className="text-sm text-gray-500 mb-2">Your shortened link is below.</p>}

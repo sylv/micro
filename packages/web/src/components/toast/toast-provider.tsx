@@ -1,8 +1,8 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 import { useToasts } from "./store";
 import { Toast } from "./toast";
 
-export const ToastProvider = memo(() => {
+export const ToastProvider = () => {
   const toasts = useToasts();
   const [hovered, setHovered] = useState(false);
 
@@ -17,4 +17,4 @@ export const ToastProvider = memo(() => {
       ))}
     </div>
   );
-});
+};

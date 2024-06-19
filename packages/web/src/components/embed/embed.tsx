@@ -1,61 +1,39 @@
-import type { FC } from 'react';
-import { memo, useMemo } from 'react';
-import { EmbedContainer } from './embed-container';
-import type { Embeddable } from './embeddable';
-import { EmbedDefault } from './variants/embed-default';
-import { EmbedImage } from './variants/embed-image';
-import { EmbedMarkdown } from './variants/embed-markdown';
-import { EmbedText } from './variants/embed-text';
-import { EmbedVideo } from './variants/embed-video';
+import type { FC } from "react";
+import type { Embeddable } from "./embeddable";
+import { EmbedDefault } from "./variants/embed-default";
+import { EmbedImage } from "./variants/embed-image";
+import { EmbedMarkdown } from "./variants/embed-markdown";
+import { EmbedText } from "./variants/embed-text";
+import { EmbedVideo } from "./variants/embed-video";
 
 interface EmbedProps {
   data: Embeddable;
 }
 
-export const MAX_HEIGHT = 'max-h-[70vh]';
-export const BASE_EMBED_CLASSES = `min-h-[150px] bg-dark-200 rounded-lg w-full`;
+export const MAX_HEIGHT = "max-h-[70vh]";
+export const BASE_EMBED_CLASSES = "min-h-[150px] bg-dark-200 rounded-lg w-full";
 
-export const Embed: FC<EmbedProps> = memo(({ data }) => {
-  const isText = useMemo(() => EmbedText.embeddable(data), [data]);
-  const isImage = useMemo(() => EmbedImage.embeddable(data), [data]);
-  const isVideo = useMemo(() => EmbedVideo.embeddable(data), [data]);
-  const isMarkdown = useMemo(() => EmbedMarkdown.embeddable(data), [data]);
+export const Embed: FC<EmbedProps> = ({ data }) => {
+  const isText = EmbedText.embeddable(data);
+  const isImage = EmbedImage.embeddable(data);
+  const isVideo = EmbedVideo.embeddable(data);
+  const isMarkdown = EmbedMarkdown.embeddable(data);
 
   if (isMarkdown) {
-    return (
-      <EmbedContainer data={data}>
-        <EmbedMarkdown data={data} />
-      </EmbedContainer>
-    );
+    return <EmbedMarkdown data={data} />;
   }
 
   if (isText) {
-    return (
-      <EmbedContainer data={data}>
-        <EmbedText data={data} />
-      </EmbedContainer>
-    );
+    return <EmbedText data={data} />;
   }
 
   if (isImage) {
-    return (
-      <EmbedContainer data={data}>
-        <EmbedImage data={data} />
-      </EmbedContainer>
-    );
+    return <EmbedImage data={data} />;
   }
 
   if (isVideo) {
-    return (
-      <EmbedContainer data={data}>
-        <EmbedVideo file={data} />
-      </EmbedContainer>
-    );
+    return <EmbedVideo file={data} />;
   }
 
-  return (
-    <EmbedContainer data={data}>
-      <EmbedDefault data={data} />
-    </EmbedContainer>
-  );
-});
+  return <EmbedDefault data={data} />;
+};

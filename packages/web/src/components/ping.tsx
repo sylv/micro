@@ -1,7 +1,7 @@
-import type { FC } from 'react';
-import { Fragment } from 'react';
+import type { FC } from "react";
+import { Fragment } from "react";
 
-export interface PingProps {
+interface PingProps {
   active: boolean;
 }
 

@@ -1,15 +1,13 @@
 import type { FC } from "react";
-import { graphql } from "../../../../@generated";
-import type { ChangePasswordMutationVariables } from "../../../../@generated/graphql";
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { Container } from "../../../../components/container";
-import { Title } from "../../../../components/title";
 import { PasswordForm } from "../../../../containers/password-form";
-import { navigate, prefetch } from "../../../../helpers/routing";
+import { navigate, prefetch } from "vike/client/router";
 import { useAsync } from "../../../../hooks/useAsync";
 import { useErrorMutation } from "../../../../hooks/useErrorMutation";
 import { useUser } from "../../../../hooks/useUser";
 import { createToast } from "../../../../components/toast/store";
+import { graphql, type VariablesOf } from "../../../../graphql";
 
 const ChangePassword = graphql(`
   mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
@@ -17,9 +15,11 @@ const ChangePassword = graphql(`
   }
 `);
 
+export const Title = "Change Password — micro";
+
 export const Page: FC = () => {
   const [, changeInner] = useErrorMutation(ChangePassword, false);
-  const [change] = useAsync(async (values: ChangePasswordMutationVariables) => {
+  const [change] = useAsync(async (values: VariablesOf<typeof ChangePassword>) => {
     prefetch("/dashboard/preferences");
     try {
       await changeInner(values);
@@ -39,7 +39,6 @@ export const Page: FC = () => {
 
   return (
     <Container>
-      <Title>Change Password</Title>
       <div className="flex justify-center top-[40vh]">
         <div className="w-[80vw] md:w-[50vw] lg:w-[30vw]">
           <Breadcrumbs href="/dashboard/preferences" className="mb-4">

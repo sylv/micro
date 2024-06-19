@@ -1,15 +1,14 @@
-import type { CombinedError, TypedDocumentNode } from "@urql/preact";
-import { useQuery } from "@urql/preact";
 import { useEffect } from "react";
-import { graphql } from "../@generated/gql";
-import type { GetUserQuery } from "../@generated/graphql";
-import { type RegularUserFragment } from "../@generated/graphql";
-import { navigate } from "../helpers/routing";
+import type { CombinedError } from "urql";
+import { useQuery } from "urql";
+import { navigate } from "vike/client/router";
+import { graphql, type FragmentOf } from "../graphql";
 import { useAsync } from "./useAsync";
 import { useErrorMutation } from "./useErrorMutation";
 
-const RegularUserFragment = graphql(`
-  fragment RegularUser on User {
+export type RegularUserFragment = FragmentOf<typeof RegularUser>;
+export const RegularUser = graphql(`
+  fragment RegularUser on User @_unmask { 
     id
     username
     email
@@ -17,13 +16,16 @@ const RegularUserFragment = graphql(`
   }
 `);
 
-const UserQuery = graphql(`
+export const UserQuery = graphql(
+  `
   query GetUser {
     user {
       ...RegularUser
     }
   }
-`);
+`,
+  [RegularUser],
+);
 
 const LogoutMutation = graphql(`
   mutation Logout {
@@ -35,7 +37,8 @@ export const useLogoutUser = () => {
   const [, logoutMutation] = useErrorMutation(LogoutMutation);
   const [logout] = useAsync(async () => {
     await logoutMutation({});
-    navigate("/");
+    // navigate("/");
+    window.location.href = "/";
   });
 
   return { logout };
@@ -52,9 +55,9 @@ export const useUserRedirect = (
   }, [redirect, query.data, query.fetching]);
 };
 
-export const useUser = <T extends TypedDocumentNode<GetUserQuery, any>>(redirect?: boolean, query?: T) => {
+export const useUser = (redirect?: boolean) => {
   const { logout } = useLogoutUser();
-  const [{ data, fetching, error }] = useQuery({ query: (query || UserQuery) as T });
+  const [{ data, fetching, error }] = useQuery({ query: UserQuery });
 
   useUserRedirect({ data, fetching }, redirect);
 

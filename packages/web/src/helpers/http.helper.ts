@@ -17,8 +17,8 @@ export class HTTPError extends Error {
   }
 }
 
-export const isServer = typeof window === "undefined";
-export const apiUri = isServer ? process.env.FRONTEND_API_URL : "/api";
+const isServer = typeof window === "undefined";
+const apiUri = isServer ? process.env.FRONTEND_API_URL : "/api";
 
 export async function http(pathOrUrl: string, options?: RequestInit): Promise<Response> {
   const hasProtocol = pathOrUrl.startsWith("http");
