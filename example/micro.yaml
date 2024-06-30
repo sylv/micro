@@ -24,6 +24,9 @@ storagePath: /data
 # then replace "one" with "two" and it would look like user "two" uploaded it.
 restrictFilesToHost: true
 
+# maximum file size for each upload (e.g. 123MB, 456GB, etc...)
+uploadLimit: 1GB
+
 # # purging can be used to clean up old files, useful if you want to allow large files to be uploaded
 # # but dont want to store them forever. this is commented by default to prevent accidental purging
 # # uncomment the section below to enable it.
