@@ -13,7 +13,7 @@
     "build": "tsc --noEmit && tsup",
     "start": "node dist/main.js",
     "test": "vitest run",
-    "watch": "tsup --watch --onSuccess \"node dist/main.js\"",
+    "watch": "NODE_ENV=development tsup --watch --onSuccess \"node dist/main.js\"",
     "mikro-orm": "tsup --no-dts --silent && MIKRO_ORM_MIGRATIONS_PATH=src/migrations mikro-orm"
   },
   "dependencies": {
