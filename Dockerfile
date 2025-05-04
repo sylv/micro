@@ -12,12 +12,12 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 
 
 
-FROM node:20-alpine AS builder 
+FROM node:20-alpine AS builder
+
+RUN apk add --no-cache libc6-compat make clang build-base python3
+RUN npm i -g pnpm
 
 WORKDIR /usr/src/micro
-
-RUN apk add --no-cache git
-RUN npm i -g pnpm
 
 COPY --from=deps /usr/src/micro .
 COPY . .
