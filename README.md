@@ -69,7 +69,10 @@ A vanity file sharing service with support for ShareX. You can see a preview at 
 
 ## development
 
-You can pull the repo and then `pnpm install`, after that everything should be good to go. You can start the `packages/api`/`packages/web` with `pnpm watch`.
+1. Pull the repo and then `pnpm install`.
+2. Run `docker compose up -d` to start postgres and minio development instances.
+3. Copy `micro.example.yaml` to `micro.yaml`, change any options relevant to your environment.
+5. Then, you can start the `packages/api`/`packages/web` with `pnpm watch`. Keep a look out for a `InviteService` log entry, which will direct you to an invite to then create the initial account.
 
 ## todo
 

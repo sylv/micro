@@ -106,7 +106,7 @@ if (rootHost.isWildcard) {
 }
 
 const disallowed = new Set(["youshallnotpass", "you_shall_not_pass", "secret", "test"]);
-if (disallowed.has(config.secret.toLowerCase())) {
+if (process.env.NODE_ENV !== "development" && disallowed.has(config.secret.toLowerCase())) {
   const token = randomBytes(24).toString("hex");
   throw new Error(
     dedent`

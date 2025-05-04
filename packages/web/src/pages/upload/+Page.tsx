@@ -133,7 +133,7 @@ export const Page: FC = () => {
       <Container center>
         <Card className="flex flex-col items-center justify-center w-full h-2/4">
           <h1 className="mb-4 text-2xl">{file.name}</h1>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-4">
             <Select
               prefix="Host"
               className="shrink-0 w-40 mr-2"
