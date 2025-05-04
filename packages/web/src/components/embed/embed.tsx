@@ -5,6 +5,7 @@ import { EmbedImage } from "./variants/embed-image";
 import { EmbedMarkdown } from "./variants/embed-markdown";
 import { EmbedText } from "./variants/embed-text";
 import { EmbedVideo } from "./variants/embed-video";
+import { EmbedDocument } from "./variants/embed-document";
 
 interface EmbedProps {
   data: Embeddable;
@@ -18,6 +19,11 @@ export const Embed: FC<EmbedProps> = ({ data }) => {
   const isImage = EmbedImage.embeddable(data);
   const isVideo = EmbedVideo.embeddable(data);
   const isMarkdown = EmbedMarkdown.embeddable(data);
+  const isDocument = EmbedDocument.embeddable(data);
+
+  if (isDocument) {
+    return <EmbedDocument file={data} />;
+  }
 
   if (isMarkdown) {
     return <EmbedMarkdown data={data} />;
