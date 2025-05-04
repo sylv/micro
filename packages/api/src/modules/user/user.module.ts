@@ -10,13 +10,16 @@ import { UserController } from "./user.controller.js";
 import { UserEntity } from "./user.entity.js";
 import { UserResolver } from "./user.resolver.js";
 import { UserService } from "./user.service.js";
+import { StorageModule } from "../storage/storage.module.js";
+import { LinkEntity } from "../link/link.entity.js";
 
 @Module({
   imports: [
     forwardRef(() => InviteModule),
     forwardRef(() => FileModule),
+    StorageModule,
     AuthModule,
-    MikroOrmModule.forFeature([UserEntity, UserVerificationEntity, FileEntity, PasteEntity]),
+    MikroOrmModule.forFeature([UserEntity, UserVerificationEntity, FileEntity, PasteEntity, LinkEntity]),
   ],
   controllers: [UserController],
   providers: [UserService, UserResolver],

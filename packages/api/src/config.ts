@@ -19,6 +19,7 @@ const schema = strictObject({
   uploadLimit: string().transform(parseBytes),
   maxPasteLength: number().default(500000),
   trustProxy: boolean().default(false),
+  deleteUsersEnabled: boolean().default(false),
   allowTypes: z
     .union([array(string()), string()])
     .optional()

@@ -29,7 +29,7 @@ RUN pnpm build
 
 # use "pnpm deploy" to prune the api into a smaller package
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-    cd packages/api && pnpm --filter @ryanke/micro-api --prod deploy pruned
+    cd packages/api && pnpm --filter @ryanke/micro-api --prod deploy pruned --legacy
 
 
 

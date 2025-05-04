@@ -88,11 +88,6 @@ export class UserService {
     );
   }
 
-  async deleteUser(id: string) {
-    const user = this.userRepo.getReference(id);
-    await this.em.removeAndFlush(user);
-  }
-
   checkPermissions(permissions: Permission | number, permission: Permission | number) {
     return (permissions & permission) === permission;
   }
