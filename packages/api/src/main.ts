@@ -17,7 +17,7 @@ const logger = new Logger("bootstrap");
 const server = fastify({
   routerOptions: { maxParamLength: 500 },
   bodyLimit: config.uploadLimit,
-  trustProxy: config.trustProxy || process.env.TRUST_PROXY === "true", // legacy
+  trustProxy: process.env.TRUST_PROXY === "true" ? true : config.trustProxy, // legacy override
 });
 
 server.decorateRequest("microHost", null);

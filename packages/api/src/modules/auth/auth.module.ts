@@ -6,9 +6,10 @@ import { UserEntity } from "../user/user.entity.js";
 import { AuthResolver } from "./auth.resolver.js";
 import { AuthService } from "./auth.service.js";
 import { JWTStrategy } from "./strategies/jwt.strategy.js";
+import { AuthRateLimitService } from "./auth-rate-limit.service.js";
 
 @Module({
-  providers: [AuthResolver, AuthService, JWTStrategy],
+  providers: [AuthResolver, AuthService, JWTStrategy, AuthRateLimitService],
   exports: [AuthService],
   imports: [
     MikroOrmModule.forFeature([UserEntity]),

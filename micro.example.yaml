@@ -21,6 +21,10 @@ storagePath: data
 # string formatted maximum file upload size. 
 uploadLimit: 10MB
 
+# trustProxy:
+#   - loopback
+#   - 172.30.0.3
+
 # whether files uploaded to one domain should be available on other domains.
 # you should leave this enabled as it stops users uploading to {{username}}
 # domains as other users, for example user "one" could upload to one.example.com

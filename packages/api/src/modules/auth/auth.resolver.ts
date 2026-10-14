@@ -2,7 +2,7 @@ import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
 import { UseGuards } from "@nestjs/common";
 import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
-import type { FastifyReply } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import ms from "ms";
 import { rootHost } from "../../config.js";
 import { UserEntity } from "../user/user.entity.js";
@@ -33,7 +33,8 @@ export class AuthResolver {
     @Args("otpCode", { nullable: true }) otpCode?: string,
   ) {
     const reply = ctx.reply as FastifyReply;
-    const user = await this.authService.authenticateUser(username, password, otpCode);
+    const request = ctx.req as FastifyRequest;
+    const user = await this.authService.authenticateUser(username, password, request.ip, otpCode);
     const payload: JWTPayloadUser = { name: user.username, id: user.id, secret: user.secret };
     const expiresAt = Date.now() + AuthResolver.ONE_YEAR;
     const token = await this.authService.signToken<JWTPayloadUser>(TokenType.USER, payload, "1y");

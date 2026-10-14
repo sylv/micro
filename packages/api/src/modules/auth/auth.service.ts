@@ -11,6 +11,7 @@ import { generateSecret, generateURI } from "otplib";
 import type { JwtSignOptions } from "@nestjs/jwt";
 import { UserEntity } from "../user/user.entity.js";
 import { AccountDisabledError } from "./account-disabled.error.js";
+import { AuthRateLimitScope, AuthRateLimitService } from "./auth-rate-limit.service.js";
 
 export enum TokenType {
   USER = "USER",
@@ -57,6 +58,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private readonly em: EntityManager,
+    private readonly rateLimit: AuthRateLimitService,
   ) {}
 
   signToken<PayloadType extends Record<string, any>>(
@@ -86,12 +88,14 @@ export class AuthService {
   /**
    * Authenticaet a user by username and password.
    */
-  async authenticateUser(username: string, password: string, otpCode?: string) {
+  async authenticateUser(username: string, password: string, sourceIp: string, otpCode?: string) {
+    await this.rateLimit.check(AuthRateLimitScope.LOGIN_IP, sourceIp);
     const user = await this.userRepo.findOne({
       $or: [{ username }, { email: { $ilike: username } }],
     });
 
     if (!user) throw new UnauthorizedException();
+    await this.rateLimit.check(AuthRateLimitScope.LOGIN_ACCOUNT, user.id);
     const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches) {
       throw new UnauthorizedException();
@@ -140,6 +144,7 @@ export class AuthService {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
 
+    await this.rateLimit.check(AuthRateLimitScope.OTP, user.id);
     const isValid = verifyOTP(confirmation.code, confirmation.secret);
     if (!isValid) {
       throw new UnauthorizedException("Invalid OTP code");
@@ -180,6 +185,7 @@ export class AuthService {
       throw new UnauthorizedException("OTP code is required.");
     }
 
+    await this.rateLimit.check(AuthRateLimitScope.OTP, user.id);
     if (this.isOTPCode(otpCode)) {
       // user gave us an otp code
       const isValid = verifyOTP(otpCode, user.otpSecret, true);

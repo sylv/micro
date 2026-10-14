@@ -83,6 +83,8 @@ async function startServer() {
     replyOptions: {
       rewriteRequestHeaders: (originalReq, headers) => ({
         ...headers,
+        "x-forwarded-for": [originalReq.headers["x-forwarded-for"], originalReq.raw.socket.remoteAddress]
+          .filter(Boolean).join(", "),
         "x-forwarded-host": originalReq.headers.host,
       }),
     },
