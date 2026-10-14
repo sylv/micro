@@ -84,7 +84,7 @@ export class FileController {
         hostname: host?.normalised,
       });
 
-      await this.em.persistAndFlush(paste);
+      await this.em.persist(paste).flush();
       return {
         id: paste.id,
         hostname: paste.hostname,

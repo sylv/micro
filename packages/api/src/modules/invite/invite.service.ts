@@ -1,4 +1,5 @@
-import { EntityManager, EntityRepository, MikroORM, ref, CreateRequestContext } from "@mikro-orm/core";
+import { EntityManager, EntityRepository, MikroORM, ref } from "@mikro-orm/core";
+import { CreateRequestContext } from "@mikro-orm/decorators/legacy";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import type { OnApplicationBootstrap } from "@nestjs/common";
 import { Injectable, Logger } from "@nestjs/common";
@@ -23,7 +24,7 @@ export class InviteService implements OnApplicationBootstrap {
       permissions: permissions || undefined,
     });
 
-    await this.em.persistAndFlush(invite);
+    await this.em.persist(invite).flush();
     return invite;
   }
 
@@ -38,7 +39,7 @@ export class InviteService implements OnApplicationBootstrap {
       this.em.persist(user);
     }
 
-    await this.em.persistAndFlush(invite);
+    await this.em.persist(invite).flush();
   }
 
   @CreateRequestContext()

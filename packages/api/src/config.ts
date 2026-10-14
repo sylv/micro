@@ -3,7 +3,7 @@ import c from "chalk";
 import { randomBytes } from "crypto";
 import dedent from "dedent";
 import escapeStringRegexp from "escape-string-regexp";
-import ms from "ms";
+import { parse as parseDuration } from "ms";
 import z, { any, array, boolean, literal, number, record, strictObject, string, union } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { expandMime } from "./helpers/expand-mime.js";
@@ -36,7 +36,7 @@ const schema = strictObject({
       secretAccessKey: string(),
     }),
     filter: strictObject({
-      decayDuration: string().transform(ms), // how long before local files are uploaded
+      decayDuration: string().transform(parseDuration), // how long before local files are uploaded
       maxSize: string().transform(parseBytes).optional(),
       minSize: string().transform(parseBytes).optional(),
     }),
@@ -44,7 +44,7 @@ const schema = strictObject({
   restrictFilesToHost: boolean().default(true),
   purge: strictObject({
     overLimit: string().transform(parseBytes),
-    afterTime: string().transform(ms),
+    afterTime: string().transform(parseDuration),
     underViews: number().optional(),
   }).optional(),
   email: strictObject({

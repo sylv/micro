@@ -38,7 +38,7 @@ export class PasteResolver {
     const isOwner = paste.owner?.id === userId;
     const wantsContent = hasFields(info, "paste.content");
     if (paste.burn && !isOwner && wantsContent) {
-      await this.em.removeAndFlush(paste);
+      await this.em.remove(paste).flush();
       paste.burnt = true;
     }
 
@@ -57,15 +57,16 @@ export class PasteResolver {
       throw new BadRequestException("Paste expiry must be in the future or unset");
     }
 
+    const { paranoid: _paranoid, ...partial } = body;
     const paste = this.pasteRepo.create({
-      ...body,
+      ...partial,
       expiresAt: expiresAt,
       owner: user,
       hostname: host?.normalised,
       id: id,
     });
 
-    await this.em.persistAndFlush(paste);
+    await this.em.persist(paste).flush();
     return paste;
   }
 

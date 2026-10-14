@@ -8,7 +8,7 @@ import { LinkResolver } from "./link.resolver.js";
 import { LinkService } from "./link.service.js";
 
 @Module({
-  imports: [LinkModule, UserModule, HostModule, MikroOrmModule.forFeature([LinkEntity])],
+  imports: [UserModule, HostModule, MikroOrmModule.forFeature([LinkEntity])],
   controllers: [LinkController],
   providers: [LinkService, LinkResolver],
   exports: [LinkService],

@@ -33,7 +33,7 @@ export class UserController {
     @Response() reply: FastifyReply,
   ) {
     await this.userService.verifyUser(userId, verifyId);
-    return reply.redirect(302, rootHost.url + "/login?verified=true");
+    return reply.redirect(rootHost.url + "/login?verified=true", 302);
   }
 
   @Delete("user/:userId/delete_yes_im_really_sure")
@@ -54,7 +54,7 @@ export class UserController {
 
       if (!file) break;
       await this.storageService.delete(file);
-      await this.em.removeAndFlush(file);
+      await this.em.remove(file).flush();
       filesDeleted++;
     }
 

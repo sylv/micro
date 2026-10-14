@@ -1,5 +1,7 @@
 import type { Ref } from "@mikro-orm/core";
-import { BeforeCreate, Entity, Property, type EventArgs } from "@mikro-orm/core";
+import type { EventArgs } from "@mikro-orm/core";
+import { BeforeCreate } from "@mikro-orm/decorators/legacy";
+import { Entity, Property } from "@mikro-orm/decorators/legacy";
 import { ObjectType } from "@nestjs/graphql";
 import type { FastifyRequest } from "fastify";
 import { config, hosts, rootHost } from "../config.js";

@@ -54,7 +54,7 @@ export class FileResolver {
     }
 
     await this.storageService.delete(file);
-    await this.em.removeAndFlush(file);
+    await this.em.remove(file).flush();
     return true;
   }
 
@@ -71,7 +71,7 @@ export class FileResolver {
       if (!isUtf8) {
         const ref = this.fileRepo.getReference(file.id);
         ref.isUtf8 = false;
-        await this.em.persistAndFlush(ref);
+        await this.em.persist(ref).flush();
         return null;
       }
 

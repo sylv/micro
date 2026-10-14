@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: ['dist/server/index.mjs'],
   outDir: 'dist',
-  target: 'node20',
+  target: 'node24',
   format: 'esm',
   sourcemap: false,
   minify: true,

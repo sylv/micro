@@ -69,10 +69,12 @@ A vanity file sharing service with support for ShareX. You can see a preview at 
 
 ## development
 
-1. Pull the repo and then `pnpm install`.
+1. Use Node.js 24+ and pnpm 11.28.5 (`npm install -g pnpm@11.28.5`), then pull the repo and run `pnpm install`.
 2. Run `docker compose up -d` to start postgres and minio development instances.
 3. Copy `micro.example.yaml` to `micro.yaml`, change any options relevant to your environment.
-5. Then, you can start the `packages/api`/`packages/web` with `pnpm watch`. Keep a look out for a `InviteService` log entry, which will direct you to an invite to then create the initial account.
+4. Start both workspace packages with `pnpm watch` from the repository root. Keep a look out for a `InviteService` log entry, which will direct you to an invite to then create the initial account.
+
+Run `pnpm build`, `pnpm test`, or `pnpm lint` from the repository root. To build the production image locally, run `docker build -t micro:local .`.
 
 ## todo
 

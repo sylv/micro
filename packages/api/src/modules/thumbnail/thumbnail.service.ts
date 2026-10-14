@@ -1,4 +1,6 @@
-import { CreateRequestContext, EntityManager, EntityRepository } from "@mikro-orm/core";
+import { IMAGE_TYPES, VIDEO_TYPES, supportsThumbnail } from "../../helpers/thumbnail-types.js";
+import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { CreateRequestContext } from "@mikro-orm/decorators/legacy";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { Interval } from "@nestjs/schedule";
@@ -8,40 +10,26 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import ffmpeg from "fluent-ffmpeg";
 import { readFile, readdir, rm, stat } from "fs/promises";
 import { DateTime } from "luxon";
-import mime from "mime-types";
 import ms from "ms";
 import { tmpdir } from "os";
 import { join } from "path";
 import sharp from "sharp";
 import { setTimeout } from "timers/promises";
 import { dedupe } from "../../helpers/dedupe.js";
-import type { FileEntity } from "../file/file.entity.js";
+import { FileEntity } from "../file/file.entity.js";
 import { FileService } from "../file/file.service.js";
 import { StorageService } from "../storage/storage.service.js";
-import type { ThumbnailEntity } from "./thumbnail.entity.js";
+import { ThumbnailEntity } from "./thumbnail.entity.js";
 
 @Injectable()
 export class ThumbnailService {
-  @InjectRepository("ThumbnailEntity") private thumbnailRepo: EntityRepository<ThumbnailEntity>;
-  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
+  @InjectRepository(ThumbnailEntity) private thumbnailRepo: EntityRepository<ThumbnailEntity>;
+  @InjectRepository(FileEntity) private fileRepo: EntityRepository<FileEntity>;
 
   private static readonly THUMBNAIL_SIZE = 200;
   private static readonly THUMBNAIL_TYPE = "image/webp";
-  static readonly IMAGE_TYPES = new Set(
-    Object.keys(sharp.format)
-      .map((key) => mime.lookup(key))
-      .filter((key) => key && key.startsWith("image")),
-  ) as Set<string>;
-
-  static readonly VIDEO_TYPES = new Set([
-    "video/mp4",
-    "video/webm",
-    "video/ogg",
-    "video/x-matroska",
-    "video/x-ms-wmv",
-    "video/x-m4v",
-    "video/x-flv",
-  ]);
+  static readonly IMAGE_TYPES = IMAGE_TYPES;
+  static readonly VIDEO_TYPES = VIDEO_TYPES;
 
   private readonly log = new Logger(ThumbnailService.name);
 
@@ -89,11 +77,11 @@ export class ThumbnailService {
         file: file,
       });
 
-      await this.em.persistAndFlush([file, thumbnail]);
+      await this.em.persist([file, thumbnail]).flush();
       return thumbnail;
     } catch (error: any) {
       file.thumbnailError = error.message;
-      await this.em.persistAndFlush(file);
+      await this.em.persist(file).flush();
       return null;
     }
   }
@@ -158,7 +146,7 @@ export class ThumbnailService {
   }
 
   static checkSupport(fileType: string) {
-    return ThumbnailService.IMAGE_TYPES.has(fileType) || ThumbnailService.VIDEO_TYPES.has(fileType);
+    return supportsThumbnail(fileType);
   }
 
   async sendThumbnail(fileId: string, request: FastifyRequest, reply: FastifyReply) {

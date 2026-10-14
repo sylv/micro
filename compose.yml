@@ -1,10 +1,9 @@
 # THIS FILE IS FOR DEVELOPMENT ONLY.
 # PERSISTENCE IS NOT ENABLED, `docker compose down` WILL DELETE ALL DATA.
 # If you want complete examples on how to host micro, see the /examples directory.
-version: "3"
 services:
   postgres:
-    image: postgres:12-alpine
+    image: postgres:18-alpine
     container_name: micro_postgres
     restart: unless-stopped
     ports:

@@ -1,4 +1,5 @@
-import { BlobType, Entity, OneToOne, OptionalProps, Property, type Ref } from "@mikro-orm/core";
+import { BlobType, OptionalProps, type Ref } from "@mikro-orm/core";
+import { Entity, OneToOne, Property } from "@mikro-orm/decorators/legacy";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { FileEntity } from "../file/file.entity.js";
 

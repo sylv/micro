@@ -6,21 +6,20 @@
   "author": "Ryan <ryan@sylver.me>",
   "private": true,
   "engines": {
-    "node": ">=16",
-    "pnpm": ">=9"
+    "node": ">=24.0.0",
+    "pnpm": ">=11.28.5"
   },
   "scripts": {
-    "build": "turbo run build",
-    "clean": "rm -rf ./packages/*/{tsconfig.tsbuildinfo,lib,dist,yarn-error.log,.next}",
-    "lint": "turbo run lint",
-    "sync": "syncpack format && syncpack fix-mismatches",
-    "test": "turbo run test"
+    "build": "pnpm -r --if-present run build",
+    "clean": "pnpm -r --if-present run clean",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "pnpm -r --if-present run test",
+    "watch": "pnpm -r --parallel --if-present run watch"
   },
   "devDependencies": {
-    "@atlasbot/configs": "^10.6.1",
-    "@biomejs/biome": "^1.7.3",
-    "syncpack": "^12.3.2",
-    "turbo": "1.13.3",
-    "typescript": "^5.4.5"
-  }
+    "@atlasbot/configs": "^10.6.3",
+    "@biomejs/biome": "^2.5.15",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "pnpm@11.28.5"
 }

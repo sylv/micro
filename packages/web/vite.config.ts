@@ -1,30 +1,22 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { vavite } from "vavite";
 import ssr from "vike/plugin";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  buildSteps: [
-    {
-      name: "client",
+  appType: "custom",
+  builder: {
+    async buildApp(builder) {
+      await builder.build(builder.environments.client!);
+      await builder.build(builder.environments.ssr!);
     },
-    {
-      name: "server",
-      config: {
-        build: { ssr: true },
-      },
-    },
-  ],
-  ssr: {
-    noExternal: ["qrcode.react"],
   },
+  ssr: { noExternal: ["qrcode.react"] },
   plugins: [
     react(),
-    ssr({ disableAutoFullBuild: true }),
-    vavite({
-      handlerEntry: "/src/server/index.ts",
-      serveClientAssetsInDev: true,
-      clientAssetsDir: "dist/client",
-    }),
+    tailwindcss(),
+    ssr(),
+    vavite({ entries: [{ entry: "/src/server/index.ts", order: "post" }] }),
   ],
 });

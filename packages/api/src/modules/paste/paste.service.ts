@@ -18,7 +18,7 @@ export class PasteService {
     }
 
     if (paste.expiresAt && paste.expiresAt.getTime() < Date.now()) {
-      await this.em.removeAndFlush(paste);
+      await this.em.remove(paste).flush();
       throw new NotFoundException();
     }
 

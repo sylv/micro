@@ -1,4 +1,6 @@
-import FastifyEarlyHints from "@fastify/early-hints";
+import FastifyStatic from "@fastify/static";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import FastifyProxy from "@fastify/http-proxy";
 import type { FastifyInstance } from "fastify";
 import Fastify from "fastify";
@@ -68,9 +70,12 @@ async function startServer() {
     },
   });
 
-  instance.register(FastifyEarlyHints, {
-    warn: true,
-  });
+  if (import.meta.env.PROD) {
+    instance.register(FastifyStatic, {
+      root: join(dirname(fileURLToPath(import.meta.url)), "client"),
+      wildcard: false,
+    });
+  }
 
   instance.register(FastifyProxy, {
     prefix: "/api",
@@ -104,7 +109,7 @@ async function startServer() {
     const { httpResponse } = pageContext;
     if (httpResponse) {
       const { pipe, statusCode, headers, earlyHints } = httpResponse;
-      reply.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
+      if (earlyHints.length) reply.raw.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
       for (const [name, value] of headers) reply.header(name, value);
       reply.status(statusCode);
       return pipe(reply.raw);
@@ -129,4 +134,14 @@ export default async function handler(request: IncomingMessage, reply: ServerRes
   }
 
   fastify!.server.emit("request", request, reply);
+}
+
+if (import.meta.env.PROD) {
+  await fastifyHandlerPromise;
+  await fastify!.listen({ host: process.env.HOST || "0.0.0.0", port: Number(process.env.PORT || 3000) });
+}
+
+if (import.meta.hot) {
+  import.meta.hot.accept();
+  import.meta.hot.dispose(async () => { await fastify?.close(); });
 }

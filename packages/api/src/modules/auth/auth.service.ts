@@ -1,3 +1,4 @@
+import { verifyOTP } from "../../helpers/verify-otp.js";
 import { EntityManager } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { EntityRepository } from "@mikro-orm/postgresql";
@@ -6,7 +7,8 @@ import { ArgsType, Field, ObjectType } from "@nestjs/graphql";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcryptjs";
 import crypto, { randomUUID } from "crypto";
-import { authenticator } from "otplib";
+import { generateSecret, generateURI } from "otplib";
+import type { JwtSignOptions } from "@nestjs/jwt";
 import { UserEntity } from "../user/user.entity.js";
 import { AccountDisabledError } from "./account-disabled.error.js";
 
@@ -60,7 +62,7 @@ export class AuthService {
   signToken<PayloadType extends Record<string, any>>(
     type: TokenType,
     payload: PayloadType,
-    expiresIn = "1y",
+    expiresIn: JwtSignOptions["expiresIn"] = "1y",
   ) {
     return this.jwtService.signAsync(payload, {
       audience: type,
@@ -116,7 +118,7 @@ export class AuthService {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
 
-    const otpSecret = authenticator.generateSecret();
+    const otpSecret = generateSecret();
     const recoveryCodes = [];
     for (let i = 0; i < 8; i++) {
       recoveryCodes.push(randomUUID());
@@ -125,7 +127,7 @@ export class AuthService {
     return {
       recoveryCodes,
       secret: otpSecret,
-      qrauthUrl: authenticator.keyuri(user.username, "Micro", otpSecret),
+      qrauthUrl: generateURI({ label: user.username, issuer: "Micro", secret: otpSecret }),
     };
   }
 
@@ -138,7 +140,7 @@ export class AuthService {
       throw new UnauthorizedException("User already has OTP enabled.");
     }
 
-    const isValid = authenticator.check(confirmation.code, confirmation.secret);
+    const isValid = verifyOTP(confirmation.code, confirmation.secret);
     if (!isValid) {
       throw new UnauthorizedException("Invalid OTP code");
     }
@@ -149,7 +151,7 @@ export class AuthService {
       return crypto.createHash("sha256").update(code).digest("hex");
     });
 
-    await this.em.persistAndFlush(user);
+    await this.em.persist(user).flush();
   }
 
   /**
@@ -161,7 +163,7 @@ export class AuthService {
     user.otpSecret = undefined;
     user.otpRecoveryCodes = undefined;
     user.otpEnabled = false;
-    await this.em.persistAndFlush(user);
+    await this.em.persist(user).flush();
   }
 
   /**
@@ -180,7 +182,7 @@ export class AuthService {
 
     if (this.isOTPCode(otpCode)) {
       // user gave us an otp code
-      const isValid = authenticator.check(otpCode, user.otpSecret);
+      const isValid = verifyOTP(otpCode, user.otpSecret, true);
       if (!isValid) {
         throw new UnauthorizedException("Invalid OTP code.");
       }
@@ -198,7 +200,7 @@ export class AuthService {
 
       // remove recovery code
       user.otpRecoveryCodes.splice(codeIndex, 1);
-      await this.em.persistAndFlush(user);
+      await this.em.persist(user).flush();
     }
   }
 

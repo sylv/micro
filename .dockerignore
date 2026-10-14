@@ -11,9 +11,15 @@ data
 .github
 *.md
 
-packages/*/.turbo
 packages/*/data
 packages/*/node_modules
 packages/*/dist
 packages/*/.next
 packages/*/.swc
+.git
+.agents
+.aws
+.codex
+target
+micro.yaml
+packages/*/pruned

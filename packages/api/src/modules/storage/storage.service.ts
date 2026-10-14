@@ -1,12 +1,13 @@
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import type { EntityRepository } from "@mikro-orm/postgresql";
-import { CreateRequestContext, EntityManager, type FilterQuery } from "@mikro-orm/core";
+import { EntityManager, type FilterQuery } from "@mikro-orm/core";
+import { CreateRequestContext } from "@mikro-orm/decorators/legacy";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Injectable, Logger, type OnApplicationBootstrap } from "@nestjs/common";
 import { Interval } from "@nestjs/schedule";
 import crypto from "crypto";
 import { once } from "events";
-import fs, { existsSync, mkdirSync, rmdirSync } from "fs";
+import fs, { existsSync, mkdirSync, rmSync } from "fs";
 import { nanoid } from "nanoid";
 import path from "path";
 import type { Readable } from "stream";
@@ -15,17 +16,17 @@ import { config } from "../../config.js";
 import { FileEntity } from "../file/file.entity.js";
 import { ExifTransformer } from "./exif.transformer.js";
 import { SizeTransform } from "./size.transformer.js";
-import sharp from "sharp";
+import sharp, { type Metadata } from "sharp";
 import { setTimeout } from "timers/promises";
 import ms from "ms";
 import { dedupe } from "../../helpers/dedupe.js";
-import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
+import { IMAGE_TYPES, VIDEO_TYPES } from "../../helpers/thumbnail-types.js";
 import { DateTime } from "luxon";
 import bytes from "bytes";
 
 @Injectable()
 export class StorageService implements OnApplicationBootstrap {
-  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
+  @InjectRepository(FileEntity) private fileRepo: EntityRepository<FileEntity>;
 
   private readonly createdPaths = new Set();
   private readonly logger = new Logger(StorageService.name);
@@ -46,7 +47,7 @@ export class StorageService implements OnApplicationBootstrap {
     }
 
     // empty out temp dir
-    if (existsSync(this.tempUploadDir)) rmdirSync(this.tempUploadDir, { recursive: true });
+    if (existsSync(this.tempUploadDir)) rmSync(this.tempUploadDir, { recursive: true });
     mkdirSync(this.tempUploadDir, { recursive: true });
   }
 
@@ -64,7 +65,7 @@ export class StorageService implements OnApplicationBootstrap {
       const sizeTransform = new SizeTransform();
       const writeStream = fs.createWriteStream(uploadPath);
 
-      let metadata: sharp.Metadata | undefined;
+      let metadata: Metadata | undefined;
       const metadataStream = sharp().metadata((error, data) => {
         metadata = data;
       });
@@ -190,7 +191,7 @@ export class StorageService implements OnApplicationBootstrap {
         $or: [
           { thumbnail: { $ne: null } },
           { thumbnailError: { $ne: null } },
-          { type: { $nin: [...ThumbnailService.IMAGE_TYPES, ...ThumbnailService.VIDEO_TYPES] } },
+          { type: { $nin: [...IMAGE_TYPES, ...VIDEO_TYPES] } },
         ],
       },
       {
@@ -218,13 +219,13 @@ export class StorageService implements OnApplicationBootstrap {
       );
 
       file.external = true;
-      await this.em.persistAndFlush(file);
+      await this.em.persist(file).flush();
 
       this.logger.log(`Finished uploading ${file.id} to external store`);
       await fs.promises.unlink(this.getPathFromHash(file.hash));
     } catch (error: any) {
       file.externalError = error.message;
-      await this.em.persistAndFlush(file);
+      await this.em.persist(file).flush();
 
       this.logger.error(`Failed to upload ${file.id} to external store`, error);
       this.logger.error("This is a bug, report it on github!");
@@ -265,7 +266,7 @@ export class StorageService implements OnApplicationBootstrap {
     for (const file of files) {
       const size = bytes.format(file.size);
       const age = DateTime.fromJSDate(file.createdAt).toRelative();
-      await this.em.removeAndFlush(file);
+      await this.em.remove(file).flush();
       await this.delete(file);
       this.logger.log(`Purging ${file.id} (${size}, ${age})`);
     }

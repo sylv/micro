@@ -1,3 +1,4 @@
+import { ReflectMetadataProvider } from "@mikro-orm/decorators/legacy";
 import { FlushMode } from "@mikro-orm/core";
 import { Logger, NotFoundException } from "@nestjs/common";
 import { dirname, join } from "path";
@@ -18,6 +19,7 @@ export const ORM_LOGGER = new Logger("MikroORM");
 export const MIGRATIONS_TABLE_NAME = "mikro_orm_migrations";
 
 export default defineConfig({
+  metadataProvider: ReflectMetadataProvider,
   entities: [
     FileMetadata,
     FileEntity,

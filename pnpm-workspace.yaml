@@ -2,10 +2,16 @@ packages:
   - packages/**
   - '!**/test/**'
 
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - '@nestjs/core'
-  - '@swc/core'
-  - esbuild
-  - sharp
-  - utf-8-validate
+allowBuilds:
+  '@nestjs/core': true
+  '@swc/core': true
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  utf-8-validate: true
+
+# Patched transitive releases; upstream ranges still select vulnerable versions.
+overrides:
+  ws@^8: ^8.21.0
+  esbuild@^0.27: ^0.28.1
+  postcss-selector-parser@^6: ^7.1.6

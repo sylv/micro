@@ -9,7 +9,7 @@ import { cacheOptions } from "./cache";
 import type { PageContext } from "vike/types";
 
 export const GRAPHQL_URL =
-  (import.meta.env.PUBLIC_ENV__FRONTEND_API_URL || import.meta.env.FRONTEND_API_URL) + "/graphql";
+  (process.env.FRONTEND_API_URL || process.env.BACKEND_API_URL || "http://localhost:8080") + "/graphql";
 
 export const useServerClient = () => {
   if (typeof window !== "undefined") {
@@ -58,7 +58,7 @@ export const useServerClient = () => {
       ],
       fetchOptions: {
         credentials: "same-origin",
-        headers: pageContext.headers || undefined,
+        headers: ("headersOriginal" in pageContext ? pageContext.headersOriginal : undefined) as HeadersInit | undefined,
       },
     });
   }, []);
@@ -78,7 +78,7 @@ export const getServerClient = (pageContext: PageContext) => {
     exchanges: [cacheExchange(cacheOptions), pageContext.ssrExchange, fetchExchange],
     fetchOptions: {
       credentials: "same-origin",
-      headers: pageContext.headers || undefined,
+      headers: ("headersOriginal" in pageContext ? pageContext.headersOriginal : undefined) as HeadersInit | undefined,
     },
   });
 };

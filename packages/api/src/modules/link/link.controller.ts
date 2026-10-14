@@ -14,7 +14,7 @@ export class LinkController {
   async followLink(@Param("id") id: string, @Request() request: FastifyRequest, @Res() reply: FastifyReply) {
     const link = await this.linkService.getLink(id, request);
     link.clicks++;
-    await this.em.persistAndFlush(link);
-    await reply.redirect(301, link.destination);
+    await this.em.persist(link).flush();
+    await reply.redirect(link.destination, 301);
   }
 }

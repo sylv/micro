@@ -26,7 +26,7 @@ import { FileEntity } from "./file.entity.js";
 
 @Injectable()
 export class FileService {
-  @InjectRepository("FileEntity") private fileRepo: EntityRepository<FileEntity>;
+  @InjectRepository(FileEntity) private fileRepo: EntityRepository<FileEntity>;
 
   private readonly logger = new Logger(FileService.name);
   constructor(
@@ -159,7 +159,7 @@ export class FileService {
       }
     }
 
-    await this.em.persistAndFlush(file);
+    await this.em.persist(file).flush();
     return file;
   }
 
@@ -173,7 +173,7 @@ export class FileService {
     if (range) await reply.header("Content-Range", contentRange.format(range));
 
     file.views++;
-    await this.em.persistAndFlush(file);
+    await this.em.persist(file).flush();
 
     const type = file.type.startsWith("text") ? `${file.type}; charset=UTF-8` : file.type;
     return reply

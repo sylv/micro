@@ -27,7 +27,7 @@ export class LinkService {
       hostname: host?.normalised,
     });
 
-    await this.em.persistAndFlush(link);
+    await this.em.persist(link).flush();
     return link;
   }
 
@@ -37,7 +37,7 @@ export class LinkService {
       throw new UnauthorizedException("You cannot delete other users files.");
     }
 
-    await this.em.removeAndFlush(link);
+    await this.em.remove(link).flush();
   }
 
   getLinkUrls(link: Pick<LinkEntity, "id">) {

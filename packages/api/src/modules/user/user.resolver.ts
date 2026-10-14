@@ -45,12 +45,10 @@ export class UserResolver {
   @ResolveField(() => Number)
   async aggregateFileSize(@UserId() userId: string, @Parent() user: UserEntity) {
     if (userId !== user.id) throw new UnauthorizedException();
-    const result = await this.fileRepo
-      .createQueryBuilder()
-      .where({ owner: user.id })
-      .getKnex()
-      .sum("size")
-      .first();
+    const [result] = await this.em.getConnection().execute<{ sum: string }[]>(
+      'select coalesce(sum(size), 0) as sum from files where owner_id = ?',
+      [user.id],
+    );
     return Number(result.sum);
   }
 
@@ -116,7 +114,7 @@ export class UserResolver {
     const secret = nanoid();
     const user = await this.userRepo.findOneOrFail(userId);
     user.secret = secret;
-    await this.em.persistAndFlush(user);
+    await this.em.persist(user).flush();
     return user;
   }
 
@@ -176,7 +174,7 @@ export class UserResolver {
     }
 
     await this.userService.sendVerificationEmail(user);
-    await this.em.persistAndFlush(user);
+    await this.em.persist(user).flush();
     return true;
   }
 }

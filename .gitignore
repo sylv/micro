@@ -18,7 +18,6 @@
 # misc
 .DS_Store
 *.pem
-.turbo
 
 # debug
 npm-debug.log*
@@ -48,4 +47,3 @@ dist
 
 packages/web/.next
 packages/api/data
-packages/*/.turbo

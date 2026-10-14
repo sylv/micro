@@ -1,4 +1,5 @@
-import { Embedded, Entity, Index, LoadStrategy, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { LoadStrategy, OptionalProps, type Ref } from "@mikro-orm/core";
+import { Embedded, Entity, Index, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Exclude } from "class-transformer";
 import mimeType from "mime-types";
@@ -6,7 +7,7 @@ import { generateDeleteKey } from "../../helpers/generate-delete-key.helper.js";
 import { ResourceEntity } from "../../helpers/resource.entity-base.js";
 import { Paginated } from "../../types/paginated.type.js";
 import { ThumbnailEntity } from "../thumbnail/thumbnail.entity.js";
-import { ThumbnailService } from "../thumbnail/thumbnail.service.js";
+import { supportsThumbnail } from "../../helpers/thumbnail-types.js";
 import { UserEntity } from "../user/user.entity.js";
 import { FileMetadata } from "./file-metadata.embeddable.js";
 
@@ -92,7 +93,7 @@ export class FileEntity extends ResourceEntity {
     const prefix = this.type.startsWith("video") ? "/v" : this.type.startsWith("image") ? "/i" : "/f";
     const viewPath = `${prefix}/${this.id}`;
     const directPath = `${prefix}/${this.id}.${extension}`;
-    const thumbnailUrl = ThumbnailService.checkSupport(this.type) ? `/t/${this.id}` : undefined;
+    const thumbnailUrl = supportsThumbnail(this.type) ? `/t/${this.id}` : undefined;
     const deletePath = this.deleteKey ? `${prefix}/${this.id}?deleteKey=${this.deleteKey}` : undefined;
 
     return {

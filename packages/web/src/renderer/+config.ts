@@ -4,7 +4,7 @@ import type { Config } from "vike/types";
 import { Layout } from "./Layout";
 import { Wrapper } from "./Wrapper";
 
-export default {
+const config: Config = {
   extends: [vikeReact],
   passToClient: ["state", "routeParams"],
   Wrapper: Wrapper,
@@ -13,7 +13,9 @@ export default {
   // todo: breaks useServerClient() because it re-renders after SSR data is grabbed,
   // currently done manually in Layout.tsx
   reactStrictMode: false,
-} satisfies Config;
+};
+
+export default config;
 
 declare global {
   namespace Vike {

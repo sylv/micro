@@ -15,10 +15,12 @@ await migrate();
 
 const logger = new Logger("bootstrap");
 const server = fastify({
-  maxParamLength: 500,
+  routerOptions: { maxParamLength: 500 },
   bodyLimit: config.uploadLimit,
   trustProxy: config.trustProxy || process.env.TRUST_PROXY === "true", // legacy
 });
+
+server.decorateRequest("microHost", null);
 
 const adapter = new FastifyAdapter(server as any);
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);

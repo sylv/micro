@@ -1,4 +1,5 @@
-import { Entity, ManyToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { OptionalProps, type Ref } from "@mikro-orm/core";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { Field, ID, InputType, ObjectType } from "@nestjs/graphql";
 import { Exclude } from "class-transformer";
 import { IsBoolean, IsNumber, IsOptional, IsString, Length } from "class-validator";

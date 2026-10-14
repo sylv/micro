@@ -40,7 +40,7 @@ export class LinkResolver {
       hostname: resolvedHost?.normalised,
     });
 
-    await this.em.persistAndFlush(link);
+    await this.em.persist(link).flush();
     return link;
   }
 

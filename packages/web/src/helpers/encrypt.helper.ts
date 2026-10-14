@@ -48,7 +48,7 @@ export async function encryptContent(content: string): Promise<EncryptionResult>
     new TextEncoder().encode(content),
   );
 
-  const ivString = arrayBufferToBase64(iv);
+  const ivString = arrayBufferToBase64(iv.buffer);
   const encryptedString = arrayBufferToBase64(encryptedContent);
   const withIV = `${ivString}:${encryptedString}`;
 

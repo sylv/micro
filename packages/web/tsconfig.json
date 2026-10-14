@@ -5,7 +5,6 @@
     "types": ["vite/client"],
     "jsx": "react-jsx",
     "noUncheckedIndexedAccess": false,
-    "baseUrl": "./",
     "plugins": [
       {
         "name": "@0no-co/graphqlsp",

@@ -1,4 +1,5 @@
-import { Entity, ManyToOne, OneToOne, OptionalProps, PrimaryKey, Property, type Ref } from "@mikro-orm/core";
+import { OptionalProps, type Ref } from "@mikro-orm/core";
+import { Entity, ManyToOne, OneToOne, PrimaryKey, Property } from "@mikro-orm/decorators/legacy";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { rootHost } from "../../config.js";
 import { generateDeleteKey } from "../../helpers/generate-delete-key.helper.js";
@@ -33,25 +34,25 @@ export class InviteEntity {
   @Field({ nullable: true })
   expiresAt?: Date;
 
-  @Property({ persist: false })
+  @Property({ persist: false, type: "boolean" })
   @Field(() => Boolean)
   get expired() {
     return this.expiresAt && this.expiresAt.getTime() < Date.now();
   }
 
-  @Property({ persist: false })
+  @Property({ persist: false, type: "boolean" })
   @Field(() => Boolean)
   get consumed() {
     return !!this.invited;
   }
 
-  @Property({ persist: false })
+  @Property({ persist: false, type: "string" })
   @Field(() => String)
   get path() {
     return `/invite/${this.id}`;
   }
 
-  @Property({ persist: false })
+  @Property({ persist: false, type: "string" })
   @Field(() => String)
   get url() {
     const url = new URL(rootHost.url);

@@ -1,9 +1,5 @@
-import {
-  EntityManager,
-  EntityRepository,
-  QueryOrder,
-  UniqueConstraintViolationException,
-} from "@mikro-orm/core";
+import { EntityManager, EntityRepository, QueryOrder, UniqueConstraintViolationException } from "@mikro-orm/core";
+
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { BadRequestException, ConflictException, ForbiddenException, Injectable } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
@@ -175,7 +171,7 @@ export class UserService {
     }
 
     verification.user.$.verifiedEmail = true;
-    await this.em.persistAndFlush(verification.user);
+    await this.em.persist(verification.user).flush();
     await this.verificationRepo.nativeDelete({
       user: userId,
     });
@@ -201,7 +197,7 @@ export class UserService {
     }
 
     user.password = await bcrypt.hash(newPassword, 12);
-    await this.em.persistAndFlush(user);
+    await this.em.persist(user).flush();
   }
 
   @Cron(CronExpression.EVERY_HOUR)

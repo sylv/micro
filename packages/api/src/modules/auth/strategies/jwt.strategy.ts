@@ -25,7 +25,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: config.secret,
       jwtFromRequest: (request: FastifyRequest<{ Querystring: { token?: string } }>) => {
-        return request.cookies.token ?? request.query.token ?? request.headers.authorization;
+        return request.cookies.token ?? request.query.token ?? request.headers.authorization ?? null;
       },
     });
   }

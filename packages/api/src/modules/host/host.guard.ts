@@ -9,13 +9,13 @@ export class HostGuard implements CanActivate {
     const request = getRequest(context);
     const referer = request.headers.referer;
     if (!referer) {
-      request.host = hosts[0];
+      request.microHost = hosts[0];
       return true;
     }
 
     const host = hosts.find((host) => host.pattern.test(referer));
     if (!host) throw new BadRequestException('Invalid host.');
-    request.host = host;
+    request.microHost = host;
     return true;
   }
 }

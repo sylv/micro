@@ -26,7 +26,7 @@ export class InviteResolver {
       inviter: inviterId,
     });
 
-    await this.em.persistAndFlush(invite);
+    await this.em.persist(invite).flush();
     return invite;
   }
 }

@@ -1,6 +1,5 @@
-import type { Options } from "@mikro-orm/core";
-import { MikroORM } from "@mikro-orm/core";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { MikroORM, type Options } from "@mikro-orm/postgresql";
+import type { Migrator } from "@mikro-orm/migrations";
 import { Logger } from "@nestjs/common";
 import mikroOrmConfig, { MIGRATIONS_TABLE_NAME, ORM_LOGGER } from "./orm.config.js";
 
@@ -13,13 +12,14 @@ export const migrate = async (
   logger.debug(`Checking for and running migrations`);
 
   const orm = await MikroORM.init(config);
-  const em = orm.em.fork({ clear: true }) as EntityManager;
+  const em = orm.em.fork({ clear: true });
 
-  const migrator = orm.getMigrator();
-  const executedMigrations = await migrator.getExecutedMigrations();
-  const pendingMigrations = await migrator.getPendingMigrations();
+  const migrator = orm.migrator as Migrator;
+  const executedMigrations = await migrator.getExecuted();
+  const pendingMigrations = await migrator.getPending();
   if (!pendingMigrations[0]) {
     ORM_LOGGER.debug(`No pending migrations, ${executedMigrations.length} already executed`);
+    await orm.close();
     return;
   }
 

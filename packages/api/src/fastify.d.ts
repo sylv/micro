@@ -1,10 +1,10 @@
-import type { MicroHost } from '../classes/MicroHost.js';
-import type { User } from './user/user.entity.js';
+import type { MicroHost } from './config.js';
+import type { UserEntity } from './modules/user/user.entity.js';
 import 'fastify';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user?: User;
-    host: MicroHost;
+    user: UserEntity;
+    microHost: MicroHost | null;
   }
 }

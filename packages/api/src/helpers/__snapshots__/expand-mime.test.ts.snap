@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should expand mime types 1`] = `
-Array [
+[
   "video/mp4",
   "video/webm",
   "video/ogg",
@@ -16,7 +16,7 @@ Array [
 `;
 
 exports[`should expand mime types 2`] = `
-Array [
+[
   "image/bmp",
   "image/gif",
   "image/jpeg",
@@ -28,7 +28,7 @@ Array [
 `;
 
 exports[`should expand mime types 3`] = `
-Array [
+[
   "image/bmp",
   "image/gif",
   "image/jpeg",
@@ -40,7 +40,7 @@ Array [
 `;
 
 exports[`should expand mime types 4`] = `
-Array [
+[
   "image/bmp",
   "image/gif",
   "image/jpeg",
@@ -53,7 +53,7 @@ Array [
 `;
 
 exports[`should expand mime types 5`] = `
-Array [
+[
   "image/bmp",
   "image/gif",
   "image/jpeg",

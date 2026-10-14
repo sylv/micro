@@ -1,9 +1,9 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type SendMailOptions } from "nodemailer";
 import { config } from "../config.js";
 
 const transport = config.email && nodemailer.createTransport(config.email.smtp);
 
-export const sendMail = (options: Omit<nodemailer.SendMailOptions, "from">) => {
+export const sendMail = (options: Omit<SendMailOptions, "from">) => {
   if (!transport || !config.email) {
     throw new Error("No SMTP configuration found");
   }

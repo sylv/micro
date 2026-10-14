@@ -1,26 +1,20 @@
 export const REWRITES = [
-  {
-    source: '/t/:thumbnailId',
-    destination: '/api/thumbnail/:thumbnailId',
-  },
-  {
-    source: '/(f|v|i)/:fileId.:extension',
-    destination: '/api/file/:fileId',
-  },
-  {
-    source: '/(p|paste)/:pasteId.:extension',
-    destination: '/api/paste/:pasteId',
-  },
-  {
-    source: '/(l|s|link)/:linkId',
-    destination: '/api/link/:linkId',
-  },
-  {
-    source: '/(f|v|i)/:fileId',
-    destination: '/file/:fileId',
-  },
-  {
-    source: '/p/:pasteId',
-    destination: '/paste/:pasteId',
-  },
+  { source: "/t/:thumbnailId", destination: "/api/thumbnail/:thumbnailId" },
+  ...["f", "v", "i"].map((prefix) => ({
+    source: `/${prefix}/:fileId.:extension`,
+    destination: "/api/file/:fileId",
+  })),
+  ...["p", "paste"].map((prefix) => ({
+    source: `/${prefix}/:pasteId.:extension`,
+    destination: "/api/paste/:pasteId",
+  })),
+  ...["l", "s", "link"].map((prefix) => ({
+    source: `/${prefix}/:linkId`,
+    destination: "/api/link/:linkId",
+  })),
+  ...["f", "v", "i"].map((prefix) => ({
+    source: `/${prefix}/:fileId`,
+    destination: "/file/:fileId",
+  })),
+  { source: "/p/:pasteId", destination: "/paste/:pasteId" },
 ];
