@@ -37,7 +37,7 @@ export class InviteEntity {
   @Property({ persist: false, type: "boolean" })
   @Field(() => Boolean)
   get expired() {
-    return this.expiresAt && this.expiresAt.getTime() < Date.now();
+    return this.expiresAt != null && this.expiresAt.getTime() <= Date.now();
   }
 
   @Property({ persist: false, type: "boolean" })

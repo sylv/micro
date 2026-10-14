@@ -1,7 +1,7 @@
 import { EntityManager, EntityRepository, QueryOrder, UniqueConstraintViolationException } from "@mikro-orm/core";
 
 import { InjectRepository } from "@mikro-orm/nestjs";
-import { BadRequestException, ConflictException, ForbiddenException, Injectable } from "@nestjs/common";
+import { BadRequestException, ConflictException, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import bcrypt from "bcryptjs";
 import dedent from "dedent";
@@ -120,6 +120,8 @@ export class UserService {
   }
 
   async createUser(data: CreateUserDto, invite: InviteEntity) {
+    if (invite.expired) throw new UnauthorizedException("Expired invite.");
+
     if (!data.email && config.email) {
       throw new ConflictException("You must provide an email address to create a user.");
     }

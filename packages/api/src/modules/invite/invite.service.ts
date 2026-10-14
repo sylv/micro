@@ -2,7 +2,7 @@ import { EntityManager, EntityRepository, MikroORM, ref } from "@mikro-orm/core"
 import { CreateRequestContext } from "@mikro-orm/decorators/legacy";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import type { OnApplicationBootstrap } from "@nestjs/common";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { Permission } from "../../constants.js";
 import { UserEntity } from "../user/user.entity.js";
 import { InviteEntity } from "./invite.entity.js";
@@ -33,6 +33,8 @@ export class InviteService implements OnApplicationBootstrap {
   }
 
   async consume(invite: InviteEntity, user: UserEntity) {
+    if (invite.expired) throw new UnauthorizedException("Expired invite.");
+
     invite.invited = ref(user);
     if (invite.skipVerification) {
       user.verifiedEmail = true;
