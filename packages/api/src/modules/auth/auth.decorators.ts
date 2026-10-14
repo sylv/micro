@@ -16,5 +16,5 @@ export const UserId = createParamDecorator((_, context) => {
 });
 
 export const CurrentHost = createParamDecorator((_, context) => {
-  return getRequest(context).host;
+  return getRequest(context).microHost;
 });
