@@ -115,6 +115,9 @@ async function startServer() {
       const { pipe, statusCode, headers, earlyHints } = httpResponse;
       if (earlyHints.length) reply.raw.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
       for (const [name, value] of headers) reply.header(name, value);
+      // otherwise cloudflare email rewriting breaks hydration
+      const cacheControl = String(reply.getHeader("Cache-Control") ?? "no-store");
+      reply.header("Cache-Control", `${cacheControl}, no-transform`);
       reply.header("X-Content-Type-Options", "nosniff");
       if (import.meta.env.PROD) {
         const assetHost = new URL(`http://${request.headers.host}`).host;

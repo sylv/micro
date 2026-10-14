@@ -32,8 +32,6 @@ const ConfirmOTP = graphql(`
   }
 `);
 
-export const title = "Enable 2FA — micro";
-
 export const Page: FC = () => {
   const [result] = useQuery({ query: GenerateOtp });
   const [currentStep, setCurrentStep] = useState(0);

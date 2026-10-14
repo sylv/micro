@@ -3,8 +3,6 @@ import { Container } from "../components/container";
 import { Spinner } from "../components/spinner";
 import { useConfig } from "../hooks/useConfig";
 
-export const title = "micro";
-
 export const Page: FC = () => {
   const config = useConfig();
   const hosts = config.data?.hosts ?? [];
@@ -21,12 +19,17 @@ export const Page: FC = () => {
             here.
           </a>
         </p>
+        {config.error && (
+          <p role="alert" className="mb-2 text-red-400">
+            Unable to load site information. Please try again later.
+          </p>
+        )}
         <h3 className="mb-2 text-2xl font-bold">Domains</h3>
         <ul className="mb-2 ml-2 text-gray-400 list-disc list-inside">
           {loading ? <Spinner /> : hosts.map((host) => <li key={host.normalised}>{host.normalised}</li>)}
         </ul>
         <h3 className="mb-2 text-2xl font-bold">Contact</h3>
-        {!config.data && <Spinner />}
+        {loading && <Spinner />}
         {config.data && (
           <p className="text-gray-400">
             To get an account or get a file taken down, email{" "}

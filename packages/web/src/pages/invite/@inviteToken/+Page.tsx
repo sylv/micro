@@ -32,8 +32,6 @@ const CreateUser = graphql(`
   }
 `);
 
-export const title = "You're invited — micro";
-
 export const Page: FC = () => {
   const config = useConfig();
   const { routeParams } = usePageContext();

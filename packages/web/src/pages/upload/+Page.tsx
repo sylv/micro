@@ -24,8 +24,6 @@ interface CreateFileResponse {
   };
 }
 
-export const title = "Upload File — micro";
-
 export const Page: FC = () => {
   const user = useUser(true);
   const inputRef = useRef<HTMLInputElement>(null);

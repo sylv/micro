@@ -29,8 +29,6 @@ const Shorten = graphql(`
   }
 `);
 
-export const title = "Shorten URL";
-
 export const Page: FC = () => {
   const [, shortenMutation] = useErrorMutation(Shorten);
   const [result, setResult] = useState<string | null>(null);

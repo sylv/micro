@@ -4,8 +4,6 @@ import { Container } from "../../components/container";
 import { createToast } from "../../components/toast/store";
 import { LoginForm } from "../../containers/login-form";
 
-export const title = "Sign In — micro";
-
 export const Page: FC = () => {
   useEffect(() => {
     // show a verification toast if the user has

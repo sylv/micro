@@ -153,9 +153,9 @@ export const Page: FC = () => {
       <Embed
         data={{
           type: "text/plain",
-          size: paste.data.paste.content.length,
+          size: content?.length ?? 0,
           displayName: paste.data.paste.title ?? `${paste.data.paste.id}.${paste.data.paste.extension}`,
-          textContent: paste.data.paste.content,
+          textContent: content ?? "",
           paths: {
             view: `/paste/${pasteId}`,
             direct: `/paste/${pasteId}.txt`,

@@ -93,8 +93,6 @@ const CreatePaste = graphql(`
   }
 `);
 
-export const title = "New Paste — micro";
-
 export const Page: FC = () => {
   const user = useUser();
   const config = useConfig();

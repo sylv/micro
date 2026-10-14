@@ -44,8 +44,6 @@ const UserQueryWithToken = graphql(
   [RegularUser],
 );
 
-export const title = "Preferences — micro";
-
 export const Page: FC = () => {
   const [user] = useQuery({ query: UserQueryWithToken });
   const { logout } = useLogoutUser();

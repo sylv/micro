@@ -15,8 +15,6 @@ const ChangePassword = graphql(`
   }
 `);
 
-export const Title = "Change Password — micro";
-
 export const Page: FC = () => {
   const [, changeInner] = useErrorMutation(ChangePassword, false);
   const [change] = useAsync(async (values: VariablesOf<typeof ChangePassword>) => {
