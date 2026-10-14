@@ -92,20 +92,13 @@ async function startServer() {
   });
 
   instance.get("*", async (request, reply) => {
-    let forwardedFor: string | undefined;
-    if (request.headers["x-forwarded-for"] && typeof request.headers["x-forwarded-for"] === "string") {
-      forwardedFor = request.headers["x-forwarded-for"];
-    } else if (request.headers.host) {
-      forwardedFor = request.headers.host;
-    }
-
     const pageContextInit = {
       cspNonce: import.meta.env.PROD ? randomBytes(16).toString("base64") : undefined,
       urlOriginal: request.url,
       ssrExchange: ssrExchange({ isClient: false }),
       headersOriginal: {
         ...request.headers,
-        ["x-forwarded-host"]: forwardedFor,
+        ["x-forwarded-host"]: request.headers.host,
       },
     } satisfies Partial<PageContext>;
 
