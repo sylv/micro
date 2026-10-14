@@ -31,7 +31,6 @@ EmbedImage.embeddable = (data: Embeddable) => {
     case "image/png":
     case "image/jpeg":
     case "image/gif":
-    case "image/svg+xml":
     case "image/webp":
     case "image/bmp":
     case "image/tiff": {

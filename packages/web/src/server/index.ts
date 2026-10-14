@@ -1,4 +1,5 @@
 import FastifyStatic from "@fastify/static";
+import { randomBytes } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import FastifyProxy from "@fastify/http-proxy";
@@ -99,6 +100,7 @@ async function startServer() {
     }
 
     const pageContextInit = {
+      cspNonce: import.meta.env.PROD ? randomBytes(16).toString("base64") : undefined,
       urlOriginal: request.url,
       ssrExchange: ssrExchange({ isClient: false }),
       headersOriginal: {
@@ -113,7 +115,18 @@ async function startServer() {
       const { pipe, statusCode, headers, earlyHints } = httpResponse;
       if (earlyHints.length) reply.raw.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) });
       for (const [name, value] of headers) reply.header(name, value);
+      reply.header("X-Content-Type-Options", "nosniff");
+      if (import.meta.env.PROD) {
+        const assetHost = new URL(`http://${request.headers.host}`).host;
+        const assets = `http://${assetHost}/assets/ https://${assetHost}/assets/`;
+        reply.header("Content-Security-Policy", `script-src 'nonce-${pageContextInit.cspNonce}' ${assets}; style-src ${assets} 'unsafe-inline'; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'self'`);
+      }
       reply.status(statusCode);
+      reply.hijack();
+      for (const [name, value] of Object.entries(reply.getHeaders())) {
+        if (value !== undefined) reply.raw.setHeader(name, value);
+      }
+      reply.raw.writeHead(statusCode);
       return pipe(reply.raw);
     } else {
       reply.status(500).send("Internal Server Error");

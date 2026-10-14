@@ -12,7 +12,7 @@ export class PasteService {
   constructor(private em: EntityManager) {}
 
   async getPaste(pasteId: string, request: FastifyRequest) {
-    const paste = await this.pasteRepo.findOneOrFail(pasteId, { populate: ["owner"] });
+    const paste = await this.pasteRepo.findOneOrFail(pasteId, { populate: ["owner", "content"] });
     if (!paste.canSendTo(request)) {
       throw new BadRequestException("Your paste is in another castle.");
     }

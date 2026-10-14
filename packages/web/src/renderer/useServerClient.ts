@@ -21,7 +21,8 @@ export const useServerClient = () => {
   if (stream == null) throw new Error("streaming is disabled or unavailable");
 
   return useMemo(() => {
-    stream.injectToStream("<script>if(typeof window.__c=='undefined')__c=[]</script>");
+    const scriptTag = pageContext.cspNonce ? `<script nonce="${pageContext.cspNonce}">` : "<script>";
+    stream.injectToStream(`${scriptTag}if(typeof window.__c=='undefined')__c=[]</script>`);
 
     if (!pageContext.ssrExchange) {
       throw new Error("pageContext.ssrExchange is required.");
@@ -32,7 +33,7 @@ export const useServerClient = () => {
     if (extracted) {
       for (const [key, value] of Object.entries(extracted)) {
         const serialized = uneval(value); // already serialized
-        stream.injectToStream(`<script>__c.push(["${key}",${serialized}])</script>`);
+        stream.injectToStream(`${scriptTag}__c.push(["${key}",${serialized}])</script>`);
       }
     }
 
@@ -51,7 +52,7 @@ export const useServerClient = () => {
           onResult: (result) => {
             if (!result.operation.key) return;
             const serialized = uneval(serializeResult(result, false));
-            stream.injectToStream(`<script>__c.push(["${result.operation.key}",${serialized}])</script>`);
+            stream.injectToStream(`${scriptTag}__c.push(["${result.operation.key}",${serialized}])</script>`);
           },
         }),
         fetchExchange,

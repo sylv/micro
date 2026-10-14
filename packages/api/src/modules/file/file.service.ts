@@ -12,13 +12,13 @@ import bytes from "bytes";
 import * as contentRange from "content-range";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import ffmpeg from "fluent-ffmpeg";
-import { DateTime } from "luxon";
 import mime from "mime-types";
 import sharp from "sharp";
 import { PassThrough } from "stream";
 import { config, type MicroHost } from "../../config.js";
 import { generateContentId } from "../../helpers/generate-content-id.helper.js";
 import { getStreamType } from "../../helpers/get-stream-type.helper.js";
+import { untrustedContentHeaders } from "../../helpers/untrusted-content-headers.js";
 import { HostService } from "../host/host.service.js";
 import { StorageService } from "../storage/storage.service.js";
 import type { UserEntity } from "../user/user.entity.js";
@@ -175,17 +175,12 @@ export class FileService {
     file.views++;
     await this.em.persist(file).flush();
 
-    const type = file.type.startsWith("text") ? `${file.type}; charset=UTF-8` : file.type;
     return reply
+      .headers(untrustedContentHeaders(file.type, file.getDisplayName()))
       .header("ETag", `"${file.hash}"`)
       .header("Accept-Ranges", "bytes")
-      .header("Content-Type", type)
       .header("Content-Length", file.size)
       .header("Last-Modified", file.createdAt)
-      .header("Content-Disposition", `inline; filename="${file.getDisplayName()}"`)
-      .header("Cache-Control", "public, max-age=31536000")
-      .header("Expires", DateTime.local().plus({ years: 1 }).toHTTP())
-      .header("X-Content-Type-Options", "nosniff")
       .send(stream);
   }
 }
